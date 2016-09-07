@@ -1,0 +1,9 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}Copyright (c) 2016 Cloudogu GmbH. All Rights Reserved.
+${licensePrefix}
+${licensePrefix}Copyright notice
+<#if licenseLast??>
+${licenseLast}
+</#if>

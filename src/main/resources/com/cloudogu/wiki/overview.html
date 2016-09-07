@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2016 Cloudogu GmbH. All Rights Reserved.
+
+Copyright notice
+-->
+<html>
+    <head>
+        <title>Overview</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Wikis</h1>
+        <ul>
+            {{#wikis}}
+            <li>
+                <a href="{{request.contextPath}}{{request.servletPath}}/{{name}}">{{displayName}}</a>
+            </li>
+            {{/wikis}}
+        </ul>
+    </body>
+</html>
