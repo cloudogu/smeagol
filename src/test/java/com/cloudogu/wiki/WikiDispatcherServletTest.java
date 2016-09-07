@@ -7,6 +7,7 @@
 package com.cloudogu.wiki;
 
 import com.google.common.collect.Lists;
+import com.mashape.unirest.http.HttpResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -22,6 +23,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -92,10 +94,47 @@ public class WikiDispatcherServletTest {
      */
     @Test
     public void testServiceOnNonExistingWiki() throws ServletException, IOException {
+        StringWriter buffer = new StringWriter();
+        when(response.getWriter()).thenReturn(new PrintWriter(buffer));
+        
         when(request.getPathInfo()).thenReturn("/test/");
         
         servlet.service(request, response);
-        verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
+        assertNotFoundPage(buffer);
+    }
+    
+    /**
+     * Test {@link WikiDispatcherServlet#service(HttpServletRequest, HttpServletResponse)} with servlet that throws
+     * a {@link WikiNotFoundException}.
+     * 
+     * @throws javax.servlet.ServletException
+     * @throws java.io.IOException
+     */
+    @Test
+    public void testServiceWithWikiNotFoundException() throws ServletException, IOException {
+        StringWriter buffer = new StringWriter();
+        when(response.getWriter()).thenReturn(new PrintWriter(buffer));
+        when(request.getPathInfo()).thenReturn("/test/");
+        
+        HttpServlet wikiServlet = mock(HttpServlet.class);
+        when(provider.getServlet("test")).thenReturn(wikiServlet);
+        doThrow(WikiNotFoundException.class).when(wikiServlet).service(
+            Mockito.any(HttpServletRequest.class), Mockito.any(HttpServletResponse.class)
+        );
+        
+        servlet.service(request, response);
+        assertNotFoundPage(buffer);
+    }
+    
+    private void assertNotFoundPage(StringWriter buffer){
+        verify(response).setStatus(HttpServletResponse.SC_NOT_FOUND);
+        
+        verify(response).setContentType("text/html");
+        assertThat(buffer.toString(), allOf(
+            containsString("<html"),
+            containsString("</html>"),
+            containsString("Not Found")
+        ));
     }
     
     /**

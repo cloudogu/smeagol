@@ -1,9 +1,8 @@
 /**
  * Copyright (c) 2016 Cloudogu GmbH. All Rights Reserved.
- * 
+ *
  * Copyright notice
  */
-
 package com.cloudogu.wiki;
 
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -18,18 +17,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The dispatcher servlet takes the current requested name of the wiki and forwards the request to the {@link Servlet},
  * which was created with {@link WikiProvider}. If the root application was requested an overview of all available wikis
  * is created from the {@link WikiProvider}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 public class WikiDispatcherServlet extends HttpServlet {
 
+    private static final Logger LOG = LoggerFactory.getLogger(WikiDispatcherServlet.class);
+
     private final MustacheFactory factory = new DefaultMustacheFactory();
-    
+
     private static final long serialVersionUID = 7511937785395456331L;
 
     private final WikiProvider provider;
@@ -44,33 +47,43 @@ public class WikiDispatcherServlet extends HttpServlet {
         if (Strings.isNullOrEmpty(name)) {
             renderOverview(req, resp);
         } else {
-            Servlet servlet = provider.getServlet(name);
-            if (servlet != null) {
-                dispatch(servlet, req, resp);
-            } else {
-                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            try {
+                Servlet servlet = provider.getServlet(name);
+                if (servlet != null) {
+                    servlet.service(wrap(req), resp);
+                } else {
+                    renderNotFound(req, resp);
+                }
+            } catch (WikiNotFoundException ex) {
+                LOG.trace("could not find wiki", ex);
+                renderNotFound(req, resp);
             }
         }
     }
-    
-    private void dispatch(Servlet servlet, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        servlet.service(wrap(request), response);
+
+    private void renderNotFound(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setStatus(404);
+        renderTemplate(response, "notfound.html", new NotFound(request));
     }
-    
-    private HttpServletRequest wrap(HttpServletRequest request){
-        return new DispatchHttpServletRequestWrapper(request);
-    }
-    
+
     private void renderOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        renderTemplate(response, "overview.html", new Overview(request, provider.getAll()));
+    }
+
+    private void renderTemplate(HttpServletResponse response, String tpl, Object ctx) throws IOException {
         response.setContentType("text/html");
-        Mustache mustache = factory.compile(WikiResources.path("overview.html"));
-        mustache.execute(response.getWriter(), new Overview(request, provider.getAll()));
+        Mustache mustache = factory.compile(WikiResources.path(tpl));
+        mustache.execute(response.getWriter(), ctx);
+    }
+
+    private HttpServletRequest wrap(HttpServletRequest request) {
+        return new DispatchHttpServletRequestWrapper(request);
     }
 
     @VisibleForTesting
     String getWikiName(HttpServletRequest request) {
         String path = request.getPathInfo();
-        if (Strings.isNullOrEmpty(path)){
+        if (Strings.isNullOrEmpty(path)) {
             return null;
         }
         if (path.startsWith("/")) {
@@ -82,7 +95,7 @@ public class WikiDispatcherServlet extends HttpServlet {
         }
         return path;
     }
-    
+
     private static class DispatchHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
         public DispatchHttpServletRequestWrapper(HttpServletRequest request) {
@@ -95,9 +108,23 @@ public class WikiDispatcherServlet extends HttpServlet {
         }
 
     }
-    
+
+    private static class NotFound {
+
+        private final HttpServletRequest request;
+
+        public NotFound(HttpServletRequest request) {
+            this.request = request;
+        }
+
+        public HttpServletRequest getRequest() {
+            return request;
+        }
+
+    }
+
     private static class Overview {
-        
+
         private final HttpServletRequest request;
         private final Iterable<Wiki> wikis;
 
@@ -109,7 +136,7 @@ public class WikiDispatcherServlet extends HttpServlet {
         public HttpServletRequest getRequest() {
             return request;
         }
-        
+
         public Iterable<Wiki> getWikis() {
             return wikis;
         }
