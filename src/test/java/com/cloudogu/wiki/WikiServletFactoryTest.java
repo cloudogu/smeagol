@@ -32,6 +32,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class WikiServletFactoryTest {
 
+    private final WikiServerConfiguration configuration = new WikiServerConfiguration();
+    
     @Mock
     private HttpServletRequest request;
 
@@ -86,7 +88,7 @@ public class WikiServletFactoryTest {
      */
     @Test
     public void testCreateServlet() throws ServletException, IOException {
-        WikiServletFactory servletFactory = new WikiServletFactory("test-runner.rb");
+        WikiServletFactory servletFactory = new WikiServletFactory(configuration, "test-runner.rb");
 
         Wiki wiki = new Wiki("test123", "Test", "Test Wiki");
         WikiOptions options = WikiOptions.builder("test").build();

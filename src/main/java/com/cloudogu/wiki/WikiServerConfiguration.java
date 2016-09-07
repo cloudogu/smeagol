@@ -38,6 +38,9 @@ public class WikiServerConfiguration {
     @Configuration("SMEAGOL_STATIC_PATH")
     private String staticPath = "src/main/webapp";
 
+    @Configuration("SMEAGOL_GEM_PATH")
+    private String gemPath = "target/rubygems";
+    
     public int getPort() {
         return port;
     }
@@ -64,6 +67,10 @@ public class WikiServerConfiguration {
 
     public String getStaticPath() {
         return staticPath;
+    }
+
+    public String getGemPath() {
+        return gemPath;
     }
     
     public Map<String,String> getCasSettings(){

@@ -44,15 +44,15 @@ public class ScmWikiProvider implements WikiProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(ScmWikiProvider.class);
 
-    private final WikiServletFactory servletFactory = new WikiServletFactory();
-
     private final WikiServerConfiguration configuration;
+    private final WikiServletFactory servletFactory;
     private final ScmConfiguration scmConfiguration;
     private final ScmWikiListStrategy wikiListStrategy;
     private final Cache<String, HttpServlet> servletCache;
 
     public ScmWikiProvider(WikiServerConfiguration configuration) {
         this.configuration = configuration;
+        this.servletFactory = new WikiServletFactory(configuration);
         this.scmConfiguration = Configurations.get(ScmConfiguration.class);
         this.wikiListStrategy = createWikiListStrategy();
         this.servletCache = createServletCache();

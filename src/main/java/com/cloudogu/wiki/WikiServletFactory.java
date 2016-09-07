@@ -30,28 +30,34 @@ public class WikiServletFactory {
 
     private static final String DEFAULT_RUNNER_SCRIPT = "runner.rb";
     
+    private final WikiServerConfiguration configuration;
     private final String runnerScript;
 
     /**
      * Constructs the WikiServletFactory with the default runner script.
+     * 
+     * @param configuration main configuration
      */
-    public WikiServletFactory() {
-        this(DEFAULT_RUNNER_SCRIPT);
+    public WikiServletFactory(WikiServerConfiguration configuration) {
+        this(configuration, DEFAULT_RUNNER_SCRIPT);
     }
     
     /**
      * Constructs the WikiServletFactory with the given runner script. This method is only for testing purposes.
-     * @param runnnerScript 
+     * 
+     * @param configuration main configuration
+     * @param runnnerScript runner script
      */
     @VisibleForTesting
-    WikiServletFactory(String runnnerScript) {
+    WikiServletFactory(WikiServerConfiguration configuration, String runnnerScript) {
+        this.configuration = configuration;
         this.runnerScript = runnnerScript;
     }
     
     private IRubyObject createApplication(Wiki wiki, WikiOptions options) throws IOException {
         LOG.debug("create wiki servlet for {}", wiki.getName());
         ScriptingContainer container = new ScriptingContainer(LocalContextScope.THREADSAFE);
-        container.getEnvironment().put("GEM_PATH", new File("target/rubygems").getAbsolutePath());
+        container.getEnvironment().put("GEM_PATH", configuration.getGemPath());
         container.put("wiki", wiki);
         container.put("wikiOptions", options);
         container.put("wikiContextFactory", WikiContextFactory.getInstance());
