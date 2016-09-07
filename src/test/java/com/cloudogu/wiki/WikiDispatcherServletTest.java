@@ -75,7 +75,7 @@ public class WikiDispatcherServletTest {
         
         verify(response).setContentType("text/html");
         assertThat(buffer.toString(), allOf(
-            containsString("<html>"),
+            containsString("<html"),
             containsString("</html>"),
             containsString("xyz"),
             containsString("XYZ Wiki")//,

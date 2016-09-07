@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -62,17 +63,26 @@ public class WikiServer {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath(cfg.getContextPath());
         
+        ServletHolder resourceServletHolder = new ServletHolder(DefaultServlet.class);
+        resourceServletHolder.setInitParameter("resourceBase", cfg.getStaticPath());
+        resourceServletHolder.setInitParameter("pathInfoOnly", "true");
+        context.addServlet(resourceServletHolder, "/_static/*");
+        
         // disable sso for the moment, because it seems to cause trouble with sinatra
         // context.addEventListener(new SingleSignOutHttpSessionListener());
         // casFilter(context, SingleSignOutFilter.class, casSettings);
         
+        // cas authentication
         Map<String,String> casSettings = cfg.getCasSettings();
         casFilter(context, Cas30ProxyReceivingTicketValidationFilter.class, casSettings);
         casFilter(context, AuthenticationFilter.class, casSettings);
         casFilter(context, HttpServletRequestWrapperFilter.class, casSettings);
+        
+        // context
         FilterHolder contextFilterHolder = new FilterHolder(new WikiContextFilter(cfg, provider));
         context.addFilter(contextFilterHolder, "/*", EnumSet.allOf(DispatcherType.class));
         
+        // main servlet
         context.addServlet(new ServletHolder(new WikiDispatcherServlet(provider)), "/*");
         
         Server server = new Server(cfg.getPort());

@@ -52,3 +52,4 @@ hs_err_pid*
 
 # jrebel
 rebel.xml
+/src/main/webapp/

@@ -34,6 +34,9 @@ public class WikiServerConfiguration {
     
     @Configuration("SMEAGOL_STAGE")
     private Stage stage = Stage.PRODUCTION;
+    
+    @Configuration("SMEAGOL_STATIC_PATH")
+    private String staticPath = "src/main/webapp";
 
     public int getPort() {
         return port;
@@ -57,6 +60,10 @@ public class WikiServerConfiguration {
 
     public Stage getStage() {
         return stage;
+    }
+
+    public String getStaticPath() {
+        return staticPath;
     }
     
     public Map<String,String> getCasSettings(){
