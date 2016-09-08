@@ -7,9 +7,9 @@ This repository contains smeagol, an wiki server which stores its files in a git
 
 * Support for multiple Wikis in one Server
 * Remote Repositories ( and )
-** Smegol clones the repository on first access
-** pulls changes regularly
-** push changes back to remote repository after commit
+  * Smegol clones the repository on first access
+  * pulls changes regularly
+  * push changes back to remote repository after commit
 * SCM-Manager support
 * CAS Authentication
 
