@@ -18,7 +18,7 @@ This repository contains smeagol, an wiki server which stores its files in a git
 Smeagol is configured with environment variables. The following configuration options are available:
 
 | Name | Default value | Description |
---------------------------------------
+| ---- | ------------- |-------------|
 | SMEAGOL_PORT | 8080 | Port for Smeagol webserver |
 | SMEAGOL_CONTEXT_PATH | /smeagol | Context path for the web application |
 | SMEAGOL_SERVICE_URL | | Full qualified url to smeagol (with context path) |
