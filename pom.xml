@@ -148,6 +148,7 @@
     
     <build>
         <plugins>
+            
             <plugin>
                 <groupId>de.saumya.mojo</groupId>
                 <artifactId>gem-maven-plugin</artifactId>
@@ -160,7 +161,50 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>com.github.sdorra</groupId>
+                <artifactId>buildfrontend-maven-plugin</artifactId>
+                <version>1.0.7</version>
+                <configuration>
+                    <allowRoot>true</allowRoot>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>bower</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>bower-install</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.cloudogu.wiki.App</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptor>src/main/assembly/app.xml</descriptor>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>assembly</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            
         </plugins>
+        
+        <finalName>smeagol</finalName>
     </build>
     
     <repositories>
