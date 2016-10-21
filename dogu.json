@@ -1,0 +1,25 @@
+{
+  "Name": "official/smeagol",
+  "Version": "0.1.0",
+  "DisplayName": "Smeagol",
+  "Description": "Store your technical documentation with in your git repositories",
+  "Category": "Development Apps",
+  "Tags": [
+    "warp", "wiki", "docs", "gollum", "git"
+  ],
+  "Url": "https://cloudogu.com",
+  "Image": "registry.cloudogu.com/official/smeagol",
+  "Dependencies": [
+    "cas", "nginx", "scm"
+  ],
+  "Volumes": [{
+    "Name": "data",
+    "Path": "/var/lib/smeagol",
+    "Owner": "1000",
+    "Group": "1000"
+  }],
+  "HealthCheck": {
+    "Type": "tcp",
+    "Port": 8080
+  }
+}

@@ -7,9 +7,9 @@ This repository contains smeagol, an wiki server which stores its files in a git
 
 * Support for multiple Wikis in one Server
 * Remote Repositories ( and )
-** Smegol clones the repository on first access
-** pulls changes regularly
-** push changes back to remote repository after commit
+  * Smegol clones the repository on first access
+  * pulls changes regularly
+  * push changes back to remote repository after commit
 * SCM-Manager support
 * CAS Authentication
 
@@ -18,7 +18,7 @@ This repository contains smeagol, an wiki server which stores its files in a git
 Smeagol is configured with environment variables. The following configuration options are available:
 
 | Name | Default value | Description |
---------------------------------------
+| ---- | ------------- |-------------|
 | SMEAGOL_PORT | 8080 | Port for Smeagol webserver |
 | SMEAGOL_CONTEXT_PATH | /smeagol | Context path for the web application |
 | SMEAGOL_SERVICE_URL | | Full qualified url to smeagol (with context path) |
