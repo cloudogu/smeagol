@@ -1,8 +1,9 @@
 FROM maven:3.3-jdk-8
 
-COPY src bower.json pom.xml .bowerrc /usr/src/
-RUN cd /usr/src \
- && mvn clean package
+COPY src/ /usr/src/smeagol/src/
+COPY bower.json pom.xml .bowerrc /usr/src/smeagol/  
+RUN cd /usr/src/smeagol \
+ && mvn package
 
 VOLUME "/dist"
-CMD ["cp", "-rfv", "/usr/src/target/smeagol-app.jar", "/usr/src/src/main/webapp", "/usr/src/target/rubygems", "/dist/"]
+CMD ["cp", "-rfv", "/usr/src/smeagol/target/smeagol-app.jar", "/usr/src/smeagol/src/main/webapp", "/usr/src/smeagol/target/rubygems", "/dist/"]
