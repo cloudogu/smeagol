@@ -9,4 +9,5 @@ ENV SMEAGOL_HOME=/var/lib/smeagol \
 		SERVICE_TAGS=webapp
 
 VOLUME /var/lib/smeagol
+EXPOSE 8080
 CMD /app/startup.sh
