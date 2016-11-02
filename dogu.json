@@ -3,7 +3,7 @@
   "Version": "0.1.1",
   "DisplayName": "Smeagol",
   "Description": "Store your technical documentation with in your git repositories",
-  "Category": "Development Apps",
+  "Category": "Documentation",
   "Tags": [
     "warp", "wiki", "docs", "gollum", "git"
   ],
