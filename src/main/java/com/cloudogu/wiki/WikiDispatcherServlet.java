@@ -21,9 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The dispatcher servlet takes the current requested name of the wiki and forwards the request to the {@link Servlet},
- * which was created with {@link WikiProvider}. If the root application was requested an overview of all available wikis
- * is created from the {@link WikiProvider}.
+ * The dispatcher servlet takes the current requested name of the wiki and
+ * forwards the request to the {@link Servlet}, which was created with
+ * {@link WikiProvider}. If the root application was requested an overview of
+ * all available wikis is created from the {@link WikiProvider}.
  *
  * @author Sebastian Sdorra
  */
@@ -46,6 +47,8 @@ public class WikiDispatcherServlet extends HttpServlet {
         String name = getWikiName(req);
         if (Strings.isNullOrEmpty(name)) {
             renderOverview(req, resp);
+        } else if (name.indexOf("/") <= 0) {
+            renderBranchOverview(req, resp);
         } else {
             try {
                 Servlet servlet = provider.getServlet(name);
@@ -67,7 +70,11 @@ public class WikiDispatcherServlet extends HttpServlet {
     }
 
     private void renderOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        renderTemplate(response, "overview.html", new Overview(request, provider.getAll()));
+        renderTemplate(response, "overviewRepos.html", new Overview(request, provider.getAll()));
+    }
+
+    private void renderBranchOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        renderTemplate(response, "overviewBranches.html", new Overview(request, provider.getAllBranches(getWikiName(request))));
     }
 
     private void renderTemplate(HttpServletResponse response, String tpl, Object ctx) throws IOException {
@@ -89,9 +96,15 @@ public class WikiDispatcherServlet extends HttpServlet {
         if (path.startsWith("/")) {
             path = path.substring(1);
         }
-        int index = path.indexOf("/");
+        if (path.endsWith("/")) {
+            path = path.substring(0, path.length() - 1);
+        }
+        int index = path.indexOf('/');
         if (index > 0) {
-            return path.substring(0, index);
+            int index2 = path.indexOf('/', index + 1);
+            if (index2 > 0) {
+                return path.substring(0, index2);
+            }
         }
         return path;
     }

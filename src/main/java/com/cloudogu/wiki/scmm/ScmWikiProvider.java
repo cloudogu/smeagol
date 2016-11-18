@@ -27,9 +27,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
+import org.eclipse.jgit.api.CheckoutCommand;
+import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -48,6 +51,7 @@ public class ScmWikiProvider implements WikiProvider {
     private final WikiServletFactory servletFactory;
     private final ScmConfiguration scmConfiguration;
     private final ScmWikiListStrategy wikiListStrategy;
+    private final ScmBranchListStrategy branchListStrategy;
     private final Cache<String, HttpServlet> servletCache;
 
     public ScmWikiProvider(WikiServerConfiguration configuration) {
@@ -56,11 +60,17 @@ public class ScmWikiProvider implements WikiProvider {
         this.scmConfiguration = Configurations.get(ScmConfiguration.class);
         this.wikiListStrategy = createWikiListStrategy();
         this.servletCache = createServletCache();
+        this.branchListStrategy = createScmBranchListStrategy();
     }
 
     @Override
     public Iterable<Wiki> getAll() {
         return wikiListStrategy.getWikis();
+    }
+
+    @Override
+    public Iterable<Wiki> getAllBranches(String name) {
+        return branchListStrategy.getWikis(name);
     }
 
     @Override
@@ -86,6 +96,8 @@ public class ScmWikiProvider implements WikiProvider {
     @Override
     public void push(String wiki, String sha1) {
         File directory = getRepositoryDirectory(wiki);
+        int index = wiki.indexOf('/');
+        String branch = wiki.substring(index + 1);
         try {
             Git git = Git.open(directory);
 
@@ -94,13 +106,13 @@ public class ScmWikiProvider implements WikiProvider {
 
             CredentialsProvider credentials = credentialsProvider(account);
 
-            LOG.debug("pull changes from remote for wiki {}", wiki);
+            LOG.debug("pull changes from remote for wiki {} on branch {}", wiki, branch);
             git.pull()
                     .setRemote("origin")
                     .setCredentialsProvider(credentials)
                     .call();
 
-            LOG.info("push changes to remote for wiki {}", wiki);
+            LOG.info("push changes to remote for wiki {} on branch {}", wiki, branch);
             git.push()
                     .setRemote("origin")
                     .setCredentialsProvider(credentials)
@@ -113,7 +125,8 @@ public class ScmWikiProvider implements WikiProvider {
 
     private HttpServlet createServlet(String name) {
         LOG.trace("try to create servlet for scm repository {}", name);
-
+        int index = name.indexOf('/');
+        String branch = name.substring(index + 1);
         WikiContext context = WikiContextFactory.getInstance().get();
         Account account = context.getAccount();
 
@@ -139,15 +152,35 @@ public class ScmWikiProvider implements WikiProvider {
                 add.setName("origin");
                 add.setUri(new URIish(wiki.getRemoteUrl()));
                 add.call();
+
+                git.pull()
+                        .setRemote("origin")
+                        .setRemoteBranchName(branch)
+                        .setCredentialsProvider(credentialsProvider(account))
+                        .call();
+
+                LOG.debug("checkout branch {}", branch);
+                git.branchCreate()
+                        .setName(branch)
+                        .setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
+                        .setStartPoint("origin/" + branch)
+                        .setForce(true)
+                        .call();
+
+                git.checkout()
+                        .setName(branch)
+                        .call();
+
             } else {
                 LOG.trace("open repository {} for wiki {}", repository, name);
                 git = Git.open(repository);
             }
 
             LOG.debug("pull changes from remote for wiki {}", name);
-            
+
             git.pull()
                     .setRemote("origin")
+                    .setRemoteBranchName(branch)
                     .setCredentialsProvider(credentialsProvider(account))
                     .call();
 
@@ -168,6 +201,17 @@ public class ScmWikiProvider implements WikiProvider {
             strategy = new DevelopmentScmWikiListStrategy(scmConfiguration);
         } else {
             strategy = new SessionCacheScmWikiListStrategy(scmConfiguration);
+        }
+        return strategy;
+    }
+
+    private ScmBranchListStrategy createScmBranchListStrategy() {
+        ScmBranchListStrategy strategy;
+        if (configuration.getStage() == Stage.DEVELOPMENT) {
+            LOG.warn("use non caching branch list strategy for development");
+            strategy = new DevelopmentScmBranchListStrategy(scmConfiguration);
+        } else {
+            strategy = new SessionCacheScmBranchListStrategy(scmConfiguration);
         }
         return strategy;
     }
