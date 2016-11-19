@@ -35,6 +35,9 @@ nbdist/
 .nb-gradle/
 nbactions.xml
 
+### IntelliJ ###
+.idea
+
 
 ### Java ###
 *.class
