@@ -14,17 +14,10 @@ import com.cloudogu.wiki.Wiki;
 public class ScmWiki extends Wiki {
 
     private final String remoteUrl;
-    private String repository;
-    private String branch;
 
-    public ScmWiki(String name, String displayName, String description, String remoteUrl) {
-        super(name, displayName, description);
+    public ScmWiki(String repositoryId, String branchName, String displayName, String description, String remoteUrl) {
+        super(repositoryId, branchName, displayName, description);
         this.remoteUrl = remoteUrl;
-        int index = name.indexOf('/');
-        if (index > 0) {
-            this.repository = name.substring(0, index);
-            this.branch = name.substring(index + 1);
-        }
     }
 
     public String getRemoteUrl() {
@@ -32,11 +25,11 @@ public class ScmWiki extends Wiki {
     }
 
     public String getRepository() {
-        return repository;
+        return super.getRepositoryId();
     }
 
     public String getBranch() {
-        return branch;
+        return super.getBranchName();
     }
 
 }

@@ -30,6 +30,8 @@ import org.slf4j.LoggerFactory;
  */
 public class WikiDispatcherServlet extends HttpServlet {
 
+    private static final String SEPARATOR = "/";
+
     private static final Logger LOG = LoggerFactory.getLogger(WikiDispatcherServlet.class);
 
     private final MustacheFactory factory = new DefaultMustacheFactory();
@@ -44,16 +46,19 @@ public class WikiDispatcherServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = getWikiName(req);
-        if (Strings.isNullOrEmpty(name)) {
+        String repositoryId = getRepositoryId(req);
+        String branchName = getBranchName(req);
+
+        if (Strings.isNullOrEmpty(repositoryId)) {
             renderOverview(req, resp);
-        } else if (name.indexOf("/") <= 0) {
+        } else if (Strings.isNullOrEmpty(branchName)) {
             renderBranchOverview(req, resp);
         } else {
+            String wikiName = repositoryId + SEPARATOR + branchName;
             try {
-                Servlet servlet = provider.getServlet(name);
+                Servlet servlet = provider.getServlet(wikiName);
                 if (servlet != null) {
-                    servlet.service(wrap(req), resp);
+                    servlet.service(wrap(req, wikiName), resp);
                 } else {
                     renderNotFound(req, resp);
                 }
@@ -74,7 +79,7 @@ public class WikiDispatcherServlet extends HttpServlet {
     }
 
     private void renderBranchOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        renderTemplate(response, "overviewBranches.html", new Overview(request, provider.getAllBranches(getWikiName(request))));
+        renderTemplate(response, "overviewBranches.html", new Overview(request, provider.getAllBranches(getRepositoryId(request))));
     }
 
     private void renderTemplate(HttpServletResponse response, String tpl, Object ctx) throws IOException {
@@ -83,41 +88,72 @@ public class WikiDispatcherServlet extends HttpServlet {
         mustache.execute(response.getWriter(), ctx);
     }
 
-    private HttpServletRequest wrap(HttpServletRequest request) {
-        return new DispatchHttpServletRequestWrapper(request);
+    private HttpServletRequest wrap(HttpServletRequest request, String path) {
+        return new DispatchHttpServletRequestWrapper(request, path);
     }
 
     @VisibleForTesting
-    String getWikiName(HttpServletRequest request) {
-        String path = request.getPathInfo();
-        if (Strings.isNullOrEmpty(path)) {
-            return null;
+    String getRepositoryId(HttpServletRequest request) {
+        String path = "";
+        String requestURI = request.getRequestURI().replaceAll("/+$", "");
+
+        if (Strings.isNullOrEmpty(requestURI)) {
+            return path;
         }
-        if (path.startsWith("/")) {
-            path = path.substring(1);
+
+        String contextPath = request.getContextPath();
+
+        if (requestURI.startsWith(contextPath)) {
+            path = requestURI.substring(contextPath.length()).replaceAll("^/+", "");
         }
-        if (path.endsWith("/")) {
-            path = path.substring(0, path.length() - 1);
+
+        int indexOfSeparator = path.indexOf(SEPARATOR);
+        if(indexOfSeparator == -1){
+            return path;
+        } else {
+            return path.substring(0, indexOfSeparator);
         }
-        int index = path.indexOf('/');
-        if (index > 0) {
-            int index2 = path.indexOf('/', index + 1);
-            if (index2 > 0) {
-                return path.substring(0, index2);
-            }
+
+    }
+
+    @VisibleForTesting
+    String getBranchName(HttpServletRequest request) {
+        String path = "";
+        String requestURI = request.getRequestURI().replaceAll("/+$", "");
+
+        if (Strings.isNullOrEmpty(requestURI)) {
+            return path;
         }
-        return path;
+
+        String contextPath = request.getContextPath();
+
+        if (requestURI.startsWith(contextPath)) {
+            path = requestURI.substring(contextPath.length()).replaceAll("^/+", "");
+        }
+
+        int indexOfSeparator = path.indexOf(SEPARATOR);
+        if(indexOfSeparator == -1){
+            return "";
+        } else {
+            return path.substring(indexOfSeparator + 1);
+        }
+
     }
 
     private static class DispatchHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
-        public DispatchHttpServletRequestWrapper(HttpServletRequest request) {
+        private String path;
+
+        public DispatchHttpServletRequestWrapper(HttpServletRequest request, String path) {
             super(request);
+            this.path = path;
         }
 
         @Override
         public String getServletPath() {
-            return super.getContextPath() + super.getServletPath();
+            String contextPath = super.getContextPath();
+            String servletPath = super.getServletPath();
+            return contextPath + servletPath;// + SEPARATOR + path;
         }
 
     }

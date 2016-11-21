@@ -44,7 +44,7 @@ public final class ScmManager {
             for (int i = 0; i < repositories.length(); i++) {
                 JSONObject repository = repositories.getJSONObject(i);
                 if ("git".equals(repository.getString("type"))) {
-                    wikis.add(convertToWiki(repository, repository.getString("id")));
+                    wikis.add(convertToWiki(repository));
                 }
             }
 
@@ -69,7 +69,7 @@ public final class ScmManager {
             JSONArray branches = (JSONArray) response.getBody().getArray().getJSONObject(0).get("branch");
             for (int i = 0; i < branches.length(); i++) {
                 JSONObject branch = branches.getJSONObject(i);
-                wikis.add(new Wiki(repository + "/" + branch.getString("name"), branch.getString("name"), null));
+                wikis.add(new Wiki(repository, branch.getString("name"), branch.getString("name"), null));
             }
 
             return wikis;
@@ -106,15 +106,16 @@ public final class ScmManager {
                 return null;
             }
 
-            return convertToWiki(response.getBody().getObject(), name);
+            return convertToWiki(response.getBody().getObject());
         } catch (UnirestException ex) {
             throw Throwables.propagate(ex);
         }
     }
 
-    private static ScmWiki convertToWiki(JSONObject repository, String id) {
+    private static ScmWiki convertToWiki(JSONObject repository) {
         return new ScmWiki(
-                id,
+                repository.getString("id"),
+                "",
                 repository.getString("name"),
                 repository.getString("description"),
                 repository.getString("url")

@@ -140,7 +140,7 @@ public class ScmWikiProvider implements WikiProvider {
             throw new WikiException(String.format("wiki %s does not return remote url", name));
         }
 
-        try {
+        try { //TODO: decrease size of try-catch-block
 
             File repository = getRepositoryDirectory(name);
 
