@@ -45,22 +45,37 @@ public class WikiDispatcherServletTest {
 
     @InjectMocks
     private WikiDispatcherServlet servlet;
-    
+
     /**
-     * Tests {@link WikiDispatcherServlet#getWikiName(HttpServletRequest) }.
+     * Tests {@link WikiDispatcherServlet#getRepositoryId(HttpServletRequest) }.
      */
     @Test
-    public void testGetWikiName() {
+    public void testGetRepositoryId() {
         when(request.getPathInfo()).thenReturn("/test/sorbot");
-        assertEquals("test", servlet.getWikiName(request));
+        assertEquals("test", servlet.getRepositoryId(request));
         when(request.getPathInfo()).thenReturn("/test");
-        assertEquals("test", servlet.getWikiName(request));
+        assertEquals("test", servlet.getRepositoryId(request));
         when(request.getPathInfo()).thenReturn("/test/sorbot/123");
-        assertEquals("test", servlet.getWikiName(request));
+        assertEquals("test", servlet.getRepositoryId(request));
         when(request.getPathInfo()).thenReturn("test/sorbot");
-        assertEquals("test", servlet.getWikiName(request));
+        assertEquals("test", servlet.getRepositoryId(request));
     }
-    
+
+    /**
+     * Tests {@link WikiDispatcherServlet#getBranchName(HttpServletRequest) }.
+     */
+    @Test
+    public void testGetBranchName() {
+        when(request.getPathInfo()).thenReturn("/test/sorbot");
+        assertEquals("sorbot", servlet.getBranchName(request));
+        when(request.getPathInfo()).thenReturn("/test");
+        assertEquals("", servlet.getBranchName(request));
+        when(request.getPathInfo()).thenReturn("/test/sorbot/123");
+        assertEquals("sorbot", servlet.getBranchName(request));
+        when(request.getPathInfo()).thenReturn("test/sorbot");
+        assertEquals("sorbot", servlet.getBranchName(request));
+    }
+
     /**
      * Test {@link WikiDispatcherServlet#service(HttpServletRequest, HttpServletResponse)} with overview requested.
      * 
@@ -71,7 +86,8 @@ public class WikiDispatcherServletTest {
     public void testServiceOnOverview() throws ServletException, IOException {
         StringWriter buffer = new StringWriter();
         when(response.getWriter()).thenReturn(new PrintWriter(buffer));
-        when(provider.getAll()).thenReturn(Lists.newArrayList(new Wiki("xyz", "XYZ Wiki", "Fresch XYZ WIKI")));
+        when(provider.getAll()).thenReturn(Lists.newArrayList(new Wiki("xyz",
+                "zxy", "XYZ Wiki", "Fresch XYZ WIKI")));
         
         servlet.service(request, response);
         
