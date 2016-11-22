@@ -37,6 +37,7 @@ nbactions.xml
 
 ### IntelliJ ###
 .idea
+*.iml
 
 
 ### Java ###
