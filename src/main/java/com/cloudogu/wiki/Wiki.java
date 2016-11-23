@@ -22,6 +22,7 @@ public class Wiki {
     private final String branchName;
     private final String displayName;
     private final String description;
+    private final String revision;
 
     /**
      * Constructs a new Wiki.
@@ -30,12 +31,14 @@ public class Wiki {
      * @param branchName name of the branch of the instance
      * @param displayName display name which is used at the overview page
      * @param description short description of the wiki
+     * @param revision revision of branch
      */
-    public Wiki(String repositoryId, String branchName, String displayName, String description) {
+    public Wiki(String repositoryId, String branchName, String displayName, String description, String revision) {
         this.repositoryId = repositoryId;
         this.branchName = branchName;
         this.displayName = displayName;
         this.description = description;
+        this.revision = revision;
     }
 
     public String getName() {
@@ -67,4 +70,7 @@ public class Wiki {
         return branchName;
     }
 
+    public String getRevision() {
+        return revision;
+    }
 }

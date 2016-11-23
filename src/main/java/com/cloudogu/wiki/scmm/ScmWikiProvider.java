@@ -134,12 +134,13 @@ public class ScmWikiProvider implements WikiProvider {
 
     private HttpServlet createServlet(String name) {
         LOG.trace("try to create servlet for scm repository {}", name);
+        String repositoryId = getRepositoryId(name);
         String branch = getDecodedBranchName(name);
 
         WikiContext context = WikiContextFactory.getInstance().get();
         Account account = context.getAccount();
 
-        ScmWiki wiki = ScmManager.getWiki(account, scmConfiguration.getInstanceUrl(), name);
+        ScmWiki wiki = ScmManager.getWiki(account, scmConfiguration.getInstanceUrl(), name, this.getAllBranches(repositoryId));
 
         if (wiki == null) {
             throw new WikiNotFoundException("could not find wiki with name ".concat(name));
@@ -190,6 +191,15 @@ public class ScmWikiProvider implements WikiProvider {
         }
     }
 
+    private String getRepositoryId(String wikiName) {
+        int index = wikiName.indexOf('/');
+        String repository = "";
+        if(index > 0) {
+            repository = wikiName.substring(0, index);
+        }
+        return repository;
+    }
+    
     private String getDecodedBranchName(String wikiName) {
         int index = wikiName.indexOf('/');
         String branch = wikiName.substring(index + 1);

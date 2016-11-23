@@ -44,7 +44,7 @@ public final class ScmManager {
             for (int i = 0; i < repositories.length(); i++) {
                 JSONObject repository = repositories.getJSONObject(i);
                 if ("git".equals(repository.getString("type"))) {
-                    wikis.add(convertToWiki(repository, ""));
+                    wikis.add(convertToWiki(repository, "", ""));
                 }
             }
 
@@ -69,7 +69,7 @@ public final class ScmManager {
             JSONArray branches = (JSONArray) response.getBody().getArray().getJSONObject(0).get("branch");
             for (int i = 0; i < branches.length(); i++) {
                 JSONObject branch = branches.getJSONObject(i);
-                wikis.add(new Wiki(repository, branch.getString("name"), branch.getString("name"), null));
+                wikis.add(new Wiki(repository, branch.getString("name"), branch.getString("name"), null, branch.getString("revision")));
             }
 
             return wikis;
@@ -78,18 +78,25 @@ public final class ScmManager {
         }
     }
 
-    public static ScmWiki getWiki(Account account, String scmInstanceUrl, String name) {
+    public static ScmWiki getWiki(Account account, String scmInstanceUrl, String name, Iterable<Wiki> wikiList) {
         try {
             int index = name.indexOf('/');
             String repository;
             String branch;
+            String revision = "NIL";
+            for (Wiki wiki : wikiList) {
+               if(wiki.getUrlEncodedName().equals(name)){
+                   revision = wiki.getRevision();
+                   break;
+               }
+            }
             if (index > 0) {
                 repository = name.substring(0, index);
                 branch = name.substring(index + 1);
             } else {
                 return null;
             }
-            HttpResponse<InputStream> content = Unirest.get(apiUrl(scmInstanceUrl, "/repositories/" + repository + "/content?path=.smeagol.yml"))
+            HttpResponse<InputStream> content = Unirest.get(apiUrl(scmInstanceUrl, "/repositories/" + repository + "/content?path=.smeagol.yml&revision=" + revision))
                     .basicAuth(account.getUsername(), new String(account.getPassword()))
                     .asBinary();
 
@@ -106,18 +113,19 @@ public final class ScmManager {
                 return null;
             }
 
-            return convertToWiki(response.getBody().getObject(), branch);
+            return convertToWiki(response.getBody().getObject(), branch, revision);
         } catch (UnirestException ex) {
             throw Throwables.propagate(ex);
         }
     }
 
-    private static ScmWiki convertToWiki(JSONObject repository, String branch) {
+    private static ScmWiki convertToWiki(JSONObject repository, String branch, String revision) {
         return new ScmWiki(
                 repository.getString("id"),
                 branch,
                 repository.getString("name"),
                 repository.getString("description"),
+                revision,
                 repository.getString("url")
         );
     }

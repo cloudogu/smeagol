@@ -15,8 +15,8 @@ public class ScmWiki extends Wiki {
 
     private final String remoteUrl;
 
-    public ScmWiki(String repositoryId, String branchName, String displayName, String description, String remoteUrl) {
-        super(repositoryId, branchName, displayName, description);
+    public ScmWiki(String repositoryId, String branchName, String displayName, String description, String revision,  String remoteUrl) {
+        super(repositoryId, branchName, displayName, description, revision);
         this.remoteUrl = remoteUrl;
     }
 
