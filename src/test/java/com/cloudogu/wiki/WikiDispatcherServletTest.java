@@ -130,14 +130,15 @@ public class WikiDispatcherServletTest {
     public void testServiceWithWikiNotFoundException() throws ServletException, IOException {
         StringWriter buffer = new StringWriter();
         when(response.getWriter()).thenReturn(new PrintWriter(buffer));
-        when(request.getPathInfo()).thenReturn("/test/");
-        
+        when(request.getRequestURI()).thenReturn("/context/test/");
+        when(request.getContextPath()).thenReturn("/context");
+
         HttpServlet wikiServlet = mock(HttpServlet.class);
         when(provider.getServlet("test")).thenReturn(wikiServlet);
         doThrow(WikiNotFoundException.class).when(wikiServlet).service(
             Mockito.any(HttpServletRequest.class), Mockito.any(HttpServletResponse.class)
         );
-        
+
         servlet.service(request, response);
         assertNotFoundPage(buffer);
     }
@@ -162,7 +163,7 @@ public class WikiDispatcherServletTest {
      */
     @Test
     public void testServiceOnWiki() throws ServletException, IOException {
-        when(request.getPathInfo()).thenReturn("/test/");
+        when(request.getRequestURI()).thenReturn("/wiki/test/");
         when(request.getContextPath()).thenReturn("/wiki");
         when(request.getServletPath()).thenReturn("/test");
         

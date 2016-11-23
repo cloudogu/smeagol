@@ -54,7 +54,10 @@ public class WikiDispatcherServlet extends HttpServlet {
         } else if (Strings.isNullOrEmpty(branchName)) {
             renderBranchOverview(req, resp);
         } else {
-            String wikiName = repositoryId + SEPARATOR + branchName;
+            String wikiName = repositoryId;
+            if(!Strings.isNullOrEmpty(branchName)){
+                wikiName += SEPARATOR + branchName;
+            }
             try {
                 Servlet servlet = provider.getServlet(wikiName);
                 if (servlet != null) {
@@ -95,16 +98,22 @@ public class WikiDispatcherServlet extends HttpServlet {
     @VisibleForTesting
     String getRepositoryId(HttpServletRequest request) {
         String path = "";
-        String requestURI = request.getRequestURI().replaceAll("/+$", "");
+        String requestURI = request.getRequestURI();
 
         if (Strings.isNullOrEmpty(requestURI)) {
             return path;
         }
 
+        requestURI = requestURI.replaceAll("/+$", "");
         String contextPath = request.getContextPath();
 
         if (requestURI.startsWith(contextPath)) {
             path = requestURI.substring(contextPath.length()).replaceAll("^/+", "");
+        }
+
+        int indexOfMatrixParameter = path.indexOf(";");
+        if(indexOfMatrixParameter != -1){
+            path = path.substring(indexOfMatrixParameter);
         }
 
         int indexOfSeparator = path.indexOf(SEPARATOR);
@@ -119,25 +128,37 @@ public class WikiDispatcherServlet extends HttpServlet {
     @VisibleForTesting
     String getBranchName(HttpServletRequest request) {
         String path = "";
-        String requestURI = request.getRequestURI().replaceAll("/+$", "");
+        String requestURI = request.getRequestURI();
 
         if (Strings.isNullOrEmpty(requestURI)) {
             return path;
         }
 
+        requestURI = requestURI.replaceAll("/+$", "");
         String contextPath = request.getContextPath();
 
         if (requestURI.startsWith(contextPath)) {
             path = requestURI.substring(contextPath.length()).replaceAll("^/+", "");
         }
 
+        int indexOfMatrixParameter = path.indexOf(";");
+        if(indexOfMatrixParameter != -1){
+            path = path.substring(indexOfMatrixParameter);
+        }
+
         int indexOfSeparator = path.indexOf(SEPARATOR);
         if(indexOfSeparator == -1){
             return "";
         } else {
-            return path.substring(indexOfSeparator + 1);
+            path = path.substring(indexOfSeparator + 1);
         }
 
+        indexOfSeparator = path.indexOf(SEPARATOR);
+        if(indexOfSeparator != -1){
+            path = path.substring(0, indexOfSeparator);
+        }
+
+        return path;
     }
 
     private static class DispatchHttpServletRequestWrapper extends HttpServletRequestWrapper {

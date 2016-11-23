@@ -22,17 +22,17 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
-import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -98,8 +98,10 @@ public class ScmWikiProvider implements WikiProvider {
         File directory = getRepositoryDirectory(wiki);
         int index = wiki.indexOf('/');
         String branch = wiki.substring(index + 1);
+
+        Git git = null;
         try {
-            Git git = Git.open(directory);
+            git = Git.open(directory);
 
             WikiContext context = WikiContextFactory.getInstance().get();
             Account account = context.getAccount();
@@ -120,6 +122,10 @@ public class ScmWikiProvider implements WikiProvider {
 
         } catch (GitAPIException | IOException ex) {
             throw new WikiException("failed to push changes back to remote repository", ex);
+        } finally {
+            if(git != null){
+                git.close();
+            }
         }
     }
 
@@ -127,6 +133,13 @@ public class ScmWikiProvider implements WikiProvider {
         LOG.trace("try to create servlet for scm repository {}", name);
         int index = name.indexOf('/');
         String branch = name.substring(index + 1);
+
+        try {
+            branch = URLDecoder.decode(branch, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
         WikiContext context = WikiContextFactory.getInstance().get();
         Account account = context.getAccount();
 
@@ -137,14 +150,14 @@ public class ScmWikiProvider implements WikiProvider {
         }
 
         if (Strings.isNullOrEmpty(wiki.getRemoteUrl())) {
-            throw new WikiException(String.format("wiki %s does not return remote url", name));
+            throw new WikiException(String.format("wiki %s does not return " + "remote url", name));
         }
 
-        try { //TODO: decrease size of try-catch-block
+        Git git = null;
+        try { //TODO: reduce size of try-catch-block
 
             File repository = getRepositoryDirectory(name);
 
-            Git git;
             if (!repository.exists()) {
                 LOG.info("init repository {} for wiki {}", repository, name);
                 git = Git.init().setDirectory(repository).call();
@@ -191,6 +204,10 @@ public class ScmWikiProvider implements WikiProvider {
             });
         } catch (IOException | GitAPIException | URISyntaxException | ExecutionException ex) {
             throw new WikiException("failed to create or update wiki ".concat(name), ex);
+        } finally {
+            if(git != null){
+                git.close();
+            }
         }
     }
 

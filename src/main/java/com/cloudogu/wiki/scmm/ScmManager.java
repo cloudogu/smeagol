@@ -44,7 +44,7 @@ public final class ScmManager {
             for (int i = 0; i < repositories.length(); i++) {
                 JSONObject repository = repositories.getJSONObject(i);
                 if ("git".equals(repository.getString("type"))) {
-                    wikis.add(convertToWiki(repository));
+                    wikis.add(convertToWiki(repository, ""));
                 }
             }
 
@@ -106,16 +106,16 @@ public final class ScmManager {
                 return null;
             }
 
-            return convertToWiki(response.getBody().getObject());
+            return convertToWiki(response.getBody().getObject(), branch);
         } catch (UnirestException ex) {
             throw Throwables.propagate(ex);
         }
     }
 
-    private static ScmWiki convertToWiki(JSONObject repository) {
+    private static ScmWiki convertToWiki(JSONObject repository, String branch) {
         return new ScmWiki(
                 repository.getString("id"),
-                "",
+                branch,
                 repository.getString("name"),
                 repository.getString("description"),
                 repository.getString("url")

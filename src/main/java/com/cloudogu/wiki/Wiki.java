@@ -16,7 +16,7 @@ import java.net.URLEncoder;
  */
 public class Wiki {
 
-    private final String SEPARATOR = "/";
+    private final static String SEPARATOR = "/";
 
     private final String repositoryId;
     private final String branchName;
@@ -39,7 +39,7 @@ public class Wiki {
     }
 
     public String getName() {
-        return this.repositoryId + SEPARATOR + this.branchName + SEPARATOR;
+        return this.repositoryId + SEPARATOR + this.branchName;
     }
 
     public String getUrlEncodedName() {
