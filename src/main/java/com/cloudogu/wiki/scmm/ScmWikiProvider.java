@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import static java.util.Collections.singleton;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServlet;
@@ -34,6 +35,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
@@ -96,8 +98,7 @@ public class ScmWikiProvider implements WikiProvider {
     @Override
     public void push(String wiki, String sha1) {
         File directory = getRepositoryDirectory(wiki);
-        int index = wiki.indexOf('/');
-        String branch = wiki.substring(index + 1);
+        String branch = getDecodedBranchName(wiki);
 
         Git git = null;
         try {
@@ -111,12 +112,14 @@ public class ScmWikiProvider implements WikiProvider {
             LOG.debug("pull changes from remote for wiki {} on branch {}", wiki, branch);
             git.pull()
                     .setRemote("origin")
+                    .setRemoteBranchName(branch)
                     .setCredentialsProvider(credentials)
                     .call();
 
             LOG.info("push changes to remote for wiki {} on branch {}", wiki, branch);
             git.push()
-                    .setRemote("origin")
+                    .setRemote("origin")                    
+                    .setRefSpecs(new RefSpec(branch+":"+branch))
                     .setCredentialsProvider(credentials)
                     .call();
 
@@ -131,14 +134,7 @@ public class ScmWikiProvider implements WikiProvider {
 
     private HttpServlet createServlet(String name) {
         LOG.trace("try to create servlet for scm repository {}", name);
-        int index = name.indexOf('/');
-        String branch = name.substring(index + 1);
-
-        try {
-            branch = URLDecoder.decode(branch, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        String branch = getDecodedBranchName(name);
 
         WikiContext context = WikiContextFactory.getInstance().get();
         Account account = context.getAccount();
@@ -159,56 +155,53 @@ public class ScmWikiProvider implements WikiProvider {
             File repository = getRepositoryDirectory(name);
 
             if (!repository.exists()) {
-                LOG.info("init repository {} for wiki {}", repository, name);
-                git = Git.init().setDirectory(repository).call();
-                RemoteAddCommand add = git.remoteAdd();
-                add.setName("origin");
-                add.setUri(new URIish(wiki.getRemoteUrl()));
-                add.call();
+                LOG.info("clone repository {} for wiki {}", repository, name);
+                git = Git.cloneRepository()
+                        .setURI(wiki.getRemoteUrl())
+                        .setDirectory(repository)
+                        .setBranchesToClone(singleton("refs/head" + branch))
+                        .setBranch(branch)
+                        .setCredentialsProvider(credentialsProvider(account))
+                        .call();
+                 
+            } else {
+                LOG.trace("open repository {} for wiki {}", repository, name);
+                git = Git.open(repository);
+                LOG.debug("pull changes from remote for wiki {}", name);
 
                 git.pull()
                         .setRemote("origin")
                         .setRemoteBranchName(branch)
                         .setCredentialsProvider(credentialsProvider(account))
                         .call();
-
-                LOG.debug("checkout branch {}", branch);
-                git.branchCreate()
-                        .setName(branch)
-                        .setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
-                        .setStartPoint("origin/" + branch)
-                        .setForce(true)
-                        .call();
-
-                git.checkout()
-                        .setName(branch)
-                        .call();
-
-            } else {
-                LOG.trace("open repository {} for wiki {}", repository, name);
-                git = Git.open(repository);
             }
-
-            LOG.debug("pull changes from remote for wiki {}", name);
-
-            git.pull()
-                    .setRemote("origin")
-                    .setRemoteBranchName(branch)
-                    .setCredentialsProvider(credentialsProvider(account))
-                    .call();
 
             WikiOptions options = WikiOptions.builder(repository.getAbsolutePath()).build();
 
             return servletCache.get(name, () -> {
                 return servletFactory.create(wiki, options);
             });
-        } catch (IOException | GitAPIException | URISyntaxException | ExecutionException ex) {
+        } catch (IOException | GitAPIException | ExecutionException ex) {
             throw new WikiException("failed to create or update wiki ".concat(name), ex);
         } finally {
-            if(git != null){
+            if (git != null) {
                 git.close();
             }
         }
+    }
+
+    private String getDecodedBranchName(String wikiName) {
+        int index = wikiName.indexOf('/');
+        String branch = wikiName.substring(index + 1);
+
+        try {
+            LOG.debug("branch: " + branch);
+            branch = URLDecoder.decode(branch, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        LOG.debug("branch after decode: " + branch);
+        return branch;
     }
 
     private ScmWikiListStrategy createWikiListStrategy() {
