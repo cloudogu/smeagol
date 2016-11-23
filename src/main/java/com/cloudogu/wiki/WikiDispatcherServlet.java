@@ -113,7 +113,11 @@ public class WikiDispatcherServlet extends HttpServlet {
 
         int indexOfMatrixParameter = path.indexOf(";");
         if(indexOfMatrixParameter != -1){
-            path = path.substring(indexOfMatrixParameter);
+             if(indexOfMatrixParameter > 1){
+                path = path.substring(0,indexOfMatrixParameter-1);
+            } else {
+                return "";
+            }
         }
 
         int indexOfSeparator = path.indexOf(SEPARATOR);
@@ -143,7 +147,11 @@ public class WikiDispatcherServlet extends HttpServlet {
 
         int indexOfMatrixParameter = path.indexOf(";");
         if(indexOfMatrixParameter != -1){
-            path = path.substring(indexOfMatrixParameter);
+            if(indexOfMatrixParameter > 1){
+                path = path.substring(0,indexOfMatrixParameter-1);
+            } else {
+                return "";
+            }
         }
 
         int indexOfSeparator = path.indexOf(SEPARATOR);
@@ -157,7 +165,6 @@ public class WikiDispatcherServlet extends HttpServlet {
         if(indexOfSeparator != -1){
             path = path.substring(0, indexOfSeparator);
         }
-
         return path;
     }
 
