@@ -152,11 +152,10 @@ public class WikiDispatcherServlet extends HttpServlet {
 
     private String getCasLogoutUrl(WikiServerConfiguration config){
         String url = config.getCasUrl();
-        if ("/".equals(url.substring(url.length() - 1 ))) {
-            url = url + "logout";
-        } else {
-            url = url + "/logout";
+        if (!url.endsWith("/")) {
+            url += "/";
         }
+        url += "logout";
         return url;
     }
 
