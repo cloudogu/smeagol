@@ -17,6 +17,8 @@ import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.jasig.cas.client.authentication.AuthenticationFilter;
+import org.jasig.cas.client.session.SingleSignOutFilter;
+import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
 import org.jasig.cas.client.util.HttpServletRequestWrapperFilter;
 import org.jasig.cas.client.validation.Cas30ProxyReceivingTicketValidationFilter;
 import org.slf4j.Logger;
@@ -59,21 +61,25 @@ public class WikiServer {
             SSL.disableCertificateCheck();
         }
         
-        
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath(cfg.getContextPath());
+        // set session timeout to 30 minutes
+        context.getSessionHandler().getSessionManager().setMaxInactiveInterval(1800);
         
         ServletHolder resourceServletHolder = new ServletHolder(DefaultServlet.class);
         resourceServletHolder.setInitParameter("resourceBase", cfg.getStaticPath());
         resourceServletHolder.setInitParameter("pathInfoOnly", "true");
         context.addServlet(resourceServletHolder, "/_static/*");
+
+        Map<String,String> casSettings = cfg.getCasSettings();
         
-        // disable sso for the moment, because it seems to cause trouble with sinatra
-        // context.addEventListener(new SingleSignOutHttpSessionListener());
-        // casFilter(context, SingleSignOutFilter.class, casSettings);
+        // add sso filter
+        context.addEventListener(new SingleSignOutHttpSessionListener());
+        FilterHolder filter = new FilterHolder(SingleSignOutFilter.class);
+        filter.setInitParameters(casSettings);
+        context.addFilter(filter, "/", EnumSet.allOf(DispatcherType.class));
         
         // cas authentication
-        Map<String,String> casSettings = cfg.getCasSettings();
         casFilter(context, Cas30ProxyReceivingTicketValidationFilter.class, casSettings);
         casFilter(context, AuthenticationFilter.class, casSettings);
         casFilter(context, HttpServletRequestWrapperFilter.class, casSettings);
@@ -84,7 +90,7 @@ public class WikiServer {
         
         // main servlet
         context.addServlet(new ServletHolder(new WikiDispatcherServlet(provider)), "/*");
-        
+
         Server server = new Server(cfg.getPort());
         server.setHandler(context);
         try {
