@@ -89,7 +89,7 @@ public class WikiServer {
         context.addFilter(contextFilterHolder, "/*", EnumSet.allOf(DispatcherType.class));
         
         // main servlet
-        context.addServlet(new ServletHolder(new WikiDispatcherServlet(provider)), "/*");
+        context.addServlet(new ServletHolder(new WikiDispatcherServlet(provider, cfg)), "/*");
 
         Server server = new Server(cfg.getPort());
         server.setHandler(context);
