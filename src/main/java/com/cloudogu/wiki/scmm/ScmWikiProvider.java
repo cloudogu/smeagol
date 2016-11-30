@@ -20,23 +20,21 @@ import com.github.sdorra.milieu.Configurations;
 import com.google.common.base.Strings;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import static java.util.Collections.singleton;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
-import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.RefSpec;
-import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,16 +97,16 @@ public class ScmWikiProvider implements WikiProvider {
     public void push(String wiki, String sha1) {
         File directory = getRepositoryDirectory(wiki);
         String branch = getDecodedBranchName(wiki);
-
+        
         Git git = null;
         try {
             git = Git.open(directory);
 
             WikiContext context = WikiContextFactory.getInstance().get();
             Account account = context.getAccount();
-
+            
             CredentialsProvider credentials = credentialsProvider(account);
-
+            
             LOG.debug("pull changes from remote for wiki {} on branch {}", wiki, branch);
             git.pull()
                     .setRemote("origin")
@@ -151,6 +149,7 @@ public class ScmWikiProvider implements WikiProvider {
         }
 
         Git git = null;
+        BufferedWriter output = null;
         try { //TODO: reduce size of try-catch-block
 
             File repository = getRepositoryDirectory(name);
@@ -164,7 +163,13 @@ public class ScmWikiProvider implements WikiProvider {
                         .setBranch(branch)
                         .setCredentialsProvider(credentialsProvider(account))
                         .call();
-                 
+
+                File newRef = new File(repository.getAbsoluteFile() + "/.git/refs/heads/master");
+                newRef.getParentFile().mkdirs();
+                newRef.createNewFile();
+                output = new BufferedWriter(new FileWriter(newRef));
+                output.write("ref: refs/heads/" + branch);
+                
             } else {
                 LOG.trace("open repository {} for wiki {}", repository, name);
                 git = Git.open(repository);
@@ -187,6 +192,9 @@ public class ScmWikiProvider implements WikiProvider {
         } finally {
             if (git != null) {
                 git.close();
+            }
+            if (output != null) {
+                try {output.close();} catch (Exception ex){};
             }
         }
     }
