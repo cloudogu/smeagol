@@ -36,9 +36,11 @@ public class WikiDispatcherServlet extends HttpServlet {
     private static final long serialVersionUID = 7511937785395456331L;
 
     private final WikiProvider provider;
+    private final WikiServerConfiguration configuration;
 
-    public WikiDispatcherServlet(WikiProvider provider) {
+    public WikiDispatcherServlet(WikiProvider provider, WikiServerConfiguration configuration) {
         this.provider = provider;
+        this.configuration = configuration;
     }
 
     @Override
@@ -67,7 +69,7 @@ public class WikiDispatcherServlet extends HttpServlet {
     }
 
     private void renderOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        renderTemplate(response, "overview.html", new Overview(request, provider.getAll()));
+        renderTemplate(response, "overview.html", new Overview(request, provider.getAll(), getCasLogoutUrl(configuration)));
     }
 
     private void renderTemplate(HttpServletResponse response, String tpl, Object ctx) throws IOException {
@@ -127,10 +129,12 @@ public class WikiDispatcherServlet extends HttpServlet {
 
         private final HttpServletRequest request;
         private final Iterable<Wiki> wikis;
+        private final String casLogoutUrl;
 
-        public Overview(HttpServletRequest request, Iterable<Wiki> wikis) {
+        public Overview(HttpServletRequest request, Iterable<Wiki> wikis, String casUrl) {
             this.request = request;
             this.wikis = wikis;
+            this.casLogoutUrl = casUrl;
         }
 
         public HttpServletRequest getRequest() {
@@ -140,6 +144,19 @@ public class WikiDispatcherServlet extends HttpServlet {
         public Iterable<Wiki> getWikis() {
             return wikis;
         }
+
+        public String getCasLogoutUrl() {
+            return casLogoutUrl;
+        }
+    }
+
+    private String getCasLogoutUrl(WikiServerConfiguration config){
+        String url = config.getCasUrl();
+        if (!url.endsWith("/")) {
+            url += "/";
+        }
+        url += "logout";
+        return url;
     }
 
 }
