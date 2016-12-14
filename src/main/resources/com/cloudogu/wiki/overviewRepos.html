@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2016 Cloudogu GmbH. All Rights Reserved.
+
+Copyright notice
+-->
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Smeagol</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <link rel="stylesheet" href="{{request.contextPath}}/_static/ces-theme/dist/css/ces.css" media="screen">
+
+        <!-- favicons -->
+        <link rel="icon" type="image/png" href="{{request.contextPath}}/_static/ces-theme/dist/images/favicon/favicon-64px.png" sizes="64x64"/>
+        <link rel="icon" type="image/png" href="{{request.contextPath}}/_static/ces-theme/dist/images/favicon/favicon-32px.png" sizes="32x32"/>
+        <link rel="icon" type="image/png" href="{{request.contextPath}}/_static/ces-theme/dist/images/favicon/favicon-16px.png" sizes="16x16"/>
+
+        <style>
+            body {
+                padding-top: 60px;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">
+                        <img class="img-responsive" alt="Cloudogu" src="{{request.contextPath}}/_static/ces-theme/dist/images/logo/blib-white-30px.png">
+                    </a>
+                    <a class="navbar-brand" href="#">Smeagol</a>
+                </div>
+                <div collapse="navCollapsed" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav" ng-cloak="">
+                        <li>
+                            <a href="{{casLogoutUrl}}">
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+
+            <h1>Smeagol</h1>
+            <div class="alert alert-info">
+                <p>Welcome to Smeagol, the repository documentation wiki.</p>
+                <p>Below you see a list of all Git repositories on your repository server that you have access to. If 
+                    you want to write documentation for a repository you simply have to add a <em>smeagol.yml</em> file 
+                    to the root of the repository. Once that is done you can use the wiki. Whenever you save changes to 
+                    a wiki Smeagol pushes them to the repository. This way the documentation is always up-to-date and 
+                    where it belongs - close to the code!</p>
+            </div>
+            <h2>Wikis</h2>
+
+            <div class="list-group">
+                {{#wikis}}
+                <a class="list-group-item" href="{{request.contextPath}}{{request.servletPath}}/{{urlEncodedName}}">
+                    <h4>{{displayName}}</h4> 
+                    {{#description}}
+                    <p class="list-group-item-text">{{description}}</p>
+                    {{/description}}
+                </a>
+                {{/wikis}}
+            </div>
+
+        </div>
+    </body>
+</html>
