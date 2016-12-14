@@ -90,7 +90,7 @@ public class WikiServletFactoryTest {
     public void testCreateServlet() throws ServletException, IOException {
         WikiServletFactory servletFactory = new WikiServletFactory(configuration, "test-runner.rb");
 
-        Wiki wiki = new Wiki("repo123", "branch321", "Test", "Test Wiki");
+        Wiki wiki = new Wiki("repo123", "branch321", "Test", "Test Wiki", "");
         WikiOptions options = WikiOptions.builder("test").build();
         HttpServlet servlet = servletFactory.create(wiki, options);
         servlet.service(request, response);
