@@ -29,10 +29,10 @@ public class SessionCacheScmWikiListStrategy extends ScmWikiListStrategy {
 
         List<Wiki> wikis;
         synchronized (session) {
-            wikis = (List<Wiki>) session.getAttribute(ScmWikiProvider.class.getName());
+            wikis = (List<Wiki>) session.getAttribute(SessionCacheScmWikiListStrategy.class.getName());
             if (wikis == null) {
                 wikis = fetchWikis(context);
-                session.setAttribute(ScmWikiProvider.class.getName(), wikis);
+                session.setAttribute(SessionCacheScmWikiListStrategy.class.getName(), wikis);
             }
         }
 
