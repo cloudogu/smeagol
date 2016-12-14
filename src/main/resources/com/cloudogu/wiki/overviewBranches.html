@@ -39,6 +39,15 @@ Copyright notice
                     </a>
                     <a class="navbar-brand" href="#">Smeagol</a>
                 </div>
+                <div collapse="navCollapsed" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav" ng-cloak="">
+                        <li>
+                            <a href="{{casLogoutUrl}}">
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
         <div class="container">
@@ -56,7 +65,7 @@ Copyright notice
 
             <div class="list-group">
                 {{#wikis}}
-                <a class="list-group-item" href="{{request.contextPath}}{{request.servletPath}}/{{name}}">
+                <a class="list-group-item" href="{{request.contextPath}}{{request.servletPath}}/{{urlEncodedName}}">
                     <h4>{{displayName}}</h4> 
                     {{#description}}
                     <p class="list-group-item-text">{{description}}</p>
