@@ -124,7 +124,7 @@ public final class ScmManager {
                 repository.getString("id"),
                 branch,
                 repository.getString("name"),
-                repository.getString("description"),
+                repository.optString("description", ""),
                 revision,
                 repository.getString("url")
         );
