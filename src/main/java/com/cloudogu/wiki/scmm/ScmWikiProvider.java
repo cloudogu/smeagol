@@ -18,6 +18,7 @@ import com.cloudogu.wiki.WikiServerConfiguration;
 import com.cloudogu.wiki.WikiServletFactory;
 import com.github.sdorra.milieu.Configurations;
 import com.google.common.base.Strings;
+import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import java.io.BufferedWriter;
@@ -98,10 +99,7 @@ public class ScmWikiProvider implements WikiProvider {
         File directory = getRepositoryDirectory(wiki);
         String branch = getDecodedBranchName(wiki);
         
-        Git git = null;
-        try {
-            git = Git.open(directory);
-
+        try (Git git = Git.open(directory)) {
             WikiContext context = WikiContextFactory.getInstance().get();
             Account account = context.getAccount();
             
@@ -123,10 +121,6 @@ public class ScmWikiProvider implements WikiProvider {
 
         } catch (GitAPIException | IOException ex) {
             throw new WikiException("failed to push changes back to remote repository", ex);
-        } finally {
-            if(git != null){
-                git.close();
-            }
         }
     }
 
@@ -147,41 +141,16 @@ public class ScmWikiProvider implements WikiProvider {
         if (Strings.isNullOrEmpty(wiki.getRemoteUrl())) {
             throw new WikiException(String.format("wiki %s does not return " + "remote url", name));
         }
-
-        Git git = null;
-        BufferedWriter output = null;
-        try { //TODO: reduce size of try-catch-block
+        
+        try {
 
             File repository = getRepositoryDirectory(name);
-
-            if (!repository.exists()) {
-                LOG.info("clone repository {} for wiki {}", repository, name);
-                git = Git.cloneRepository()
-                        .setURI(wiki.getRemoteUrl())
-                        .setDirectory(repository)
-                        .setBranchesToClone(singleton("refs/head" + branch))
-                        .setBranch(branch)
-                        .setCredentialsProvider(credentialsProvider(account))
-                        .call();
-
-                File newRef = new File(repository.getAbsoluteFile() + "/.git/refs/heads/master");
-                newRef.getParentFile().mkdirs();
-                newRef.createNewFile();
-                output = new BufferedWriter(new FileWriter(newRef));
-                output.write("ref: refs/heads/" + branch);
-                
+            if ( repository.exists() ) {
+                pullChanges(wiki, account, repository, branch);
             } else {
-                LOG.trace("open repository {} for wiki {}", repository, name);
-                git = Git.open(repository);
-                LOG.debug("pull changes from remote for wiki {}", name);
-
-                git.pull()
-                        .setRemote("origin")
-                        .setRemoteBranchName(branch)
-                        .setCredentialsProvider(credentialsProvider(account))
-                        .call();
+                createClone(wiki, account, repository, branch);
             }
-
+        
             WikiOptions options = WikiOptions.builder(repository.getAbsolutePath()).build();
 
             return servletCache.get(name, () -> {
@@ -189,15 +158,47 @@ public class ScmWikiProvider implements WikiProvider {
             });
         } catch (IOException | GitAPIException | ExecutionException ex) {
             throw new WikiException("failed to create or update wiki ".concat(name), ex);
-        } finally {
-            if (git != null) {
-                git.close();
-            }
-            if (output != null) {
-                try {output.close();} catch (Exception ex){};
-            }
         }
     }
+    
+    private void pullChanges(ScmWiki wiki, Account account, File direcory, String branch) 
+            throws GitAPIException, IOException {
+        LOG.trace("open repository {} for wiki {}", direcory, wiki.getName());
+        try (Git git = Git.open(direcory)) {
+            LOG.debug("pull changes from remote for wiki {}", wiki.getName());
+                git.pull()
+                    .setRemote("origin")
+                    .setRemoteBranchName(branch)
+                    .setCredentialsProvider(credentialsProvider(account))
+                    .call();            
+        }
+    }
+    
+    private void createClone(ScmWiki wiki, Account account, File direcory, String branch) 
+            throws GitAPIException, IOException {
+        LOG.info("clone repository {} for wiki {}", direcory, wiki.getName());
+        Git.cloneRepository()
+                  .setURI(wiki.getRemoteUrl())
+                  .setDirectory(direcory)
+                  .setBranchesToClone(singleton("refs/head" + branch))
+                  .setBranch(branch)
+                  .setCredentialsProvider(credentialsProvider(account))
+                  .call()
+                  .close();
+        
+        File newRef = new File(direcory, ".git/refs/heads/master");
+        File refDirectory = newRef.getParentFile();
+        if (!refDirectory.exists() && !refDirectory.mkdirs()) {
+            throw new IOException("failed to create parent directory " + refDirectory);
+        }
+        if (!newRef.exists() && !newRef.createNewFile()) {
+            throw new IOException("failed to create parent directory");
+        }
+        try (BufferedWriter output = new BufferedWriter(new FileWriter(newRef))) {
+            output.write("ref: refs/heads/" + branch);
+        }
+    }
+
 
     private String getRepositoryId(String wikiName) {
         int index = wikiName.indexOf('/');
@@ -213,12 +214,10 @@ public class ScmWikiProvider implements WikiProvider {
         String branch = wikiName.substring(index + 1);
 
         try {
-            LOG.debug("branch: " + branch);
             branch = URLDecoder.decode(branch, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            throw Throwables.propagate(e);
         }
-        LOG.debug("branch after decode: " + branch);
         return branch;
     }
 

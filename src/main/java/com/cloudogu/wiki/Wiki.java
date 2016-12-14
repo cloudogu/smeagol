@@ -8,6 +8,8 @@ package com.cloudogu.wiki;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Wiki describes a single wiki instance in the application context.
@@ -15,6 +17,8 @@ import java.net.URLEncoder;
  * @author Sebastian Sdorra
  */
 public class Wiki {
+    
+    private static final Logger LOG = LoggerFactory.getLogger(Wiki.class);
 
     private final static String SEPARATOR = "/";
 
@@ -49,9 +53,9 @@ public class Wiki {
         try {
             return this.repositoryId + SEPARATOR + URLEncoder.encode(branchName, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            LOG.warn("failed to encode wiki name", e);
         }
-        return this.getName(); //TODO: what to do?
+        return this.getName();
     }
     
     public String getDisplayName() {
