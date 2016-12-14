@@ -12,6 +12,7 @@ TRUSTSTORE="${SMEAGOL_HOME}/truststore.jks"
 create_truststore.sh "${TRUSTSTORE}" > /dev/null
 
 java -Djava.awt.headless=true \
+  -Dfile.encoding=UTF-8 \
   -Djava.net.preferIPv4Stack=true \
   -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
   -Djavax.net.ssl.trustStorePassword=changeit \
