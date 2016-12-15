@@ -1,4 +1,4 @@
-FROM registry.cloudogu.com/official/java:8u111-1
+FROM registry.cloudogu.com/official/java:8u111-2
 MAINTAINER Sebastian Sdorra <sebastian.sdorra@cloudogu.com>
 
 COPY dist /app
