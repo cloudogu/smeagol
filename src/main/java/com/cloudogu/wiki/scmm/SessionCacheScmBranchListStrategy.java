@@ -28,13 +28,18 @@ public class SessionCacheScmBranchListStrategy extends ScmBranchListStrategy {
 
         List<Wiki> wikis;
         synchronized (session) {
-            wikis = (List<Wiki>) session.getAttribute(SessionCacheScmBranchListStrategy.class.getName());
+            String cacheKey = cacheKey(repository);
+            wikis = (List<Wiki>) session.getAttribute(cacheKey);
             if (wikis == null) {
                 wikis = fetchWikis(context, repository);
-                session.setAttribute(SessionCacheScmBranchListStrategy.class.getName(), wikis);
+                session.setAttribute(cacheKey, wikis);
             }
         }
 
         return wikis;
+    }
+
+    private String cacheKey(String repository) {
+        return SessionCacheScmBranchListStrategy.class.getName().concat(":").concat(repository);
     }
 }
