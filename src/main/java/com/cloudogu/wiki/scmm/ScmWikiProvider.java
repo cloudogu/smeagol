@@ -185,17 +185,18 @@ public class ScmWikiProvider implements WikiProvider {
                   .setCredentialsProvider(credentialsProvider(account))
                   .call()
                   .close();
-        
-        File newRef = new File(direcory, ".git/refs/heads/master");
-        File refDirectory = newRef.getParentFile();
-        if (!refDirectory.exists() && !refDirectory.mkdirs()) {
-            throw new IOException("failed to create parent directory " + refDirectory);
-        }
-        if (!newRef.exists() && !newRef.createNewFile()) {
-            throw new IOException("failed to create parent directory");
-        }
-        try (BufferedWriter output = new BufferedWriter(new FileWriter(newRef))) {
-            output.write("ref: refs/heads/" + branch);
+        if (!"master".equals(branch)) {
+            File newRef = new File(direcory, ".git/refs/heads/master");
+            File refDirectory = newRef.getParentFile();
+            if (!refDirectory.exists() && !refDirectory.mkdirs()) {
+                throw new IOException("failed to create parent directory " + refDirectory);
+            }
+            if (!newRef.exists() && !newRef.createNewFile()) {
+                throw new IOException("failed to create parent directory");
+            }
+            try (BufferedWriter output = new BufferedWriter(new FileWriter(newRef))) {
+                output.write("ref: refs/heads/" + branch);
+            }
         }
     }
 
