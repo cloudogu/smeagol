@@ -4,6 +4,12 @@ require 'gollum/app'
 require 'rack/request'
 require 'rack/response'
 
+# fix table rendering
+# https://github.com/gollum/gollum-lib/issues/227
+GitHub::Markup::Markdown::MARKDOWN_GEMS['kramdown'] = proc { |content|
+  Kramdown::Document.new(content, :auto_ids => false).to_html
+}
+
 module Precious
   class App < Sinatra::Base
 
