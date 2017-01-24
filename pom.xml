@@ -45,13 +45,6 @@
             <version>4.0.1</version>
             <type>gem</type>
         </dependency>
-
-        <dependency>
-            <groupId>rubygems</groupId>
-            <artifactId>github-markdown</artifactId>
-            <version>0.6.9</version>
-            <type>gem</type>
-        </dependency>
         
         <!-- configuration -->
         
