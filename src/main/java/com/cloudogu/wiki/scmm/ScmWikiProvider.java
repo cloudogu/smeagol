@@ -77,17 +77,14 @@ public class ScmWikiProvider implements WikiProvider {
     @Override
     public HttpServlet getServlet(String name) {
         HttpServlet servlet;
-        if (configuration.getStage() == Stage.DEVELOPMENT) {
-            servlet = createServlet(name);
-        } else {
-            WikiContext context = WikiContextFactory.getInstance().get();
-            final HttpSession session = context.getRequest().getSession(true);
-            synchronized (session) {
-                servlet = (HttpServlet) session.getAttribute("servlet." + name);
-                if (servlet == null) {
-                    servlet = createServlet(name);
-                    session.setAttribute("servlet." + name, servlet);
-                }
+
+        WikiContext context = WikiContextFactory.getInstance().get();
+        final HttpSession session = context.getRequest().getSession(true);
+        synchronized (session) {
+            servlet = (HttpServlet) session.getAttribute("servlet." + name);
+            if (servlet == null) {
+                servlet = createServlet(name);
+                session.setAttribute("servlet." + name, servlet);
             }
         }
 
@@ -146,7 +143,7 @@ public class ScmWikiProvider implements WikiProvider {
 
             File repository = getRepositoryDirectory(name);
             if ( repository.exists() ) {
-                pullChanges(wiki, account, repository, branch);
+                pullChanges(account, repository, branch);
             } else {
                 createClone(wiki, account, repository, branch);
             }
@@ -161,11 +158,11 @@ public class ScmWikiProvider implements WikiProvider {
         }
     }
     
-    private void pullChanges(ScmWiki wiki, Account account, File direcory, String branch) 
+    public void pullChanges(Account account, File direcory, String branch) 
             throws GitAPIException, IOException {
-        LOG.trace("open repository {} for wiki {}", direcory, wiki.getName());
+        LOG.trace("open repository {}", direcory);
         try (Git git = Git.open(direcory)) {
-            LOG.debug("pull changes from remote for wiki {}", wiki.getName());
+            LOG.debug("pull changes from remote for repository {}", direcory);
                 git.pull()
                     .setRemote("origin")
                     .setRemoteBranchName(branch)
@@ -210,7 +207,7 @@ public class ScmWikiProvider implements WikiProvider {
         return repository;
     }
     
-    private String getDecodedBranchName(String wikiName) {
+    public String getDecodedBranchName(String wikiName) {
         int index = wikiName.indexOf('/');
         String branch = wikiName.substring(index + 1);
 
@@ -223,41 +220,25 @@ public class ScmWikiProvider implements WikiProvider {
     }
 
     private ScmWikiListStrategy createWikiListStrategy() {
-        ScmWikiListStrategy strategy;
-        if (configuration.getStage() == Stage.DEVELOPMENT) {
-            LOG.warn("use non caching wiki list strategy for development");
-            strategy = new DevelopmentScmWikiListStrategy(scmConfiguration);
-        } else {
-            strategy = new SessionCacheScmWikiListStrategy(scmConfiguration);
-        }
+        ScmWikiListStrategy strategy = new SessionCacheScmWikiListStrategy(scmConfiguration);
         return strategy;
     }
 
     private ScmBranchListStrategy createScmBranchListStrategy() {
-        ScmBranchListStrategy strategy;
-        if (configuration.getStage() == Stage.DEVELOPMENT) {
-            LOG.warn("use non caching branch list strategy for development");
-            strategy = new DevelopmentScmBranchListStrategy(scmConfiguration);
-        } else {
-            strategy = new SessionCacheScmBranchListStrategy(scmConfiguration);
-        }
+        ScmBranchListStrategy strategy = new SessionCacheScmBranchListStrategy(scmConfiguration);
         return strategy;
     }
 
     private Cache<String, HttpServlet> createServletCache() {
         CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
-        if (configuration.getStage() == Stage.DEVELOPMENT) {
-            LOG.warn("disable servlet cache for development");
-            cacheBuilder = cacheBuilder.expireAfterAccess(10, TimeUnit.SECONDS);
-        }
         return cacheBuilder.build();
     }
 
-    private CredentialsProvider credentialsProvider(Account account) {
+    public CredentialsProvider credentialsProvider(Account account) {
         return new UsernamePasswordCredentialsProvider(account.getUsername(), account.getPassword());
     }
 
-    private File getRepositoryDirectory(String name) {
+    public File getRepositoryDirectory(String name) {
         File directory = new File(configuration.getHomeDirectory());
         if (!directory.exists() && !directory.mkdirs()) {
             throw new WikiException("could not create smeagol directory");
