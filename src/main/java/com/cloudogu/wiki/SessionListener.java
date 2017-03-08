@@ -24,13 +24,11 @@ public class SessionListener implements HttpSessionListener {
     
     @Override
     public void sessionCreated(HttpSessionEvent hse) {
-        System.out.println("session created");
         sessions.addSession(hse.getSession());
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent hse) {
-        System.out.println("session destroyed");
     }
     
 }

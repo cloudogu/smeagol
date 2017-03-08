@@ -27,7 +27,6 @@ public class SessionStore {
     }
     
     public Iterator<HttpSession> getAll(){
-        System.out.println("Saved "+sessionStore.size()+" sessions in store");
         return sessionStore.iterator();
     }
 }
