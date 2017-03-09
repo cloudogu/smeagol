@@ -19,7 +19,7 @@ public class SessionStore {
     Set<HttpSession> sessionStore;
     
     public SessionStore(){
-        sessionStore = Collections.newSetFromMap(new WeakHashMap());
+        sessionStore = Collections.newSetFromMap(Collections.synchronizedMap(new WeakHashMap()));
     }
     
     public boolean addSession(HttpSession session){
@@ -28,5 +28,9 @@ public class SessionStore {
     
     public Iterator<HttpSession> getAll(){
         return sessionStore.iterator();
+    }
+    
+    public int getSize(){
+        return sessionStore.size();
     }
 }
