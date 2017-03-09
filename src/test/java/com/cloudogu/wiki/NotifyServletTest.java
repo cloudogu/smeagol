@@ -1,0 +1,92 @@
+/*
+ * Copyright (c) 2016 Cloudogu GmbH. All Rights Reserved.
+ * 
+ * Copyright notice
+ */
+package com.cloudogu.wiki;
+
+import com.cloudogu.wiki.scmm.NotifyServlet;
+import com.cloudogu.wiki.scmm.ScmWikiProvider;
+import com.google.common.collect.ImmutableSet;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Set;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.eclipse.jgit.api.errors.GitAPIException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import static org.mockito.Mockito.*;
+import org.mockito.runners.MockitoJUnitRunner;
+
+/**
+ *
+ * @author Michael Behlendorf
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class NotifyServletTest {
+    
+    @Mock
+    private SessionStore sessionStore;
+    
+    @Mock
+    private ScmWikiProvider wikiProvider;
+    
+    @Mock
+    private HttpServletRequest request;
+    
+    @Mock
+    private HttpServletResponse response;
+    
+    @Mock
+    private HttpSession session;
+    
+    
+    NotifyServlet servlet;
+    
+    
+    
+    private final static String REPOSITORY = "TestRepo";
+    private final static String BRANCH = "TestBranch";
+    private final static String ACCOUNT = "com.cloudogu.wiki.Account";
+    private Account account;
+            
+    @Before
+    public void setUpMocks(){
+        account = new Account("name", "displayName", "mail");
+        List<HttpSession> sessions = Arrays.asList(session);
+        
+        servlet = new NotifyServlet(sessionStore, wikiProvider);
+
+        when(sessionStore.getAll()).thenReturn(sessions.iterator());
+        
+        Set<String> attributes = ImmutableSet.of(ACCOUNT, "servlet."+REPOSITORY+"/"+BRANCH);
+        Enumeration<String> attributesEnum = java.util.Collections.enumeration(attributes);
+        when(session.getAttributeNames()).thenReturn(attributesEnum);
+        when(session.getAttribute(ACCOUNT)).thenReturn(account);
+        
+    }
+    
+    @Test
+    public void testDoGet() throws IOException, ServletException, GitAPIException {
+        when(request.getParameter("id")).thenReturn(REPOSITORY);
+        when(request.getMethod()).thenReturn("GET");
+        
+        File directory = new File("home",(REPOSITORY+"/"+BRANCH));
+        when(wikiProvider.getRepositoryDirectory(REPOSITORY+"/"+BRANCH)).thenReturn(directory);
+
+        servlet.service(request, response);
+        
+        
+        verify(wikiProvider).pullChanges(account, directory, BRANCH);
+    }
+    
+}
