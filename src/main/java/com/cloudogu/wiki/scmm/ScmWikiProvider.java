@@ -6,7 +6,6 @@
 package com.cloudogu.wiki.scmm;
 
 import com.cloudogu.wiki.Account;
-import com.cloudogu.wiki.Stage;
 import com.cloudogu.wiki.Wiki;
 import com.cloudogu.wiki.WikiContext;
 import com.cloudogu.wiki.WikiContextFactory;
@@ -29,7 +28,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import static java.util.Collections.singleton;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 import org.eclipse.jgit.api.Git;
@@ -207,15 +205,19 @@ public class ScmWikiProvider implements WikiProvider {
         return repository;
     }
     
-    public String getDecodedBranchName(String wikiName) {
-        int index = wikiName.indexOf('/');
-        String branch = wikiName.substring(index + 1);
-
+    public static String getDecodedBranchName(String wikiName) {
+        String branch = getBranchName(wikiName);
         try {
             branch = URLDecoder.decode(branch, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw Throwables.propagate(e);
         }
+        return branch;
+    }
+    
+    public static String getBranchName(String wikiName) {
+        int index = wikiName.indexOf('/');
+        String branch = wikiName.substring(index + 1);
         return branch;
     }
 
