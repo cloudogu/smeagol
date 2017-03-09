@@ -9,10 +9,10 @@ import com.cloudogu.wiki.Account;
 import com.cloudogu.wiki.SessionStore;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,14 +49,14 @@ public class NotifyServlet extends HttpServlet {
 
     private void updateRepository(String repositoryToUpdate) {
         Iterator<HttpSession> sessionIter = sessions.getAll();
-        List updatedDirectories = new ArrayList();
+        Set<String> updatedDirectories = new HashSet<>();
         while (sessionIter.hasNext()) {
             HttpSession s = sessionIter.next();
             checkForServletsInSession(s, updatedDirectories, repositoryToUpdate);
         }
     }
 
-    private void checkForServletsInSession(HttpSession session, List updatedDirectories, String repositoryToUpdate) {
+    private void checkForServletsInSession(HttpSession session, Set<String> updatedDirectories, String repositoryToUpdate) {
         synchronized (session) {
             Enumeration<String> attributes = session.getAttributeNames();
             Account account = (Account) session.getAttribute("com.cloudogu.wiki.Account");
@@ -68,23 +68,24 @@ public class NotifyServlet extends HttpServlet {
 
     }
 
-    private void checkIfAttributeIsServlet(List updatedDirectories, Account account, String repositoryToUpdate, String attribute) {
+    private void checkIfAttributeIsServlet(Set<String> updatedDirectories, Account account, String repositoryToUpdate, String attribute) {
         if (attribute.startsWith(COMMON_START)) {
-            String directory = attribute.substring(COMMON_START.length());
-            if (directory.startsWith(repositoryToUpdate) && !updatedDirectories.contains(directory)) {
-                updateDirectory(directory, updatedDirectories, account);
+            String wikiName = attribute.substring(COMMON_START.length());            
+            if (wikiName.startsWith(repositoryToUpdate) && !updatedDirectories.contains(wikiName)) {
+                updateDirectory(wikiName, updatedDirectories, account);
             }
         }
     }
 
-    private void updateDirectory(String directory, List updatedDirectories, Account account) {
-        LOG.info("found repository {} for user {}", directory, account.getUsername());
-        File dir = provider.getRepositoryDirectory(directory);
-        String branch = provider.getDecodedBranchName(directory);
+    private void updateDirectory(String wikiName, Set<String> updatedDirectories, Account account) {
+        LOG.info("found repository {} for user {}", wikiName, account.getUsername());
+        File dir = provider.getRepositoryDirectory(wikiName);
+        String branch = provider.getDecodedBranchName(wikiName);
+        System.out.println("branch: "+branch);
         try {
             LOG.info("pull changes");
             provider.pullChanges(account, dir, branch);
-            updatedDirectories.add(directory);
+            updatedDirectories.add(wikiName);
         } catch (GitAPIException | IOException ex) {
             LOG.warn(null, ex);
         }
