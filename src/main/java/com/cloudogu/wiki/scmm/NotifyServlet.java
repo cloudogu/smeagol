@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * NotifyServlet updates all currently open wikis of a given repository.
+ * 
  * @author Michael Behlendorf
  */
 public class NotifyServlet extends HttpServlet {

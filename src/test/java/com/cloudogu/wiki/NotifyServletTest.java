@@ -27,7 +27,8 @@ import static org.mockito.Mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- *
+ * Unit tests for {@link NotifyServlet}.
+ * 
  * @author Michael Behlendorf
  */
 @RunWith(MockitoJUnitRunner.class)

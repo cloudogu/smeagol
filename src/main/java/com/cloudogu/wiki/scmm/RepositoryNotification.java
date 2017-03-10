@@ -18,7 +18,9 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * RepositoryNotification searches for open wikis via sessions and updates them 
+ * for a given repository.
+ * 
  * @author Michael Behlendorf
  */
 public class RepositoryNotification {
