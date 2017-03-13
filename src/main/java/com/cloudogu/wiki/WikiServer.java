@@ -6,6 +6,8 @@
 
 package com.cloudogu.wiki;
 
+import com.cloudogu.wiki.scmm.NotifyServlet;
+import com.cloudogu.wiki.scmm.ScmWikiProvider;
 import com.google.common.base.Throwables;
 import java.util.EnumSet;
 import java.util.Map;
@@ -33,15 +35,17 @@ public class WikiServer {
 
     private static final Logger LOG = LoggerFactory.getLogger(WikiServer.class);
     
-    private final WikiProvider provider;
+    private final ScmWikiProvider provider;
+    private final SessionStore sessions;
 
     /**
      * Constructs a new server.
      * 
      * @param provider provider which is used to retrieve and render the wikis
      */
-    public WikiServer(WikiProvider provider) {
+    public WikiServer(ScmWikiProvider provider) {
         this.provider = provider;
+        this.sessions = new SessionStore();
     }
     
     /**
@@ -84,9 +88,15 @@ public class WikiServer {
         casFilter(context, AuthenticationFilter.class, casSettings);
         casFilter(context, HttpServletRequestWrapperFilter.class, casSettings);
         
+        // listener
+        context.getSessionHandler().addEventListener(new SessionListener(sessions));
+        
         // context
-        FilterHolder contextFilterHolder = new FilterHolder(new WikiContextFilter(cfg, provider));
+        FilterHolder contextFilterHolder = new FilterHolder(new WikiContextFilter(cfg, provider, sessions));
         context.addFilter(contextFilterHolder, "/*", EnumSet.allOf(DispatcherType.class));
+        
+        // rest servlets
+        context.addServlet(new ServletHolder(new NotifyServlet(sessions, provider)),"/rest/api/v1/notify");
         
         // main servlet
         context.addServlet(new ServletHolder(new WikiDispatcherServlet(provider, cfg)), "/*");
