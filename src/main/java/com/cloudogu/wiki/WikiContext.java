@@ -22,6 +22,7 @@ public class WikiContext {
     private final WikiProvider provider;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
+    private final SessionStore sessions;
 
     /**
      * Constructs a new WikiContext.
@@ -30,12 +31,18 @@ public class WikiContext {
      * @param provider wiki provider implementation
      * @param request http request
      * @param response http response
+     * @param sessions session store
      */
-    public WikiContext(WikiServerConfiguration configuration, WikiProvider provider, HttpServletRequest request, HttpServletResponse response) {
+    public WikiContext(WikiServerConfiguration configuration, WikiProvider provider, HttpServletRequest request, HttpServletResponse response, SessionStore sessions) {
         this.configuration = configuration;
         this.provider = provider;
         this.request = request;
         this.response = response;
+        this.sessions = sessions;
+    }
+    
+    public SessionStore getSessions(){
+        return sessions;
     }
     
     public HttpServletRequest getRequest() {

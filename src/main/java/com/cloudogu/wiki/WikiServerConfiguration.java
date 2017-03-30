@@ -81,6 +81,7 @@ public class WikiServerConfiguration {
             .put("proxyCallbackUrl", serviceUrl + "/proxyCallbackUrl")
             .put("proxyReceptorUrl", contextPath + "/proxyCallbackUrl")
             .put("acceptAnyProxy", "true")
+            .put("ignorePattern", "rest/api/v1/notify*")
             .build();
     }
     
