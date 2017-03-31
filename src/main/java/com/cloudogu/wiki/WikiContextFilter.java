@@ -25,16 +25,19 @@ public class WikiContextFilter implements Filter {
 
     private final WikiServerConfiguration configuration;
     private final WikiProvider provider;
+    private final SessionStore sessions;
 
     /**
      * Constructs a new WikiContextFilter.
      * 
      * @param configuration main application configuration
      * @param provider wiki context provider
+     * @param sessions session store
      */
-    public WikiContextFilter(WikiServerConfiguration configuration, WikiProvider provider) {
+    public WikiContextFilter(WikiServerConfiguration configuration, WikiProvider provider, SessionStore sessions) {
         this.configuration = configuration;
         this.provider = provider;
+        this.sessions = sessions;
     }
     
     @Override
@@ -46,7 +49,7 @@ public class WikiContextFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         WikiContextFactory factory = WikiContextFactory.getInstance();
         factory.begin(
-            new WikiContext(configuration, provider, (HttpServletRequest)request, (HttpServletResponse)response)
+            new WikiContext(configuration, provider, (HttpServletRequest)request, (HttpServletResponse)response, sessions)
         );
         try {
             chain.doFilter(request, response);
