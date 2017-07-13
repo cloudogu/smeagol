@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2016 Cloudogu GmbH. All Rights Reserved.
+
+Copyright notice
+-->
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Smeagol</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <link rel="stylesheet" href="{{request.contextPath}}/_static/ces-theme/dist/css/ces.css" media="screen">
+
+        <!-- favicons -->
+        <link rel="icon" type="image/png" href="{{request.contextPath}}/_static/ces-theme/dist/images/favicon/favicon-64px.png" sizes="64x64"/>
+        <link rel="icon" type="image/png" href="{{request.contextPath}}/_static/ces-theme/dist/images/favicon/favicon-32px.png" sizes="32x32"/>
+        <link rel="icon" type="image/png" href="{{request.contextPath}}/_static/ces-theme/dist/images/favicon/favicon-16px.png" sizes="16x16"/>
+
+        <style>
+            body {
+                padding-top: 60px;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Navigation umschalten</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">
+                        <img class="img-responsive" alt="Cloudogu" src="{{request.contextPath}}/_static/ces-theme/dist/images/logo/blib-white-30px.png">
+                    </a>
+                    <a class="navbar-brand" href="{{request.contextPath}}">
+                        Smeagol
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="{{casLogoutUrl}}">
+                                Abmelden
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
