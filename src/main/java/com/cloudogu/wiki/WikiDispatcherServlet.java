@@ -11,6 +11,8 @@ import com.github.mustachejava.MustacheFactory;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Locale;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -50,11 +52,13 @@ public class WikiDispatcherServlet extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String repositoryId = getRepositoryId(req);
         String branchName = getBranchName(req);
+        Enumeration locales = req.getLocales();
+        Locale locale = determineLocale(locales);
 
         if (Strings.isNullOrEmpty(repositoryId)) {
-            renderOverview(req, resp);
+            renderOverview(req, resp, locale);
         } else if (Strings.isNullOrEmpty(branchName)) {
-            renderBranchOverview(req, resp);
+            renderBranchOverview(req, resp, locale);
         } else {
             String wikiName = repositoryId;
             if(!Strings.isNullOrEmpty(branchName)){
@@ -65,26 +69,34 @@ public class WikiDispatcherServlet extends HttpServlet {
                 if (servlet != null) {
                     servlet.service(wrap(req, wikiName), resp);
                 } else {
-                    renderNotFound(req, resp);
+                    renderNotFound(req, resp, locale);
                 }
             } catch (WikiNotFoundException ex) {
                 LOG.trace("could not find wiki", ex);
-                renderNotFound(req, resp);
+                renderNotFound(req, resp, locale);
             }
         }
     }
 
-    private void renderNotFound(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void renderNotFound(HttpServletRequest request, HttpServletResponse response, Locale locale) throws IOException {
         response.setStatus(404);
         renderTemplate(response, "notfound.html", new NotFound(request));
     }
 
-    private void renderOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        renderTemplate(response, "overviewRepos.html", new Overview(request, provider.getAll(), getCasLogoutUrl(configuration)));
+    private void renderOverview(HttpServletRequest request, HttpServletResponse response, Locale locale) throws IOException {
+        if (Locale.GERMAN.equals(locale)) {
+            renderTemplate(response, "overviewRepos_de.html", new Overview(request, provider.getAll(), getCasLogoutUrl(configuration)));
+        } else {
+            renderTemplate(response, "overviewRepos.html", new Overview(request, provider.getAll(), getCasLogoutUrl(configuration)));
+        }
     }
 
-    private void renderBranchOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        renderTemplate(response, "overviewBranches.html", new Overview(request, provider.getAllBranches(getRepositoryId(request)), getCasLogoutUrl(configuration)));
+    private void renderBranchOverview(HttpServletRequest request, HttpServletResponse response, Locale locale) throws IOException {
+        if (Locale.GERMAN.equals(locale)) {
+            renderTemplate(response, "overviewBranches_de.html", new Overview(request, provider.getAllBranches(getRepositoryId(request)), getCasLogoutUrl(configuration)));
+        } else {
+            renderTemplate(response, "overviewBranches.html", new Overview(request, provider.getAllBranches(getRepositoryId(request)), getCasLogoutUrl(configuration)));
+        }
     }
 
     private void renderTemplate(HttpServletResponse response, String tpl, Object ctx) throws IOException {
@@ -168,6 +180,18 @@ public class WikiDispatcherServlet extends HttpServlet {
             path = path.substring(0, indexOfSeparator);
         }
         return path;
+    }
+
+    private Locale determineLocale(Enumeration locales) {
+        while (locales.hasMoreElements()) {
+            Locale locale = (Locale) locales.nextElement();
+            // Use german if possible, otherwise use english
+            if ("de".equals(locale.toString()) || "de_DE".equals(locale.toString())
+                    || "de_AT".equals(locale.toString()) || "de_CH".equals(locale.toString())) {
+                return Locale.GERMAN;
+            }
+        }
+        return Locale.ENGLISH;
     }
 
     private static class DispatchHttpServletRequestWrapper extends HttpServletRequestWrapper {
