@@ -10,6 +10,9 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -54,6 +57,7 @@ public class WikiDispatcherServlet extends HttpServlet {
         String branchName = getBranchName(req);
         Enumeration locales = req.getLocales();
         Locale locale = determineLocale(locales);
+        System.out.println("locale: "+locale.toString());
 
         if (Strings.isNullOrEmpty(repositoryId)) {
             renderOverview(req, resp, locale);
@@ -80,7 +84,11 @@ public class WikiDispatcherServlet extends HttpServlet {
 
     private void renderNotFound(HttpServletRequest request, HttpServletResponse response, Locale locale) throws IOException {
         response.setStatus(404);
-        renderTemplate(response, "notfound.html", new NotFound(request));
+        if (Locale.GERMAN.equals(locale)) {
+            renderTemplate(response, "notfound_de.html", new NotFound(request));
+        } else {
+            renderTemplate(response, "notfound.html", new NotFound(request));
+        }
     }
 
     private void renderOverview(HttpServletRequest request, HttpServletResponse response, Locale locale) throws IOException {

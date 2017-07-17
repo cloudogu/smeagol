@@ -43,6 +43,15 @@ Precious::App.set(:default_markup, :markdown)
 Precious::App.set(:wiki_options, wiki_options)
 Precious::App.set(:wikiContextFactory, wikiContextFactory)
 
+locale = wikiContextFactory.get().getRequest().getLocale()
+if locale.to_s == "de"
+    dir = File.dirname(File.expand_path(__FILE__))
+# TODO: Set correct path for template resources
+    Precious::App.set(:mustache, {:templates => "#{dir}/src/main/resources/templates/"})
+    puts "Setting german templates"
+else
+    puts "Do not set german templates"
+end
 
 Gollum::Hook.register(:post_commit, :hook_id) do |committer, sha1|
   provider = wikiContextFactory.get().getProvider()

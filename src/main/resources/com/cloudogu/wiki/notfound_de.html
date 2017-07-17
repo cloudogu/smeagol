@@ -1,0 +1,21 @@
+{{> header}}
+
+<h1>Not Found</h1>
+
+<div class="alert alert-warning">
+    <p>Das angeforderte Wiki wurde nicht gefunden. This could have several reasons:</p>
+    <ul>
+        <li>There is no repository for the wiki on the target repository server</li>
+        <li>The repository is not a Git repository</li>
+        <li>You don't have access to the repository</li>
+        <li>The repository does not contain a <i>.smeagol.yml</i> file</li>
+    </ul>
+</div>
+
+<div>
+    <a class="btn btn-default" href="{{request.contextPath}}">
+        Back to Repository Overview
+    </a>
+</div>
+
+{{> footer}}
