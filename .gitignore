@@ -56,5 +56,5 @@ hs_err_pid*
 
 # jrebel
 rebel.xml
-/src/main/webapp/
+/src/main/webapp/ces-theme/
 node_modules

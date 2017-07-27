@@ -79,14 +79,19 @@ public class ScmWikiProvider implements WikiProvider {
         WikiContext context = WikiContextFactory.getInstance().get();
         final HttpSession session = context.getRequest().getSession(true);
         synchronized (session) {
-            servlet = (HttpServlet) session.getAttribute("servlet." + name);
+            String cacheKey = createCacheKey(context, name);
+            servlet = (HttpServlet) session.getAttribute(cacheKey);
             if (servlet == null) {
-                servlet = createServlet(name);
-                session.setAttribute("servlet." + name, servlet);
+                servlet = createServlet(name, cacheKey);
+                session.setAttribute(cacheKey, servlet);
             }
         }
 
         return servlet;
+    }
+
+    private String createCacheKey(WikiContext context, String name) {
+        return "servlet." + name + "_" + context.getLocale().getLanguage();
     }
 
     @Override
@@ -119,7 +124,7 @@ public class ScmWikiProvider implements WikiProvider {
         }
     }
 
-    private HttpServlet createServlet(String name) {
+    private HttpServlet createServlet(String name, String cacheKey) {
         LOG.trace("try to create servlet for scm repository {}", name);
         String repositoryId = getRepositoryId(name);
         String branch = getDecodedBranchName(name);
@@ -148,7 +153,7 @@ public class ScmWikiProvider implements WikiProvider {
         
             WikiOptions options = WikiOptions.builder(repository.getAbsolutePath()).build();
 
-            return servletCache.get(name, () -> {
+            return servletCache.get(cacheKey, () -> {
                 return servletFactory.create(wiki, options);
             });
         } catch (IOException | GitAPIException | ExecutionException ex) {

@@ -10,15 +10,17 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
-import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.swing.text.View;
+import java.io.IOException;
 
 /**
  * The dispatcher servlet takes the current requested name of the wiki and
@@ -76,21 +78,26 @@ public class WikiDispatcherServlet extends HttpServlet {
 
     private void renderNotFound(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(404);
-        renderTemplate(response, "notfound.html", new NotFound(request));
+        renderTemplate(response, "notfound", new NotFound(request));
     }
 
     private void renderOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        renderTemplate(response, "overviewRepos.html", new Overview(request, provider.getAll(), getCasLogoutUrl(configuration)));
+        renderTemplate(response, "overviewRepos", new Overview(request, provider.getAll(), getCasLogoutUrl(configuration)));
     }
 
     private void renderBranchOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        renderTemplate(response, "overviewBranches.html", new Overview(request, provider.getAllBranches(getRepositoryId(request)), getCasLogoutUrl(configuration)));
+        renderTemplate(response, "overviewBranches", new Overview(request, provider.getAllBranches(getRepositoryId(request)), getCasLogoutUrl(configuration)));
     }
 
-    private void renderTemplate(HttpServletResponse response, String tpl, Object ctx) throws IOException {
+    private void renderTemplate(HttpServletResponse response, String templateName, ViewModel viewModel) throws IOException {
+        String tpl = createTemplatePath(templateName, viewModel);
         response.setContentType("text/html");
         Mustache mustache = factory.compile(WikiResources.path(tpl));
-        mustache.execute(response.getWriter(), ctx);
+        mustache.execute(response.getWriter(), viewModel);
+    }
+
+    private String createTemplatePath(String templateName, ViewModel viewModel) {
+        return templateName + "_" + viewModel.getLocale() + ".html";
     }
 
     private HttpServletRequest wrap(HttpServletRequest request, String path) {
@@ -188,34 +195,41 @@ public class WikiDispatcherServlet extends HttpServlet {
 
     }
 
-    private static class NotFound {
+    private static abstract class ViewModel {
 
         private final HttpServletRequest request;
 
-        public NotFound(HttpServletRequest request) {
+        protected ViewModel(HttpServletRequest request) {
             this.request = request;
         }
 
         public HttpServletRequest getRequest() {
             return request;
+        }
+
+        public String getLocale() {
+            return LocaleChoosingStrategy.getLocale(request.getLocales()).getLanguage();
         }
 
     }
 
-    private static class Overview {
+    private static class NotFound extends ViewModel {
 
-        private final HttpServletRequest request;
+        public NotFound(HttpServletRequest request) {
+            super(request);
+        }
+
+    }
+
+    private static class Overview extends ViewModel {
+
         private final Iterable<Wiki> wikis;
         private final String casLogoutUrl;
 
         public Overview(HttpServletRequest request, Iterable<Wiki> wikis, String casUrl) {
-            this.request = request;
+            super(request);
             this.wikis = wikis;
             this.casLogoutUrl = casUrl;
-        }
-
-        public HttpServletRequest getRequest() {
-            return request;
         }
 
         public Iterable<Wiki> getWikis() {
