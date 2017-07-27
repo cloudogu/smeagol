@@ -10,20 +10,17 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Locale;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.swing.text.View;
+import java.io.IOException;
 
 /**
  * The dispatcher servlet takes the current requested name of the wiki and
@@ -55,14 +52,11 @@ public class WikiDispatcherServlet extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String repositoryId = getRepositoryId(req);
         String branchName = getBranchName(req);
-        Enumeration locales = req.getLocales();
-        Locale locale = determineLocale(locales);
-        System.out.println("locale: "+locale.toString());
 
         if (Strings.isNullOrEmpty(repositoryId)) {
-            renderOverview(req, resp, locale);
+            renderOverview(req, resp);
         } else if (Strings.isNullOrEmpty(branchName)) {
-            renderBranchOverview(req, resp, locale);
+            renderBranchOverview(req, resp);
         } else {
             String wikiName = repositoryId;
             if(!Strings.isNullOrEmpty(branchName)){
@@ -73,44 +67,37 @@ public class WikiDispatcherServlet extends HttpServlet {
                 if (servlet != null) {
                     servlet.service(wrap(req, wikiName), resp);
                 } else {
-                    renderNotFound(req, resp, locale);
+                    renderNotFound(req, resp);
                 }
             } catch (WikiNotFoundException ex) {
                 LOG.trace("could not find wiki", ex);
-                renderNotFound(req, resp, locale);
+                renderNotFound(req, resp);
             }
         }
     }
 
-    private void renderNotFound(HttpServletRequest request, HttpServletResponse response, Locale locale) throws IOException {
+    private void renderNotFound(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(404);
-        if (Locale.GERMAN.equals(locale)) {
-            renderTemplate(response, "notfound_de.html", new NotFound(request));
-        } else {
-            renderTemplate(response, "notfound.html", new NotFound(request));
-        }
+        renderTemplate(response, "notfound", new NotFound(request));
     }
 
-    private void renderOverview(HttpServletRequest request, HttpServletResponse response, Locale locale) throws IOException {
-        if (Locale.GERMAN.equals(locale)) {
-            renderTemplate(response, "overviewRepos_de.html", new Overview(request, provider.getAll(), getCasLogoutUrl(configuration)));
-        } else {
-            renderTemplate(response, "overviewRepos.html", new Overview(request, provider.getAll(), getCasLogoutUrl(configuration)));
-        }
+    private void renderOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        renderTemplate(response, "overviewRepos", new Overview(request, provider.getAll(), getCasLogoutUrl(configuration)));
     }
 
-    private void renderBranchOverview(HttpServletRequest request, HttpServletResponse response, Locale locale) throws IOException {
-        if (Locale.GERMAN.equals(locale)) {
-            renderTemplate(response, "overviewBranches_de.html", new Overview(request, provider.getAllBranches(getRepositoryId(request)), getCasLogoutUrl(configuration)));
-        } else {
-            renderTemplate(response, "overviewBranches.html", new Overview(request, provider.getAllBranches(getRepositoryId(request)), getCasLogoutUrl(configuration)));
-        }
+    private void renderBranchOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        renderTemplate(response, "overviewBranches", new Overview(request, provider.getAllBranches(getRepositoryId(request)), getCasLogoutUrl(configuration)));
     }
 
-    private void renderTemplate(HttpServletResponse response, String tpl, Object ctx) throws IOException {
+    private void renderTemplate(HttpServletResponse response, String templateName, ViewModel viewModel) throws IOException {
+        String tpl = createTemplatePath(templateName, viewModel);
         response.setContentType("text/html");
         Mustache mustache = factory.compile(WikiResources.path(tpl));
-        mustache.execute(response.getWriter(), ctx);
+        mustache.execute(response.getWriter(), viewModel);
+    }
+
+    private String createTemplatePath(String templateName, ViewModel viewModel) {
+        return templateName + "_" + viewModel.getLocale() + ".html";
     }
 
     private HttpServletRequest wrap(HttpServletRequest request, String path) {
@@ -190,18 +177,6 @@ public class WikiDispatcherServlet extends HttpServlet {
         return path;
     }
 
-    private Locale determineLocale(Enumeration locales) {
-        while (locales.hasMoreElements()) {
-            Locale locale = (Locale) locales.nextElement();
-            // Use german if possible, otherwise use english
-            if ("de".equals(locale.toString()) || "de_DE".equals(locale.toString())
-                    || "de_AT".equals(locale.toString()) || "de_CH".equals(locale.toString())) {
-                return Locale.GERMAN;
-            }
-        }
-        return Locale.ENGLISH;
-    }
-
     private static class DispatchHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
         private String path;
@@ -220,34 +195,41 @@ public class WikiDispatcherServlet extends HttpServlet {
 
     }
 
-    private static class NotFound {
+    private static abstract class ViewModel {
 
         private final HttpServletRequest request;
 
-        public NotFound(HttpServletRequest request) {
+        protected ViewModel(HttpServletRequest request) {
             this.request = request;
         }
 
         public HttpServletRequest getRequest() {
             return request;
+        }
+
+        public String getLocale() {
+            return LocaleChoosingStrategy.getLocale(request.getLocales()).getLanguage();
         }
 
     }
 
-    private static class Overview {
+    private static class NotFound extends ViewModel {
 
-        private final HttpServletRequest request;
+        public NotFound(HttpServletRequest request) {
+            super(request);
+        }
+
+    }
+
+    private static class Overview extends ViewModel {
+
         private final Iterable<Wiki> wikis;
         private final String casLogoutUrl;
 
         public Overview(HttpServletRequest request, Iterable<Wiki> wikis, String casUrl) {
-            this.request = request;
+            super(request);
             this.wikis = wikis;
             this.casLogoutUrl = casUrl;
-        }
-
-        public HttpServletRequest getRequest() {
-            return request;
         }
 
         public Iterable<Wiki> getWikis() {
