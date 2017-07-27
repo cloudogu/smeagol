@@ -9,6 +9,7 @@ package com.cloudogu.wiki;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
 
 /**
  * The WikiContext is used to call methods and retrieve central informations from every place in the application.
@@ -44,7 +45,11 @@ public class WikiContext {
     public SessionStore getSessions(){
         return sessions;
     }
-    
+
+    public Locale getLocale() {
+        return LocaleChoosingStrategy.getLocale(getRequest().getLocales());
+    }
+
     public HttpServletRequest getRequest() {
         return request;
     }
