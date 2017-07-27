@@ -67,7 +67,7 @@
   </div>
   <div id="gollum-editor-help" class="jaws">
     <ul id="gollum-editor-help-parent">
-      <li><a href="javascript:void(0);" class="selected">Help 1</a></li>
+      <li><a href="javascript:void(0);" class="selected">Hilfe 1</a></li>
       <li><a href="javascript:void(0);">Hilfe 1</a></li>
       <li><a href="javascript:void(0);">Hilfe 1</a></li>
     </ul>
@@ -121,15 +121,15 @@
     <div id="gollum-editor-edit-summary" class="singleline">
       <label for="message" class="jaws">Nachricht bearbeiten:</label>
       {{#is_create_page}}
-      <input type="text" name="message" id="gollum-editor-message-field" value="Created {{page_name}} ({{format}})">
+      <input type="text" name="message" id="gollum-editor-message-field" value="Erstellt {{page_name}} ({{format}})">
       {{/is_create_page}}
       {{#is_edit_page}}
-      <input type="text" name="message" id="gollum-editor-message-field" value="Updated {{page_name}} ({{format}})">
+      <input type="text" name="message" id="gollum-editor-message-field" value="Geändert {{page_name}} ({{format}})">
       {{/is_edit_page}}
     </div>
 
     <span class="jaws"><br></span>
-    <input type="submit" id="gollum-editor-submit" value="Save" title="Speichere aktuelle Änderungen">
+    <input type="submit" id="gollum-editor-submit" value="Speichern" title="Speichere aktuelle Änderungen">
     <a href="{{base_url}}/preview" id="gollum-editor-preview" class="minibutton" title="Überprüfe diese Seite">Vorschau</a>
   </fieldset>
 </form>
