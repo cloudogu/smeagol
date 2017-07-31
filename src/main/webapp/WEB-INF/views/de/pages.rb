@@ -6,13 +6,13 @@ module Precious
       attr_reader :results, :ref, :allow_editing
 
       def title
-        "All pages in #{@ref}"
+        "Alle Dateien in #{@ref}"
       end
 
       def breadcrumb
         if @path
           path       = Pathname.new(@path)
-          breadcrumb = [%{<a href="#{@base_url}/pages/">Home</a>}]
+          breadcrumb = [%{<a href="#{@base_url}/pages/">Start</a>}]
           path.descend do |crumb|
             title = crumb.basename
 
@@ -25,7 +25,7 @@ module Precious
 
           breadcrumb.join(" / ")
         else
-          "Home"
+          "Start"
         end
       end
 
