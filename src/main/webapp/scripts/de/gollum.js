@@ -330,4 +330,8 @@ $(document).ready(function() {
       $item.attr('src', img_bin);
     });
   }
+
+  if( $('.toc-title').length ){
+    $('.toc-title').text('Inhaltsverzeichnis');
+  }
 });
