@@ -5,7 +5,7 @@ module Precious
       attr_reader :wiki
 
       def title
-        "Latest Changes (Globally)"
+        "Letzte Änderungen (Global)"
       end
 
       def versions
