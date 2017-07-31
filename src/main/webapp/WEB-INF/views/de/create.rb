@@ -6,7 +6,7 @@ module Precious
       attr_reader :page, :name
 
       def title
-        "Create a new page"
+        "Neue Seite anlegen"
       end
 
       def is_create_page
