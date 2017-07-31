@@ -4,7 +4,7 @@ module Precious
       attr_reader :results, :ref
 
       def title
-        "File view of #{@ref}"
+        "Dateiansicht von #{@ref}"
       end
 
       def has_results
