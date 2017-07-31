@@ -17,7 +17,7 @@ module Precious
         account = settings.wikiContextFactory.get().getAccount()
         { 'gollum.author' => { :name => account.getDisplayName(), :email => account.getMail() }}
     end
-    
+
   end
 end
 
@@ -52,7 +52,10 @@ if locale.to_s == "de"
       staticPath = "#{dir}/src/main/webapp"
     end
 
-    Precious::App.set(:mustache, {:templates => "#{staticPath}/WEB-INF/templates/de/"})
+    Precious::App.set(:mustache, {
+        :templates => "#{staticPath}/WEB-INF/templates/de/",
+        :views => "#{staticPath}/WEB-INF/views/de/"
+    })
 end
 
 Gollum::Hook.register(:post_commit, :hook_id) do |committer, sha1|
