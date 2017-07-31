@@ -233,7 +233,7 @@ $(document).ready(function() {
         " erstellt, außer ein absoluter Pfad ist angegeben."
 
       $.GollumDialog.init({
-        title: 'Create New Page',
+        title: 'Seite anlegen',
         fields: [
           {
             id:   'name',
