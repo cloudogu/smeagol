@@ -155,7 +155,7 @@ $(document).ready(function() {
         fields: [
           {
             type:   'file',
-            context: 'Your uploaded file will be accessible at<br>/'+uploadDest+'/[filename]',
+            context: 'Die hochgeladene Datei befindet sich unter <br>/'+uploadDest+'/[filename]',
             action: baseUrl + '/uploadFile'
           }
         ],
@@ -174,31 +174,31 @@ $(document).ready(function() {
       var path = pagePath();
       var oldName = pageName();
       var context_blurb =
-        "Renamed page will be under " +
+        "Die umbenannte Datei befindet sich unter " +
         "<span class='path'>" + htmlEscape('/' + path) + "</span>" +
-        " unless an absolute path is given."
+        ", außer ein absoluter Pfad ist angegeben."
 
       $.GollumDialog.init({
         title: 'Seite umbenennen',
         fields: [
           {
             id:   'name',
-            name: 'Rename to',
+            name: 'Datei umbenennen auf:',
             type: 'text',
             defaultValue: oldName || '',
             context: context_blurb
           }
         ],
         OK: function( res ) {
-          var newName = 'Rename Page';
+          var newName = 'Seite umbenennen';
           if ( res['name'] ) {
             newName = res['name'];
           }
           var name_parts = abspath(path, newName);
           var newPath = name_parts[0];
 
-          var msg = '/' + path == newPath ? 'Renamed ' + oldName + ' to ' + newName
-                                          : 'Renamed ' + oldName + ' to ' + name_parts.join('/');
+          var msg = '/' + path == newPath ? '' + oldName + ' umbenannt auf ' + newName
+                                          : '' + oldName + ' umbenannt auf ' + name_parts.join('/');
           // Fill in the rename form
           // This is preferable to AJAX so that we automatically follow the 302 response.
           var rename_form = $("form[name=rename]");
@@ -228,23 +228,23 @@ $(document).ready(function() {
         path = path.replace(/\/$/,'')
       }
       var context_blurb =
-        "Page will be created under " +
+        "Die Seite wird unter " +
         "<span class='path'>" + htmlEscape('/' + path) + "</span>" +
-        " unless an absolute path is given."
+        " erstellt, außer ein absoluter Pfad ist angegeben."
 
       $.GollumDialog.init({
         title: 'Create New Page',
         fields: [
           {
             id:   'name',
-            name: 'Page Name',
+            name: 'Name der Seite',
             type: 'text',
             defaultValue: '',
             context: context_blurb
           }
         ],
         OK: function( res ) {
-          var name = 'New Page';
+          var name = 'Neue Seite';
           if ( res['name'] ) {
             name = res['name'];
           }
@@ -301,7 +301,7 @@ $(document).ready(function() {
   if( $('#wiki-wrapper.edit').length ){
     $("#gollum-editor-submit").click( function() { window.onbeforeunload = null; } );
     $("#gollum-editor-body").one('change', function(){
-      window.onbeforeunload = function(){ return "Leaving will discard all edits!" };
+      window.onbeforeunload = function(){ return "Mit dem Verlassen der Seite werden alle Änderungen verworfen!" };
     });
     $.GollumEditor();
   }
@@ -309,7 +309,7 @@ $(document).ready(function() {
   if( $('#wiki-wrapper.create').length ){
     $("#gollum-editor-submit").click( function() { window.onbeforeunload = null; } );
     $("#gollum-editor-body").one('change', function(){
-      window.onbeforeunload = function(){ return "Leaving will not create a new page!" };
+      window.onbeforeunload = function(){ return "Mit dem Verlassen wird keine neue Seite angelegt!" };
     });
     $.GollumEditor({ NewFile: true, MarkupType: default_markup });
   }
