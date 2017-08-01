@@ -45,18 +45,25 @@
             <version>4.1.1</version>
             <type>gem</type>
         </dependency>
-
-        <!-- 
-        fix dependency resolution problem:
-        Gollum depends on github-markup, which depends on rinku, since version 1.5.0.
-        Rinku uses native extensions, which will not work with jruby.
-        So we have to use version 1.4.0.
-        -->
         
         <dependency>
             <groupId>rubygems</groupId>
             <artifactId>github-markup</artifactId>
-            <version>1.4.0</version>
+            <version>1.6.1</version>
+            <type>gem</type>
+        </dependency>
+
+        <dependency>
+            <groupId>rubygems</groupId>
+            <artifactId>asciidoctor</artifactId>
+            <version>1.5.6.1</version>
+            <type>gem</type>
+        </dependency>
+
+        <dependency>
+            <groupId>rubygems</groupId>
+            <artifactId>creole</artifactId>
+            <version>0.5.0</version>
             <type>gem</type>
         </dependency>
 
