@@ -7,6 +7,7 @@ FQDN=$(doguctl config --global fqdn)
 export SMEAGOL_SERVICE_URL="https://${FQDN}/smeagol"
 export SMEAGOL_CAS_URL="https://${FQDN}/cas"
 export SCM_INSTANCE_URL="https://${FQDN}/scm"
+export PLANTUML_URL="https://${FQDN}/plantuml/png"
 
 TRUSTSTORE="${SMEAGOL_HOME}/truststore.jks"
 create_truststore.sh "${TRUSTSTORE}" > /dev/null

@@ -66,7 +66,12 @@ if locale.to_s == "de"
     })
 end
 
-
+plantUmlUrl = ENV["PLANTUML_URL"]
+if plantUmlUrl || plantUmlUrl.length == 0
+  Gollum::Filter::PlantUML.configure do |config|
+    config.url = plantUmlUrl
+  end
+end
 
 Gollum::Hook.register(:post_commit, :hook_id) do |committer, sha1|
   if sha1.is_a?(String)
