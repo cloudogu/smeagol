@@ -58,9 +58,13 @@ if locale.to_s == "de"
     })
 end
 
+
+
 Gollum::Hook.register(:post_commit, :hook_id) do |committer, sha1|
-  provider = wikiContextFactory.get().getProvider()
-  provider.push(wiki.getName(), sha1)
+  if sha1.is_a?(String)
+    provider = wikiContextFactory.get().getProvider()
+    provider.push(wiki.getName(), sha1)
+  end
 end
 
 MapGollum.new(Precious::App, wiki)
