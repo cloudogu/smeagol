@@ -42,21 +42,28 @@
         <dependency>
             <groupId>rubygems</groupId>
             <artifactId>gollum</artifactId>
-            <version>4.0.1</version>
+            <version>4.1.1</version>
             <type>gem</type>
         </dependency>
-
-        <!-- 
-        fix dependency resolution problem:
-        Gollum depends on github-markup, which depends on rinku, since version 1.5.0.
-        Rinku uses native extensions, which will not work with jruby.
-        So we have to use version 1.4.0.
-        -->
         
         <dependency>
             <groupId>rubygems</groupId>
             <artifactId>github-markup</artifactId>
-            <version>1.4.0</version>
+            <version>1.6.1</version>
+            <type>gem</type>
+        </dependency>
+
+        <dependency>
+            <groupId>rubygems</groupId>
+            <artifactId>asciidoctor</artifactId>
+            <version>1.5.6.1</version>
+            <type>gem</type>
+        </dependency>
+
+        <dependency>
+            <groupId>rubygems</groupId>
+            <artifactId>creole</artifactId>
+            <version>0.5.0</version>
             <type>gem</type>
         </dependency>
 
@@ -232,8 +239,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <rack-servlet.version>1.7</rack-servlet.version>
-        <jruby.version>9.1.2.0</jruby.version>
+        <rack-servlet.version>1.8</rack-servlet.version>
+        <jruby.version>9.1.12.0</jruby.version>
         <jruby-plugins.version>1.1.5</jruby-plugins.version>
         <jetty.version>9.3.11.v20160721</jetty.version>
         <cas-client.version>3.4.1</cas-client.version>
