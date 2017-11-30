@@ -57,15 +57,18 @@ public class RepositoryNotification {
     }
 
     private void updateWikisInSession(HttpSession session) {
-        Enumeration<String> attributes = session.getAttributeNames();
-        if (attributes != null) {
-            Account account = (Account) session.getAttribute("com.cloudogu.wiki.Account");
-            while (attributes.hasMoreElements()) {
-                String attribute = attributes.nextElement();
-                tryToUpdateWikiForAttribute(account, attribute);
+        try {
+            Enumeration<String> attributes = session.getAttributeNames();
+            if (attributes != null) {
+                Account account = (Account) session.getAttribute("com.cloudogu.wiki.Account");
+                while (attributes.hasMoreElements()) {
+                    String attribute = attributes.nextElement();
+                    tryToUpdateWikiForAttribute(account, attribute);
+                }
             }
+        } catch (IllegalStateException ex) {
+            LOG.debug("Tried to get attributes from invalid session.", ex);
         }
-
     }
 
     private void tryToUpdateWikiForAttribute(Account account, String attribute) {
