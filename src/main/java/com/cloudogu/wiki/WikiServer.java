@@ -101,6 +101,8 @@ public class WikiServer {
         // main servlet
         context.addServlet(new ServletHolder(new WikiDispatcherServlet(provider, cfg)), "/*");
 
+        context.addServlet(new ServletHolder(new CasLogoutServlet(casSettings)), "/logout");
+
         Server server = new Server(cfg.getPort());
         server.setHandler(context);
         try {
