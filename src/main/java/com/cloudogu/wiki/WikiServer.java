@@ -8,11 +8,16 @@ package com.cloudogu.wiki;
 
 import com.cloudogu.wiki.scmm.NotifyServlet;
 import com.cloudogu.wiki.scmm.ScmWikiProvider;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Throwables;
 import java.util.EnumSet;
 import java.util.Map;
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
+
+import com.mashape.unirest.http.Unirest;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.FilterHolder;
@@ -58,12 +63,7 @@ public class WikiServer {
             "start wiki server on port {} with context path {} in stage {}", 
             cfg.getPort(), cfg.getContextPath(), cfg.getStage()
         );
-        
-        if ( cfg.getStage() == Stage.DEVELOPMENT ){
-            LOG.warn("smeagol is running in development stage, never use this stage for production deployments");
-            LOG.warn("disabling ssl/tls certificate checks");
-            SSL.disableCertificateCheck();
-        }
+        configureRestClient(cfg);
         
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath(cfg.getContextPath());
@@ -111,7 +111,20 @@ public class WikiServer {
             throw Throwables.propagate(ex);
         }
     }
-    
+
+    @VisibleForTesting
+    static void configureRestClient(WikiServerConfiguration cfg) {
+        HttpClientBuilder httpClientBuilder = HttpClients.custom();
+        // Disable cookies to ensure that we always get a fresh scmm session
+        httpClientBuilder.disableCookieManagement();
+        if ( cfg.getStage() == Stage.DEVELOPMENT ){
+            LOG.warn("smeagol is running in development stage, never use this stage for production deployments");
+            LOG.warn("disabling ssl/tls certificate checks");
+            SSL.disableCertificateCheck(httpClientBuilder);
+        }
+        Unirest.setHttpClient(httpClientBuilder.build());
+    }
+
     private void casFilter(ServletContextHandler context, Class<? extends Filter> filterClass, Map<String,String> cfg) {
         FilterHolder filter = new FilterHolder(filterClass);
         filter.setInitParameters(cfg);
