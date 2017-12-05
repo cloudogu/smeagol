@@ -5,8 +5,7 @@
  */
 package com.cloudogu.wiki;
 
-import com.cloudogu.wiki.scmm.RepositoryNotification;
-import com.cloudogu.wiki.scmm.ScmWikiProvider;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServlet;
@@ -21,15 +20,20 @@ import java.util.Map;
  */
 public class CasLogoutServlet extends HttpServlet {
 
-    private String logoutUrl;
+    private static final Logger LOG = LoggerFactory.getLogger(CasLogoutServlet.class);
+    private final String logoutUrl;
 
     public CasLogoutServlet(Map<String,String> casSettings) {
         logoutUrl = casSettings.get("casServerUrlPrefix") + "/logout";
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
-        response.sendRedirect(logoutUrl);
+        try {
+            response.sendRedirect(logoutUrl);
+        } catch (IOException ex) {
+            LOG.warn("Failed to send redirect.", ex);
+        }
     }
 }
