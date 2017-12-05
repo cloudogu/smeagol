@@ -67,8 +67,8 @@ public class WikiServer {
         
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath(cfg.getContextPath());
-        // set session timeout to 30 minutes
-        context.getSessionHandler().getSessionManager().setMaxInactiveInterval(1800);
+        // set session timeout to 2 hours
+        context.getSessionHandler().getSessionManager().setMaxInactiveInterval(7200);
         
         ServletHolder resourceServletHolder = new ServletHolder(DefaultServlet.class);
         resourceServletHolder.setInitParameter("resourceBase", cfg.getStaticPath());
