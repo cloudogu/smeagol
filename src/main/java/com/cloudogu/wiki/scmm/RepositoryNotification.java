@@ -67,7 +67,7 @@ public class RepositoryNotification {
                 }
             }
         } catch (IllegalStateException ex) {
-            LOG.debug("Tried to get attributes from invalid session.", ex);
+            LOG.debug("Tried to get attributes from invalid session.");
         }
     }
 
