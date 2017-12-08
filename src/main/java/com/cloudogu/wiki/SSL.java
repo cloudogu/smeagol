@@ -16,6 +16,8 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 
 /**
@@ -32,7 +34,7 @@ public final class SSL {
      * Disables certificate checks. <strong>Warning:</strong> After the execution of this method, all certificates are
      * accepted. Use this method only for development and never in production.
      */
-    public static void disableCertificateCheck() {
+    public static void disableCertificateCheck(HttpClientBuilder httpClientBuilder) {
         try {
             SSLContext sc = SSLContext.getInstance("TLS");
             sc.init(null, UNSECURE_TRUSTMANAGER, new SecureRandom());
@@ -41,7 +43,7 @@ public final class SSL {
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
             
             // disable check for Unirest
-            Unirest.setHttpClient(HttpClients.custom().setSSLContext(sc).build());
+            httpClientBuilder.setSSLContext(sc);
         } catch (KeyManagementException | NoSuchAlgorithmException ex) {
             throw Throwables.propagate(ex);
         }
