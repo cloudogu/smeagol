@@ -70,7 +70,7 @@ public class NotifyServletTest {
         sessions.add(session);
         sessions.add(session2);
         
-        Set<String> attributes = ImmutableSet.of(ACCOUNT, "servlet."+REPOSITORY+"/"+BRANCH);
+        Set<String> attributes = ImmutableSet.of(ACCOUNT, "servlet."+REPOSITORY+"/"+BRANCH+"_de");
         Enumeration<String> attributesEnum = java.util.Collections.enumeration(attributes);
         when(session.getAttributeNames()).thenReturn(attributesEnum);
         when(session.getAttribute(ACCOUNT)).thenReturn(account);
@@ -93,8 +93,7 @@ public class NotifyServletTest {
         when(wikiProvider.getRepositoryDirectory(REPOSITORY+"/"+BRANCH)).thenReturn(directory);
 
         servlet.service(request, response);
-        
-        
+
         verify(wikiProvider).pullChanges(account, directory, BRANCH);
     }
     

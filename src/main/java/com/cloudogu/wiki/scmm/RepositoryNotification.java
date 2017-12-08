@@ -30,6 +30,7 @@ public class RepositoryNotification {
     private String repositoryToUpdate;
     private final Set<String> updatedDirectories = new HashSet<>();
     private final String COMMON_START = "servlet.";
+    private final String COMMON_END = "_**";
     
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(RepositoryNotification.class);
     
@@ -56,20 +57,24 @@ public class RepositoryNotification {
     }
 
     private void updateWikisInSession(HttpSession session) {
-        Enumeration<String> attributes = session.getAttributeNames();
-        if (attributes != null) {
-            Account account = (Account) session.getAttribute("com.cloudogu.wiki.Account");
-            while (attributes.hasMoreElements()) {
-                String attribute = attributes.nextElement();
-                tryToUpdateWikiForAttribute(account, attribute);
+        try {
+            Enumeration<String> attributes = session.getAttributeNames();
+            if (attributes != null) {
+                Account account = (Account) session.getAttribute("com.cloudogu.wiki.Account");
+                while (attributes.hasMoreElements()) {
+                    String attribute = attributes.nextElement();
+                    tryToUpdateWikiForAttribute(account, attribute);
+                }
             }
+        } catch (IllegalStateException ex) {
+            LOG.debug("Tried to get attributes from invalid session.");
         }
-
     }
 
     private void tryToUpdateWikiForAttribute(Account account, String attribute) {
         if (attribute.startsWith(COMMON_START)) {
-            String wikiName = attribute.substring(COMMON_START.length());
+            String wikiNameWithLanguage = attribute.substring(COMMON_START.length());
+            String wikiName = wikiNameWithLanguage.substring(0, wikiNameWithLanguage.length() - COMMON_END.length());
             if (wikiRequiresUpdate(wikiName)) {
                 updateWiki(wikiName, account);
             }

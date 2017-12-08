@@ -67,7 +67,7 @@ if locale.to_s == "de"
 end
 
 plantUmlUrl = ENV["PLANTUML_URL"]
-if plantUmlUrl || plantUmlUrl.length == 0
+if plantUmlUrl && plantUmlUrl.length > 0
   Gollum::Filter::PlantUML.configure do |config|
     config.url = plantUmlUrl
     # do not verify ssl, in order to work with self signed certificates
