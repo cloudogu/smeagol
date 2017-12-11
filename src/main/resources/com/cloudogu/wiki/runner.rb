@@ -64,6 +64,17 @@ if locale.to_s == "de"
         :templates => "#{staticPath}/WEB-INF/templates/de/",
         :views => "#{staticPath}/WEB-INF/views/de/"
     })
+else
+    staticPath = ENV["SMEAGOL_STATIC_PATH"]
+    if staticPath == nil
+      dir = File.dirname(File.expand_path(__FILE__))
+      staticPath = "#{dir}/src/main/webapp"
+    end
+
+    Precious::App.set(:mustache, {
+        :templates => "#{staticPath}/WEB-INF/templates/en/",
+        :views => "#{staticPath}/WEB-INF/views/de/"
+    })
 end
 
 plantUmlUrl = ENV["PLANTUML_URL"]
