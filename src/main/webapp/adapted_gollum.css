@@ -4,8 +4,6 @@ body {
     padding-top: 60px;
 }
 
-
-
 #wiki-wrapper {
     margin-right: auto;
     margin-left: auto;
@@ -156,18 +154,26 @@ li a.file:before {
     width: 100%;
 }
 
+.markdown-body {
+    padding: 1em;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
 @media (min-width: 940px) {
     .markdown-body {
         padding: 30px;
     }
 }
 
-.markdown-body {
-        padding: 1em;
-        font-size: 15px;
-        line-height: 1.7;
-        overflow: hidden;
-        word-wrap: break-word;
+/* version overview / last changes */
+
+#wiki-history table tr td.checkbox {
+    width: auto;
+    padding: 0 0.2em 0 0;
+    display: table-cell;
 }
 
 @media (min-width: 940px) {
@@ -175,10 +181,6 @@ li a.file:before {
         width: 4em;
         padding: 0.3em;
     }
-}
-#wiki-history table tr td.checkbox {
-        width: auto;
-        padding: 0 0.2em 0 0;
 }
 
 #wiki-history table tr td.checkbox input {
@@ -189,6 +191,7 @@ li a.file:before {
     margin: 0 auto;
     width: 1.2em;
     height: 1.2em;
+    position: relative;
 }
 
 #wiki-history table tr td.author {
@@ -219,6 +222,15 @@ li a.file:before {
     padding: 0 0.2em;
 }
 
+#wiki-history table tr td {
+    border-top: 1px solid #c0dce9;
+    border-bottom: 1px solid #c0dce9;
+    font-size: 1em;
+    line-height: 1.6em;
+    margin: 0;
+    padding: 0.3em 0.7em;
+}
+
 @media (min-width: 940px) {
     #wiki-history table tr td {
         border: 1px solid #c0dce9;
@@ -227,15 +239,6 @@ li a.file:before {
         margin: 0;
         padding: 0.3em 0.7em;
     }
-}
-
-#wiki-history table tr td {
-        border-top: 1px solid #c0dce9;
-        border-bottom: 1px solid #c0dce9;
-        font-size: 1em;
-        line-height: 1.6em;
-        margin: 0;
-        padding: 0.3em 0.7em;
 }
 
 #wiki-history table, #wiki-history tbody {
@@ -256,4 +259,67 @@ li a.file:before {
 
 #wiki-history table tr:nth-child(2n), #wiki-history table tr.alt-row {
     background-color: #f3f7fa;
+}
+
+/* compare versions */
+
+.compare .data {
+    border: 1px solid #ddd;
+    margin: 1em 0 2em;
+    overflow: auto;
+}
+
+.highlight {
+    background: #fff;
+}
+.compare .data table {
+    width: 100%;
+}
+
+.compare .data td.line_numbers {
+    background: #f7f7f7;
+    border-right: 1px solid #999;
+    color: #999;
+    padding: 0 0 0 0.5em;
+}
+
+.compare .data tr td + td + td {
+    width: 100%;
+}
+
+.compare .data tr td {
+    font-family: "Consolas", "Monaco", "Andale Mono", "Courier New", monospace;
+    font-size: 1.2em;
+    line-height: 1.2em;
+    margin: 0;
+    padding: 0;
+}
+
+.compare .data pre {
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 0;
+    line-height: 1.6em;
+
+}
+
+.compare .data pre div {
+    padding: 0 0 0 1em;
+}
+
+.highlight .gc {
+    color: #999;
+    background-color: #EAF2F5;
+}
+
+.highlight .gd {
+    color: #000;
+    background-color: #fdd;
+}
+
+.highlight .gi {
+    color: #000;
+    background-color: #dfd;
 }
