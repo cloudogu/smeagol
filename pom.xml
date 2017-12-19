@@ -222,7 +222,36 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
+
+
+            <plugin>
+                <groupId>nl.geodienstencentrum.maven</groupId>
+                <artifactId>sass-maven-plugin</artifactId>
+                <version>2.13</version>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>update-stylesheets</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <resources>
+                        <resource>
+                            <!-- Set source and destination dirs -->
+                            <source>
+                                <directory>src/main/webapp/gollumTheme</directory>
+                            </source>
+                            <destination>src/main/webapp/gollumTheme</destination>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+
+
+
         </plugins>
         
         <finalName>smeagol</finalName>
