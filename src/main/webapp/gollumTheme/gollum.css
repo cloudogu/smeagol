@@ -8016,6 +8016,16 @@ li a.file:before {
 
 a#function-bold, a#function-italic, a#function-ul, a#function-ol, a#function-link, a#function-image {
   position: static;
+  line-height: 1.5 !important;
+}
+
+a#function-ol {
+  padding-left: 0 !important;
+}
+
+a#function-h1, a#function-h2, a#function-h3, a#function-hr {
+  position: static;
+  line-height: 150% !important;
 }
 
 a#function-ol:before {
