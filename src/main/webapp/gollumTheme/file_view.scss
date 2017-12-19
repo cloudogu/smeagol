@@ -1,0 +1,108 @@
+//@import "../ces-theme/src/scss/ces";
+@import "gollum.scss";
+@charset "UTF-8";
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot");
+  src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("../fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
+
+
+
+#results {
+  @extend #wiki-wrapper;
+}
+
+.tree {
+  @extend #wiki-body;
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+}
+
+.tree li {
+  @extend .markdown-body;
+}
+
+li.file {
+    padding: 0;
+}
+
+@media (min-width: 940px) {
+  li.file{
+    padding: 0;
+  }
+}
+
+li input:checked + ol > li {
+  display: block;
+  margin: 0 0 0.125em;
+}
+
+
+li input + ol > li {
+  display: none;
+}
+
+li {
+  position: relative;
+  margin-left: -15px;
+  list-style: none;
+}
+
+li input {
+  position: absolute;
+  left: 0;
+  opacity: 0;
+  z-index: 2;
+  cursor: pointer;
+  height: 1em;
+  width: 1em;
+}
+
+li input:checked + ol:before {
+  @extend .glyphicon, .glyphicon-chevron-down;
+  color: #00426B;
+  margin: 6px 0 0 -44px;
+  height: auto;
+  left: -25px;
+  top: -27px;
+}
+
+li input + ol:before{
+  @extend .glyphicon, .glyphicon-chevron-right;
+  color: #00426B;
+  margin: 6px 0 0 -44px;
+  height: 1.5em;
+  left: -25px;
+  top: -27px;
+}
+
+li label {
+  margin-top: 0;
+  margin-bottom: 0;
+  @extend h4;
+}
+li label:before {
+  @extend .glyphicon;
+  content: "\e118\2003";
+}
+
+li.file form button {
+  border: 0px;
+  background: none;
+  padding-left: 10px;
+  @extend .glyphicon;
+}
+
+/*li.file form button:before {
+  color: #00426B;
+  @extend .glyphicon-trash;
+}*/
+
+li.file form {
+  vertical-align: middle;
+  display: inline-block;
+}
+
+li.file a {
+  display: inline-block;
+}
