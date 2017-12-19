@@ -1,4 +1,4 @@
-@import "ces-theme/src/scss/ces";
+@import "../ces-theme/src/scss/ces";
 @charset "UTF-8";
 
 body {
@@ -7,6 +7,10 @@ body {
 
 #wiki-wrapper {
   @extend .container
+}
+
+.minibutton:hover {
+  text-decoration: none !important;
 }
 
 .minibutton {
@@ -252,6 +256,7 @@ li a.file:before {
 }
 
 /* dialog */
+
 #gollum-dialog-dialog {
   display: block;
   overflow: visible;
