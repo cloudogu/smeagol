@@ -93,6 +93,9 @@ li.file form button {
   @extend .glyphicon;
 }
 
+// not shown since delete link does not work
+// delete link is set in target/rubygems/gollum-lib-4.2.7-java/lib/gollum-lib/file_view.rb
+
 /*li.file form button:before {
   color: #00426B;
   @extend .glyphicon-trash;
