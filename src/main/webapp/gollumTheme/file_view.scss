@@ -6,7 +6,9 @@
   src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot");
   src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("../fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
 
-
+input[type="checkbox"] {
+  margin: 14px 0 0;
+}
 
 #results {
   @extend #wiki-wrapper;
@@ -35,16 +37,19 @@ li.file {
 li input:checked + ol > li {
   display: block;
   margin: 0 0 0.125em;
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 
-
+ol {
+  margin-top: -20px;
+}
 li input + ol > li {
   display: none;
 }
 
 li {
   position: relative;
-  margin-left: -15px;
   list-style: none;
 }
 
@@ -64,7 +69,7 @@ li input:checked + ol:before {
   margin: 6px 0 0 -44px;
   height: auto;
   left: -25px;
-  top: -27px;
+  top: -5px;
 }
 
 li input + ol:before{
@@ -73,11 +78,10 @@ li input + ol:before{
   margin: 6px 0 0 -44px;
   height: 1.5em;
   left: -25px;
-  top: -27px;
+  top: -5px;
 }
 
 li label {
-  margin-top: 0;
   margin-bottom: 0;
   @extend h4;
 }
