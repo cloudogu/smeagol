@@ -60,7 +60,7 @@ strong {
 dfn {
   font-style: italic; }
 
-h1 {
+h1, #head ul.actions {
   font-size: 2em;
   margin: 0.67em 0; }
 
@@ -1152,14 +1152,15 @@ hr {
 [role="button"] {
   cursor: pointer; }
 
-h1, h2, h3, h4, h5, h6,
+h1, #head ul.actions, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: inherit;
   font-weight: 500;
   line-height: 1.1;
   color: #00426B; }
-  h1 small,
-  h1 .small, h2 small,
+  h1 small, #head ul.actions small,
+  h1 .small,
+  #head ul.actions .small, h2 small,
   h2 .small, h3 small,
   h3 .small, h4 small,
   h4 .small, h5 small,
@@ -1176,13 +1177,14 @@ h1, h2, h3, h4, h5, h6,
     line-height: 1;
     color: #777777; }
 
-h1, .h1,
+h1, #head ul.actions, .h1,
 h2, .h2,
 h3, .h3 {
   margin-top: 20px;
   margin-bottom: 10px; }
-  h1 small,
-  h1 .small, .h1 small,
+  h1 small, #head ul.actions small,
+  h1 .small,
+  #head ul.actions .small, .h1 small,
   .h1 .small,
   h2 small,
   h2 .small, .h2 small,
@@ -1208,7 +1210,7 @@ h6, .h6 {
   .h6 .small {
     font-size: 75%; }
 
-h1, .h1 {
+h1, #head ul.actions, .h1 {
   font-size: 36px; }
 
 h2, .h2 {
@@ -4489,7 +4491,7 @@ a.badge:hover, a.badge:focus {
   margin-bottom: 30px;
   color: #086690;
   background-color: #eeeeee; }
-  .jumbotron h1,
+  .jumbotron h1, .jumbotron #head ul.actions, #head .jumbotron ul.actions,
   .jumbotron .h1 {
     color: #086690; }
   .jumbotron p {
@@ -4511,7 +4513,7 @@ a.badge:hover, a.badge:focus {
       .container .jumbotron, #wiki-wrapper .jumbotron, .container-fluid .jumbotron {
         padding-left: 60px;
         padding-right: 60px; }
-      .jumbotron h1,
+      .jumbotron h1, .jumbotron #head ul.actions, #head .jumbotron ul.actions,
       .jumbotron .h1 {
         font-size: 63px; } }
 
@@ -6064,6 +6066,20 @@ body {
 .actions {
   padding-left: 0; }
 
+#head ul.actions {
+  clear: both; }
+
+@media (min-width: 940px) {
+  #head ul.actions {
+    clear: none;
+    float: right !important; } }
+@media (min-width: 1200px) {
+  div#wiki-wrapper.page #head ul.actions {
+    float: right; } }
+@media (max-width: 1200px) {
+  div#wiki-wrapper.page #head ul.actions {
+    float: none !important;
+    clear: both; } }
 @font-face {
   font-family: 'Glyphicons Halflings';
   src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot");
@@ -6096,10 +6112,17 @@ li a.file:before {
 
 #head {
   border-bottom: 1px solid #ddd;
-  padding-bottom: 0.3em;
   margin: 4em 0 1.5em;
-  margin-bottom: 0; }
+  padding: 0;
+  overflow: hidden; }
 
+@media (min-width: 940px) {
+  #head {
+    padding-bottom: 0.3em;
+    margin-bottom: 0; } }
+@media (min-width: 940px) {
+  #head h1, #head ul.actions {
+    float: left; } }
 #wiki-body, div#results {
   display: block;
   float: left;
