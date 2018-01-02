@@ -30,23 +30,10 @@ body {
   @extend h1;
 }
 
-@media (min-width: 940px) {
+@media (min-width: 1200px) {
   #head ul.actions {
     clear: none;
     float: right !important;
-  }
-}
-
-@media (min-width: 1200px) {
-  div#wiki-wrapper.page #head ul.actions {
-    float: right;
-  }
-}
-
-@media (max-width: 1200px) {
-  div#wiki-wrapper.page #head ul.actions {
-    float: none !important;
-    clear: both;
   }
 }
 
@@ -100,14 +87,14 @@ li a.file:before {
   overflow: hidden;
 }
 
-@media (min-width: 940px) {
+@media (min-width: 1200px) {
   #head {
     padding-bottom: 0.3em;
     margin-bottom: 0;
   }
 }
 
-@media (min-width: 940px) {
+@media (min-width: 1200px) {
   #head h1 {
     float: left;
   }
