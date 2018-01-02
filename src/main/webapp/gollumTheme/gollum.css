@@ -6069,8 +6069,12 @@ body {
 #head ul.actions {
   clear: both; }
 
+@media (min-width: 940px) {
+  div#wiki-wrapper.results #head ul.actions {
+    clear: none;
+    float: right !important; } }
 @media (min-width: 1200px) {
-  #head ul.actions {
+  div#wiki-wrapper.history #head ul.actions {
     clear: none;
     float: right !important; } }
 @font-face {
@@ -6109,11 +6113,11 @@ li a.file:before {
   padding: 0;
   overflow: hidden; }
 
-@media (min-width: 1200px) {
+@media (min-width: 940px) {
   #head {
     padding-bottom: 0.3em;
     margin-bottom: 0; } }
-@media (min-width: 1200px) {
+@media (min-width: 940px) {
   #head h1, #head ul.actions {
     float: left; } }
 #wiki-body, div#results {

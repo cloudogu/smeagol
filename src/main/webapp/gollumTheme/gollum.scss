@@ -30,12 +30,20 @@ body {
   @extend h1;
 }
 
-@media (min-width: 1200px) {
-  #head ul.actions {
+@media (min-width: 940px) {
+  div#wiki-wrapper.results #head ul.actions{
     clear: none;
     float: right !important;
   }
 }
+
+@media (min-width: 1200px) {
+  div#wiki-wrapper.history #head ul.actions{
+    clear: none;
+    float: right !important;
+  }
+}
+
 
 @font-face {
   font-family: 'Glyphicons Halflings';
@@ -87,14 +95,14 @@ li a.file:before {
   overflow: hidden;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 940px) {
   #head {
     padding-bottom: 0.3em;
     margin-bottom: 0;
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 940px) {
   #head h1 {
     float: left;
   }
