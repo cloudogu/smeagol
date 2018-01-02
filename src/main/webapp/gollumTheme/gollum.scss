@@ -99,6 +99,21 @@ li a.file:before {
   }
 }
 
+/* results of searching */
+
+div#results {
+  @extend #wiki-body;
+}
+
+div#results li {
+  border: none;
+  @extend .list-group-item;
+}
+
+span.count {
+  color: #999;
+}
+
 /* version overview / last changes */
 
 #wiki-history table tr td.checkbox {
