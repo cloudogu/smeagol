@@ -9,7 +9,7 @@
 <div class="list-group">
     {{#wikis}}
     <a class="list-group-item" href="{{request.contextPath}}{{request.servletPath}}/{{urlEncodedName}}">
-        <h4>{{displayName}}</h4> 
+        <h4>{{groupName}}: {{displayName}}</h4>
         {{#description}}
         <p class="list-group-item-text">{{description}}</p>
         {{/description}}
