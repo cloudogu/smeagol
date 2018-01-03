@@ -60,7 +60,7 @@ strong {
 dfn {
   font-style: italic; }
 
-h1 {
+h1, #head ul.actions {
   font-size: 2em;
   margin: 0.67em 0; }
 
@@ -1152,14 +1152,15 @@ hr {
 [role="button"] {
   cursor: pointer; }
 
-h1, h2, h3, h4, li label, h5, h6,
+h1, #head ul.actions, h2, h3, h4, li label, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: inherit;
   font-weight: 500;
   line-height: 1.1;
   color: #00426B; }
-  h1 small,
-  h1 .small, h2 small,
+  h1 small, #head ul.actions small,
+  h1 .small,
+  #head ul.actions .small, h2 small,
   h2 .small, h3 small,
   h3 .small, h4 small, li label small,
   h4 .small,
@@ -1177,13 +1178,14 @@ h1, h2, h3, h4, li label, h5, h6,
     line-height: 1;
     color: #777777; }
 
-h1, .h1,
+h1, #head ul.actions, .h1,
 h2, .h2,
 h3, .h3 {
   margin-top: 20px;
   margin-bottom: 10px; }
-  h1 small,
-  h1 .small, .h1 small,
+  h1 small, #head ul.actions small,
+  h1 .small,
+  #head ul.actions .small, .h1 small,
   .h1 .small,
   h2 small,
   h2 .small, .h2 small,
@@ -1210,7 +1212,7 @@ h6, .h6 {
   .h6 .small {
     font-size: 75%; }
 
-h1, .h1 {
+h1, #head ul.actions, .h1 {
   font-size: 36px; }
 
 h2, .h2 {
@@ -4472,12 +4474,12 @@ a.label:hover, a.label:focus {
   .btn-xs .badge, .btn-group-xs > .btn .badge, .btn-group-xs > .minibutton .badge, #gollum-editor #gollum-editor-function-bar .btn-group-xs > a.function-button .badge, .webkit #gollum-editor .btn-group-xs > input#gollum-editor-submit .badge, .btn-group-xs > .btn .badge, .btn-group-xs > .minibutton .badge, #gollum-editor #gollum-editor-function-bar .btn-group-xs > a.function-button .badge, .webkit #gollum-editor .btn-group-xs > input#gollum-editor-submit .badge {
     top: 0;
     padding: 1px 5px; }
-  .list-group-item.active > .badge, .nav-pills > .active > a > .badge {
+  .list-group-item.active > .badge, div#results li.active > .badge, .nav-pills > .active > a > .badge {
     color: #23A3DD;
     background-color: #fff; }
-  .list-group-item > .badge {
+  .list-group-item > .badge, div#results li > .badge {
     float: right; }
-  .list-group-item > .badge + .badge {
+  .list-group-item > .badge + .badge, div#results li > .badge + .badge {
     margin-right: 5px; }
   .nav-pills > li > a > .badge {
     margin-left: 3px; }
@@ -4493,7 +4495,7 @@ a.badge:hover, a.badge:focus {
   margin-bottom: 30px;
   color: #086690;
   background-color: #eeeeee; }
-  .jumbotron h1,
+  .jumbotron h1, .jumbotron #head ul.actions, #head .jumbotron ul.actions,
   .jumbotron .h1 {
     color: #086690; }
   .jumbotron p {
@@ -4515,7 +4517,7 @@ a.badge:hover, a.badge:focus {
       .container .jumbotron, #wiki-wrapper .jumbotron, #results .jumbotron, .container-fluid .jumbotron {
         padding-left: 60px;
         padding-right: 60px; }
-      .jumbotron h1,
+      .jumbotron h1, .jumbotron #head ul.actions, #head .jumbotron ul.actions,
       .jumbotron .h1 {
         font-size: 63px; } }
 
@@ -4733,17 +4735,17 @@ a.thumbnail.active {
   margin-bottom: 20px;
   padding-left: 0; }
 
-.list-group-item {
+.list-group-item, div#results li {
   position: relative;
   display: block;
   padding: 10px 15px;
   margin-bottom: -1px;
   background-color: #fff;
   border: 1px solid #ddd; }
-  .list-group-item:first-child {
+  .list-group-item:first-child, div#results li:first-child {
     border-top-right-radius: 4px;
     border-top-left-radius: 4px; }
-  .list-group-item:last-child {
+  .list-group-item:last-child, div#results li:last-child {
     margin-bottom: 0;
     border-bottom-right-radius: 4px;
     border-bottom-left-radius: 4px; }
@@ -4765,28 +4767,34 @@ button.list-group-item {
   width: 100%;
   text-align: left; }
 
-.list-group-item.disabled, .list-group-item.disabled:hover, .list-group-item.disabled:focus {
+.list-group-item.disabled, div#results li.disabled, .list-group-item.disabled:hover, div#results li.disabled:hover, .list-group-item.disabled:focus, div#results li.disabled:focus {
   background-color: #eeeeee;
   color: #777777;
   cursor: not-allowed; }
-  .list-group-item.disabled .list-group-item-heading, .list-group-item.disabled:hover .list-group-item-heading, .list-group-item.disabled:focus .list-group-item-heading {
+  .list-group-item.disabled .list-group-item-heading, div#results li.disabled .list-group-item-heading, .list-group-item.disabled:hover .list-group-item-heading, div#results li.disabled:hover .list-group-item-heading, .list-group-item.disabled:focus .list-group-item-heading, div#results li.disabled:focus .list-group-item-heading {
     color: inherit; }
-  .list-group-item.disabled .list-group-item-text, .list-group-item.disabled:hover .list-group-item-text, .list-group-item.disabled:focus .list-group-item-text {
+  .list-group-item.disabled .list-group-item-text, div#results li.disabled .list-group-item-text, .list-group-item.disabled:hover .list-group-item-text, div#results li.disabled:hover .list-group-item-text, .list-group-item.disabled:focus .list-group-item-text, div#results li.disabled:focus .list-group-item-text {
     color: #777777; }
-.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+.list-group-item.active, div#results li.active, .list-group-item.active:hover, div#results li.active:hover, .list-group-item.active:focus, div#results li.active:focus {
   z-index: 2;
   color: #fff;
   background-color: #23A3DD;
   border-color: #23A3DD; }
-  .list-group-item.active .list-group-item-heading,
+  .list-group-item.active .list-group-item-heading, div#results li.active .list-group-item-heading,
   .list-group-item.active .list-group-item-heading > small,
-  .list-group-item.active .list-group-item-heading > .small, .list-group-item.active:hover .list-group-item-heading,
+  div#results li.active .list-group-item-heading > small,
+  .list-group-item.active .list-group-item-heading > .small,
+  div#results li.active .list-group-item-heading > .small, .list-group-item.active:hover .list-group-item-heading, div#results li.active:hover .list-group-item-heading,
   .list-group-item.active:hover .list-group-item-heading > small,
-  .list-group-item.active:hover .list-group-item-heading > .small, .list-group-item.active:focus .list-group-item-heading,
+  div#results li.active:hover .list-group-item-heading > small,
+  .list-group-item.active:hover .list-group-item-heading > .small,
+  div#results li.active:hover .list-group-item-heading > .small, .list-group-item.active:focus .list-group-item-heading, div#results li.active:focus .list-group-item-heading,
   .list-group-item.active:focus .list-group-item-heading > small,
-  .list-group-item.active:focus .list-group-item-heading > .small {
+  div#results li.active:focus .list-group-item-heading > small,
+  .list-group-item.active:focus .list-group-item-heading > .small,
+  div#results li.active:focus .list-group-item-heading > .small {
     color: inherit; }
-  .list-group-item.active .list-group-item-text, .list-group-item.active:hover .list-group-item-text, .list-group-item.active:focus .list-group-item-text {
+  .list-group-item.active .list-group-item-text, div#results li.active .list-group-item-text, .list-group-item.active:hover .list-group-item-text, div#results li.active:hover .list-group-item-text, .list-group-item.active:focus .list-group-item-text, div#results li.active:focus .list-group-item-text {
     color: #d4edf8; }
 
 .list-group-item-success {
@@ -4935,25 +4943,31 @@ button.list-group-item-danger {
 .panel > .list-group,
 .panel > .panel-collapse > .list-group {
   margin-bottom: 0; }
-  .panel > .list-group .list-group-item,
-  .panel > .panel-collapse > .list-group .list-group-item {
+  .panel > .list-group .list-group-item, .panel > .list-group div#results li, div#results .panel > .list-group li,
+  .panel > .panel-collapse > .list-group .list-group-item,
+  .panel > .panel-collapse > .list-group div#results li,
+  div#results .panel > .panel-collapse > .list-group li {
     border-width: 1px 0;
     border-radius: 0; }
-  .panel > .list-group:first-child .list-group-item:first-child,
-  .panel > .panel-collapse > .list-group:first-child .list-group-item:first-child {
+  .panel > .list-group:first-child .list-group-item:first-child, .panel > .list-group:first-child div#results li:first-child, div#results .panel > .list-group:first-child li:first-child,
+  .panel > .panel-collapse > .list-group:first-child .list-group-item:first-child,
+  .panel > .panel-collapse > .list-group:first-child div#results li:first-child,
+  div#results .panel > .panel-collapse > .list-group:first-child li:first-child {
     border-top: 0;
     border-top-right-radius: 3px;
     border-top-left-radius: 3px; }
-  .panel > .list-group:last-child .list-group-item:last-child,
-  .panel > .panel-collapse > .list-group:last-child .list-group-item:last-child {
+  .panel > .list-group:last-child .list-group-item:last-child, .panel > .list-group:last-child div#results li:last-child, div#results .panel > .list-group:last-child li:last-child,
+  .panel > .panel-collapse > .list-group:last-child .list-group-item:last-child,
+  .panel > .panel-collapse > .list-group:last-child div#results li:last-child,
+  div#results .panel > .panel-collapse > .list-group:last-child li:last-child {
     border-bottom: 0;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px; }
-.panel > .panel-heading + .panel-collapse > .list-group .list-group-item:first-child {
+.panel > .panel-heading + .panel-collapse > .list-group .list-group-item:first-child, .panel > .panel-heading + .panel-collapse > .list-group div#results li:first-child, div#results .panel > .panel-heading + .panel-collapse > .list-group li:first-child {
   border-top-right-radius: 0;
   border-top-left-radius: 0; }
 
-.panel-heading + .list-group .list-group-item:first-child {
+.panel-heading + .list-group .list-group-item:first-child, .panel-heading + .list-group div#results li:first-child, div#results .panel-heading + .list-group li:first-child {
   border-top-width: 0; }
 
 .list-group + .panel-footer {
@@ -6051,6 +6065,7 @@ a.thumbnail-primary-bg.active {
 body {
   padding-top: 60px; }
 
+/* Buttons */
 .minibutton:hover {
   text-decoration: none !important; }
 
@@ -6062,6 +6077,18 @@ body {
 .actions {
   padding-left: 0; }
 
+#head ul.actions {
+  clear: both; }
+
+@media (min-width: 940px) {
+  div#wiki-wrapper.results #head ul.actions, div.results#results #head ul.actions {
+    clear: none;
+    float: right !important; } }
+@media (min-width: 1200px) {
+  div#wiki-wrapper.history #head ul.actions, div.history#results #head ul.actions {
+    clear: none;
+    float: right !important; } }
+/* symbols */
 @font-face {
   font-family: 'Glyphicons Halflings';
   src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot");
@@ -6078,6 +6105,7 @@ li a.folder:before {
 li a.file:before {
   content: "\e022\2003"; }
 
+/* structure of pages (e.g., footer and header) */
 #pages ul {
   padding-left: 4em; }
 
@@ -6094,11 +6122,18 @@ li a.file:before {
 
 #head {
   border-bottom: 1px solid #ddd;
-  padding-bottom: 0.3em;
   margin: 4em 0 1.5em;
-  margin-bottom: 0; }
+  padding: 0;
+  overflow: hidden; }
 
-#wiki-body, .tree {
+@media (min-width: 940px) {
+  #head {
+    padding-bottom: 0.3em;
+    margin-bottom: 0; } }
+@media (min-width: 940px) {
+  #head h1, #head ul.actions {
+    float: left; } }
+#wiki-body, div#results, .tree {
   display: block;
   float: left;
   clear: left;
@@ -6117,6 +6152,13 @@ li a.file:before {
 @media (min-width: 940px) {
   .markdown-body, .tree li {
     padding: 30px; } }
+/* results of searching */
+div#results li {
+  border: none; }
+
+span.count {
+  color: #999; }
+
 /* version overview / last changes */
 #wiki-history table tr td.checkbox {
   width: auto;
@@ -6450,23 +6492,23 @@ input[type="checkbox"] {
   border-bottom: 1px solid #ddd;
   border-top: 1px solid #ddd; }
 
-li.file {
-  padding: 0; }
+.tree li {
+  padding: 30px !important; }
 
-@media (min-width: 940px) {
-  li.file {
-    padding: 0; } }
+li.file {
+  padding: 0 !important; }
+
 li input:checked + ol > li {
-  display: block;
+  display: block !important;
   margin: 0 0 0.125em;
-  padding-top: 0px;
-  padding-bottom: 0px; }
+  padding-top: 0px !important;
+  padding-bottom: 0px !important; }
 
 ol {
   margin-top: -20px; }
 
 li input + ol > li {
-  display: none; }
+  display: none !important; }
 
 li {
   position: relative;

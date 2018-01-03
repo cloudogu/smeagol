@@ -21,31 +21,26 @@ input[type="checkbox"] {
 }
 
 .tree li {
+  padding: 30px !important;
   @extend .markdown-body;
 }
 
 li.file {
-    padding: 0;
-}
-
-@media (min-width: 940px) {
-  li.file{
-    padding: 0;
-  }
+    padding: 0 !important;
 }
 
 li input:checked + ol > li {
-  display: block;
+  display: block !important;
   margin: 0 0 0.125em;
-  padding-top: 0px;
-  padding-bottom: 0px;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
 }
 
 ol {
   margin-top: -20px;
 }
 li input + ol > li {
-  display: none;
+  display: none !important;
 }
 
 li {
@@ -97,7 +92,7 @@ li.file form button {
   @extend .glyphicon;
 }
 
-// not shown since delete link does not work
+// delete button (li.file form button:before) is not displayed since the link does not work
 // delete link is set in target/rubygems/gollum-lib-4.2.7-java/lib/gollum-lib/file_view.rb
 
 /*li.file form button:before {
