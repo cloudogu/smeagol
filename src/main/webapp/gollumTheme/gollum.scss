@@ -9,6 +9,8 @@ body {
   @extend .container
 }
 
+/* Buttons */
+
 .minibutton:hover {
   text-decoration: none !important;
 }
@@ -21,6 +23,7 @@ body {
   padding-left: 0;
 }
 
+// position of buttons (next to heading if window is big enough)
 .actions {
   padding-left: 0;
 }
@@ -44,6 +47,7 @@ body {
   }
 }
 
+/* symbols */
 
 @font-face {
   font-family: 'Glyphicons Halflings';
@@ -69,6 +73,8 @@ li a.folder:before {
 li a.file:before {
   content: "\e022\2003";
 }
+
+/* structure of pages (e.g., footer and header) */
 
 #pages ul {
   @extend .list-unstyled;

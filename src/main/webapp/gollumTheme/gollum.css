@@ -6055,6 +6055,7 @@ a.thumbnail-primary-bg.active {
 body {
   padding-top: 60px; }
 
+/* Buttons */
 .minibutton:hover {
   text-decoration: none !important; }
 
@@ -6077,6 +6078,7 @@ body {
   div#wiki-wrapper.history #head ul.actions {
     clear: none;
     float: right !important; } }
+/* symbols */
 @font-face {
   font-family: 'Glyphicons Halflings';
   src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot");
