@@ -21,12 +21,15 @@ public class Wiki {
     private static final Logger LOG = LoggerFactory.getLogger(Wiki.class);
 
     private final static String SEPARATOR = "/";
+    private final static String FILE_NAME_SEPARATOR = "/";
 
     private final String repositoryId;
     private final String branchName;
     private final String displayName;
     private final String description;
     private final String revision;
+    private boolean group;
+    private String groupName;
 
     /**
      * Constructs a new Wiki.
@@ -40,10 +43,29 @@ public class Wiki {
     public Wiki(String repositoryId, String branchName, String displayName, String description, String revision) {
         this.repositoryId = repositoryId;
         this.branchName = branchName;
-        this.displayName = displayName;
         this.description = description;
         this.revision = revision;
+
+        //parseName(displayName);
+        String splitedName[] = displayName.split(FILE_NAME_SEPARATOR, 2);
+        this.displayName = splitedName[splitedName.length-1];
+        if(splitedName.length == 1){
+            this.group = false;
+            this.groupName = "main";
+        }
+        else {
+            this.groupName = splitedName[0];
+            this.group = true;
+        }
     }
+
+   /* private void parseName(String name){
+        String splitedName[] = name.split(FILE_NAME_SEPARATOR, 2);
+        displayName = splitedName[splitedName.length-1];
+        if(splitedName.length > 1){
+            group = splitedName[0];
+        }
+    }*/
 
     public String getName() {
         return this.repositoryId + SEPARATOR + this.branchName;
@@ -77,4 +99,8 @@ public class Wiki {
     public String getRevision() {
         return revision;
     }
+
+    public Boolean getGroup() { return group; }
+
+    public String getGroupName() { return groupName; }
 }
