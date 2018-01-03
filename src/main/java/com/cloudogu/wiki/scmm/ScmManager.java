@@ -17,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -48,6 +50,13 @@ public final class ScmManager {
                     wikis.add(convertToWiki(repository, "", ""));
                 }
             }
+
+           // sorting repositories
+            wikis.sort(
+                    Comparator.comparing(Wiki::getGroup, Comparator.reverseOrder())
+                            .thenComparing(Wiki::getGroupName, String.CASE_INSENSITIVE_ORDER)
+                            .thenComparing(Wiki::getDisplayName, String.CASE_INSENSITIVE_ORDER));
+
 
             return wikis;
         } catch (UnirestException ex) {
