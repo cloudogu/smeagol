@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.View;
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * The dispatcher servlet takes the current requested name of the wiki and
@@ -221,6 +223,24 @@ public class WikiDispatcherServlet extends HttpServlet {
 
     }
 
+    private static class Group {
+        private List<Wiki> repos;
+        private String groupName;
+
+        public Group(String groupName, List<Wiki> wikis){
+            this.groupName = groupName;
+            this.repos = wikis;
+        }
+
+        public String getGroupName(){
+            return groupName;
+        }
+
+        public List<Wiki> getRepos(){
+            return repos;
+        }
+    }
+
     private static class Overview extends ViewModel {
 
         private final Iterable<Wiki> wikis;
@@ -234,6 +254,32 @@ public class WikiDispatcherServlet extends HttpServlet {
 
         public Iterable<Wiki> getWikis() {
             return wikis;
+        }
+
+
+        public List<Group> getGroups() {
+            // here: sorting by groups
+            String group = "";
+            List<Wiki> tmp = new ArrayList<Wiki>();
+            List<Group> groups = new ArrayList<Group>();
+
+            for (Wiki wiki : wikis) {
+                if(group.equals("")){
+                    group = wiki.getGroupName();
+                }
+
+                if(group.equals(wiki.getGroupName())){
+                    tmp.add(wiki);
+                }
+                else {
+                    groups.add(new Group(group, tmp));
+                    tmp = new ArrayList<Wiki>();
+                    tmp.add(wiki);
+                    group = wiki.getGroupName();
+                }
+            }
+            groups.add(new Group(group, tmp));
+            return groups;
         }
 
         public String getCasLogoutUrl() {
