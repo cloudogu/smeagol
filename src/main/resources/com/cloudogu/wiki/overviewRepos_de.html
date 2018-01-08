@@ -6,18 +6,54 @@
 
 <h2>Wikis</h2>
 
+<style>
+    .border{
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+    }
+    .open:before {
+        font-family: 'Glyphicons Halflings';
+        font-size: 14px;
+        content: "\e114\2002";
+    }
+    .closed:before {
+        font-family: 'Glyphicons Halflings';
+        font-size: 14px;
+        content: "\e080\2002"; }
+
+</style>
+
 <div class="list-group">
     {{#groups}}
-    <h4>{{groupName}}</h4>
-    {{#repos}}
+    <h4 class="border open accordion">{{groupName}}</h4>
+    <div class="panel" style="display: block" >
+        {{#repos}}
         <a class="list-group-item" href="{{request.contextPath}}{{request.servletPath}}/{{urlEncodedName}}">
            <h4>{{displayName}}</h4>
           {{#description}}
           <p class="list-group-item-text">{{description}}</p>
           {{/description}}
         </a>
-    {{/repos}}
+        {{/repos}}
+    </div>
     {{/groups}}
 </div>
 
 {{> footer}}
+
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            this.classList.toggle("closed");
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        });
+    }
+</script>
