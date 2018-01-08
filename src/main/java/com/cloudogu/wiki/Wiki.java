@@ -59,14 +59,6 @@ public class Wiki {
         }
     }
 
-   /* private void parseName(String name){
-        String splitedName[] = name.split(FILE_NAME_SEPARATOR, 2);
-        displayName = splitedName[splitedName.length-1];
-        if(splitedName.length > 1){
-            group = splitedName[0];
-        }
-    }*/
-
     public String getName() {
         return this.repositoryId + SEPARATOR + this.branchName;
     }
@@ -100,7 +92,7 @@ public class Wiki {
         return revision;
     }
 
-    public Boolean getGroup() { return group; }
+    public Boolean hasGroup() { return group; }
 
     public String getGroupName() { return groupName; }
 }
