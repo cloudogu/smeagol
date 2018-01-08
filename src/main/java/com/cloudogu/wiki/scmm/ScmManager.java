@@ -53,10 +53,9 @@ public final class ScmManager {
 
            // sorting repositories
             wikis.sort(
-                    Comparator.comparing(Wiki::getGroup, Comparator.reverseOrder())
+                    Comparator.comparing(Wiki::hasGroup, Comparator.reverseOrder())
                             .thenComparing(Wiki::getGroupName, String.CASE_INSENSITIVE_ORDER)
                             .thenComparing(Wiki::getDisplayName, String.CASE_INSENSITIVE_ORDER));
-
 
             return wikis;
         } catch (UnirestException ex) {
