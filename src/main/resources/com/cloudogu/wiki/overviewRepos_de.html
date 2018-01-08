@@ -7,14 +7,17 @@
 <h2>Wikis</h2>
 
 <div class="list-group">
-    {{#wikis}}
-    <a class="list-group-item" href="{{request.contextPath}}{{request.servletPath}}/{{urlEncodedName}}">
-        <h4>{{groupName}}: {{displayName}}</h4>
-        {{#description}}
-        <p class="list-group-item-text">{{description}}</p>
-        {{/description}}
-    </a>
-    {{/wikis}}
+    {{#groups}}
+    <h4>{{groupName}}</h4>
+    {{#repos}}
+        <a class="list-group-item" href="{{request.contextPath}}{{request.servletPath}}/{{urlEncodedName}}">
+           <h4>{{displayName}}</h4>
+          {{#description}}
+          <p class="list-group-item-text">{{description}}</p>
+          {{/description}}
+        </a>
+    {{/repos}}
+    {{/groups}}
 </div>
 
 {{> footer}}
