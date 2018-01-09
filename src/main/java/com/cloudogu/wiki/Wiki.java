@@ -21,7 +21,6 @@ public class Wiki {
     private static final Logger LOG = LoggerFactory.getLogger(Wiki.class);
 
     private final static String SEPARATOR = "/";
-    private final static String FILE_NAME_SEPARATOR = "/";
 
     private final String repositoryId;
     private final String branchName;
@@ -48,17 +47,17 @@ public class Wiki {
 
         // displayName has structure 'group/name' -> splitting it
         // group can have the structure 'name1/name2/...'
-        String splitedName[] = displayName.split(FILE_NAME_SEPARATOR, 2);
+        String splitedName[] = displayName.split(SEPARATOR, 2);
 
         if(splitedName.length == 1){
             this.group = false;
             this.groupName = "main";
         }
         else {
-            this.groupName = displayName.substring(0,displayName.lastIndexOf(FILE_NAME_SEPARATOR));
+            this.groupName = displayName.substring(0,displayName.lastIndexOf(SEPARATOR));
             this.group = true;
         }
-        this.displayName = displayName.substring(displayName.lastIndexOf(FILE_NAME_SEPARATOR) + 1);
+        this.displayName = displayName.substring(displayName.lastIndexOf(SEPARATOR) + 1);
     }
 
     public String getName() {
@@ -94,7 +93,7 @@ public class Wiki {
         return revision;
     }
 
-    public Boolean hasGroup() { return group; }
+    public boolean hasGroup() { return group; }
 
     public String getGroupName() { return groupName; }
 }
