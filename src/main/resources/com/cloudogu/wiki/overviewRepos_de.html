@@ -46,12 +46,12 @@
 
 <script>
     // used for collapsing/expanding of repos by clicking on the groupname
-    let acc = document.getElementsByClassName("accordion");
+    var acc = document.getElementsByClassName("accordion");
 
-    for (let i = 0; i < acc.length; i++) {
+    for (var i = 0; i < acc.length; i++) {
         acc[i].addEventListener("click", function() {
             this.classList.toggle("closed");
-            let panel = this.nextElementSibling;
+            var panel = this.nextElementSibling;
             if (panel.style.display === "block") {
                 panel.style.display = "none";
             } else {
