@@ -51,7 +51,7 @@ public class Wiki {
 
         if(splitedName.length == 1){
             this.group = false;
-            this.groupName = "main";
+            this.groupName = null;
         }
         else {
             this.groupName = displayName.substring(0,displayName.lastIndexOf(SEPARATOR));

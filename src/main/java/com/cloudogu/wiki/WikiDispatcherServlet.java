@@ -270,6 +270,7 @@ public class WikiDispatcherServlet extends HttpServlet {
             List<Group> groups = new ArrayList<Group>();
 
             if(Iterables.size(wikis) != 0) {
+
                 for (Wiki wiki : wikis) { // wikis are already sorted by group name and alphabetically in ScmManager.getPotentialWikis
 
                     if (currentGroup.equals("")) { // first iteration -> currentGroup needs to get the current groupname
@@ -282,13 +283,14 @@ public class WikiDispatcherServlet extends HttpServlet {
                         currentRepos.add(wiki);
                     } else { //current repo does not have the same group as the repo before
                         // -> the repos before can be added to groups, since all members of this group are found now
+                        if(currentGroup == null) currentGroup = "main";
                         groups.add(new Group(currentGroup, currentRepos));
                         currentRepos = new ArrayList<Wiki>(); // old currentRepos does not be needed anymore -> new initialisation
                         currentRepos.add(wiki); //current repo has to be added
                         currentGroup = wiki.getGroupName(); // groupname of current repo has to be used for next iteration
                     }
                 }
-
+                if(currentGroup == null) currentGroup = "main";
                 groups.add(new Group(currentGroup, currentRepos)); //adding last group with last repos
                 return groups;
             }

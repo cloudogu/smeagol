@@ -51,8 +51,7 @@ public final class ScmManager {
 
            // sorting repositories by group and then alphabetically
             wikis.sort(
-                    Comparator.comparing(Wiki::hasGroup, Comparator.reverseOrder())
-                            .thenComparing(Wiki::getGroupName, String.CASE_INSENSITIVE_ORDER)
+                    Comparator.comparing(Wiki::getGroupName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER))
                             .thenComparing(Wiki::getDisplayName, String.CASE_INSENSITIVE_ORDER));
 
             return wikis;
