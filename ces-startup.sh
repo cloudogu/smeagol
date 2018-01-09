@@ -9,6 +9,16 @@ export SMEAGOL_CAS_URL="https://${FQDN}/cas"
 export SCM_INSTANCE_URL="https://${FQDN}/scm"
 export PLANTUML_URL="https://${FQDN}/plantuml/png"
 
+
+# wait until scm passes all health checks
+echo "wait until scm passes all health checks"
+if ! doguctl healthy --wait --timeout 120 scm; then
+  echo "timeout reached by waiting of scm to get healthy"
+  exit 1
+fi
+sleep 10
+
+
 TRUSTSTORE="${SMEAGOL_HOME}/truststore.jks"
 create_truststore.sh "${TRUSTSTORE}" > /dev/null
 
