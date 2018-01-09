@@ -10,6 +10,7 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -268,28 +269,30 @@ public class WikiDispatcherServlet extends HttpServlet {
             List<Wiki> currentRepos = new ArrayList<Wiki>();
             List<Group> groups = new ArrayList<Group>();
 
-            for (Wiki wiki : wikis) { // wikis are already sorted by group name and alphabetically in ScmManager.getPotentialWikis
+            if(Iterables.size(wikis) != 0) {
+                for (Wiki wiki : wikis) { // wikis are already sorted by group name and alphabetically in ScmManager.getPotentialWikis
 
-                if(currentGroup.equals("")){ // first iteration -> currentGroup needs to get the current groupname
-                    currentGroup = wiki.getGroupName();
+                    if (currentGroup.equals("")) { // first iteration -> currentGroup needs to get the current groupname
+                        currentGroup = wiki.getGroupName();
+                    }
+
+                    // after first iteration, groupname is the name of the group before
+                    // if this equals with the current one, the current repo has the same group and can be added to currentRepos
+                    if (currentGroup.equals(wiki.getGroupName())) {
+                        currentRepos.add(wiki);
+                    } else { //current repo does not have the same group as the repo before
+                        // -> the repos before can be added to groups, since all members of this group are found now
+                        groups.add(new Group(currentGroup, currentRepos));
+                        currentRepos = new ArrayList<Wiki>(); // old currentRepos does not be needed anymore -> new initialisation
+                        currentRepos.add(wiki); //current repo has to be added
+                        currentGroup = wiki.getGroupName(); // groupname of current repo has to be used for next iteration
+                    }
                 }
 
-                // after first iteration, groupname is the name of the group before
-                // if this equals with the current one, the current repo has the same group and can be added to currentRepos
-                if(currentGroup.equals(wiki.getGroupName())){
-                    currentRepos.add(wiki);
-                }
-                else { //current repo does not have the same group as the repo before
-                       // -> the repos before can be added to groups, since all members of this group are found now
-                    groups.add(new Group(currentGroup, currentRepos));
-                    currentRepos = new ArrayList<Wiki>(); // old currentRepos does not be needed anymore -> new initialisation
-                    currentRepos.add(wiki); //current repo has to be added
-                    currentGroup = wiki.getGroupName(); // groupname of current repo has to be used for next iteration
-                }
+                groups.add(new Group(currentGroup, currentRepos)); //adding last group with last repos
+                return groups;
             }
-
-            groups.add(new Group(currentGroup, currentRepos)); //adding last group with last repos
-            return groups;
+            return null;
         }
 
         public String getCasLogoutUrl() {
