@@ -15,9 +15,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -51,7 +49,7 @@ public final class ScmManager {
                 }
             }
 
-           // sorting repositories
+           // sorting repositories by group and then alphabetically
             wikis.sort(
                     Comparator.comparing(Wiki::hasGroup, Comparator.reverseOrder())
                             .thenComparing(Wiki::getGroupName, String.CASE_INSENSITIVE_ORDER)

@@ -30,14 +30,14 @@
     {{#groups}}
     <h4 class="border open accordion">{{groupName}}</h4>
     <div class="panel" style="display: block" >
-        {{#repos}}
+        {{#wikis}}
         <a class="list-group-item" href="{{request.contextPath}}{{request.servletPath}}/{{urlEncodedName}}">
             <h4>{{displayName}}</h4>
             {{#description}}
             <p class="list-group-item-text">{{description}}</p>
             {{/description}}
         </a>
-        {{/repos}}
+        {{/wikis}}
     </div>
     {{/groups}}
 </div>

@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.View;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
@@ -224,20 +223,20 @@ public class WikiDispatcherServlet extends HttpServlet {
     }
 
     private static class Group {
-        private List<Wiki> repos;
+        private List<Wiki> wikis;
         private String groupName;
 
         public Group(String groupName, List<Wiki> wikis){
             this.groupName = groupName;
-            this.repos = wikis;
+            this.wikis = wikis;
         }
 
         public String getGroupName(){
             return groupName;
         }
 
-        public List<Wiki> getRepos(){
-            return repos;
+        public List<Wiki> getWikis(){
+            return wikis;
         }
     }
 
@@ -258,27 +257,38 @@ public class WikiDispatcherServlet extends HttpServlet {
 
 
         public List<Group> getGroups() {
-            // here: sorting by groups
-            String group = "";
-            List<Wiki> tmp = new ArrayList<Wiki>();
+
+            /* getGroups gives a list with the groups including their repos.
+             * Therefore, the Wiki list (current order: 'repo 1 (group a), repo 2 (group a), ...')
+             * needs to be splitted into an order as 'group a (repo 1, ..), group b (repo x, ..), ..',
+             * that desired presentation in overviewRepos_en/de.html is possible.
+             */
+
+            String currentGroup = "";
+            List<Wiki> currentRepos = new ArrayList<Wiki>();
             List<Group> groups = new ArrayList<Group>();
 
-            for (Wiki wiki : wikis) {
-                if(group.equals("")){
-                    group = wiki.getGroupName();
+            for (Wiki wiki : wikis) { // wikis are already sorted by group name and alphabetically in ScmManager.getPotentialWikis
+
+                if(currentGroup.equals("")){ // first iteration -> currentGroup needs to get the current groupname
+                    currentGroup = wiki.getGroupName();
                 }
 
-                if(group.equals(wiki.getGroupName())){
-                    tmp.add(wiki);
+                // after first iteration, groupname is the name of the group before
+                // if this equals with the current one, the current repo has the same group and can be added to currentRepos
+                if(currentGroup.equals(wiki.getGroupName())){
+                    currentRepos.add(wiki);
                 }
-                else {
-                    groups.add(new Group(group, tmp));
-                    tmp = new ArrayList<Wiki>();
-                    tmp.add(wiki);
-                    group = wiki.getGroupName();
+                else { //current repo does not have the same group as the repo before
+                       // -> the repos before can be added to groups, since all members of this group are found now
+                    groups.add(new Group(currentGroup, currentRepos));
+                    currentRepos = new ArrayList<Wiki>(); // old currentRepos does not be needed anymore -> new initialisation
+                    currentRepos.add(wiki); //current repo has to be added
+                    currentGroup = wiki.getGroupName(); // groupname of current repo has to be used for next iteration
                 }
             }
-            groups.add(new Group(group, tmp));
+
+            groups.add(new Group(currentGroup, currentRepos)); //adding last group with last repos
             return groups;
         }
 
