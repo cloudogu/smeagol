@@ -28,8 +28,8 @@ public class Wiki {
     private final String displayName;
     private final String description;
     private final String revision;
-    private boolean group;
-    private String groupName;
+    private boolean group; // true if repo has a group
+    private String groupName; //groups without a group gets group name 'main'
 
     /**
      * Constructs a new Wiki.
@@ -46,17 +46,19 @@ public class Wiki {
         this.description = description;
         this.revision = revision;
 
-        //parseName(displayName);
+        // displayName has structure 'group/name' -> splitting it
+        // group can have the structure 'name1/name2/...'
         String splitedName[] = displayName.split(FILE_NAME_SEPARATOR, 2);
-        this.displayName = splitedName[splitedName.length-1];
+
         if(splitedName.length == 1){
             this.group = false;
             this.groupName = "main";
         }
         else {
-            this.groupName = splitedName[0];
+            this.groupName = displayName.substring(0,displayName.lastIndexOf(FILE_NAME_SEPARATOR));
             this.group = true;
         }
+        this.displayName = displayName.substring(displayName.lastIndexOf(FILE_NAME_SEPARATOR) + 1);
     }
 
     public String getName() {
