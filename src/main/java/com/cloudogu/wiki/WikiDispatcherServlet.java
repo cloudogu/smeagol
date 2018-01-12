@@ -53,8 +53,14 @@ public class WikiDispatcherServlet extends HttpServlet {
         String repositoryId = getRepositoryId(req);
         String branchName = getBranchName(req);
 
+
         if (Strings.isNullOrEmpty(repositoryId)) {
-            renderOverview(req, resp);
+            try {
+                renderOverview(req, resp);
+            }
+            catch(RuntimeException ex){
+                renderNotConnectionToSCM(req, resp);
+            }
         } else if (Strings.isNullOrEmpty(branchName)) {
             renderBranchOverview(req, resp);
         } else {
@@ -79,6 +85,11 @@ public class WikiDispatcherServlet extends HttpServlet {
     private void renderNotFound(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(404);
         renderTemplate(response, "notfound", new NotFound(request));
+    }
+
+    private void renderNotConnectionToSCM(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setStatus(404);
+        renderTemplate(response, "noSCMConnection", new NotFound(request));
     }
 
     private void renderOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {

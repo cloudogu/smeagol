@@ -16,6 +16,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.swing.*;
 import java.io.InputStream;
 import java.util.List;
 
@@ -51,16 +52,7 @@ public final class ScmManager {
 
             return wikis;
         } catch (UnirestException ex) {
-
-            List<Wiki> wikis = Lists.newArrayList();
-
-            for (int i = 0; i < 1; i++) {
-               wikis.add(new Wiki("", "", "Es ist ein Fehler aufgetreten",
-                       "Der SCM-Manager kann nicht erreicht werden - Überprüfe die Verbindung. Es kann auch sein, dass der SCM-Manager noch nicht vollständig hochgefahren ist.", ""));
-            }
-
-            return wikis;
-            //throw Throwables.propagate(ex);
+            throw Throwables.propagate(ex);
         }
     }
 
