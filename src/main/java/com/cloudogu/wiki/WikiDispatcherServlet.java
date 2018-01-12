@@ -285,7 +285,7 @@ public class WikiDispatcherServlet extends HttpServlet {
 
         private final Iterable<Wiki> wikis;
         private final String casLogoutUrl;
-        private final List<Group> groups;
+        private final Iterable<Group> groups;
 
         public Overview(HttpServletRequest request, Iterable<Wiki> wikis, String casUrl) {
             super(request);
@@ -306,7 +306,7 @@ public class WikiDispatcherServlet extends HttpServlet {
         }
 
 
-        public List<Group> getGroups(){
+        public Iterable<Group> getGroups(){
             return groups;
         }
 
