@@ -88,7 +88,7 @@ public class WikiDispatcherServlet extends HttpServlet {
     }
 
     private void renderNotConnectionToSCM(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setStatus(404);
+        response.setStatus(500);
         renderTemplate(response, "noSCMConnection", new NotFound(request));
     }
 
