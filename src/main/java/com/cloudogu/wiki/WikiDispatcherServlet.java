@@ -59,7 +59,7 @@ public class WikiDispatcherServlet extends HttpServlet {
                 renderOverview(req, resp);
             }
             catch(RuntimeException ex){
-                renderNotConnectionToSCM(req, resp);
+                renderNoConnectionToSCM(req, resp);
             }
         } else if (Strings.isNullOrEmpty(branchName)) {
             renderBranchOverview(req, resp);
@@ -87,7 +87,7 @@ public class WikiDispatcherServlet extends HttpServlet {
         renderTemplate(response, "notfound", new NotFound(request));
     }
 
-    private void renderNotConnectionToSCM(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void renderNoConnectionToSCM(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(500);
         renderTemplate(response, "noSCMConnection", new NotFound(request));
     }
