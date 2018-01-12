@@ -78,13 +78,53 @@ public class WikiDispatcherServlet extends HttpServlet {
         }
     }
 
+    public List<Group> sortingWikisByGroups(Iterable<Wiki> wikis) {
+
+            /* getGroups gives a list with the groups including their repos.
+             * Therefore, the Wiki list (current order: 'repo 1 (group a), repo 2 (group a), ...')
+             * needs to be splitted into an order as 'group a (repo 1, ..), group b (repo x, ..), ..',
+             * that desired presentation in overviewRepos_en/de.html is possible.
+             */
+
+        String currentGroup = "";
+        List<Wiki> currentRepos = new ArrayList<Wiki>();
+        List<Group> groups = new ArrayList<Group>();
+
+        if(Iterables.size(wikis) != 0) {
+
+            for (Wiki wiki : wikis) { // wikis are already sorted by group name and alphabetically in ScmManager.getPotentialWikis
+
+                if (currentGroup.equals("")) { // first iteration -> currentGroup needs to get the current groupname
+                    currentGroup = wiki.getGroupName();
+                }
+
+                // after first iteration, groupname is the name of the group before
+                // if this equals with the current one, the current repo has the same group and can be added to currentRepos
+                if (currentGroup.equals(wiki.getGroupName())) {
+                    currentRepos.add(wiki);
+                } else { //current repo does not have the same group as the repo before
+                    // -> the repos before can be added to groups, since all members of this group are found now
+                    if(currentGroup == null) currentGroup = "main";
+                    groups.add(new Group(currentGroup, currentRepos));
+                    currentRepos = new ArrayList<Wiki>(); // old currentRepos does not be needed anymore -> new initialisation
+                    currentRepos.add(wiki); //current repo has to be added
+                    currentGroup = wiki.getGroupName(); // groupname of current repo has to be used for next iteration
+                }
+            }
+            if(currentGroup == null) currentGroup = "main";
+            groups.add(new Group(currentGroup, currentRepos)); //adding last group with last repos
+            return groups;
+        }
+        return null;
+    }
+
     private void renderNotFound(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(404);
         renderTemplate(response, "notfound", new NotFound(request));
     }
 
     private void renderOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        renderTemplate(response, "overviewRepos", new Overview(request, provider.getAll(), getCasLogoutUrl(configuration)));
+        renderTemplate(response, "overviewRepos", new Overview(request, sortingWikisByGroups(provider.getAll()), getCasLogoutUrl(configuration)));
     }
 
     private void renderBranchOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -245,11 +285,20 @@ public class WikiDispatcherServlet extends HttpServlet {
 
         private final Iterable<Wiki> wikis;
         private final String casLogoutUrl;
+        private final List<Group> groups;
 
         public Overview(HttpServletRequest request, Iterable<Wiki> wikis, String casUrl) {
             super(request);
             this.wikis = wikis;
             this.casLogoutUrl = casUrl;
+            this.groups = null;
+        }
+
+        public Overview(HttpServletRequest request, List<Group> groups, String casUrl) {
+            super(request);
+            this.wikis = null;
+            this.casLogoutUrl = casUrl;
+            this.groups = groups;
         }
 
         public Iterable<Wiki> getWikis() {
@@ -257,44 +306,8 @@ public class WikiDispatcherServlet extends HttpServlet {
         }
 
 
-        public List<Group> getGroups() {
-
-            /* getGroups gives a list with the groups including their repos.
-             * Therefore, the Wiki list (current order: 'repo 1 (group a), repo 2 (group a), ...')
-             * needs to be splitted into an order as 'group a (repo 1, ..), group b (repo x, ..), ..',
-             * that desired presentation in overviewRepos_en/de.html is possible.
-             */
-
-            String currentGroup = "";
-            List<Wiki> currentRepos = new ArrayList<Wiki>();
-            List<Group> groups = new ArrayList<Group>();
-
-            if(Iterables.size(wikis) != 0) {
-
-                for (Wiki wiki : wikis) { // wikis are already sorted by group name and alphabetically in ScmManager.getPotentialWikis
-
-                    if (currentGroup.equals("")) { // first iteration -> currentGroup needs to get the current groupname
-                        currentGroup = wiki.getGroupName();
-                    }
-
-                    // after first iteration, groupname is the name of the group before
-                    // if this equals with the current one, the current repo has the same group and can be added to currentRepos
-                    if (currentGroup.equals(wiki.getGroupName())) {
-                        currentRepos.add(wiki);
-                    } else { //current repo does not have the same group as the repo before
-                        // -> the repos before can be added to groups, since all members of this group are found now
-                        if(currentGroup == null) currentGroup = "main";
-                        groups.add(new Group(currentGroup, currentRepos));
-                        currentRepos = new ArrayList<Wiki>(); // old currentRepos does not be needed anymore -> new initialisation
-                        currentRepos.add(wiki); //current repo has to be added
-                        currentGroup = wiki.getGroupName(); // groupname of current repo has to be used for next iteration
-                    }
-                }
-                if(currentGroup == null) currentGroup = "main";
-                groups.add(new Group(currentGroup, currentRepos)); //adding last group with last repos
-                return groups;
-            }
-            return null;
+        public List<Group> getGroups(){
+            return groups;
         }
 
         public String getCasLogoutUrl() {
