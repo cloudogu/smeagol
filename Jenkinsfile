@@ -1,5 +1,5 @@
 #!groovy
-@Library('github.com/cloudogu/ces-build-lib@a5955fb')
+@Library('github.com/cloudogu/ces-build-lib@acc3ade')
 import com.cloudogu.ces.cesbuildlib.*
 
 node() { // No specific label
@@ -11,7 +11,7 @@ node() { // No specific label
             disableConcurrentBuilds()
     ])
 
-    String emailRecipients = env.EMAIL_RECIPIENTS
+    String defaultEmailRecipients = env.EMAIL_RECIPIENTS
 
     catchError {
 
@@ -49,8 +49,7 @@ node() { // No specific label
     // Archive Unit and integration test results, if any
     junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml'
 
-    // email on fail
-    step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: emailRecipients, sendToIndividuals: true])
+    mailIfStatusChanged(findEmailRecipients(defaultEmailRecipients))
 }
 
 def setupMaven(mvn) {
