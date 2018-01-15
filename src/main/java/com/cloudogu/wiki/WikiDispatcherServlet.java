@@ -58,7 +58,7 @@ public class WikiDispatcherServlet extends HttpServlet {
                 WikiContext context = WikiContextFactory.getInstance().get();
                 HttpSession session = context.getRequest().getSession(true);
                 session.setAttribute(SessionCacheScmWikiListStrategy.class.getName(), null);
-                LOG.info("jajajaj");
+                LOG.info("wikis are reloaded");
             }
 
             renderOverview(req, resp);
