@@ -16,7 +16,6 @@ if ! doguctl healthy --wait --timeout 120 scm; then
   echo "timeout reached by waiting of scm to get healthy"
   exit 1
 fi
-sleep 10
 
 
 TRUSTSTORE="${SMEAGOL_HOME}/truststore.jks"
