@@ -7,12 +7,10 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Map;
 
 /**
- * Created by masuewer on 15.01.18.
+ * @author Maren Süwer
  */
 
 public class RefreshWikisServlet extends HttpServlet {
