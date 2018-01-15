@@ -15,8 +15,6 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import javax.swing.*;
 import java.io.InputStream;
 import java.util.List;
 
