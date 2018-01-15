@@ -94,13 +94,12 @@ public class WikiDispatcherServlet extends HttpServlet {
 
             for (Wiki wiki : wikis) { // wikis are already sorted by group name and alphabetically in ScmManager.getPotentialWikis
 
-                if (currentGroup.equals("")) { // first iteration -> currentGroup needs to get the current groupname
+                if (currentGroup != null && currentGroup.equals("")) { // first iteration -> currentGroup needs to get the current groupname
                     currentGroup = wiki.getGroupName();
                 }
-
                 // after first iteration, groupname is the name of the group before
                 // if this equals with the current one, the current repo has the same group and can be added to currentRepos
-                if (currentGroup.equals(wiki.getGroupName())) {
+                if (currentGroup == wiki.getGroupName()) {
                     currentRepos.add(wiki);
                 } else { //current repo does not have the same group as the repo before
                     // -> the repos before can be added to groups, since all members of this group are found now
