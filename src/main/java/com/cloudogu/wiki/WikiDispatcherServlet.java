@@ -5,6 +5,8 @@
  */
 package com.cloudogu.wiki;
 
+import com.cloudogu.wiki.scmm.ScmWikiProvider;
+import com.cloudogu.wiki.scmm.SessionCacheScmWikiListStrategy;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -15,10 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import javax.swing.text.View;
 import java.io.IOException;
 
@@ -54,6 +53,14 @@ public class WikiDispatcherServlet extends HttpServlet {
         String branchName = getBranchName(req);
 
         if (Strings.isNullOrEmpty(repositoryId)) {
+            if ("POST".equals(req.getMethod()) && req.getParameter("refresh") != null) {
+                // Reset wiki cache
+                WikiContext context = WikiContextFactory.getInstance().get();
+                HttpSession session = context.getRequest().getSession(true);
+                session.setAttribute(SessionCacheScmWikiListStrategy.class.getName(), null);
+                LOG.info("jajajaj");
+            }
+
             renderOverview(req, resp);
         } else if (Strings.isNullOrEmpty(branchName)) {
             renderBranchOverview(req, resp);
