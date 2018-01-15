@@ -128,7 +128,7 @@ public class WikiDispatcherServlet extends HttpServlet {
     }
 
     private void renderBranchOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        renderTemplate(response, "overviewBranches", new Overview(request, provider.getAllBranches(getRepositoryId(request)), getCasLogoutUrl(configuration)));
+        renderTemplate(response, "overviewBranches", new BranchOverview(request, provider.getAllBranches(getRepositoryId(request)), getCasLogoutUrl(configuration)));
     }
 
     private void renderTemplate(HttpServletResponse response, String templateName, ViewModel viewModel) throws IOException {
@@ -281,30 +281,34 @@ public class WikiDispatcherServlet extends HttpServlet {
         }
     }
 
-    private static class Overview extends ViewModel {
-
+    private static class BranchOverview extends ViewModel {
         private final Iterable<Wiki> wikis;
         private final String casLogoutUrl;
-        private final Iterable<Group> groups;
 
-        public Overview(HttpServletRequest request, Iterable<Wiki> wikis, String casUrl) {
+        public BranchOverview(HttpServletRequest request, Iterable<Wiki> wikis, String casUrl) {
             super(request);
             this.wikis = wikis;
             this.casLogoutUrl = casUrl;
-            this.groups = null;
-        }
-
-        public Overview(HttpServletRequest request, List<Group> groups, String casUrl) {
-            super(request);
-            this.wikis = null;
-            this.casLogoutUrl = casUrl;
-            this.groups = groups;
         }
 
         public Iterable<Wiki> getWikis() {
             return wikis;
         }
 
+        public String getCasLogoutUrl() {
+            return casLogoutUrl;
+        }
+    }
+
+    private static class Overview extends ViewModel {
+        private final String casLogoutUrl;
+        private final Iterable<Group> groups;
+
+        public Overview(HttpServletRequest request, List<Group> groups, String casUrl) {
+            super(request);
+            this.casLogoutUrl = casUrl;
+            this.groups = groups;
+        }
 
         public Iterable<Group> getGroups(){
             return groups;
