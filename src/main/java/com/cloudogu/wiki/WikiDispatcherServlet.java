@@ -57,7 +57,7 @@ public class WikiDispatcherServlet extends HttpServlet {
             try {
                 renderOverview(req, resp);
             }
-            catch(NoSCMConnectionException ex){
+            catch(ScmConnectionException ex){
                 LOG.trace("no scm connection", ex);
                 renderNoConnectionToSCM(req, resp);
             }

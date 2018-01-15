@@ -6,7 +6,7 @@
 package com.cloudogu.wiki.scmm;
 
 import com.cloudogu.wiki.Account;
-import com.cloudogu.wiki.NoSCMConnectionException;
+import com.cloudogu.wiki.ScmConnectionException;
 import com.cloudogu.wiki.Wiki;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
@@ -52,7 +52,7 @@ public final class ScmManager {
 
             return wikis;
         } catch (UnirestException ex) {
-            throw new NoSCMConnectionException();
+            throw new ScmConnectionException();
         }
     }
 
