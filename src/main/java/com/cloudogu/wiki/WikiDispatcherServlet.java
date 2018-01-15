@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.View;
 import java.io.IOException;
 
 /**
@@ -58,8 +57,8 @@ public class WikiDispatcherServlet extends HttpServlet {
             try {
                 renderOverview(req, resp);
             }
-            catch(RuntimeException ex){
-                LOG.trace("no connection to scm-manager possible");
+            catch(NoSCMConnectionException ex){
+                LOG.trace("no scm connection", ex);
                 renderNoConnectionToSCM(req, resp);
             }
         } else if (Strings.isNullOrEmpty(branchName)) {

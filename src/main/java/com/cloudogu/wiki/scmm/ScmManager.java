@@ -6,6 +6,7 @@
 package com.cloudogu.wiki.scmm;
 
 import com.cloudogu.wiki.Account;
+import com.cloudogu.wiki.NoSCMConnectionException;
 import com.cloudogu.wiki.Wiki;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
@@ -17,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.InputStream;
 import java.util.List;
+
 
 /**
  *
@@ -50,7 +52,7 @@ public final class ScmManager {
 
             return wikis;
         } catch (UnirestException ex) {
-            throw Throwables.propagate(ex);
+            throw new NoSCMConnectionException();
         }
     }
 
