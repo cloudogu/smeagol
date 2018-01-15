@@ -53,14 +53,6 @@ public class WikiDispatcherServlet extends HttpServlet {
         String branchName = getBranchName(req);
 
         if (Strings.isNullOrEmpty(repositoryId)) {
-            if ("POST".equals(req.getMethod()) && req.getParameter("refresh") != null) {
-                // Reset wiki cache
-                WikiContext context = WikiContextFactory.getInstance().get();
-                HttpSession session = context.getRequest().getSession(true);
-                session.setAttribute(SessionCacheScmWikiListStrategy.class.getName(), null);
-                LOG.info("wikis are reloaded");
-            }
-
             renderOverview(req, resp);
         } else if (Strings.isNullOrEmpty(branchName)) {
             renderBranchOverview(req, resp);
