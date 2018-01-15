@@ -5,14 +5,10 @@
 {{> welcome_de}}
 
 <h2>
-    <form name="submitForm" method="post" action="/smeagol/" class="inline">
-        <input type="hidden" name="refresh" value="refreshWikis">
                                 Wikis
-        <a href="javascript:document.submitForm.submit()">
-                              <span type="submit" name="refresh" value="refreshWikis" class="glyphicon glyphicon-refresh">
-                              </span>
-        </a>
-    </form>
+    <a href="{{request.contextPath}}/refresh">
+        <span class="glyphicon glyphicon-refresh" style="float: right;"></span>
+    </a>
 </h2>
 
 <div class="list-group">
