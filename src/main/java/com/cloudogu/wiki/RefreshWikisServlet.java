@@ -15,18 +15,15 @@ import java.io.IOException;
 public class RefreshWikisServlet extends HttpServlet {
 
     private static final Logger LOG = LoggerFactory.getLogger(RefreshWikisServlet.class);
-    private final String refreshUrl;
 
-    public RefreshWikisServlet() {
-        refreshUrl = "/smeagol";
-    }
+    public RefreshWikisServlet() {}
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         request.getSession(true).removeAttribute(SessionCacheScmWikiListStrategy.class.getName());
         LOG.info("wikis are reloaded");
         try {
-            response.sendRedirect(refreshUrl);
+            response.sendRedirect(request.getContextPath());
         } catch (IOException ex) {
             LOG.warn("Failed to send redirect.", ex);
         }
