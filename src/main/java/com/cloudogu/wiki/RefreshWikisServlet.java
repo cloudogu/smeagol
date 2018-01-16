@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * The RefreshWikisServlet removes cached wiki list from the session
+ *
  * @author Maren Süwer
  */
 public class RefreshWikisServlet extends HttpServlet {
@@ -21,7 +23,7 @@ public class RefreshWikisServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         request.getSession(true).removeAttribute(SessionCacheScmWikiListStrategy.class.getName());
-        LOG.info("wikis are reloaded");
+        LOG.info("cached wiki list is removed");
         try {
             response.sendRedirect(request.getContextPath());
         } catch (IOException ex) {
