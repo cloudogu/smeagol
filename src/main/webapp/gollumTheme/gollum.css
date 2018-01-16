@@ -6095,6 +6095,7 @@ li a.folder:before {
 li a.file:before {
   content: "\e022\2003"; }
 
+/* structure of pages (e.g., footer and header) */
 #pages ul {
   padding-left: 4em; }
 

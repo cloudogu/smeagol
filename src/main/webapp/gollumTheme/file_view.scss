@@ -1,29 +1,57 @@
-//@import "../ces-theme/src/scss/ces";
-@import "gollum.scss";
+@import "../ces-theme/src/scss/ces";
+//@import "gollum.scss";
 @charset "UTF-8";
 @font-face {
   font-family: 'Glyphicons Halflings';
   src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot");
   src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("../fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
 
+body {
+  padding-top: 60px;
+}
+
 input[type="checkbox"] {
   margin: 14px 0 0;
 }
 
-#results {
-  @extend #wiki-wrapper;
+div#results {
+  @extend .container;
 }
 
 .tree {
-  @extend #wiki-body;
+  //@extend #wiki-body;
+  display: block;
+  float: left;
+  clear: left;
+  margin-right: 3%;
+  margin-bottom: 40px;
+  margin-top: 40px;
+  width: 100%;
+
   border-bottom: 1px solid #ddd;
   border-top: 1px solid #ddd;
 }
 
-.tree li {
+/*.tree li {
   padding: 30px !important;
   @extend .markdown-body;
+}*/
+
+
+.tree li {
+  padding: 30px;
+  font-size: 15px;
+  line-height: 1.7;
+  overflow: hidden;
+  word-wrap: break-word;
 }
+
+@media (min-width: 940px) {
+  .tree li {
+    padding: 30px;
+  }
+}
+
 
 li.file {
     padding: 0 !important;
