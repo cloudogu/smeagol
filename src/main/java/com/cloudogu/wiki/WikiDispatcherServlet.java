@@ -99,9 +99,7 @@ public class WikiDispatcherServlet extends HttpServlet {
                 }
                 // after first iteration, groupname is the name of the group before
                 // if this equals with the current one, the current repo has the same group and can be added to currentRepos
-                LOG.info(currentGroup + " - " + wiki.getGroupName());
                 if (currentGroup!=null && currentGroup.equals(wiki.getGroupName()) || currentGroup==wiki.getGroupName()) {
-                    LOG.info("sind gleich!");
                     currentRepos.add(wiki);
                 } else { //current repo does not have the same group as the repo before
                     // -> the repos before can be added to groups, since all members of this group are found now
