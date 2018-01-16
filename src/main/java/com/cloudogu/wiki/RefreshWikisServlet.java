@@ -25,7 +25,6 @@ public class RefreshWikisServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         request.getSession(true).removeAttribute(SessionCacheScmWikiListStrategy.class.getName());
         LOG.info("wikis are reloaded");
-        request.getSession().invalidate();
         try {
             response.sendRedirect(refreshUrl);
         } catch (IOException ex) {
