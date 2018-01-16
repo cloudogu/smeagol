@@ -8,7 +8,7 @@
 
 <style>
     .border{
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid #00426B;
         cursor: pointer;
         margin-bottom: 20px;
     }
@@ -28,7 +28,7 @@
 
 <div class="list-group">
     {{#groups}}
-    <h4 class="border open accordion">{{groupName}}</h4>
+    <h3 class="border open accordion">{{groupName}}</h3>
     <div class="panel" style="display: block" >
         {{#wikis}}
         <a class="list-group-item" href="{{request.contextPath}}{{request.servletPath}}/{{urlEncodedName}}">
