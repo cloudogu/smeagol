@@ -5,8 +5,6 @@
  */
 package com.cloudogu.wiki;
 
-import com.cloudogu.wiki.scmm.ScmWikiProvider;
-import com.cloudogu.wiki.scmm.SessionCacheScmWikiListStrategy;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -14,11 +12,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
-import javax.swing.text.View;
 import java.io.IOException;
 
 /**
