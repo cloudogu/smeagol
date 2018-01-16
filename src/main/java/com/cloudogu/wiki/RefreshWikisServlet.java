@@ -12,7 +12,6 @@ import java.io.IOException;
 /**
  * @author Maren Süwer
  */
-
 public class RefreshWikisServlet extends HttpServlet {
 
     private static final Logger LOG = LoggerFactory.getLogger(RefreshWikisServlet.class);
