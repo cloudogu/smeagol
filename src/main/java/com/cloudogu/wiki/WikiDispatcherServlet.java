@@ -99,7 +99,9 @@ public class WikiDispatcherServlet extends HttpServlet {
                 }
                 // after first iteration, groupname is the name of the group before
                 // if this equals with the current one, the current repo has the same group and can be added to currentRepos
-                if (currentGroup == wiki.getGroupName()) {
+                LOG.info(currentGroup + " - " + wiki.getGroupName());
+                if (currentGroup!=null && currentGroup.equals(wiki.getGroupName()) || currentGroup==wiki.getGroupName()) {
+                    LOG.info("sind gleich!");
                     currentRepos.add(wiki);
                 } else { //current repo does not have the same group as the repo before
                     // -> the repos before can be added to groups, since all members of this group are found now
@@ -107,7 +109,8 @@ public class WikiDispatcherServlet extends HttpServlet {
                     groups.add(new Group(currentGroup, currentRepos));
                     currentRepos = new ArrayList<Wiki>(); // old currentRepos does not be needed anymore -> new initialisation
                     currentRepos.add(wiki); //current repo has to be added
-                    currentGroup = wiki.getGroupName(); // groupname of current repo has to be used for next iteration
+                    // groupname of current repo has to be used for next iteration
+                    currentGroup = wiki.getGroupName();
                 }
             }
             if(currentGroup == null) currentGroup = "main";
