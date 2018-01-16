@@ -19,7 +19,7 @@ public class RefreshWikisServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(RefreshWikisServlet.class);
     
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         request.getSession(true).removeAttribute(SessionCacheScmWikiListStrategy.class.getName());
         LOG.info("cached wiki list is removed");
         try {
