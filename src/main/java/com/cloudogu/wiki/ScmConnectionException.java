@@ -6,8 +6,8 @@ package com.cloudogu.wiki;
 public class ScmConnectionException extends RuntimeException
 {
     // Konstruktor unserer eigenen Exception
-    public ScmConnectionException()
+    public ScmConnectionException(String exceptionMessage, Exception ex)
     {
-        super("No Connection to scm manager possible!");
+        super(exceptionMessage, ex);
     }
 }

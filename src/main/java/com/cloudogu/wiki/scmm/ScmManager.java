@@ -52,7 +52,7 @@ public final class ScmManager {
 
             return wikis;
         } catch (UnirestException ex) {
-            throw new ScmConnectionException();
+            throw new ScmConnectionException("No Connection to scm manager possible!", ex);
         }
     }
 
