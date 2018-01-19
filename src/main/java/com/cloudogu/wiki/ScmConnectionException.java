@@ -1,13 +1,14 @@
 package com.cloudogu.wiki;
 
 /**
+ * This exception is thrown if the scm manager cannot be reached.
+ *
  * @author Maren Süwer
  */
 public class ScmConnectionException extends RuntimeException
 {
-    // Konstruktor unserer eigenen Exception
-    public ScmConnectionException(String exceptionMessage, Exception ex)
+    public ScmConnectionException(String message, Throwable ex)
     {
-        super(exceptionMessage, ex);
+        super(message, ex);
     }
 }
