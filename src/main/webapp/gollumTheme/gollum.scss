@@ -3,6 +3,7 @@
 
 $color-grey-bright: #ddd;
 $color-grey-dark: #999;
+$color-blue-bright: #b9d1dc;
 
 body {
   padding-top: 60px;
@@ -218,8 +219,8 @@ span.count {
 }
 
 #wiki-history table tr td {
-  border-top: 1px solid #b9d1dc;
-  border-bottom: 1px solid #b9d1dc;
+  border-top: 1px solid $color-blue-bright;
+  border-bottom: 1px solid $color-blue-bright;
   font-size: 1em;
   line-height: 1.6em;
   margin: 0;
@@ -228,7 +229,7 @@ span.count {
 
 @media (min-width: 940px) {
   #wiki-history table tr td {
-    border: 1px solid #b9d1dc;
+    border: 1px solid $color-blue-bright;
     font-size: 1em;
     line-height: 1.6em;
     margin: 0;
