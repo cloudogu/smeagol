@@ -1,5 +1,4 @@
 @import "../ces-theme/src/scss/ces";
-//@import "gollum.scss";
 @charset "UTF-8";
 @font-face {
   font-family: 'Glyphicons Halflings';
@@ -19,7 +18,6 @@ div#results {
 }
 
 .tree {
-  //@extend #wiki-body;
   display: block;
   float: left;
   clear: left;
@@ -31,12 +29,6 @@ div#results {
   border-bottom: 1px solid #ddd;
   border-top: 1px solid #ddd;
 }
-
-/*.tree li {
-  padding: 30px !important;
-  @extend .markdown-body;
-}*/
-
 
 .tree li {
   padding: 30px;
@@ -51,7 +43,6 @@ div#results {
     padding: 30px;
   }
 }
-
 
 li.file {
     padding: 0 !important;
