@@ -25,5 +25,8 @@
   ],
   "dependencies": {
     "ces-theme": "https://github.com/cloudogu/ces-theme.git"
+  },
+  "devDependencies": {
+    "bootstrap-sass": "^3.3.7"
   }
 }
