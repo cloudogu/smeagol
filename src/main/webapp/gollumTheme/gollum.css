@@ -3028,32 +3028,32 @@ a.btn.disabled, a.disabled.minibutton, #gollum-editor #gollum-editor-function-ba
     color: #777777;
     background-color: #fff; }
 
-.btn-primary, #gollum-editor #gollum-editor-function-bar a.function-button {
+.btn-primary {
   color: #fff;
   background-color: #23A3DD;
   border-color: #1f93c8; }
-  .btn-primary:focus, #gollum-editor #gollum-editor-function-bar a.function-button:focus, .btn-primary.focus, #gollum-editor #gollum-editor-function-bar a.focus.function-button {
+  .btn-primary:focus, .btn-primary.focus {
     color: #fff;
     background-color: #1b83b2;
     border-color: #0e4259; }
-  .btn-primary:hover, #gollum-editor #gollum-editor-function-bar a.function-button:hover {
+  .btn-primary:hover {
     color: #fff;
     background-color: #1b83b2;
     border-color: #176c93; }
-  .btn-primary:active, #gollum-editor #gollum-editor-function-bar a.function-button:active, .btn-primary.active, #gollum-editor #gollum-editor-function-bar a.active.function-button, .open > .btn-primary.dropdown-toggle, #gollum-editor #gollum-editor-function-bar .open > a.dropdown-toggle.function-button {
+  .btn-primary:active, .btn-primary.active, .open > .btn-primary.dropdown-toggle {
     color: #fff;
     background-color: #1b83b2;
     border-color: #176c93; }
-    .btn-primary:active:hover, #gollum-editor #gollum-editor-function-bar a.function-button:active:hover, .btn-primary:active:focus, #gollum-editor #gollum-editor-function-bar a.function-button:active:focus, .btn-primary:active.focus, #gollum-editor #gollum-editor-function-bar a.function-button:active.focus, .btn-primary.active:hover, #gollum-editor #gollum-editor-function-bar a.active.function-button:hover, .btn-primary.active:focus, #gollum-editor #gollum-editor-function-bar a.active.function-button:focus, .btn-primary.active.focus, #gollum-editor #gollum-editor-function-bar a.active.focus.function-button, .open > .btn-primary.dropdown-toggle:hover, #gollum-editor #gollum-editor-function-bar .open > a.dropdown-toggle.function-button:hover, .open > .btn-primary.dropdown-toggle:focus, #gollum-editor #gollum-editor-function-bar .open > a.dropdown-toggle.function-button:focus, .open > .btn-primary.dropdown-toggle.focus, #gollum-editor #gollum-editor-function-bar .open > a.dropdown-toggle.focus.function-button {
+    .btn-primary:active:hover, .btn-primary:active:focus, .btn-primary:active.focus, .btn-primary.active:hover, .btn-primary.active:focus, .btn-primary.active.focus, .open > .btn-primary.dropdown-toggle:hover, .open > .btn-primary.dropdown-toggle:focus, .open > .btn-primary.dropdown-toggle.focus {
       color: #fff;
       background-color: #176c93;
       border-color: #0e4259; }
-  .btn-primary:active, #gollum-editor #gollum-editor-function-bar a.function-button:active, .btn-primary.active, #gollum-editor #gollum-editor-function-bar a.active.function-button, .open > .btn-primary.dropdown-toggle, #gollum-editor #gollum-editor-function-bar .open > a.dropdown-toggle.function-button {
+  .btn-primary:active, .btn-primary.active, .open > .btn-primary.dropdown-toggle {
     background-image: none; }
-  .btn-primary.disabled:hover, #gollum-editor #gollum-editor-function-bar a.disabled.function-button:hover, .btn-primary.disabled:focus, #gollum-editor #gollum-editor-function-bar a.disabled.function-button:focus, .btn-primary.disabled.focus, #gollum-editor #gollum-editor-function-bar a.disabled.focus.function-button, .btn-primary[disabled]:hover, #gollum-editor #gollum-editor-function-bar a[disabled].function-button:hover, .btn-primary[disabled]:focus, #gollum-editor #gollum-editor-function-bar a[disabled].function-button:focus, .btn-primary[disabled].focus, #gollum-editor #gollum-editor-function-bar a[disabled].focus.function-button, fieldset[disabled] .btn-primary:hover, fieldset[disabled] #gollum-editor #gollum-editor-function-bar a.function-button:hover, #gollum-editor #gollum-editor-function-bar fieldset[disabled] a.function-button:hover, fieldset[disabled] .btn-primary:focus, fieldset[disabled] #gollum-editor #gollum-editor-function-bar a.function-button:focus, #gollum-editor #gollum-editor-function-bar fieldset[disabled] a.function-button:focus, fieldset[disabled] .btn-primary.focus, fieldset[disabled] #gollum-editor #gollum-editor-function-bar a.focus.function-button, #gollum-editor #gollum-editor-function-bar fieldset[disabled] a.focus.function-button {
+  .btn-primary.disabled:hover, .btn-primary.disabled:focus, .btn-primary.disabled.focus, .btn-primary[disabled]:hover, .btn-primary[disabled]:focus, .btn-primary[disabled].focus, fieldset[disabled] .btn-primary:hover, fieldset[disabled] .btn-primary:focus, fieldset[disabled] .btn-primary.focus {
     background-color: #23A3DD;
     border-color: #1f93c8; }
-  .btn-primary .badge, #gollum-editor #gollum-editor-function-bar a.function-button .badge {
+  .btn-primary .badge {
     color: #23A3DD;
     background-color: #fff; }
 
@@ -6150,6 +6150,12 @@ span.count {
   color: #999; }
 
 /* version overview / last changes */
+#wiki-wrapper.history div#head {
+  border-bottom: none; }
+
+#wiki-history {
+  padding-top: 15px; }
+
 #wiki-history table tr td.checkbox {
   width: auto;
   padding: 0 0.2em 0 0;
@@ -6192,8 +6198,8 @@ span.count {
   padding: 0 0.2em; }
 
 #wiki-history table tr td {
-  border-top: 1px solid #c0dce9;
-  border-bottom: 1px solid #c0dce9;
+  border-top: 1px solid #b9d1dc;
+  border-bottom: 1px solid #b9d1dc;
   font-size: 1em;
   line-height: 1.6em;
   margin: 0;
@@ -6201,7 +6207,7 @@ span.count {
 
 @media (min-width: 940px) {
   #wiki-history table tr td {
-    border: 1px solid #c0dce9;
+    border: 1px solid #b9d1dc;
     font-size: 1em;
     line-height: 1.6em;
     margin: 0;
@@ -6213,14 +6219,14 @@ span.count {
   width: 100%; }
 
 #wiki-history table tr {
-  background-color: #ebf2f6; }
+  background-color: #d0e0e8; }
 
 #wiki-history table tr {
   padding: 0;
   margin: 0; }
 
 #wiki-history table tr:nth-child(2n), #wiki-history table tr.alt-row {
-  background-color: #f3f7fa; }
+  background-color: #e7eff3; }
 
 /* compare versions */
 .compare .data {
@@ -6263,15 +6269,15 @@ span.count {
 
 .highlight .gc {
   color: #999;
-  background-color: #EAF2F5; }
+  background-color: #e7eff3; }
 
 .highlight .gd {
   color: #000;
-  background-color: #fdd; }
+  background-color: #f9d7dc; }
 
 .highlight .gi {
   color: #000;
-  background-color: #dfd; }
+  background-color: #e8efb2; }
 
 /* dialog */
 #gollum-dialog-dialog {
@@ -6423,7 +6429,20 @@ span.count {
   height: 30px;
   width: 30px;
   overflow: hidden;
-  padding: 3px 6px; }
+  padding: 3px 6px;
+  color: #23A3DD;
+  background-color: #fff;
+  border-color: #1f93c8; }
+
+#gollum-editor #gollum-editor-function-bar a.function-button:focus {
+  color: #1b83b2;
+  background-color: #fff;
+  border-color: #0e4259; }
+
+#gollum-editor #gollum-editor-function-bar a.function-button:hover {
+  color: #1b83b2;
+  background-color: #fff;
+  border-color: #176c93; }
 
 a#function-bold, a#function-italic, a#function-ul, a#function-ol, a#function-link, a#function-image {
   position: static;

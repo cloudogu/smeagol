@@ -154,6 +154,13 @@ span.count {
 }
 
 /* version overview / last changes */
+#wiki-wrapper.history div#head{
+  border-bottom: none;
+}
+
+#wiki-history {
+  padding-top: 15px;
+}
 
 #wiki-history table tr td.checkbox {
   width: auto;
@@ -208,8 +215,8 @@ span.count {
 }
 
 #wiki-history table tr td {
-  border-top: 1px solid #c0dce9;
-  border-bottom: 1px solid #c0dce9;
+  border-top: 1px solid #b9d1dc;
+  border-bottom: 1px solid #b9d1dc;
   font-size: 1em;
   line-height: 1.6em;
   margin: 0;
@@ -218,7 +225,7 @@ span.count {
 
 @media (min-width: 940px) {
   #wiki-history table tr td {
-    border: 1px solid #c0dce9;
+    border: 1px solid #b9d1dc;
     font-size: 1em;
     line-height: 1.6em;
     margin: 0;
@@ -234,7 +241,7 @@ span.count {
 }
 
 #wiki-history table tr {
-  background-color: #ebf2f6;
+  background-color: #d0e0e8;
 }
 
 #wiki-history table tr {
@@ -243,7 +250,7 @@ span.count {
 }
 
 #wiki-history table tr:nth-child(2n), #wiki-history table tr.alt-row {
-  background-color: #f3f7fa;
+  background-color: #e7eff3;
 }
 
 /* compare versions */
@@ -296,17 +303,17 @@ span.count {
 
 .highlight .gc {
   color: #999;
-  background-color: #EAF2F5;
+  background-color: #e7eff3;
 }
 
 .highlight .gd {
   color: #000;
-  background-color: #fdd;
+  background-color: #f9d7dc;
 }
 
 .highlight .gi {
   color: #000;
-  background-color: #dfd;
+  background-color: #e8efb2;
 }
 
 /* dialog */
@@ -530,7 +537,21 @@ span.count {
   width: 30px;
   overflow: hidden;
   padding: 3px 6px;
-  @extend .btn, .btn-primary;
+  color: #23A3DD;
+  background-color: #fff;
+  border-color: #1f93c8;
+  @extend .btn;
+}
+
+#gollum-editor #gollum-editor-function-bar a.function-button:focus {
+  color: #1b83b2;
+  background-color: #fff;
+  border-color: #0e4259;
+}
+#gollum-editor #gollum-editor-function-bar a.function-button:hover {
+  color: #1b83b2;
+  background-color: #fff;
+  border-color: #176c93;
 }
 
 a#function-bold, a#function-italic, a#function-ul, a#function-ol, a#function-link, a#function-image{
