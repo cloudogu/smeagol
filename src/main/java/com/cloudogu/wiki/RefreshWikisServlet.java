@@ -19,9 +19,14 @@ public class RefreshWikisServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(RefreshWikisServlet.class);
     
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-        request.getSession(true).removeAttribute(SessionCacheScmWikiListStrategy.class.getName());
-        LOG.info("cached wiki list is removed");
-        response.sendRedirect(request.getContextPath());
+    protected void doPost(HttpServletRequest request, HttpServletResponse response){
+        try {
+            request.getSession(true).removeAttribute(SessionCacheScmWikiListStrategy.class.getName());
+            LOG.info("cached wiki list is removed");
+            response.sendRedirect(request.getContextPath());
+        }
+        catch(IOException ex){
+            LOG.warn("Failed to send redirect.", ex);
+        }
     }
 }
