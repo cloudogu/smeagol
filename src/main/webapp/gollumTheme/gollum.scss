@@ -1,6 +1,9 @@
 @import "../ces-theme/src/scss/ces";
 @charset "UTF-8";
 
+$color-grey-bright: #ddd;
+$color-grey-dark: #999;
+
 body {
   padding-top: 60px;
 }
@@ -83,19 +86,19 @@ li a.file:before {
 
 .page #footer {
   clear: both;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid $color-grey-bright;
   margin: 1em 0 7em;
 }
 
 #footer p#last-edit {
   font-size: .9em;
   line-height: 1.6em;
-  color: #999;
+  color: $color-grey-dark;
   margin: 0.9em 0;
 }
 
 #head {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid $color-grey-bright;
   margin: 4em 0 1.5em;
   padding: 0;
   overflow: hidden;
@@ -150,7 +153,7 @@ div#results li {
 }
 
 span.count {
-  color: #999;
+  color: $color-grey-dark;
 }
 
 /* version overview / last changes */
@@ -205,7 +208,7 @@ span.count {
 }
 
 #wiki-history table tr td.commit-name span.time-elapsed {
-  color: #999;
+  color: $color-grey-dark;
 }
 
 #wiki-history table tr td.commit-name a {
@@ -256,7 +259,7 @@ span.count {
 /* compare versions */
 
 .compare .data {
-  border: 1px solid #ddd;
+  border: 1px solid $color-grey-bright;
   margin: 1em 0 2em;
   overflow: auto;
 }
@@ -270,8 +273,8 @@ span.count {
 
 .compare .data td.line_numbers {
   background: #f7f7f7;
-  border-right: 1px solid #999;
-  color: #999;
+  border-right: 1px solid $color-grey-dark;
+  color: $color-grey-dark;
   padding: 0 0 0 0.5em;
 }
 
@@ -302,7 +305,7 @@ span.count {
 }
 
 .highlight .gc {
-  color: #999;
+  color: $color-grey-dark;
   background-color: #e7eff3;
 }
 
@@ -483,7 +486,7 @@ span.count {
 }
 
 #gollum-editor .singleline input.ph {
-  color: #999;
+  color: $color-grey-dark;
 }
 
 #gollum-editor .singleline input {
@@ -492,14 +495,14 @@ span.count {
 }
 
 #gollum-editor-title-field.active {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid $color-grey-bright;
   display: block;
   padding: 0 0 0.5em 0;
   margin-bottom: 1em;
 }
 
 #gollum-editor #gollum-editor-function-bar {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid $color-grey-bright;
   padding: 0 0 0.5em 0;
   margin-bottom: 1em;
 }
