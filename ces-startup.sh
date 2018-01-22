@@ -12,7 +12,7 @@ export PLANTUML_URL="https://${FQDN}/plantuml/png"
 
 # wait until scm passes all health checks
 echo "wait until scm passes all health checks"
-if ! doguctl healthy --wait --timeout 120 scm; then
+if ! doguctl healthy --wait --timeout 300 scm; then
   echo "timeout reached by waiting of scm to get healthy"
   exit 1
 fi
