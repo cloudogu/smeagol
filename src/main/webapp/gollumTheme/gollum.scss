@@ -100,7 +100,7 @@ li a.file:before {
 
 #head {
   border-bottom: 1px solid $color-grey-bright;
-  margin: 4em 0 1.5em;
+  margin: 0 0 1.5em;
   padding: 0;
   overflow: hidden;
 }
@@ -118,13 +118,17 @@ li a.file:before {
   }
 }
 
+#wiki-toc-main {
+  margin-bottom: 20px;
+}
+
 #wiki-body {
   display: block;
   float: left;
   clear: left;
   margin-right: 3%;
   margin-bottom: 40px;
-  margin-top: 40px;
+  margin-top: 0;
   width: 100%;
 }
 
