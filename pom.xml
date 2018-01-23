@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.cloudogu.wiki</groupId>
     <artifactId>smeagol</artifactId>
-    <version>0.4.1</version>
+    <version>0.4.2</version>
     <name>smeagol</name>
     <packaging>jar</packaging>
     
@@ -164,6 +164,15 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <!-- Dependency used in Jenkinsfile. Including this in maven provides code completion in Jenkinsfile. -->
+            <groupId>com.github.cloudogu</groupId>
+            <artifactId>ces-build-lib</artifactId>
+            <!-- Keep this version in sync with the one used in Jenkinsfile -->
+            <version>888733b</version>
+            <!-- Don't ship this dependency with the app -->
+            <optional>true</optional>
+        </dependency>
     </dependencies>
     
     
@@ -232,6 +241,11 @@
         <repository>
             <id>rubygems-release</id>
             <url>http://rubygems-proxy.torquebox.org/releases</url>
+        </repository>
+        <repository>
+            <!-- Necessary for ces-build-lib -->
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
     

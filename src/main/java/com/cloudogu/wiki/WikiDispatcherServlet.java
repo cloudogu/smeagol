@@ -13,13 +13,9 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
@@ -55,8 +51,15 @@ public class WikiDispatcherServlet extends HttpServlet {
         String repositoryId = getRepositoryId(req);
         String branchName = getBranchName(req);
 
+
         if (Strings.isNullOrEmpty(repositoryId)) {
-            renderOverview(req, resp);
+            try {
+                renderOverview(req, resp);
+            }
+            catch(ScmConnectionException ex){
+                LOG.error("no scm connection", ex);
+                renderNoConnectionToSCM(req, resp);
+            }
         } else if (Strings.isNullOrEmpty(branchName)) {
             renderBranchOverview(req, resp);
         } else {
@@ -121,6 +124,11 @@ public class WikiDispatcherServlet extends HttpServlet {
     private void renderNotFound(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(404);
         renderTemplate(response, "notfound", new NotFound(request));
+    }
+
+    private void renderNoConnectionToSCM(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setStatus(500);
+        renderTemplate(response, "noSCMConnection", new NotFound(request));
     }
 
     private void renderOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {

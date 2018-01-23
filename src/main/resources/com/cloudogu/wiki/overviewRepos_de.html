@@ -4,7 +4,15 @@
 
 {{> welcome_de}}
 
-<h2>Wikis</h2>
+<h2>
+    <form name="submitForm" method="post" action="{{request.contextPath}}/refresh" class="inline">
+        <input type="hidden" name="refresh" value="refreshWikis">
+                Wikis
+        <a href="javascript:document.submitForm.submit()">
+            <span type="submit" name="refresh" value="refreshWikis" class="glyphicon glyphicon-refresh" style="float: right;"></span>
+        </a>
+    </form>
+</h2>
 
 <style>
     .border{
