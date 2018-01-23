@@ -17,6 +17,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.InputStream;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -49,6 +50,11 @@ public final class ScmManager {
                     wikis.add(convertToWiki(repository, "", ""));
                 }
             }
+
+           // sorting repositories by group and then alphabetically
+            wikis.sort(
+                    Comparator.comparing(Wiki::getGroupName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER))
+                            .thenComparing(Wiki::getDisplayName, String.CASE_INSENSITIVE_ORDER));
 
             return wikis;
         } catch (UnirestException ex) {
