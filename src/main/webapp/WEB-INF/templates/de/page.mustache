@@ -9,42 +9,41 @@ Mousetrap.bind(['e'], function( e ) {
 <div id="head">
   <h1>{{page_header}}</h1>
   <ul class="actions">
-    <li class="minibutton">
+    <li class="minibutton no-space">
       {{>searchbar}}
     </li>
     <li class="minibutton"><a href="{{base_url}}/"
-       class="action-home-page">Startseite</a></li>
+       class="btn btn-primary btn-sm">Startseite</a></li>
     <li class="minibutton"><a href="{{base_url}}/pages"
-      class="action-all-pages">Alle</a></li>
+      class="btn btn-primary btn-sm">Alle</a></li>
     <li class="minibutton"><a href="{{base_url}}/fileview"
-    class="action-fileview">Dateien</a></li>
+    class="btn btn-primary btn-sm">Dateien</a></li>
     {{#allow_editing}}
       <li class="minibutton jaws">
-        <a href="#" id="minibutton-new-page">Neu</a></li>
+        <a href="#" id="minibutton-new-page" class="btn btn-primary btn-sm">Neu</a></li>
     {{/allow_editing}}
     {{#allow_editing}}
       {{#allow_uploads}}
       <li class="minibutton jaws">
-        <a href="#" id="minibutton-upload-page">Hochladen</a></li>
+        <a href="#" id="minibutton-upload-page" class="btn btn-primary btn-sm">Hochladen</a></li>
       {{/allow_uploads}}
     {{/allow_editing}}
     {{#allow_editing}}
       {{#editable}}
         <li class="minibutton jaws">
-          <a href="#" id="minibutton-rename-page">Umbenennen</a></li>
+          <a href="#" id="minibutton-rename-page" class="btn btn-primary btn-sm">Umbenennen</a></li>
       {{/editable}}
     {{/allow_editing}}
     {{#allow_editing}}
       {{#editable}}
-        <li class="minibutton"><a href="{{base_url}}/edit/{{escaped_url_path}}"
-           class="action-edit-page">Bearbeiten</a></li>
+        <li class="minibutton"><a href="{{base_url}}/edit/{{escaped_url_path}}" class="btn btn-primary btn-sm">Bearbeiten</a></li>
       {{/editable}}
     {{/allow_editing}}
     {{#page_exists}}
     <li class="minibutton"><a href="{{base_url}}/history/{{escaped_url_path}}"
-       class="action-page-history">Versionsübersicht</a></li>
+                              class="btn btn-primary btn-sm">Versionsübersicht</a></li>
     <li class="minibutton"><a href="{{base_url}}/latest_changes"
-       class="action-page-history">Letzte Änderungen</a></li>
+                              class="btn btn-primary btn-sm">Letzte Änderungen</a></li>
     {{/page_exists}}
   </ul>
 </div>

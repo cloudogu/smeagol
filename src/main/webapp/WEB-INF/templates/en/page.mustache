@@ -13,38 +13,37 @@ Mousetrap.bind(['e'], function( e ) {
       {{>searchbar}}
     </li>
     <li class="minibutton"><a href="{{base_url}}/"
-       class="action-home-page">Home</a></li>
+       class="btn btn-primary btn-sm">Home</a></li>
     <li class="minibutton"><a href="{{base_url}}/pages"
-      class="action-all-pages">All</a></li>
+      class="btn btn-primary btn-sm">All</a></li>
     <li class="minibutton"><a href="{{base_url}}/fileview"
-    class="action-fileview">Files</a></li>
+    class="btn btn-primary btn-sm">Files</a></li>
     {{#allow_editing}}
       <li class="minibutton jaws">
-        <a href="#" id="minibutton-new-page">New</a></li>
+        <a href="#" id="minibutton-new-page" class="btn btn-primary btn-sm">New</a></li>
     {{/allow_editing}}
     {{#allow_editing}}
       {{#allow_uploads}}
       <li class="minibutton jaws">
-        <a href="#" id="minibutton-upload-page">Upload</a></li>
+        <a href="#" id="minibutton-upload-page" class="btn btn-primary btn-sm">Upload</a></li>
       {{/allow_uploads}}
     {{/allow_editing}}
     {{#allow_editing}}
       {{#editable}}
         <li class="minibutton jaws">
-          <a href="#" id="minibutton-rename-page">Rename</a></li>
+          <a href="#" id="minibutton-rename-page" class="btn btn-primary btn-sm">Rename</a></li>
       {{/editable}}
     {{/allow_editing}}
     {{#allow_editing}}
       {{#editable}}
-        <li class="minibutton"><a href="{{base_url}}/edit/{{escaped_url_path}}"
-           class="action-edit-page">Edit</a></li>
+        <li class="minibutton"><a href="{{base_url}}/edit/{{escaped_url_path}}" class="btn btn-primary btn-sm">Edit</a></li>
       {{/editable}}
     {{/allow_editing}}
     {{#page_exists}}
     <li class="minibutton"><a href="{{base_url}}/history/{{escaped_url_path}}"
-       class="action-page-history">History</a></li>
+                              class="btn btn-primary btn-sm">History</a></li>
     <li class="minibutton"><a href="{{base_url}}/latest_changes"
-       class="action-page-history">Latest Changes</a></li>
+                              class="btn btn-primary btn-sm">Latest Changes</a></li>
     {{/page_exists}}
   </ul>
 </div>

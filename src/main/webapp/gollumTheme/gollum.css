@@ -222,9 +222,9 @@ th {
     page-break-after: avoid; }
   .navbar {
     display: none; }
-  .btn > .caret, .minibutton > .caret, #gollum-editor #gollum-editor-function-bar a.function-button > .caret, .webkit #gollum-editor input#gollum-editor-submit > .caret,
+  .btn > .caret, li.minibutton > .caret, #gollum-editor #gollum-editor-function-bar a.function-button > .caret, .webkit #gollum-editor input#gollum-editor-submit > .caret,
   .dropup > .btn > .caret,
-  .dropup > .minibutton > .caret, #gollum-editor #gollum-editor-function-bar
+  .dropup > li.minibutton > .caret, #gollum-editor #gollum-editor-function-bar
   .dropup > a.function-button > .caret, .webkit #gollum-editor
   .dropup > input#gollum-editor-submit > .caret {
     border-top-color: #000 !important; }
@@ -244,7 +244,7 @@ th {
   src: url("../fonts/bootstrap/glyphicons-halflings-regular.eot");
   src: url("../fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("../fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("../fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("../fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("../fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
 
-.glyphicon, #search-submit, li a.folder:before, li a.file:before, a#function-bold, a#function-italic, a#function-ul, a#function-ol, a#function-link, a#function-image {
+.glyphicon, a#function-bold, a#function-italic, a#function-ul, a#function-ol, a#function-link, a#function-image {
   position: relative;
   top: 1px;
   display: inline-block;
@@ -2424,8 +2424,7 @@ input[type="search"] {
     line-height: 34px; }
   input[type="date"].input-sm, .input-group-sm > input[type="date"].form-control, #gollum-dialog-dialog-body fieldset .field .input-group-sm > input[type="date"][type="text"], #gollum-editor-title-field .input-group-sm > input[type="date"]#gollum-editor-page-title, #gollum-editor .singleline .input-group-sm > input[type="date"],
   .input-group-sm > input[type="date"].input-group-addon,
-  .input-group-sm > .input-group-btn > input[type="date"].btn,
-  .input-group-sm > .input-group-btn > input[type="date"].minibutton, .webkit #gollum-editor
+  .input-group-sm > .input-group-btn > input[type="date"].btn, .webkit #gollum-editor
   .input-group-sm > .input-group-btn > input[type="date"]#gollum-editor-submit,
   .input-group-sm input[type="date"],
   input[type="time"].input-sm,
@@ -2434,8 +2433,7 @@ input[type="search"] {
   .input-group-sm > input[type="time"]#gollum-editor-page-title, #gollum-editor .singleline
   .input-group-sm > input[type="time"],
   .input-group-sm > input[type="time"].input-group-addon,
-  .input-group-sm > .input-group-btn > input[type="time"].btn,
-  .input-group-sm > .input-group-btn > input[type="time"].minibutton, .webkit #gollum-editor
+  .input-group-sm > .input-group-btn > input[type="time"].btn, .webkit #gollum-editor
   .input-group-sm > .input-group-btn > input[type="time"]#gollum-editor-submit,
   .input-group-sm input[type="time"],
   input[type="datetime-local"].input-sm,
@@ -2444,8 +2442,7 @@ input[type="search"] {
   .input-group-sm > input[type="datetime-local"]#gollum-editor-page-title, #gollum-editor .singleline
   .input-group-sm > input[type="datetime-local"],
   .input-group-sm > input[type="datetime-local"].input-group-addon,
-  .input-group-sm > .input-group-btn > input[type="datetime-local"].btn,
-  .input-group-sm > .input-group-btn > input[type="datetime-local"].minibutton, .webkit #gollum-editor
+  .input-group-sm > .input-group-btn > input[type="datetime-local"].btn, .webkit #gollum-editor
   .input-group-sm > .input-group-btn > input[type="datetime-local"]#gollum-editor-submit,
   .input-group-sm input[type="datetime-local"],
   input[type="month"].input-sm,
@@ -2454,15 +2451,13 @@ input[type="search"] {
   .input-group-sm > input[type="month"]#gollum-editor-page-title, #gollum-editor .singleline
   .input-group-sm > input[type="month"],
   .input-group-sm > input[type="month"].input-group-addon,
-  .input-group-sm > .input-group-btn > input[type="month"].btn,
-  .input-group-sm > .input-group-btn > input[type="month"].minibutton, .webkit #gollum-editor
+  .input-group-sm > .input-group-btn > input[type="month"].btn, .webkit #gollum-editor
   .input-group-sm > .input-group-btn > input[type="month"]#gollum-editor-submit,
   .input-group-sm input[type="month"] {
     line-height: 30px; }
   input[type="date"].input-lg, .input-group-lg > input[type="date"].form-control, #gollum-dialog-dialog-body fieldset .field .input-group-lg > input[type="date"][type="text"], #gollum-editor-title-field .input-group-lg > input[type="date"]#gollum-editor-page-title, #gollum-editor .singleline .input-group-lg > input[type="date"],
   .input-group-lg > input[type="date"].input-group-addon,
-  .input-group-lg > .input-group-btn > input[type="date"].btn,
-  .input-group-lg > .input-group-btn > input[type="date"].minibutton, .webkit #gollum-editor
+  .input-group-lg > .input-group-btn > input[type="date"].btn, .webkit #gollum-editor
   .input-group-lg > .input-group-btn > input[type="date"]#gollum-editor-submit,
   .input-group-lg input[type="date"],
   input[type="time"].input-lg,
@@ -2471,8 +2466,7 @@ input[type="search"] {
   .input-group-lg > input[type="time"]#gollum-editor-page-title, #gollum-editor .singleline
   .input-group-lg > input[type="time"],
   .input-group-lg > input[type="time"].input-group-addon,
-  .input-group-lg > .input-group-btn > input[type="time"].btn,
-  .input-group-lg > .input-group-btn > input[type="time"].minibutton, .webkit #gollum-editor
+  .input-group-lg > .input-group-btn > input[type="time"].btn, .webkit #gollum-editor
   .input-group-lg > .input-group-btn > input[type="time"]#gollum-editor-submit,
   .input-group-lg input[type="time"],
   input[type="datetime-local"].input-lg,
@@ -2481,8 +2475,7 @@ input[type="search"] {
   .input-group-lg > input[type="datetime-local"]#gollum-editor-page-title, #gollum-editor .singleline
   .input-group-lg > input[type="datetime-local"],
   .input-group-lg > input[type="datetime-local"].input-group-addon,
-  .input-group-lg > .input-group-btn > input[type="datetime-local"].btn,
-  .input-group-lg > .input-group-btn > input[type="datetime-local"].minibutton, .webkit #gollum-editor
+  .input-group-lg > .input-group-btn > input[type="datetime-local"].btn, .webkit #gollum-editor
   .input-group-lg > .input-group-btn > input[type="datetime-local"]#gollum-editor-submit,
   .input-group-lg input[type="datetime-local"],
   input[type="month"].input-lg,
@@ -2491,8 +2484,7 @@ input[type="search"] {
   .input-group-lg > input[type="month"]#gollum-editor-page-title, #gollum-editor .singleline
   .input-group-lg > input[type="month"],
   .input-group-lg > input[type="month"].input-group-addon,
-  .input-group-lg > .input-group-btn > input[type="month"].btn,
-  .input-group-lg > .input-group-btn > input[type="month"].minibutton, .webkit #gollum-editor
+  .input-group-lg > .input-group-btn > input[type="month"].btn, .webkit #gollum-editor
   .input-group-lg > .input-group-btn > input[type="month"]#gollum-editor-submit,
   .input-group-lg input[type="month"] {
     line-height: 46px; } }
@@ -2570,12 +2562,12 @@ fieldset[disabled] .checkbox label {
 .form-control-static.input-lg, .input-group-lg > .form-control-static.form-control, #gollum-dialog-dialog-body fieldset .field .input-group-lg > input.form-control-static[type="text"], #gollum-editor-title-field .input-group-lg > input.form-control-static#gollum-editor-page-title, #gollum-editor .input-group-lg > textarea.form-control-static, #gollum-editor .singleline .input-group-lg > input.form-control-static, #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector .input-group-lg > select.form-control-static,
 .input-group-lg > .form-control-static.input-group-addon,
 .input-group-lg > .input-group-btn > .form-control-static.btn,
-.input-group-lg > .input-group-btn > .form-control-static.minibutton, #gollum-editor #gollum-editor-function-bar
+.input-group-lg > .input-group-btn > li.form-control-static.minibutton, #gollum-editor #gollum-editor-function-bar
 .input-group-lg > .input-group-btn > a.form-control-static.function-button, .webkit #gollum-editor
 .input-group-lg > .input-group-btn > input.form-control-static#gollum-editor-submit, .form-control-static.input-sm, .input-group-sm > .form-control-static.form-control, #gollum-dialog-dialog-body fieldset .field .input-group-sm > input.form-control-static[type="text"], #gollum-editor-title-field .input-group-sm > input.form-control-static#gollum-editor-page-title, #gollum-editor .input-group-sm > textarea.form-control-static, #gollum-editor .singleline .input-group-sm > input.form-control-static, #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector .input-group-sm > select.form-control-static,
 .input-group-sm > .form-control-static.input-group-addon,
 .input-group-sm > .input-group-btn > .form-control-static.btn,
-.input-group-sm > .input-group-btn > .form-control-static.minibutton, #gollum-editor #gollum-editor-function-bar
+.input-group-sm > .input-group-btn > li.form-control-static.minibutton, #gollum-editor #gollum-editor-function-bar
 .input-group-sm > .input-group-btn > a.form-control-static.function-button, .webkit #gollum-editor
 .input-group-sm > .input-group-btn > input.form-control-static#gollum-editor-submit {
   padding-left: 0;
@@ -2584,7 +2576,7 @@ fieldset[disabled] .checkbox label {
 .input-sm, .input-group-sm > .form-control, #gollum-dialog-dialog-body fieldset .field .input-group-sm > input[type="text"], #gollum-editor-title-field .input-group-sm > input#gollum-editor-page-title, #gollum-editor .input-group-sm > textarea, #gollum-editor .singleline .input-group-sm > input, #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector .input-group-sm > select,
 .input-group-sm > .input-group-addon,
 .input-group-sm > .input-group-btn > .btn,
-.input-group-sm > .input-group-btn > .minibutton, #gollum-editor #gollum-editor-function-bar
+.input-group-sm > .input-group-btn > li.minibutton, #gollum-editor #gollum-editor-function-bar
 .input-group-sm > .input-group-btn > a.function-button, .webkit #gollum-editor
 .input-group-sm > .input-group-btn > input#gollum-editor-submit {
   height: 30px;
@@ -2595,21 +2587,18 @@ fieldset[disabled] .checkbox label {
 
 select.input-sm, .input-group-sm > select.form-control, #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector .input-group-sm > select,
 .input-group-sm > select.input-group-addon,
-.input-group-sm > .input-group-btn > select.btn,
-.input-group-sm > .input-group-btn > select.minibutton {
+.input-group-sm > .input-group-btn > select.btn {
   height: 30px;
   line-height: 30px; }
 
 textarea.input-sm, .input-group-sm > textarea.form-control, #gollum-editor .input-group-sm > textarea,
 .input-group-sm > textarea.input-group-addon,
 .input-group-sm > .input-group-btn > textarea.btn,
-.input-group-sm > .input-group-btn > textarea.minibutton,
 select[multiple].input-sm,
 .input-group-sm > select[multiple].form-control, #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector
 .input-group-sm > select[multiple],
 .input-group-sm > select[multiple].input-group-addon,
-.input-group-sm > .input-group-btn > select[multiple].btn,
-.input-group-sm > .input-group-btn > select[multiple].minibutton {
+.input-group-sm > .input-group-btn > select[multiple].btn {
   height: auto; }
 
 .form-group-sm .form-control, .form-group-sm #gollum-dialog-dialog-body fieldset .field input[type="text"], #gollum-dialog-dialog-body fieldset .field .form-group-sm input[type="text"], .form-group-sm #gollum-editor-title-field input#gollum-editor-page-title, #gollum-editor-title-field .form-group-sm input#gollum-editor-page-title, .form-group-sm #gollum-editor textarea, #gollum-editor .form-group-sm textarea, .form-group-sm #gollum-editor .singleline input, #gollum-editor .singleline .form-group-sm input, .form-group-sm #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector select, #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector .form-group-sm select {
@@ -2639,7 +2628,7 @@ select[multiple].input-sm,
 .input-lg, .input-group-lg > .form-control, #gollum-dialog-dialog-body fieldset .field .input-group-lg > input[type="text"], #gollum-editor-title-field .input-group-lg > input#gollum-editor-page-title, #gollum-editor .input-group-lg > textarea, #gollum-editor .singleline .input-group-lg > input, #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector .input-group-lg > select,
 .input-group-lg > .input-group-addon,
 .input-group-lg > .input-group-btn > .btn,
-.input-group-lg > .input-group-btn > .minibutton, #gollum-editor #gollum-editor-function-bar
+.input-group-lg > .input-group-btn > li.minibutton, #gollum-editor #gollum-editor-function-bar
 .input-group-lg > .input-group-btn > a.function-button, .webkit #gollum-editor
 .input-group-lg > .input-group-btn > input#gollum-editor-submit {
   height: 46px;
@@ -2650,21 +2639,18 @@ select[multiple].input-sm,
 
 select.input-lg, .input-group-lg > select.form-control, #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector .input-group-lg > select,
 .input-group-lg > select.input-group-addon,
-.input-group-lg > .input-group-btn > select.btn,
-.input-group-lg > .input-group-btn > select.minibutton {
+.input-group-lg > .input-group-btn > select.btn {
   height: 46px;
   line-height: 46px; }
 
 textarea.input-lg, .input-group-lg > textarea.form-control, #gollum-editor .input-group-lg > textarea,
 .input-group-lg > textarea.input-group-addon,
 .input-group-lg > .input-group-btn > textarea.btn,
-.input-group-lg > .input-group-btn > textarea.minibutton,
 select[multiple].input-lg,
 .input-group-lg > select[multiple].form-control, #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector
 .input-group-lg > select[multiple],
 .input-group-lg > select[multiple].input-group-addon,
-.input-group-lg > .input-group-btn > select[multiple].btn,
-.input-group-lg > .input-group-btn > select[multiple].minibutton {
+.input-group-lg > .input-group-btn > select[multiple].btn {
   height: auto; }
 
 .form-group-lg .form-control, .form-group-lg #gollum-dialog-dialog-body fieldset .field input[type="text"], #gollum-dialog-dialog-body fieldset .field .form-group-lg input[type="text"], .form-group-lg #gollum-editor-title-field input#gollum-editor-page-title, #gollum-editor-title-field .form-group-lg input#gollum-editor-page-title, .form-group-lg #gollum-editor textarea, #gollum-editor .form-group-lg textarea, .form-group-lg #gollum-editor .singleline input, #gollum-editor .singleline .form-group-lg input, .form-group-lg #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector select, #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector .form-group-lg select {
@@ -2712,7 +2698,7 @@ select[multiple].input-lg,
 .input-lg + .form-control-feedback, .input-group-lg > .form-control + .form-control-feedback, #gollum-dialog-dialog-body fieldset .field .input-group-lg > input[type="text"] + .form-control-feedback, #gollum-editor-title-field .input-group-lg > input#gollum-editor-page-title + .form-control-feedback, #gollum-editor .input-group-lg > textarea + .form-control-feedback, #gollum-editor .singleline .input-group-lg > input + .form-control-feedback, #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector .input-group-lg > select + .form-control-feedback,
 .input-group-lg > .input-group-addon + .form-control-feedback,
 .input-group-lg > .input-group-btn > .btn + .form-control-feedback,
-.input-group-lg > .input-group-btn > .minibutton + .form-control-feedback, #gollum-editor #gollum-editor-function-bar
+.input-group-lg > .input-group-btn > li.minibutton + .form-control-feedback, #gollum-editor #gollum-editor-function-bar
 .input-group-lg > .input-group-btn > a.function-button + .form-control-feedback, .webkit #gollum-editor
 .input-group-lg > .input-group-btn > input#gollum-editor-submit + .form-control-feedback,
 .input-group-lg + .form-control-feedback,
@@ -2734,7 +2720,7 @@ select[multiple].input-lg,
 .input-sm + .form-control-feedback, .input-group-sm > .form-control + .form-control-feedback, #gollum-dialog-dialog-body fieldset .field .input-group-sm > input[type="text"] + .form-control-feedback, #gollum-editor-title-field .input-group-sm > input#gollum-editor-page-title + .form-control-feedback, #gollum-editor .input-group-sm > textarea + .form-control-feedback, #gollum-editor .singleline .input-group-sm > input + .form-control-feedback, #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector .input-group-sm > select + .form-control-feedback,
 .input-group-sm > .input-group-addon + .form-control-feedback,
 .input-group-sm > .input-group-btn > .btn + .form-control-feedback,
-.input-group-sm > .input-group-btn > .minibutton + .form-control-feedback, #gollum-editor #gollum-editor-function-bar
+.input-group-sm > .input-group-btn > li.minibutton + .form-control-feedback, #gollum-editor #gollum-editor-function-bar
 .input-group-sm > .input-group-btn > a.function-button + .form-control-feedback, .webkit #gollum-editor
 .input-group-sm > .input-group-btn > input#gollum-editor-submit + .form-control-feedback,
 .input-group-sm + .form-control-feedback,
@@ -2946,7 +2932,7 @@ select[multiple].input-lg,
     padding-top: 6px;
     font-size: 12px; } }
 
-.btn, .minibutton, #gollum-editor #gollum-editor-function-bar a.function-button, .webkit #gollum-editor input#gollum-editor-submit {
+.btn, li.minibutton, #gollum-editor #gollum-editor-function-bar a.function-button, .webkit #gollum-editor input#gollum-editor-submit {
   display: inline-block;
   margin-bottom: 0;
   font-weight: normal;
@@ -2966,24 +2952,24 @@ select[multiple].input-lg,
   -ms-user-select: none;
   user-select: none; }
 
-.btn:focus, .minibutton:focus, #gollum-editor #gollum-editor-function-bar a.function-button:focus, .webkit #gollum-editor input#gollum-editor-submit:focus, .btn.focus, .focus.minibutton, #gollum-editor #gollum-editor-function-bar a.focus.function-button, .webkit #gollum-editor input.focus#gollum-editor-submit, .btn:active:focus, .minibutton:active:focus, #gollum-editor #gollum-editor-function-bar a.function-button:active:focus, .webkit #gollum-editor input#gollum-editor-submit:active:focus, .btn:active.focus, .minibutton:active.focus, #gollum-editor #gollum-editor-function-bar a.function-button:active.focus, .webkit #gollum-editor input#gollum-editor-submit:active.focus, .btn.active:focus, .active.minibutton:focus, #gollum-editor #gollum-editor-function-bar a.active.function-button:focus, .webkit #gollum-editor input.active#gollum-editor-submit:focus, .btn.active.focus, .active.focus.minibutton, #gollum-editor #gollum-editor-function-bar a.active.focus.function-button, .webkit #gollum-editor input.active.focus#gollum-editor-submit {
+.btn:focus, li.minibutton:focus, #gollum-editor #gollum-editor-function-bar a.function-button:focus, .webkit #gollum-editor input#gollum-editor-submit:focus, .btn.focus, li.focus.minibutton, #gollum-editor #gollum-editor-function-bar a.focus.function-button, .webkit #gollum-editor input.focus#gollum-editor-submit, .btn:active:focus, li.minibutton:active:focus, #gollum-editor #gollum-editor-function-bar a.function-button:active:focus, .webkit #gollum-editor input#gollum-editor-submit:active:focus, .btn:active.focus, li.minibutton:active.focus, #gollum-editor #gollum-editor-function-bar a.function-button:active.focus, .webkit #gollum-editor input#gollum-editor-submit:active.focus, .btn.active:focus, li.active.minibutton:focus, #gollum-editor #gollum-editor-function-bar a.active.function-button:focus, .webkit #gollum-editor input.active#gollum-editor-submit:focus, .btn.active.focus, li.active.focus.minibutton, #gollum-editor #gollum-editor-function-bar a.active.focus.function-button, .webkit #gollum-editor input.active.focus#gollum-editor-submit {
   outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px; }
 
-.btn:hover, .minibutton:hover, #gollum-editor #gollum-editor-function-bar a.function-button:hover, .webkit #gollum-editor input#gollum-editor-submit:hover, .btn:focus, .minibutton:focus, #gollum-editor #gollum-editor-function-bar a.function-button:focus, .webkit #gollum-editor input#gollum-editor-submit:focus, .btn.focus, .focus.minibutton, #gollum-editor #gollum-editor-function-bar a.focus.function-button, .webkit #gollum-editor input.focus#gollum-editor-submit {
+.btn:hover, li.minibutton:hover, #gollum-editor #gollum-editor-function-bar a.function-button:hover, .webkit #gollum-editor input#gollum-editor-submit:hover, .btn:focus, li.minibutton:focus, #gollum-editor #gollum-editor-function-bar a.function-button:focus, .webkit #gollum-editor input#gollum-editor-submit:focus, .btn.focus, li.focus.minibutton, #gollum-editor #gollum-editor-function-bar a.focus.function-button, .webkit #gollum-editor input.focus#gollum-editor-submit {
   color: #fff;
   text-decoration: none; }
 
-.btn:active, .minibutton:active, #gollum-editor #gollum-editor-function-bar a.function-button:active, .webkit #gollum-editor input#gollum-editor-submit:active, .btn.active, .active.minibutton, #gollum-editor #gollum-editor-function-bar a.active.function-button, .webkit #gollum-editor input.active#gollum-editor-submit {
+.btn:active, li.minibutton:active, #gollum-editor #gollum-editor-function-bar a.function-button:active, .webkit #gollum-editor input#gollum-editor-submit:active, .btn.active, li.active.minibutton, #gollum-editor #gollum-editor-function-bar a.active.function-button, .webkit #gollum-editor input.active#gollum-editor-submit {
   outline: 0;
   background-image: none;
   -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125); }
 
-.btn.disabled, .disabled.minibutton, #gollum-editor #gollum-editor-function-bar a.disabled.function-button, .webkit #gollum-editor input.disabled#gollum-editor-submit, .btn[disabled], [disabled].minibutton, #gollum-editor #gollum-editor-function-bar a[disabled].function-button, .webkit #gollum-editor input[disabled]#gollum-editor-submit,
+.btn.disabled, li.disabled.minibutton, #gollum-editor #gollum-editor-function-bar a.disabled.function-button, .webkit #gollum-editor input.disabled#gollum-editor-submit, .btn[disabled], li[disabled].minibutton, #gollum-editor #gollum-editor-function-bar a[disabled].function-button, .webkit #gollum-editor input[disabled]#gollum-editor-submit,
 fieldset[disabled] .btn,
-fieldset[disabled] .minibutton,
+fieldset[disabled] li.minibutton,
 fieldset[disabled] #gollum-editor #gollum-editor-function-bar a.function-button, #gollum-editor #gollum-editor-function-bar
 fieldset[disabled] a.function-button,
 fieldset[disabled] .webkit #gollum-editor input#gollum-editor-submit, .webkit #gollum-editor
@@ -2994,9 +2980,8 @@ fieldset[disabled] input#gollum-editor-submit {
   -webkit-box-shadow: none;
   box-shadow: none; }
 
-a.btn.disabled, a.disabled.minibutton, #gollum-editor #gollum-editor-function-bar a.disabled.function-button,
+a.btn.disabled, #gollum-editor #gollum-editor-function-bar a.disabled.function-button,
 fieldset[disabled] a.btn,
-fieldset[disabled] a.minibutton,
 fieldset[disabled] #gollum-editor #gollum-editor-function-bar a.function-button, #gollum-editor #gollum-editor-function-bar
 fieldset[disabled] a.function-button {
   pointer-events: none; }
@@ -3265,53 +3250,53 @@ fieldset[disabled] .btn-danger.focus {
   color: #E43B53;
   background-color: #fff; }
 
-.btn-link, .minibutton, .webkit #gollum-editor input#gollum-editor-submit {
+.btn-link, li.minibutton, .webkit #gollum-editor input#gollum-editor-submit {
   color: #23A3DD;
   font-weight: normal;
   border-radius: 0; }
 
-.btn-link, .minibutton, .webkit #gollum-editor input#gollum-editor-submit, .btn-link:active, .minibutton:active, .webkit #gollum-editor input#gollum-editor-submit:active, .btn-link.active, .active.minibutton, .webkit #gollum-editor input.active#gollum-editor-submit, .btn-link[disabled], [disabled].minibutton, .webkit #gollum-editor input[disabled]#gollum-editor-submit,
+.btn-link, li.minibutton, .webkit #gollum-editor input#gollum-editor-submit, .btn-link:active, li.minibutton:active, .webkit #gollum-editor input#gollum-editor-submit:active, .btn-link.active, li.active.minibutton, .webkit #gollum-editor input.active#gollum-editor-submit, .btn-link[disabled], li[disabled].minibutton, .webkit #gollum-editor input[disabled]#gollum-editor-submit,
 fieldset[disabled] .btn-link,
-fieldset[disabled] .minibutton,
+fieldset[disabled] li.minibutton,
 fieldset[disabled] .webkit #gollum-editor input#gollum-editor-submit, .webkit #gollum-editor
 fieldset[disabled] input#gollum-editor-submit {
   background-color: transparent;
   -webkit-box-shadow: none;
   box-shadow: none; }
 
-.btn-link, .minibutton, .webkit #gollum-editor input#gollum-editor-submit, .btn-link:hover, .minibutton:hover, .webkit #gollum-editor input#gollum-editor-submit:hover, .btn-link:focus, .minibutton:focus, .webkit #gollum-editor input#gollum-editor-submit:focus, .btn-link:active, .minibutton:active, .webkit #gollum-editor input#gollum-editor-submit:active {
+.btn-link, li.minibutton, .webkit #gollum-editor input#gollum-editor-submit, .btn-link:hover, li.minibutton:hover, .webkit #gollum-editor input#gollum-editor-submit:hover, .btn-link:focus, li.minibutton:focus, .webkit #gollum-editor input#gollum-editor-submit:focus, .btn-link:active, li.minibutton:active, .webkit #gollum-editor input#gollum-editor-submit:active {
   border-color: transparent; }
 
-.btn-link:hover, .minibutton:hover, .webkit #gollum-editor input#gollum-editor-submit:hover, .btn-link:focus, .minibutton:focus, .webkit #gollum-editor input#gollum-editor-submit:focus {
+.btn-link:hover, li.minibutton:hover, .webkit #gollum-editor input#gollum-editor-submit:hover, .btn-link:focus, li.minibutton:focus, .webkit #gollum-editor input#gollum-editor-submit:focus {
   color: #18729b;
   text-decoration: underline;
   background-color: transparent; }
 
-.btn-link[disabled]:hover, [disabled].minibutton:hover, .webkit #gollum-editor input[disabled]#gollum-editor-submit:hover, .btn-link[disabled]:focus, [disabled].minibutton:focus, .webkit #gollum-editor input[disabled]#gollum-editor-submit:focus,
+.btn-link[disabled]:hover, li[disabled].minibutton:hover, .webkit #gollum-editor input[disabled]#gollum-editor-submit:hover, .btn-link[disabled]:focus, li[disabled].minibutton:focus, .webkit #gollum-editor input[disabled]#gollum-editor-submit:focus,
 fieldset[disabled] .btn-link:hover,
-fieldset[disabled] .minibutton:hover,
+fieldset[disabled] li.minibutton:hover,
 fieldset[disabled] .webkit #gollum-editor input#gollum-editor-submit:hover, .webkit #gollum-editor
 fieldset[disabled] input#gollum-editor-submit:hover,
 fieldset[disabled] .btn-link:focus,
-fieldset[disabled] .minibutton:focus,
+fieldset[disabled] li.minibutton:focus,
 fieldset[disabled] .webkit #gollum-editor input#gollum-editor-submit:focus, .webkit #gollum-editor
 fieldset[disabled] input#gollum-editor-submit:focus {
   color: #777777;
   text-decoration: none; }
 
-.btn-lg, .btn-group-lg > .btn, .btn-group-lg > .minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-lg > a.function-button, .webkit #gollum-editor .btn-group-lg > input#gollum-editor-submit {
+.btn-lg, .btn-group-lg > .btn, .btn-group-lg > li.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-lg > a.function-button, .webkit #gollum-editor .btn-group-lg > input#gollum-editor-submit {
   padding: 10px 16px;
   font-size: 18px;
   line-height: 1.33333;
   border-radius: 6px; }
 
-.btn-sm, .btn-group-sm > .btn, .btn-group-sm > .minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-sm > a.function-button, .webkit #gollum-editor .btn-group-sm > input#gollum-editor-submit {
+.btn-sm, .btn-group-sm > .btn, .btn-group-sm > li.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-sm > a.function-button, .webkit #gollum-editor .btn-group-sm > input#gollum-editor-submit {
   padding: 5px 10px;
   font-size: 12px;
   line-height: 1.5;
   border-radius: 3px; }
 
-.btn-xs, .btn-group-xs > .btn, .btn-group-xs > .minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-xs > a.function-button, .webkit #gollum-editor .btn-group-xs > input#gollum-editor-submit {
+.btn-xs, .btn-group-xs > .btn, .btn-group-xs > li.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-xs > a.function-button, .webkit #gollum-editor .btn-group-xs > input#gollum-editor-submit {
   padding: 1px 5px;
   font-size: 12px;
   line-height: 1.5;
@@ -3501,42 +3486,42 @@ tbody.collapse.in {
   display: inline-block;
   vertical-align: middle; }
 
-.btn-group > .btn, .btn-group > .minibutton, #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button, .webkit #gollum-editor .btn-group > input#gollum-editor-submit,
+.btn-group > .btn, .btn-group > li.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button, .webkit #gollum-editor .btn-group > input#gollum-editor-submit,
 .btn-group-vertical > .btn,
-.btn-group-vertical > .minibutton, #gollum-editor #gollum-editor-function-bar
+.btn-group-vertical > li.minibutton, #gollum-editor #gollum-editor-function-bar
 .btn-group-vertical > a.function-button, .webkit #gollum-editor
 .btn-group-vertical > input#gollum-editor-submit {
   position: relative;
   float: left; }
 
-.btn-group > .btn:hover, .btn-group > .minibutton:hover, #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button:hover, .webkit #gollum-editor .btn-group > input#gollum-editor-submit:hover, .btn-group > .btn:focus, .btn-group > .minibutton:focus, #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button:focus, .webkit #gollum-editor .btn-group > input#gollum-editor-submit:focus, .btn-group > .btn:active, .btn-group > .minibutton:active, #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button:active, .webkit #gollum-editor .btn-group > input#gollum-editor-submit:active, .btn-group > .btn.active, .btn-group > .active.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group > a.active.function-button, .webkit #gollum-editor .btn-group > input.active#gollum-editor-submit,
+.btn-group > .btn:hover, .btn-group > li.minibutton:hover, #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button:hover, .webkit #gollum-editor .btn-group > input#gollum-editor-submit:hover, .btn-group > .btn:focus, .btn-group > li.minibutton:focus, #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button:focus, .webkit #gollum-editor .btn-group > input#gollum-editor-submit:focus, .btn-group > .btn:active, .btn-group > li.minibutton:active, #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button:active, .webkit #gollum-editor .btn-group > input#gollum-editor-submit:active, .btn-group > .btn.active, .btn-group > li.active.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group > a.active.function-button, .webkit #gollum-editor .btn-group > input.active#gollum-editor-submit,
 .btn-group-vertical > .btn:hover,
-.btn-group-vertical > .minibutton:hover, #gollum-editor #gollum-editor-function-bar
+.btn-group-vertical > li.minibutton:hover, #gollum-editor #gollum-editor-function-bar
 .btn-group-vertical > a.function-button:hover, .webkit #gollum-editor
 .btn-group-vertical > input#gollum-editor-submit:hover,
 .btn-group-vertical > .btn:focus,
-.btn-group-vertical > .minibutton:focus, #gollum-editor #gollum-editor-function-bar
+.btn-group-vertical > li.minibutton:focus, #gollum-editor #gollum-editor-function-bar
 .btn-group-vertical > a.function-button:focus, .webkit #gollum-editor
 .btn-group-vertical > input#gollum-editor-submit:focus,
 .btn-group-vertical > .btn:active,
-.btn-group-vertical > .minibutton:active, #gollum-editor #gollum-editor-function-bar
+.btn-group-vertical > li.minibutton:active, #gollum-editor #gollum-editor-function-bar
 .btn-group-vertical > a.function-button:active, .webkit #gollum-editor
 .btn-group-vertical > input#gollum-editor-submit:active,
 .btn-group-vertical > .btn.active,
-.btn-group-vertical > .active.minibutton, #gollum-editor #gollum-editor-function-bar
+.btn-group-vertical > li.active.minibutton, #gollum-editor #gollum-editor-function-bar
 .btn-group-vertical > a.active.function-button, .webkit #gollum-editor
 .btn-group-vertical > input.active#gollum-editor-submit {
   z-index: 2; }
 
-.btn-group .btn + .btn, .btn-group .minibutton + .btn, .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + .btn, #gollum-editor #gollum-editor-function-bar .btn-group a.function-button + .btn, .btn-group .webkit #gollum-editor input#gollum-editor-submit + .btn, .webkit #gollum-editor .btn-group input#gollum-editor-submit + .btn, .btn-group .btn + .minibutton, .btn-group .minibutton + .minibutton, .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + .minibutton, #gollum-editor #gollum-editor-function-bar .btn-group a.function-button + .minibutton, .btn-group .webkit #gollum-editor input#gollum-editor-submit + .minibutton, .webkit #gollum-editor .btn-group input#gollum-editor-submit + .minibutton, .btn-group #gollum-editor #gollum-editor-function-bar .btn + a.function-button, #gollum-editor #gollum-editor-function-bar .btn-group .btn + a.function-button, .btn-group #gollum-editor #gollum-editor-function-bar .minibutton + a.function-button, #gollum-editor #gollum-editor-function-bar .btn-group .minibutton + a.function-button, .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + a.function-button, #gollum-editor #gollum-editor-function-bar .btn-group a.function-button + a.function-button, .btn-group .webkit #gollum-editor #gollum-editor-function-bar input#gollum-editor-submit + a.function-button, .webkit #gollum-editor .btn-group #gollum-editor-function-bar input#gollum-editor-submit + a.function-button, .webkit #gollum-editor #gollum-editor-function-bar .btn-group input#gollum-editor-submit + a.function-button, .btn-group .webkit #gollum-editor .btn + input#gollum-editor-submit, .webkit #gollum-editor .btn-group .btn + input#gollum-editor-submit, .btn-group .webkit #gollum-editor .minibutton + input#gollum-editor-submit, .webkit #gollum-editor .btn-group .minibutton + input#gollum-editor-submit, .btn-group .webkit #gollum-editor #gollum-editor-function-bar a.function-button + input#gollum-editor-submit, .webkit .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + input#gollum-editor-submit, .webkit #gollum-editor #gollum-editor-function-bar .btn-group a.function-button + input#gollum-editor-submit, .btn-group .webkit #gollum-editor input#gollum-editor-submit + input#gollum-editor-submit, .webkit #gollum-editor .btn-group input#gollum-editor-submit + input#gollum-editor-submit,
+.btn-group .btn + .btn, .btn-group li.minibutton + .btn, .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + .btn, #gollum-editor #gollum-editor-function-bar .btn-group a.function-button + .btn, .btn-group .webkit #gollum-editor input#gollum-editor-submit + .btn, .webkit #gollum-editor .btn-group input#gollum-editor-submit + .btn, .btn-group .btn + li.minibutton, .btn-group li.minibutton + li.minibutton, .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + li.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group a.function-button + li.minibutton, .btn-group .webkit #gollum-editor input#gollum-editor-submit + li.minibutton, .webkit #gollum-editor .btn-group input#gollum-editor-submit + li.minibutton, .btn-group #gollum-editor #gollum-editor-function-bar .btn + a.function-button, #gollum-editor #gollum-editor-function-bar .btn-group .btn + a.function-button, .btn-group #gollum-editor #gollum-editor-function-bar li.minibutton + a.function-button, #gollum-editor #gollum-editor-function-bar .btn-group li.minibutton + a.function-button, .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + a.function-button, #gollum-editor #gollum-editor-function-bar .btn-group a.function-button + a.function-button, .btn-group .webkit #gollum-editor #gollum-editor-function-bar input#gollum-editor-submit + a.function-button, .webkit #gollum-editor .btn-group #gollum-editor-function-bar input#gollum-editor-submit + a.function-button, .webkit #gollum-editor #gollum-editor-function-bar .btn-group input#gollum-editor-submit + a.function-button, .btn-group .webkit #gollum-editor .btn + input#gollum-editor-submit, .webkit #gollum-editor .btn-group .btn + input#gollum-editor-submit, .btn-group .webkit #gollum-editor li.minibutton + input#gollum-editor-submit, .webkit #gollum-editor .btn-group li.minibutton + input#gollum-editor-submit, .btn-group .webkit #gollum-editor #gollum-editor-function-bar a.function-button + input#gollum-editor-submit, .webkit .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + input#gollum-editor-submit, .webkit #gollum-editor #gollum-editor-function-bar .btn-group a.function-button + input#gollum-editor-submit, .btn-group .webkit #gollum-editor input#gollum-editor-submit + input#gollum-editor-submit, .webkit #gollum-editor .btn-group input#gollum-editor-submit + input#gollum-editor-submit,
 .btn-group .btn + .btn-group,
-.btn-group .minibutton + .btn-group,
+.btn-group li.minibutton + .btn-group,
 .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + .btn-group, #gollum-editor #gollum-editor-function-bar
 .btn-group a.function-button + .btn-group,
 .btn-group .webkit #gollum-editor input#gollum-editor-submit + .btn-group, .webkit #gollum-editor
 .btn-group input#gollum-editor-submit + .btn-group,
 .btn-group .btn-group + .btn,
-.btn-group .btn-group + .minibutton,
+.btn-group .btn-group + li.minibutton,
 .btn-group #gollum-editor #gollum-editor-function-bar .btn-group + a.function-button, #gollum-editor #gollum-editor-function-bar
 .btn-group .btn-group + a.function-button,
 .btn-group .webkit #gollum-editor .btn-group + input#gollum-editor-submit, .webkit #gollum-editor
@@ -3554,27 +3539,27 @@ tbody.collapse.in {
 .btn-toolbar:after {
   clear: both; }
 
-.btn-toolbar .btn, .btn-toolbar .minibutton, .btn-toolbar #gollum-editor #gollum-editor-function-bar a.function-button, #gollum-editor #gollum-editor-function-bar .btn-toolbar a.function-button, .btn-toolbar .webkit #gollum-editor input#gollum-editor-submit, .webkit #gollum-editor .btn-toolbar input#gollum-editor-submit,
+.btn-toolbar .btn, .btn-toolbar li.minibutton, .btn-toolbar #gollum-editor #gollum-editor-function-bar a.function-button, #gollum-editor #gollum-editor-function-bar .btn-toolbar a.function-button, .btn-toolbar .webkit #gollum-editor input#gollum-editor-submit, .webkit #gollum-editor .btn-toolbar input#gollum-editor-submit,
 .btn-toolbar .btn-group,
 .btn-toolbar .input-group {
   float: left; }
 
-.btn-toolbar > .btn, .btn-toolbar > .minibutton, #gollum-editor #gollum-editor-function-bar .btn-toolbar > a.function-button, .webkit #gollum-editor .btn-toolbar > input#gollum-editor-submit,
+.btn-toolbar > .btn, .btn-toolbar > li.minibutton, #gollum-editor #gollum-editor-function-bar .btn-toolbar > a.function-button, .webkit #gollum-editor .btn-toolbar > input#gollum-editor-submit,
 .btn-toolbar > .btn-group,
 .btn-toolbar > .input-group {
   margin-left: 5px; }
 
-.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle), .btn-group > .minibutton:not(:first-child):not(:last-child):not(.dropdown-toggle), #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button:not(:first-child):not(:last-child):not(.dropdown-toggle), .webkit #gollum-editor .btn-group > input#gollum-editor-submit:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle), .btn-group > li.minibutton:not(:first-child):not(:last-child):not(.dropdown-toggle), #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button:not(:first-child):not(:last-child):not(.dropdown-toggle), .webkit #gollum-editor .btn-group > input#gollum-editor-submit:not(:first-child):not(:last-child):not(.dropdown-toggle) {
   border-radius: 0; }
 
-.btn-group > .btn:first-child, .btn-group > .minibutton:first-child, #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button:first-child, .webkit #gollum-editor .btn-group > input#gollum-editor-submit:first-child {
+.btn-group > .btn:first-child, .btn-group > li.minibutton:first-child, #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button:first-child, .webkit #gollum-editor .btn-group > input#gollum-editor-submit:first-child {
   margin-left: 0; }
 
-.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle), .btn-group > .minibutton:first-child:not(:last-child):not(.dropdown-toggle), #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button:first-child:not(:last-child):not(.dropdown-toggle), .webkit #gollum-editor .btn-group > input#gollum-editor-submit:first-child:not(:last-child):not(.dropdown-toggle) {
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle), .btn-group > li.minibutton:first-child:not(:last-child):not(.dropdown-toggle), #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button:first-child:not(:last-child):not(.dropdown-toggle), .webkit #gollum-editor .btn-group > input#gollum-editor-submit:first-child:not(:last-child):not(.dropdown-toggle) {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0; }
 
-.btn-group > .btn:last-child:not(:first-child), .btn-group > .minibutton:last-child:not(:first-child), #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button:last-child:not(:first-child), .webkit #gollum-editor .btn-group > input#gollum-editor-submit:last-child:not(:first-child),
+.btn-group > .btn:last-child:not(:first-child), .btn-group > li.minibutton:last-child:not(:first-child), #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button:last-child:not(:first-child), .webkit #gollum-editor .btn-group > input#gollum-editor-submit:last-child:not(:first-child),
 .btn-group > .dropdown-toggle:not(:first-child) {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0; }
@@ -3582,15 +3567,15 @@ tbody.collapse.in {
 .btn-group > .btn-group {
   float: left; }
 
-.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn, .btn-group > .btn-group:not(:first-child):not(:last-child) > .minibutton, #gollum-editor #gollum-editor-function-bar .btn-group > .btn-group:not(:first-child):not(:last-child) > a.function-button, .webkit #gollum-editor .btn-group > .btn-group:not(:first-child):not(:last-child) > input#gollum-editor-submit {
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn, .btn-group > .btn-group:not(:first-child):not(:last-child) > li.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group > .btn-group:not(:first-child):not(:last-child) > a.function-button, .webkit #gollum-editor .btn-group > .btn-group:not(:first-child):not(:last-child) > input#gollum-editor-submit {
   border-radius: 0; }
 
-.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child, .btn-group > .btn-group:first-child:not(:last-child) > .minibutton:last-child, #gollum-editor #gollum-editor-function-bar .btn-group > .btn-group:first-child:not(:last-child) > a.function-button:last-child, .webkit #gollum-editor .btn-group > .btn-group:first-child:not(:last-child) > input#gollum-editor-submit:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child, .btn-group > .btn-group:first-child:not(:last-child) > li.minibutton:last-child, #gollum-editor #gollum-editor-function-bar .btn-group > .btn-group:first-child:not(:last-child) > a.function-button:last-child, .webkit #gollum-editor .btn-group > .btn-group:first-child:not(:last-child) > input#gollum-editor-submit:last-child,
 .btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0; }
 
-.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child, .btn-group > .btn-group:last-child:not(:first-child) > .minibutton:first-child, #gollum-editor #gollum-editor-function-bar .btn-group > .btn-group:last-child:not(:first-child) > a.function-button:first-child, .webkit #gollum-editor .btn-group > .btn-group:last-child:not(:first-child) > input#gollum-editor-submit:first-child {
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child, .btn-group > .btn-group:last-child:not(:first-child) > li.minibutton:first-child, #gollum-editor #gollum-editor-function-bar .btn-group > .btn-group:last-child:not(:first-child) > a.function-button:first-child, .webkit #gollum-editor .btn-group > .btn-group:last-child:not(:first-child) > input#gollum-editor-submit:first-child {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0; }
 
@@ -3598,11 +3583,11 @@ tbody.collapse.in {
 .btn-group.open .dropdown-toggle {
   outline: 0; }
 
-.btn-group > .btn + .dropdown-toggle, .btn-group > .minibutton + .dropdown-toggle, #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button + .dropdown-toggle, .webkit #gollum-editor .btn-group > input#gollum-editor-submit + .dropdown-toggle {
+.btn-group > .btn + .dropdown-toggle, .btn-group > li.minibutton + .dropdown-toggle, #gollum-editor #gollum-editor-function-bar .btn-group > a.function-button + .dropdown-toggle, .webkit #gollum-editor .btn-group > input#gollum-editor-submit + .dropdown-toggle {
   padding-left: 8px;
   padding-right: 8px; }
 
-.btn-group > .btn-lg + .dropdown-toggle, .btn-group-lg.btn-group > .btn + .dropdown-toggle, .btn-group-lg.btn-group > .minibutton + .dropdown-toggle, #gollum-editor #gollum-editor-function-bar .btn-group-lg.btn-group > a.function-button + .dropdown-toggle, .webkit #gollum-editor .btn-group-lg.btn-group > input#gollum-editor-submit + .dropdown-toggle {
+.btn-group > .btn-lg + .dropdown-toggle, .btn-group-lg.btn-group > .btn + .dropdown-toggle, .btn-group-lg.btn-group > li.minibutton + .dropdown-toggle, #gollum-editor #gollum-editor-function-bar .btn-group-lg.btn-group > a.function-button + .dropdown-toggle, .webkit #gollum-editor .btn-group-lg.btn-group > input#gollum-editor-submit + .dropdown-toggle {
   padding-left: 12px;
   padding-right: 12px; }
 
@@ -3610,24 +3595,24 @@ tbody.collapse.in {
   -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125); }
 
-.btn-group.open .dropdown-toggle.btn-link, .btn-group.open .dropdown-toggle.minibutton, .btn-group.open .webkit #gollum-editor input.dropdown-toggle#gollum-editor-submit, .webkit #gollum-editor .btn-group.open input.dropdown-toggle#gollum-editor-submit {
+.btn-group.open .dropdown-toggle.btn-link, .btn-group.open li.dropdown-toggle.minibutton, .btn-group.open .webkit #gollum-editor input.dropdown-toggle#gollum-editor-submit, .webkit #gollum-editor .btn-group.open input.dropdown-toggle#gollum-editor-submit {
   -webkit-box-shadow: none;
   box-shadow: none; }
 
-.btn .caret, .minibutton .caret, #gollum-editor #gollum-editor-function-bar a.function-button .caret, .webkit #gollum-editor input#gollum-editor-submit .caret {
+.btn .caret, li.minibutton .caret, #gollum-editor #gollum-editor-function-bar a.function-button .caret, .webkit #gollum-editor input#gollum-editor-submit .caret {
   margin-left: 0; }
 
-.btn-lg .caret, .btn-group-lg > .btn .caret, .btn-group-lg > .minibutton .caret, #gollum-editor #gollum-editor-function-bar .btn-group-lg > a.function-button .caret, .webkit #gollum-editor .btn-group-lg > input#gollum-editor-submit .caret {
+.btn-lg .caret, .btn-group-lg > .btn .caret, .btn-group-lg > li.minibutton .caret, #gollum-editor #gollum-editor-function-bar .btn-group-lg > a.function-button .caret, .webkit #gollum-editor .btn-group-lg > input#gollum-editor-submit .caret {
   border-width: 5px 5px 0;
   border-bottom-width: 0; }
 
-.dropup .btn-lg .caret, .dropup .btn-group-lg > .btn .caret, .dropup .btn-group-lg > .minibutton .caret, .dropup #gollum-editor #gollum-editor-function-bar .btn-group-lg > a.function-button .caret, #gollum-editor #gollum-editor-function-bar .dropup .btn-group-lg > a.function-button .caret, .dropup .webkit #gollum-editor .btn-group-lg > input#gollum-editor-submit .caret, .webkit #gollum-editor .dropup .btn-group-lg > input#gollum-editor-submit .caret {
+.dropup .btn-lg .caret, .dropup .btn-group-lg > .btn .caret, .dropup .btn-group-lg > li.minibutton .caret, .dropup #gollum-editor #gollum-editor-function-bar .btn-group-lg > a.function-button .caret, #gollum-editor #gollum-editor-function-bar .dropup .btn-group-lg > a.function-button .caret, .dropup .webkit #gollum-editor .btn-group-lg > input#gollum-editor-submit .caret, .webkit #gollum-editor .dropup .btn-group-lg > input#gollum-editor-submit .caret {
   border-width: 0 5px 5px; }
 
-.btn-group-vertical > .btn, .btn-group-vertical > .minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button, .webkit #gollum-editor .btn-group-vertical > input#gollum-editor-submit,
+.btn-group-vertical > .btn, .btn-group-vertical > li.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button, .webkit #gollum-editor .btn-group-vertical > input#gollum-editor-submit,
 .btn-group-vertical > .btn-group,
 .btn-group-vertical > .btn-group > .btn,
-.btn-group-vertical > .btn-group > .minibutton, #gollum-editor #gollum-editor-function-bar
+.btn-group-vertical > .btn-group > li.minibutton, #gollum-editor #gollum-editor-function-bar
 .btn-group-vertical > .btn-group > a.function-button, .webkit #gollum-editor
 .btn-group-vertical > .btn-group > input#gollum-editor-submit {
   display: block;
@@ -3642,46 +3627,46 @@ tbody.collapse.in {
 .btn-group-vertical > .btn-group:after {
   clear: both; }
 
-.btn-group-vertical > .btn-group > .btn, .btn-group-vertical > .btn-group > .minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > .btn-group > a.function-button, .webkit #gollum-editor .btn-group-vertical > .btn-group > input#gollum-editor-submit {
+.btn-group-vertical > .btn-group > .btn, .btn-group-vertical > .btn-group > li.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > .btn-group > a.function-button, .webkit #gollum-editor .btn-group-vertical > .btn-group > input#gollum-editor-submit {
   float: none; }
 
-.btn-group-vertical > .btn + .btn, .btn-group-vertical > .minibutton + .btn, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button + .btn, .webkit #gollum-editor .btn-group-vertical > input#gollum-editor-submit + .btn, .btn-group-vertical > .btn + .minibutton, .btn-group-vertical > .minibutton + .minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button + .minibutton, .webkit #gollum-editor .btn-group-vertical > input#gollum-editor-submit + .minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > .btn + a.function-button, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > .minibutton + a.function-button, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button + a.function-button, .webkit #gollum-editor #gollum-editor-function-bar .btn-group-vertical > input#gollum-editor-submit + a.function-button, .webkit #gollum-editor .btn-group-vertical > .btn + input#gollum-editor-submit, .webkit #gollum-editor .btn-group-vertical > .minibutton + input#gollum-editor-submit, .webkit #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button + input#gollum-editor-submit, .webkit #gollum-editor .btn-group-vertical > input#gollum-editor-submit + input#gollum-editor-submit,
+.btn-group-vertical > .btn + .btn, .btn-group-vertical > li.minibutton + .btn, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button + .btn, .webkit #gollum-editor .btn-group-vertical > input#gollum-editor-submit + .btn, .btn-group-vertical > .btn + li.minibutton, .btn-group-vertical > li.minibutton + li.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button + li.minibutton, .webkit #gollum-editor .btn-group-vertical > input#gollum-editor-submit + li.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > .btn + a.function-button, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > li.minibutton + a.function-button, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button + a.function-button, .webkit #gollum-editor #gollum-editor-function-bar .btn-group-vertical > input#gollum-editor-submit + a.function-button, .webkit #gollum-editor .btn-group-vertical > .btn + input#gollum-editor-submit, .webkit #gollum-editor .btn-group-vertical > li.minibutton + input#gollum-editor-submit, .webkit #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button + input#gollum-editor-submit, .webkit #gollum-editor .btn-group-vertical > input#gollum-editor-submit + input#gollum-editor-submit,
 .btn-group-vertical > .btn + .btn-group,
-.btn-group-vertical > .minibutton + .btn-group, #gollum-editor #gollum-editor-function-bar
+.btn-group-vertical > li.minibutton + .btn-group, #gollum-editor #gollum-editor-function-bar
 .btn-group-vertical > a.function-button + .btn-group, .webkit #gollum-editor
 .btn-group-vertical > input#gollum-editor-submit + .btn-group,
 .btn-group-vertical > .btn-group + .btn,
-.btn-group-vertical > .btn-group + .minibutton, #gollum-editor #gollum-editor-function-bar
+.btn-group-vertical > .btn-group + li.minibutton, #gollum-editor #gollum-editor-function-bar
 .btn-group-vertical > .btn-group + a.function-button, .webkit #gollum-editor
 .btn-group-vertical > .btn-group + input#gollum-editor-submit,
 .btn-group-vertical > .btn-group + .btn-group {
   margin-top: -1px;
   margin-left: 0; }
 
-.btn-group-vertical > .btn:not(:first-child):not(:last-child), .btn-group-vertical > .minibutton:not(:first-child):not(:last-child), #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button:not(:first-child):not(:last-child), .webkit #gollum-editor .btn-group-vertical > input#gollum-editor-submit:not(:first-child):not(:last-child) {
+.btn-group-vertical > .btn:not(:first-child):not(:last-child), .btn-group-vertical > li.minibutton:not(:first-child):not(:last-child), #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button:not(:first-child):not(:last-child), .webkit #gollum-editor .btn-group-vertical > input#gollum-editor-submit:not(:first-child):not(:last-child) {
   border-radius: 0; }
 
-.btn-group-vertical > .btn:first-child:not(:last-child), .btn-group-vertical > .minibutton:first-child:not(:last-child), #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button:first-child:not(:last-child), .webkit #gollum-editor .btn-group-vertical > input#gollum-editor-submit:first-child:not(:last-child) {
+.btn-group-vertical > .btn:first-child:not(:last-child), .btn-group-vertical > li.minibutton:first-child:not(:last-child), #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button:first-child:not(:last-child), .webkit #gollum-editor .btn-group-vertical > input#gollum-editor-submit:first-child:not(:last-child) {
   border-top-right-radius: 4px;
   border-top-left-radius: 4px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0; }
 
-.btn-group-vertical > .btn:last-child:not(:first-child), .btn-group-vertical > .minibutton:last-child:not(:first-child), #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button:last-child:not(:first-child), .webkit #gollum-editor .btn-group-vertical > input#gollum-editor-submit:last-child:not(:first-child) {
+.btn-group-vertical > .btn:last-child:not(:first-child), .btn-group-vertical > li.minibutton:last-child:not(:first-child), #gollum-editor #gollum-editor-function-bar .btn-group-vertical > a.function-button:last-child:not(:first-child), .webkit #gollum-editor .btn-group-vertical > input#gollum-editor-submit:last-child:not(:first-child) {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
   border-bottom-right-radius: 4px;
   border-bottom-left-radius: 4px; }
 
-.btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .btn, .btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > a.function-button, .webkit #gollum-editor .btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > input#gollum-editor-submit {
+.btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .btn, .btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > li.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > a.function-button, .webkit #gollum-editor .btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > input#gollum-editor-submit {
   border-radius: 0; }
 
-.btn-group-vertical > .btn-group:first-child:not(:last-child) > .btn:last-child, .btn-group-vertical > .btn-group:first-child:not(:last-child) > .minibutton:last-child, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > .btn-group:first-child:not(:last-child) > a.function-button:last-child, .webkit #gollum-editor .btn-group-vertical > .btn-group:first-child:not(:last-child) > input#gollum-editor-submit:last-child,
+.btn-group-vertical > .btn-group:first-child:not(:last-child) > .btn:last-child, .btn-group-vertical > .btn-group:first-child:not(:last-child) > li.minibutton:last-child, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > .btn-group:first-child:not(:last-child) > a.function-button:last-child, .webkit #gollum-editor .btn-group-vertical > .btn-group:first-child:not(:last-child) > input#gollum-editor-submit:last-child,
 .btn-group-vertical > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0; }
 
-.btn-group-vertical > .btn-group:last-child:not(:first-child) > .btn:first-child, .btn-group-vertical > .btn-group:last-child:not(:first-child) > .minibutton:first-child, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > .btn-group:last-child:not(:first-child) > a.function-button:first-child, .webkit #gollum-editor .btn-group-vertical > .btn-group:last-child:not(:first-child) > input#gollum-editor-submit:first-child {
+.btn-group-vertical > .btn-group:last-child:not(:first-child) > .btn:first-child, .btn-group-vertical > .btn-group:last-child:not(:first-child) > li.minibutton:first-child, #gollum-editor #gollum-editor-function-bar .btn-group-vertical > .btn-group:last-child:not(:first-child) > a.function-button:first-child, .webkit #gollum-editor .btn-group-vertical > .btn-group:last-child:not(:first-child) > input#gollum-editor-submit:first-child {
   border-top-right-radius: 0;
   border-top-left-radius: 0; }
 
@@ -3691,29 +3676,29 @@ tbody.collapse.in {
   table-layout: fixed;
   border-collapse: separate; }
 
-.btn-group-justified > .btn, .btn-group-justified > .minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-justified > a.function-button, .webkit #gollum-editor .btn-group-justified > input#gollum-editor-submit,
+.btn-group-justified > .btn, .btn-group-justified > li.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-justified > a.function-button, .webkit #gollum-editor .btn-group-justified > input#gollum-editor-submit,
 .btn-group-justified > .btn-group {
   float: none;
   display: table-cell;
   width: 1%; }
 
-.btn-group-justified > .btn-group .btn, .btn-group-justified > .btn-group .minibutton, .btn-group-justified > .btn-group #gollum-editor #gollum-editor-function-bar a.function-button, #gollum-editor #gollum-editor-function-bar .btn-group-justified > .btn-group a.function-button, .btn-group-justified > .btn-group .webkit #gollum-editor input#gollum-editor-submit, .webkit #gollum-editor .btn-group-justified > .btn-group input#gollum-editor-submit {
+.btn-group-justified > .btn-group .btn, .btn-group-justified > .btn-group li.minibutton, .btn-group-justified > .btn-group #gollum-editor #gollum-editor-function-bar a.function-button, #gollum-editor #gollum-editor-function-bar .btn-group-justified > .btn-group a.function-button, .btn-group-justified > .btn-group .webkit #gollum-editor input#gollum-editor-submit, .webkit #gollum-editor .btn-group-justified > .btn-group input#gollum-editor-submit {
   width: 100%; }
 
 .btn-group-justified > .btn-group .dropdown-menu {
   left: auto; }
 
-[data-toggle="buttons"] > .btn input[type="radio"], [data-toggle="buttons"] > .minibutton input[type="radio"], #gollum-editor #gollum-editor-function-bar [data-toggle="buttons"] > a.function-button input[type="radio"], .webkit #gollum-editor [data-toggle="buttons"] > input#gollum-editor-submit input[type="radio"],
+[data-toggle="buttons"] > .btn input[type="radio"], [data-toggle="buttons"] > li.minibutton input[type="radio"], #gollum-editor #gollum-editor-function-bar [data-toggle="buttons"] > a.function-button input[type="radio"], .webkit #gollum-editor [data-toggle="buttons"] > input#gollum-editor-submit input[type="radio"],
 [data-toggle="buttons"] > .btn input[type="checkbox"],
-[data-toggle="buttons"] > .minibutton input[type="checkbox"], #gollum-editor #gollum-editor-function-bar
+[data-toggle="buttons"] > li.minibutton input[type="checkbox"], #gollum-editor #gollum-editor-function-bar
 [data-toggle="buttons"] > a.function-button input[type="checkbox"], .webkit #gollum-editor
 [data-toggle="buttons"] > input#gollum-editor-submit input[type="checkbox"],
 [data-toggle="buttons"] > .btn-group > .btn input[type="radio"],
-[data-toggle="buttons"] > .btn-group > .minibutton input[type="radio"], #gollum-editor #gollum-editor-function-bar
+[data-toggle="buttons"] > .btn-group > li.minibutton input[type="radio"], #gollum-editor #gollum-editor-function-bar
 [data-toggle="buttons"] > .btn-group > a.function-button input[type="radio"], .webkit #gollum-editor
 [data-toggle="buttons"] > .btn-group > input#gollum-editor-submit input[type="radio"],
 [data-toggle="buttons"] > .btn-group > .btn input[type="checkbox"],
-[data-toggle="buttons"] > .btn-group > .minibutton input[type="checkbox"], #gollum-editor #gollum-editor-function-bar
+[data-toggle="buttons"] > .btn-group > li.minibutton input[type="checkbox"], #gollum-editor #gollum-editor-function-bar
 [data-toggle="buttons"] > .btn-group > a.function-button input[type="checkbox"], .webkit #gollum-editor
 [data-toggle="buttons"] > .btn-group > input#gollum-editor-submit input[type="checkbox"] {
   position: absolute;
@@ -3790,7 +3775,7 @@ tbody.collapse.in {
 .input-group-addon.input-sm,
 .input-group-sm > .input-group-addon,
 .input-group-sm > .input-group-btn > .input-group-addon.btn,
-.input-group-sm > .input-group-btn > .input-group-addon.minibutton, #gollum-editor #gollum-editor-function-bar
+.input-group-sm > .input-group-btn > li.input-group-addon.minibutton, #gollum-editor #gollum-editor-function-bar
 .input-group-sm > .input-group-btn > a.input-group-addon.function-button, .webkit #gollum-editor
 .input-group-sm > .input-group-btn > input.input-group-addon#gollum-editor-submit {
   padding: 5px 10px;
@@ -3800,7 +3785,7 @@ tbody.collapse.in {
 .input-group-addon.input-lg,
 .input-group-lg > .input-group-addon,
 .input-group-lg > .input-group-btn > .input-group-addon.btn,
-.input-group-lg > .input-group-btn > .input-group-addon.minibutton, #gollum-editor #gollum-editor-function-bar
+.input-group-lg > .input-group-btn > li.input-group-addon.minibutton, #gollum-editor #gollum-editor-function-bar
 .input-group-lg > .input-group-btn > a.input-group-addon.function-button, .webkit #gollum-editor
 .input-group-lg > .input-group-btn > input.input-group-addon#gollum-editor-submit {
   padding: 10px 16px;
@@ -3814,20 +3799,20 @@ tbody.collapse.in {
 .input-group .form-control:first-child, .input-group #gollum-dialog-dialog-body fieldset .field input[type="text"]:first-child, #gollum-dialog-dialog-body fieldset .field .input-group input[type="text"]:first-child, .input-group #gollum-editor-title-field input#gollum-editor-page-title:first-child, #gollum-editor-title-field .input-group input#gollum-editor-page-title:first-child, .input-group #gollum-editor textarea:first-child, #gollum-editor .input-group textarea:first-child, .input-group #gollum-editor .singleline input:first-child, #gollum-editor .singleline .input-group input:first-child, .input-group #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector select:first-child, #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector .input-group select:first-child,
 .input-group-addon:first-child,
 .input-group-btn:first-child > .btn,
-.input-group-btn:first-child > .minibutton, #gollum-editor #gollum-editor-function-bar
+.input-group-btn:first-child > li.minibutton, #gollum-editor #gollum-editor-function-bar
 .input-group-btn:first-child > a.function-button, .webkit #gollum-editor
 .input-group-btn:first-child > input#gollum-editor-submit,
 .input-group-btn:first-child > .btn-group > .btn,
-.input-group-btn:first-child > .btn-group > .minibutton, #gollum-editor #gollum-editor-function-bar
+.input-group-btn:first-child > .btn-group > li.minibutton, #gollum-editor #gollum-editor-function-bar
 .input-group-btn:first-child > .btn-group > a.function-button, .webkit #gollum-editor
 .input-group-btn:first-child > .btn-group > input#gollum-editor-submit,
 .input-group-btn:first-child > .dropdown-toggle,
 .input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle),
-.input-group-btn:last-child > .minibutton:not(:last-child):not(.dropdown-toggle), #gollum-editor #gollum-editor-function-bar
+.input-group-btn:last-child > li.minibutton:not(:last-child):not(.dropdown-toggle), #gollum-editor #gollum-editor-function-bar
 .input-group-btn:last-child > a.function-button:not(:last-child):not(.dropdown-toggle), .webkit #gollum-editor
 .input-group-btn:last-child > input#gollum-editor-submit:not(:last-child):not(.dropdown-toggle),
 .input-group-btn:last-child > .btn-group:not(:last-child) > .btn,
-.input-group-btn:last-child > .btn-group:not(:last-child) > .minibutton, #gollum-editor #gollum-editor-function-bar
+.input-group-btn:last-child > .btn-group:not(:last-child) > li.minibutton, #gollum-editor #gollum-editor-function-bar
 .input-group-btn:last-child > .btn-group:not(:last-child) > a.function-button, .webkit #gollum-editor
 .input-group-btn:last-child > .btn-group:not(:last-child) > input#gollum-editor-submit {
   border-bottom-right-radius: 0;
@@ -3839,20 +3824,20 @@ tbody.collapse.in {
 .input-group .form-control:last-child, .input-group #gollum-dialog-dialog-body fieldset .field input[type="text"]:last-child, #gollum-dialog-dialog-body fieldset .field .input-group input[type="text"]:last-child, .input-group #gollum-editor-title-field input#gollum-editor-page-title:last-child, #gollum-editor-title-field .input-group input#gollum-editor-page-title:last-child, .input-group #gollum-editor textarea:last-child, #gollum-editor .input-group textarea:last-child, .input-group #gollum-editor .singleline input:last-child, #gollum-editor .singleline .input-group input:last-child, .input-group #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector select:last-child, #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector .input-group select:last-child,
 .input-group-addon:last-child,
 .input-group-btn:last-child > .btn,
-.input-group-btn:last-child > .minibutton, #gollum-editor #gollum-editor-function-bar
+.input-group-btn:last-child > li.minibutton, #gollum-editor #gollum-editor-function-bar
 .input-group-btn:last-child > a.function-button, .webkit #gollum-editor
 .input-group-btn:last-child > input#gollum-editor-submit,
 .input-group-btn:last-child > .btn-group > .btn,
-.input-group-btn:last-child > .btn-group > .minibutton, #gollum-editor #gollum-editor-function-bar
+.input-group-btn:last-child > .btn-group > li.minibutton, #gollum-editor #gollum-editor-function-bar
 .input-group-btn:last-child > .btn-group > a.function-button, .webkit #gollum-editor
 .input-group-btn:last-child > .btn-group > input#gollum-editor-submit,
 .input-group-btn:last-child > .dropdown-toggle,
 .input-group-btn:first-child > .btn:not(:first-child),
-.input-group-btn:first-child > .minibutton:not(:first-child), #gollum-editor #gollum-editor-function-bar
+.input-group-btn:first-child > li.minibutton:not(:first-child), #gollum-editor #gollum-editor-function-bar
 .input-group-btn:first-child > a.function-button:not(:first-child), .webkit #gollum-editor
 .input-group-btn:first-child > input#gollum-editor-submit:not(:first-child),
 .input-group-btn:first-child > .btn-group:not(:first-child) > .btn,
-.input-group-btn:first-child > .btn-group:not(:first-child) > .minibutton, #gollum-editor #gollum-editor-function-bar
+.input-group-btn:first-child > .btn-group:not(:first-child) > li.minibutton, #gollum-editor #gollum-editor-function-bar
 .input-group-btn:first-child > .btn-group:not(:first-child) > a.function-button, .webkit #gollum-editor
 .input-group-btn:first-child > .btn-group:not(:first-child) > input#gollum-editor-submit {
   border-bottom-left-radius: 0;
@@ -3866,20 +3851,20 @@ tbody.collapse.in {
   font-size: 0;
   white-space: nowrap; }
 
-.input-group-btn > .btn, .input-group-btn > .minibutton, #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button, .webkit #gollum-editor .input-group-btn > input#gollum-editor-submit {
+.input-group-btn > .btn, .input-group-btn > li.minibutton, #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button, .webkit #gollum-editor .input-group-btn > input#gollum-editor-submit {
   position: relative; }
 
-.input-group-btn > .btn + .btn, .input-group-btn > .minibutton + .btn, #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button + .btn, .webkit #gollum-editor .input-group-btn > input#gollum-editor-submit + .btn, .input-group-btn > .btn + .minibutton, .input-group-btn > .minibutton + .minibutton, #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button + .minibutton, .webkit #gollum-editor .input-group-btn > input#gollum-editor-submit + .minibutton, #gollum-editor #gollum-editor-function-bar .input-group-btn > .btn + a.function-button, #gollum-editor #gollum-editor-function-bar .input-group-btn > .minibutton + a.function-button, #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button + a.function-button, .webkit #gollum-editor #gollum-editor-function-bar .input-group-btn > input#gollum-editor-submit + a.function-button, .webkit #gollum-editor .input-group-btn > .btn + input#gollum-editor-submit, .webkit #gollum-editor .input-group-btn > .minibutton + input#gollum-editor-submit, .webkit #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button + input#gollum-editor-submit, .webkit #gollum-editor .input-group-btn > input#gollum-editor-submit + input#gollum-editor-submit {
+.input-group-btn > .btn + .btn, .input-group-btn > li.minibutton + .btn, #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button + .btn, .webkit #gollum-editor .input-group-btn > input#gollum-editor-submit + .btn, .input-group-btn > .btn + li.minibutton, .input-group-btn > li.minibutton + li.minibutton, #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button + li.minibutton, .webkit #gollum-editor .input-group-btn > input#gollum-editor-submit + li.minibutton, #gollum-editor #gollum-editor-function-bar .input-group-btn > .btn + a.function-button, #gollum-editor #gollum-editor-function-bar .input-group-btn > li.minibutton + a.function-button, #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button + a.function-button, .webkit #gollum-editor #gollum-editor-function-bar .input-group-btn > input#gollum-editor-submit + a.function-button, .webkit #gollum-editor .input-group-btn > .btn + input#gollum-editor-submit, .webkit #gollum-editor .input-group-btn > li.minibutton + input#gollum-editor-submit, .webkit #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button + input#gollum-editor-submit, .webkit #gollum-editor .input-group-btn > input#gollum-editor-submit + input#gollum-editor-submit {
   margin-left: -1px; }
 
-.input-group-btn > .btn:hover, .input-group-btn > .minibutton:hover, #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button:hover, .webkit #gollum-editor .input-group-btn > input#gollum-editor-submit:hover, .input-group-btn > .btn:focus, .input-group-btn > .minibutton:focus, #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button:focus, .webkit #gollum-editor .input-group-btn > input#gollum-editor-submit:focus, .input-group-btn > .btn:active, .input-group-btn > .minibutton:active, #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button:active, .webkit #gollum-editor .input-group-btn > input#gollum-editor-submit:active {
+.input-group-btn > .btn:hover, .input-group-btn > li.minibutton:hover, #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button:hover, .webkit #gollum-editor .input-group-btn > input#gollum-editor-submit:hover, .input-group-btn > .btn:focus, .input-group-btn > li.minibutton:focus, #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button:focus, .webkit #gollum-editor .input-group-btn > input#gollum-editor-submit:focus, .input-group-btn > .btn:active, .input-group-btn > li.minibutton:active, #gollum-editor #gollum-editor-function-bar .input-group-btn > a.function-button:active, .webkit #gollum-editor .input-group-btn > input#gollum-editor-submit:active {
   z-index: 2; }
 
-.input-group-btn:first-child > .btn, .input-group-btn:first-child > .minibutton, #gollum-editor #gollum-editor-function-bar .input-group-btn:first-child > a.function-button, .webkit #gollum-editor .input-group-btn:first-child > input#gollum-editor-submit,
+.input-group-btn:first-child > .btn, .input-group-btn:first-child > li.minibutton, #gollum-editor #gollum-editor-function-bar .input-group-btn:first-child > a.function-button, .webkit #gollum-editor .input-group-btn:first-child > input#gollum-editor-submit,
 .input-group-btn:first-child > .btn-group {
   margin-right: -1px; }
 
-.input-group-btn:last-child > .btn, .input-group-btn:last-child > .minibutton, #gollum-editor #gollum-editor-function-bar .input-group-btn:last-child > a.function-button, .webkit #gollum-editor .input-group-btn:last-child > input#gollum-editor-submit,
+.input-group-btn:last-child > .btn, .input-group-btn:last-child > li.minibutton, #gollum-editor #gollum-editor-function-bar .input-group-btn:last-child > a.function-button, .webkit #gollum-editor .input-group-btn:last-child > input#gollum-editor-submit,
 .input-group-btn:last-child > .btn-group {
   z-index: 2;
   margin-left: -1px; }
@@ -4318,11 +4303,11 @@ tbody.collapse.in {
   margin-top: 8px;
   margin-bottom: 8px; }
 
-.navbar-btn.btn-sm, .btn-group-sm > .navbar-btn.btn, .btn-group-sm > .navbar-btn.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-sm > a.navbar-btn.function-button, .webkit #gollum-editor .btn-group-sm > input.navbar-btn#gollum-editor-submit {
+.navbar-btn.btn-sm, .btn-group-sm > .navbar-btn.btn, .btn-group-sm > li.navbar-btn.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-sm > a.navbar-btn.function-button, .webkit #gollum-editor .btn-group-sm > input.navbar-btn#gollum-editor-submit {
   margin-top: 10px;
   margin-bottom: 10px; }
 
-.navbar-btn.btn-xs, .btn-group-xs > .navbar-btn.btn, .btn-group-xs > .navbar-btn.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-xs > a.navbar-btn.function-button, .webkit #gollum-editor .btn-group-xs > input.navbar-btn#gollum-editor-submit {
+.navbar-btn.btn-xs, .btn-group-xs > .navbar-btn.btn, .btn-group-xs > li.navbar-btn.minibutton, #gollum-editor #gollum-editor-function-bar .btn-group-xs > a.navbar-btn.function-button, .webkit #gollum-editor .btn-group-xs > input.navbar-btn#gollum-editor-submit {
   margin-top: 14px;
   margin-bottom: 14px; }
 
@@ -4410,19 +4395,19 @@ tbody.collapse.in {
 .navbar-default .navbar-link:hover {
   color: #fff; }
 
-.navbar-default .btn-link, .navbar-default .minibutton, .navbar-default .webkit #gollum-editor input#gollum-editor-submit, .webkit #gollum-editor .navbar-default input#gollum-editor-submit {
+.navbar-default .btn-link, .navbar-default li.minibutton, .navbar-default .webkit #gollum-editor input#gollum-editor-submit, .webkit #gollum-editor .navbar-default input#gollum-editor-submit {
   color: #fff; }
 
-.navbar-default .btn-link:hover, .navbar-default .minibutton:hover, .navbar-default .webkit #gollum-editor input#gollum-editor-submit:hover, .webkit #gollum-editor .navbar-default input#gollum-editor-submit:hover, .navbar-default .btn-link:focus, .navbar-default .minibutton:focus, .navbar-default .webkit #gollum-editor input#gollum-editor-submit:focus, .webkit #gollum-editor .navbar-default input#gollum-editor-submit:focus {
+.navbar-default .btn-link:hover, .navbar-default li.minibutton:hover, .navbar-default .webkit #gollum-editor input#gollum-editor-submit:hover, .webkit #gollum-editor .navbar-default input#gollum-editor-submit:hover, .navbar-default .btn-link:focus, .navbar-default li.minibutton:focus, .navbar-default .webkit #gollum-editor input#gollum-editor-submit:focus, .webkit #gollum-editor .navbar-default input#gollum-editor-submit:focus {
   color: #fff; }
 
-.navbar-default .btn-link[disabled]:hover, .navbar-default [disabled].minibutton:hover, .navbar-default .webkit #gollum-editor input[disabled]#gollum-editor-submit:hover, .webkit #gollum-editor .navbar-default input[disabled]#gollum-editor-submit:hover, .navbar-default .btn-link[disabled]:focus, .navbar-default [disabled].minibutton:focus, .navbar-default .webkit #gollum-editor input[disabled]#gollum-editor-submit:focus, .webkit #gollum-editor .navbar-default input[disabled]#gollum-editor-submit:focus,
+.navbar-default .btn-link[disabled]:hover, .navbar-default li[disabled].minibutton:hover, .navbar-default .webkit #gollum-editor input[disabled]#gollum-editor-submit:hover, .webkit #gollum-editor .navbar-default input[disabled]#gollum-editor-submit:hover, .navbar-default .btn-link[disabled]:focus, .navbar-default li[disabled].minibutton:focus, .navbar-default .webkit #gollum-editor input[disabled]#gollum-editor-submit:focus, .webkit #gollum-editor .navbar-default input[disabled]#gollum-editor-submit:focus,
 fieldset[disabled] .navbar-default .btn-link:hover,
-fieldset[disabled] .navbar-default .minibutton:hover,
+fieldset[disabled] .navbar-default li.minibutton:hover,
 fieldset[disabled] .navbar-default .webkit #gollum-editor input#gollum-editor-submit:hover, .webkit #gollum-editor
 fieldset[disabled] .navbar-default input#gollum-editor-submit:hover,
 fieldset[disabled] .navbar-default .btn-link:focus,
-fieldset[disabled] .navbar-default .minibutton:focus,
+fieldset[disabled] .navbar-default li.minibutton:focus,
 fieldset[disabled] .navbar-default .webkit #gollum-editor input#gollum-editor-submit:focus, .webkit #gollum-editor
 fieldset[disabled] .navbar-default input#gollum-editor-submit:focus {
   color: #cccccc; }
@@ -4496,19 +4481,19 @@ fieldset[disabled] .navbar-default input#gollum-editor-submit:focus {
 .navbar-inverse .navbar-link:hover {
   color: #fff; }
 
-.navbar-inverse .btn-link, .navbar-inverse .minibutton, .navbar-inverse .webkit #gollum-editor input#gollum-editor-submit, .webkit #gollum-editor .navbar-inverse input#gollum-editor-submit {
+.navbar-inverse .btn-link, .navbar-inverse li.minibutton, .navbar-inverse .webkit #gollum-editor input#gollum-editor-submit, .webkit #gollum-editor .navbar-inverse input#gollum-editor-submit {
   color: #fff; }
 
-.navbar-inverse .btn-link:hover, .navbar-inverse .minibutton:hover, .navbar-inverse .webkit #gollum-editor input#gollum-editor-submit:hover, .webkit #gollum-editor .navbar-inverse input#gollum-editor-submit:hover, .navbar-inverse .btn-link:focus, .navbar-inverse .minibutton:focus, .navbar-inverse .webkit #gollum-editor input#gollum-editor-submit:focus, .webkit #gollum-editor .navbar-inverse input#gollum-editor-submit:focus {
+.navbar-inverse .btn-link:hover, .navbar-inverse li.minibutton:hover, .navbar-inverse .webkit #gollum-editor input#gollum-editor-submit:hover, .webkit #gollum-editor .navbar-inverse input#gollum-editor-submit:hover, .navbar-inverse .btn-link:focus, .navbar-inverse li.minibutton:focus, .navbar-inverse .webkit #gollum-editor input#gollum-editor-submit:focus, .webkit #gollum-editor .navbar-inverse input#gollum-editor-submit:focus {
   color: #fff; }
 
-.navbar-inverse .btn-link[disabled]:hover, .navbar-inverse [disabled].minibutton:hover, .navbar-inverse .webkit #gollum-editor input[disabled]#gollum-editor-submit:hover, .webkit #gollum-editor .navbar-inverse input[disabled]#gollum-editor-submit:hover, .navbar-inverse .btn-link[disabled]:focus, .navbar-inverse [disabled].minibutton:focus, .navbar-inverse .webkit #gollum-editor input[disabled]#gollum-editor-submit:focus, .webkit #gollum-editor .navbar-inverse input[disabled]#gollum-editor-submit:focus,
+.navbar-inverse .btn-link[disabled]:hover, .navbar-inverse li[disabled].minibutton:hover, .navbar-inverse .webkit #gollum-editor input[disabled]#gollum-editor-submit:hover, .webkit #gollum-editor .navbar-inverse input[disabled]#gollum-editor-submit:hover, .navbar-inverse .btn-link[disabled]:focus, .navbar-inverse li[disabled].minibutton:focus, .navbar-inverse .webkit #gollum-editor input[disabled]#gollum-editor-submit:focus, .webkit #gollum-editor .navbar-inverse input[disabled]#gollum-editor-submit:focus,
 fieldset[disabled] .navbar-inverse .btn-link:hover,
-fieldset[disabled] .navbar-inverse .minibutton:hover,
+fieldset[disabled] .navbar-inverse li.minibutton:hover,
 fieldset[disabled] .navbar-inverse .webkit #gollum-editor input#gollum-editor-submit:hover, .webkit #gollum-editor
 fieldset[disabled] .navbar-inverse input#gollum-editor-submit:hover,
 fieldset[disabled] .navbar-inverse .btn-link:focus,
-fieldset[disabled] .navbar-inverse .minibutton:focus,
+fieldset[disabled] .navbar-inverse li.minibutton:focus,
 fieldset[disabled] .navbar-inverse .webkit #gollum-editor input#gollum-editor-submit:focus, .webkit #gollum-editor
 fieldset[disabled] .navbar-inverse input#gollum-editor-submit:focus {
   color: #444; }
@@ -4684,7 +4669,7 @@ fieldset[disabled] .navbar-inverse input#gollum-editor-submit:focus {
 .label:empty {
   display: none; }
 
-.btn .label, .minibutton .label, #gollum-editor #gollum-editor-function-bar a.function-button .label, .webkit #gollum-editor input#gollum-editor-submit .label {
+.btn .label, li.minibutton .label, #gollum-editor #gollum-editor-function-bar a.function-button .label, .webkit #gollum-editor input#gollum-editor-submit .label {
   position: relative;
   top: -1px; }
 
@@ -4746,13 +4731,13 @@ a.label:hover, a.label:focus {
 .badge:empty {
   display: none; }
 
-.btn .badge, .minibutton .badge, #gollum-editor #gollum-editor-function-bar a.function-button .badge, .webkit #gollum-editor input#gollum-editor-submit .badge {
+.btn .badge, li.minibutton .badge, #gollum-editor #gollum-editor-function-bar a.function-button .badge, .webkit #gollum-editor input#gollum-editor-submit .badge {
   position: relative;
   top: -1px; }
 
-.btn-xs .badge, .btn-group-xs > .btn .badge, .btn-group-xs > .minibutton .badge, #gollum-editor #gollum-editor-function-bar .btn-group-xs > a.function-button .badge, .webkit #gollum-editor .btn-group-xs > input#gollum-editor-submit .badge,
+.btn-xs .badge, .btn-group-xs > .btn .badge, .btn-group-xs > li.minibutton .badge, #gollum-editor #gollum-editor-function-bar .btn-group-xs > a.function-button .badge, .webkit #gollum-editor .btn-group-xs > input#gollum-editor-submit .badge,
 .btn-group-xs > .btn .badge,
-.btn-group-xs > .minibutton .badge, #gollum-editor #gollum-editor-function-bar
+.btn-group-xs > li.minibutton .badge, #gollum-editor #gollum-editor-function-bar
 .btn-group-xs > a.function-button .badge, .webkit #gollum-editor
 .btn-group-xs > input#gollum-editor-submit .badge {
   top: 0;
@@ -5761,11 +5746,11 @@ button.close {
 .modal-footer:after {
   clear: both; }
 
-.modal-footer .btn + .btn, .modal-footer .minibutton + .btn, .modal-footer #gollum-editor #gollum-editor-function-bar a.function-button + .btn, #gollum-editor #gollum-editor-function-bar .modal-footer a.function-button + .btn, .modal-footer .webkit #gollum-editor input#gollum-editor-submit + .btn, .webkit #gollum-editor .modal-footer input#gollum-editor-submit + .btn, .modal-footer .btn + .minibutton, .modal-footer .minibutton + .minibutton, .modal-footer #gollum-editor #gollum-editor-function-bar a.function-button + .minibutton, #gollum-editor #gollum-editor-function-bar .modal-footer a.function-button + .minibutton, .modal-footer .webkit #gollum-editor input#gollum-editor-submit + .minibutton, .webkit #gollum-editor .modal-footer input#gollum-editor-submit + .minibutton, .modal-footer #gollum-editor #gollum-editor-function-bar .btn + a.function-button, #gollum-editor #gollum-editor-function-bar .modal-footer .btn + a.function-button, .modal-footer #gollum-editor #gollum-editor-function-bar .minibutton + a.function-button, #gollum-editor #gollum-editor-function-bar .modal-footer .minibutton + a.function-button, .modal-footer #gollum-editor #gollum-editor-function-bar a.function-button + a.function-button, #gollum-editor #gollum-editor-function-bar .modal-footer a.function-button + a.function-button, .modal-footer .webkit #gollum-editor #gollum-editor-function-bar input#gollum-editor-submit + a.function-button, .webkit #gollum-editor .modal-footer #gollum-editor-function-bar input#gollum-editor-submit + a.function-button, .webkit #gollum-editor #gollum-editor-function-bar .modal-footer input#gollum-editor-submit + a.function-button, .modal-footer .webkit #gollum-editor .btn + input#gollum-editor-submit, .webkit #gollum-editor .modal-footer .btn + input#gollum-editor-submit, .modal-footer .webkit #gollum-editor .minibutton + input#gollum-editor-submit, .webkit #gollum-editor .modal-footer .minibutton + input#gollum-editor-submit, .modal-footer .webkit #gollum-editor #gollum-editor-function-bar a.function-button + input#gollum-editor-submit, .webkit .modal-footer #gollum-editor #gollum-editor-function-bar a.function-button + input#gollum-editor-submit, .webkit #gollum-editor #gollum-editor-function-bar .modal-footer a.function-button + input#gollum-editor-submit, .modal-footer .webkit #gollum-editor input#gollum-editor-submit + input#gollum-editor-submit, .webkit #gollum-editor .modal-footer input#gollum-editor-submit + input#gollum-editor-submit {
+.modal-footer .btn + .btn, .modal-footer li.minibutton + .btn, .modal-footer #gollum-editor #gollum-editor-function-bar a.function-button + .btn, #gollum-editor #gollum-editor-function-bar .modal-footer a.function-button + .btn, .modal-footer .webkit #gollum-editor input#gollum-editor-submit + .btn, .webkit #gollum-editor .modal-footer input#gollum-editor-submit + .btn, .modal-footer .btn + li.minibutton, .modal-footer li.minibutton + li.minibutton, .modal-footer #gollum-editor #gollum-editor-function-bar a.function-button + li.minibutton, #gollum-editor #gollum-editor-function-bar .modal-footer a.function-button + li.minibutton, .modal-footer .webkit #gollum-editor input#gollum-editor-submit + li.minibutton, .webkit #gollum-editor .modal-footer input#gollum-editor-submit + li.minibutton, .modal-footer #gollum-editor #gollum-editor-function-bar .btn + a.function-button, #gollum-editor #gollum-editor-function-bar .modal-footer .btn + a.function-button, .modal-footer #gollum-editor #gollum-editor-function-bar li.minibutton + a.function-button, #gollum-editor #gollum-editor-function-bar .modal-footer li.minibutton + a.function-button, .modal-footer #gollum-editor #gollum-editor-function-bar a.function-button + a.function-button, #gollum-editor #gollum-editor-function-bar .modal-footer a.function-button + a.function-button, .modal-footer .webkit #gollum-editor #gollum-editor-function-bar input#gollum-editor-submit + a.function-button, .webkit #gollum-editor .modal-footer #gollum-editor-function-bar input#gollum-editor-submit + a.function-button, .webkit #gollum-editor #gollum-editor-function-bar .modal-footer input#gollum-editor-submit + a.function-button, .modal-footer .webkit #gollum-editor .btn + input#gollum-editor-submit, .webkit #gollum-editor .modal-footer .btn + input#gollum-editor-submit, .modal-footer .webkit #gollum-editor li.minibutton + input#gollum-editor-submit, .webkit #gollum-editor .modal-footer li.minibutton + input#gollum-editor-submit, .modal-footer .webkit #gollum-editor #gollum-editor-function-bar a.function-button + input#gollum-editor-submit, .webkit .modal-footer #gollum-editor #gollum-editor-function-bar a.function-button + input#gollum-editor-submit, .webkit #gollum-editor #gollum-editor-function-bar .modal-footer a.function-button + input#gollum-editor-submit, .modal-footer .webkit #gollum-editor input#gollum-editor-submit + input#gollum-editor-submit, .webkit #gollum-editor .modal-footer input#gollum-editor-submit + input#gollum-editor-submit {
   margin-left: 5px;
   margin-bottom: 0; }
 
-.modal-footer .btn-group .btn + .btn, .modal-footer .btn-group .minibutton + .btn, .modal-footer .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + .btn, #gollum-editor #gollum-editor-function-bar .modal-footer .btn-group a.function-button + .btn, .modal-footer .btn-group .webkit #gollum-editor input#gollum-editor-submit + .btn, .webkit #gollum-editor .modal-footer .btn-group input#gollum-editor-submit + .btn, .modal-footer .btn-group .btn + .minibutton, .modal-footer .btn-group .minibutton + .minibutton, .modal-footer .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + .minibutton, #gollum-editor #gollum-editor-function-bar .modal-footer .btn-group a.function-button + .minibutton, .modal-footer .btn-group .webkit #gollum-editor input#gollum-editor-submit + .minibutton, .webkit #gollum-editor .modal-footer .btn-group input#gollum-editor-submit + .minibutton, .modal-footer .btn-group #gollum-editor #gollum-editor-function-bar .btn + a.function-button, #gollum-editor #gollum-editor-function-bar .modal-footer .btn-group .btn + a.function-button, .modal-footer .btn-group #gollum-editor #gollum-editor-function-bar .minibutton + a.function-button, #gollum-editor #gollum-editor-function-bar .modal-footer .btn-group .minibutton + a.function-button, .modal-footer .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + a.function-button, #gollum-editor #gollum-editor-function-bar .modal-footer .btn-group a.function-button + a.function-button, .modal-footer .btn-group .webkit #gollum-editor #gollum-editor-function-bar input#gollum-editor-submit + a.function-button, .webkit #gollum-editor .modal-footer .btn-group #gollum-editor-function-bar input#gollum-editor-submit + a.function-button, .webkit #gollum-editor #gollum-editor-function-bar .modal-footer .btn-group input#gollum-editor-submit + a.function-button, .modal-footer .btn-group .webkit #gollum-editor .btn + input#gollum-editor-submit, .webkit #gollum-editor .modal-footer .btn-group .btn + input#gollum-editor-submit, .modal-footer .btn-group .webkit #gollum-editor .minibutton + input#gollum-editor-submit, .webkit #gollum-editor .modal-footer .btn-group .minibutton + input#gollum-editor-submit, .modal-footer .btn-group .webkit #gollum-editor #gollum-editor-function-bar a.function-button + input#gollum-editor-submit, .webkit .modal-footer .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + input#gollum-editor-submit, .webkit #gollum-editor #gollum-editor-function-bar .modal-footer .btn-group a.function-button + input#gollum-editor-submit, .modal-footer .btn-group .webkit #gollum-editor input#gollum-editor-submit + input#gollum-editor-submit, .webkit #gollum-editor .modal-footer .btn-group input#gollum-editor-submit + input#gollum-editor-submit {
+.modal-footer .btn-group .btn + .btn, .modal-footer .btn-group li.minibutton + .btn, .modal-footer .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + .btn, #gollum-editor #gollum-editor-function-bar .modal-footer .btn-group a.function-button + .btn, .modal-footer .btn-group .webkit #gollum-editor input#gollum-editor-submit + .btn, .webkit #gollum-editor .modal-footer .btn-group input#gollum-editor-submit + .btn, .modal-footer .btn-group .btn + li.minibutton, .modal-footer .btn-group li.minibutton + li.minibutton, .modal-footer .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + li.minibutton, #gollum-editor #gollum-editor-function-bar .modal-footer .btn-group a.function-button + li.minibutton, .modal-footer .btn-group .webkit #gollum-editor input#gollum-editor-submit + li.minibutton, .webkit #gollum-editor .modal-footer .btn-group input#gollum-editor-submit + li.minibutton, .modal-footer .btn-group #gollum-editor #gollum-editor-function-bar .btn + a.function-button, #gollum-editor #gollum-editor-function-bar .modal-footer .btn-group .btn + a.function-button, .modal-footer .btn-group #gollum-editor #gollum-editor-function-bar li.minibutton + a.function-button, #gollum-editor #gollum-editor-function-bar .modal-footer .btn-group li.minibutton + a.function-button, .modal-footer .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + a.function-button, #gollum-editor #gollum-editor-function-bar .modal-footer .btn-group a.function-button + a.function-button, .modal-footer .btn-group .webkit #gollum-editor #gollum-editor-function-bar input#gollum-editor-submit + a.function-button, .webkit #gollum-editor .modal-footer .btn-group #gollum-editor-function-bar input#gollum-editor-submit + a.function-button, .webkit #gollum-editor #gollum-editor-function-bar .modal-footer .btn-group input#gollum-editor-submit + a.function-button, .modal-footer .btn-group .webkit #gollum-editor .btn + input#gollum-editor-submit, .webkit #gollum-editor .modal-footer .btn-group .btn + input#gollum-editor-submit, .modal-footer .btn-group .webkit #gollum-editor li.minibutton + input#gollum-editor-submit, .webkit #gollum-editor .modal-footer .btn-group li.minibutton + input#gollum-editor-submit, .modal-footer .btn-group .webkit #gollum-editor #gollum-editor-function-bar a.function-button + input#gollum-editor-submit, .webkit .modal-footer .btn-group #gollum-editor #gollum-editor-function-bar a.function-button + input#gollum-editor-submit, .webkit #gollum-editor #gollum-editor-function-bar .modal-footer .btn-group a.function-button + input#gollum-editor-submit, .modal-footer .btn-group .webkit #gollum-editor input#gollum-editor-submit + input#gollum-editor-submit, .webkit #gollum-editor .modal-footer .btn-group input#gollum-editor-submit + input#gollum-editor-submit {
   margin-left: -1px; }
 
 .modal-footer .btn-block + .btn-block {
@@ -6224,7 +6209,7 @@ button.close {
   text-align: center;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); }
 
-.carousel-caption .btn, .carousel-caption .minibutton, .carousel-caption #gollum-editor #gollum-editor-function-bar a.function-button, #gollum-editor #gollum-editor-function-bar .carousel-caption a.function-button, .carousel-caption .webkit #gollum-editor input#gollum-editor-submit, .webkit #gollum-editor .carousel-caption input#gollum-editor-submit {
+.carousel-caption .btn, .carousel-caption li.minibutton, .carousel-caption #gollum-editor #gollum-editor-function-bar a.function-button, #gollum-editor #gollum-editor-function-bar .carousel-caption a.function-button, .carousel-caption .webkit #gollum-editor input#gollum-editor-submit, .webkit #gollum-editor .carousel-caption input#gollum-editor-submit {
   text-shadow: none; }
 
 @media screen and (min-width: 768px) {
@@ -6514,16 +6499,28 @@ body {
 .minibutton:hover {
   text-decoration: none !important; }
 
-.minibutton {
+li.minibutton {
   font-weight: normal;
   border-radius: 0;
   padding-left: 0; }
+
+#head li.minibutton {
+  padding-top: 0;
+  padding-right: 0;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  float: left; }
+
+#head li.minibutton.no-space {
+  margin-bottom: 0; }
 
 .actions {
   padding-left: 0; }
 
 #head ul.actions {
-  clear: both; }
+  clear: both;
+  margin-top: 5px;
+  margin-bottom: 5px; }
 
 @media (min-width: 940px) {
   div#wiki-wrapper.results #head ul.actions {
@@ -6540,12 +6537,6 @@ body {
   font-family: 'Glyphicons Halflings';
   src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot");
   src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("../fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
-
-#search-submit span {
-  display: none; }
-
-#search-submit:after {
-  content: "\e003"; }
 
 li a.folder:before {
   content: "\e118\2003"; }
@@ -6577,14 +6568,108 @@ li a.file:before {
 @media (min-width: 940px) {
   #head {
     padding-bottom: 0.3em;
-    margin-bottom: 0; } }
+    margin-bottom: 20px; } }
 
 @media (min-width: 940px) {
   #head h1, #head ul.actions {
     float: left; } }
 
 #wiki-toc-main {
-  margin-bottom: 20px; }
+  background-color: #f5f5f5;
+  border: 1px solid #777777;
+  font-size: 13px;
+  padding: 0px 5px;
+  float: left;
+  margin-bottom: 20px;
+  min-width: 33%;
+  border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em; }
+
+#wiki-toc-main > div {
+  border: none; }
+
+.toc {
+  background-color: #f5f5f5;
+  border: 1px solid #777777;
+  padding: 5px 10px;
+  margin: 0;
+  border-radius: 3px; }
+
+.toc-title {
+  color: #777777;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 2px;
+  border-bottom: 1px solid #777777;
+  margin-bottom: 3px; }
+
+.toc ul {
+  padding-left: 10px;
+  margin: 0; }
+  .toc ul li {
+    margin: 0; }
+
+.toc > ul {
+  margin-left: 10px;
+  font-size: 17px; }
+
+.toc ul ul {
+  font-size: 15px; }
+
+.toc ul ul ul {
+  font-size: 14px; }
+
+#header-content .toc,
+#footer-content .toc,
+#sidebar-content .toc {
+  border: none; }
+
+#head #searchbar {
+  float: right;
+  padding: 0;
+  overflow: hidden; }
+
+#head #searchbar #searchbar-fauxtext {
+  background: #fff;
+  border: 1px solid #1f93c8;
+  overflow: hidden;
+  height: 2.2em;
+  border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+  -webkit-border-radius: 0.3em; }
+
+#head #searchbar #searchbar-fauxtext input#search-query {
+  border: none;
+  color: #000;
+  float: left;
+  font-size: 1em;
+  height: inherit;
+  padding: 0 .5em;
+  -webkit-focus-ring: none; }
+
+.ie8 #head #searchbar #searchbar-fauxtext input#search-query {
+  padding: 0.5em 0 0 0.5em; }
+
+#head #searchbar #searchbar-fauxtext input#search-query.ph {
+  color: #999; }
+
+#head #searchbar #searchbar-fauxtext #search-submit {
+  border: 0;
+  border-left: 1px solid #1f93c8;
+  cursor: pointer;
+  height: inherit;
+  border-radius: 0 3px 3px 0;
+  -moz-border-radius: 0 3px 3px 0;
+  -webkit-border-radius: 0 3px 3px 0; }
+
+.ff #head #searchbar #searchbar-fauxtext #search-submit span,
+.ie #head #searchbar #searchbar-fauxtext #search-submit span {
+  height: 2.2em; }
+
+@media all and (min-width: 940px) {
+  #head #searchbar {
+    padding: 0; } }
 
 #wiki-body, div#results {
   display: block;
@@ -6601,10 +6686,12 @@ li a.file:before {
   line-height: 1.7;
   overflow: hidden;
   word-wrap: break-word; }
+  .markdown-body h1, .markdown-body #head ul.actions, #head .markdown-body ul.actions {
+    border-bottom: 1px solid #ddd; }
 
 @media (min-width: 940px) {
   .markdown-body {
-    padding: 30px; } }
+    padding: 5px 30px 30px; } }
 
 /* results of searching */
 div#results li {

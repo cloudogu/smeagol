@@ -6,10 +6,10 @@
       {{>searchbar}}
     </li>
     <li class="minibutton"><a href="{{base_url}}/{{escaped_url_path}}"
-       class="action-view-page">View Page</a></li>
+       class="btn btn-primary btn-sm">View Page</a></li>
     {{#allow_editing}}
       <li class="minibutton"><a href="{{base_url}}/edit/{{escaped_url_path}}"
-         class="action-edit-page">Edit Page</a></li>
+         class="btn btn-primary btn-sm">Edit Page</a></li>
     {{/allow_editing}}
   </ul>
 </div>
@@ -17,7 +17,7 @@
 
   <ul class="actions">
     <li class="minibutton"><a href="javascript:void(0);"
-       class="action-compare-revision">Compare Revisions</a></li>
+       class="btn btn-primary btn-sm">Compare Revisions</a></li>
   </ul>
 
   <form name="compare-versions" id="version-form" method="post"
@@ -50,11 +50,11 @@
 <div id="footer">
   <ul class="actions">
     <li class="minibutton"><a href="javascript:void(0);"
-       class="action-compare-revision">Compare Revisions</a></li>
+       class="btn btn-primary btn-sm">Compare Revisions</a></li>
 
     <!-- only show this button if we have more than 20 revisions -->
     <li class="minibutton"><a href="#"
-       class="action-back-to-top">Back to Top</a></li>
+       class="btn btn-primary btn-sm">Back to Top</a></li>
   </ul>
 </div>
 </div>

@@ -3,6 +3,11 @@
 $color-grey-bright: #ddd;
 $color-grey-dark: #999;
 $color-blue-bright: #b9d1dc;
+$color-blue-dark: #1f93c8;
+
+$color-toc-background: #f5f5f5;
+$color-toc-font: #777777;
+
 
 body {
   padding-top: 60px;
@@ -18,12 +23,27 @@ body {
   text-decoration: none !important;
 }
 
-.minibutton {
+li.minibutton {
   @extend .btn;
   @extend .btn-link;
   font-weight: normal;
   border-radius: 0;
   padding-left: 0;
+}
+
+//put minibutton in head element closer together
+#head li.minibutton {
+  padding-top: 0;
+  padding-right: 0;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  //removes list-item-spacing in order to apply regular margin
+  float: left;
+}
+
+//make buttons wrap propperly
+#head li.minibutton.no-space {
+  margin-bottom: 0;
 }
 
 // position of buttons (next to heading if window is big enough)
@@ -34,6 +54,9 @@ body {
 #head ul.actions {
   clear: both;
   @extend h1;
+  margin-top: 5px;
+  margin-bottom: 5px;
+
 }
 
 @media (min-width: 940px) {
@@ -56,18 +79,6 @@ body {
   font-family: 'Glyphicons Halflings';
   src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot");
   src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("../fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
-
-#search-submit span {
-  display: none;
-}
-
-#search-submit, li a.folder:before, li a.file:before{
-  @extend .glyphicon;
-}
-
-#search-submit:after {
-  content: "\e003";
-}
 
 li a.folder:before {
   content: "\e118\2003";
@@ -107,7 +118,7 @@ li a.file:before {
 @media (min-width: 940px) {
   #head {
     padding-bottom: 0.3em;
-    margin-bottom: 0;
+    margin-bottom: 20px;
   }
 }
 
@@ -117,8 +128,132 @@ li a.file:before {
   }
 }
 
+// Table of Contents | copied from gollum and colors adjusted
 #wiki-toc-main {
+  background-color: $color-toc-background;
+  border: 1px solid $color-toc-font;
+  font-size: 13px;
+  padding: 0px 5px;
+  float: left;
   margin-bottom: 20px;
+  min-width: 33%;
+
+  border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+}
+
+#wiki-toc-main > div {
+  border: none;
+}
+
+.toc {
+  background-color: $color-toc-background;
+  border: 1px solid $color-toc-font;
+  padding: 5px 10px;
+  margin: 0;
+  border-radius: 3px;
+}
+
+.toc-title {
+  color: $color-toc-font;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 2px;
+  border-bottom: 1px solid $color-toc-font;
+  margin-bottom: 3px;
+}
+
+.toc {
+
+  ul {
+    padding-left: 10px;
+    margin: 0;
+
+    li {
+      margin: 0;
+    }
+  }
+
+  > ul {
+    margin-left: 10px;
+    font-size: 17px;
+  }
+
+  ul ul {
+    font-size: 15px;
+  }
+
+  ul ul ul {
+    font-size: 14px;
+  }
+
+}
+
+#header-content .toc,
+#footer-content .toc,
+#sidebar-content .toc {
+  border: none;
+}
+
+//Searchbar | copied from gollum and adjusted for Smeagol colors
+#head #searchbar {
+  float: right;
+  padding: 0;
+  overflow: hidden;
+}
+
+#head #searchbar #searchbar-fauxtext {
+  background: #fff;
+  border: 1px solid $color-blue-dark;
+  overflow: hidden;
+  height: 2.2em;
+
+  border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+  -webkit-border-radius: 0.3em;
+}
+
+#head #searchbar #searchbar-fauxtext input#search-query {
+  border: none;
+  color: #000;
+  float: left;
+  font-size: 1em;
+  height: inherit;
+  padding: 0 .5em;
+
+  -webkit-focus-ring: none;
+}
+
+.ie8 #head #searchbar #searchbar-fauxtext input#search-query {
+  padding: 0.5em 0 0 0.5em;
+}
+
+#head #searchbar #searchbar-fauxtext input#search-query.ph {
+  color: #999;
+}
+
+#head #searchbar #searchbar-fauxtext #search-submit {
+  border: 0;
+  border-left: 1px solid $color-blue-dark;
+  cursor: pointer;
+  height: inherit;
+
+  border-radius: 0 3px 3px 0;
+  -moz-border-radius: 0 3px 3px 0;
+  -webkit-border-radius: 0 3px 3px 0;
+}
+
+.ff #head #searchbar #searchbar-fauxtext #search-submit span,
+.ie #head #searchbar #searchbar-fauxtext #search-submit span {
+  height: 2.2em;
+}
+
+@media all and (min-width: 940px) {
+  #head #searchbar {
+    padding: 0;
+  }
+
 }
 
 #wiki-body {
@@ -137,11 +272,15 @@ li a.file:before {
   line-height: 1.7;
   overflow: hidden;
   word-wrap: break-word;
+
+  h1 {
+      border-bottom: 1px solid $color-grey-bright;
+  }
 }
 
 @media (min-width: 940px) {
   .markdown-body {
-    padding: 30px;
+    padding: 5px 30px 30px;
   }
 }
 
@@ -546,7 +685,7 @@ span.count {
   padding: 3px 6px;
   color: #23A3DD;
   background-color: #fff;
-  border-color: #1f93c8;
+  border-color: $color-blue-dark;
   @extend .btn;
 }
 
