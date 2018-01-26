@@ -6,6 +6,7 @@
 package com.cloudogu.wiki.scmm;
 
 import com.cloudogu.wiki.Account;
+import com.cloudogu.wiki.ScmConnectionException;
 import com.cloudogu.wiki.Wiki;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
@@ -15,9 +16,10 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.InputStream;
+import java.util.Comparator;
 import java.util.List;
+
 
 /**
  *
@@ -49,9 +51,14 @@ public final class ScmManager {
                 }
             }
 
+           // sorting repositories by group and then alphabetically
+            wikis.sort(
+                    Comparator.comparing(Wiki::getGroupName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER))
+                            .thenComparing(Wiki::getDisplayName, String.CASE_INSENSITIVE_ORDER));
+
             return wikis;
         } catch (UnirestException ex) {
-            throw Throwables.propagate(ex);
+            throw new ScmConnectionException("No Connection to scm manager possible!", ex);
         }
     }
 

@@ -81,7 +81,7 @@ public class WikiServer {
         context.addEventListener(new SingleSignOutHttpSessionListener());
         FilterHolder filter = new FilterHolder(SingleSignOutFilter.class);
         filter.setInitParameters(casSettings);
-        context.addFilter(filter, "/", EnumSet.allOf(DispatcherType.class));
+        context.addFilter(filter, "/*", EnumSet.allOf(DispatcherType.class));
         
         // cas authentication
         casFilter(context, Cas30ProxyReceivingTicketValidationFilter.class, casSettings);
@@ -102,6 +102,7 @@ public class WikiServer {
         context.addServlet(new ServletHolder(new WikiDispatcherServlet(provider, cfg)), "/*");
 
         context.addServlet(new ServletHolder(new CasLogoutServlet(casSettings)), "/logout");
+        context.addServlet(new ServletHolder(new RefreshWikisServlet()), "/refresh");
 
         Server server = new Server(cfg.getPort());
         server.setHandler(context);

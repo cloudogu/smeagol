@@ -27,6 +27,8 @@ public class Wiki {
     private final String displayName;
     private final String description;
     private final String revision;
+    private boolean group; // true if repo has a group
+    private String groupName; //groups without a group gets group name 'main'
 
     /**
      * Constructs a new Wiki.
@@ -40,9 +42,22 @@ public class Wiki {
     public Wiki(String repositoryId, String branchName, String displayName, String description, String revision) {
         this.repositoryId = repositoryId;
         this.branchName = branchName;
-        this.displayName = displayName;
         this.description = description;
         this.revision = revision;
+
+        // displayName has structure 'group/name' -> splitting it
+        // group can have the structure 'name1/name2/...'
+        String splitedName[] = displayName.split(SEPARATOR, 2);
+
+        if(splitedName.length == 1){
+            this.group = false;
+            this.groupName = null;
+        }
+        else {
+            this.groupName = displayName.substring(0,displayName.lastIndexOf(SEPARATOR));
+            this.group = true;
+        }
+        this.displayName = displayName.substring(displayName.lastIndexOf(SEPARATOR) + 1);
     }
 
     public String getName() {
@@ -77,4 +92,8 @@ public class Wiki {
     public String getRevision() {
         return revision;
     }
+
+    public boolean hasGroup() { return group; }
+
+    public String getGroupName() { return groupName; }
 }

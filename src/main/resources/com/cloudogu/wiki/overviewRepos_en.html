@@ -4,17 +4,67 @@
 
 {{> welcome_en}}
 
-<h2>Wikis</h2>
+<h2>
+    <form name="submitForm" method="post" action="{{request.contextPath}}/refresh" class="inline">
+        <input type="hidden" name="refresh" value="refreshWikis">
+        Wikis
+        <a href="javascript:document.submitForm.submit()">
+            <span type="submit" name="refresh" value="refreshWikis" class="glyphicon glyphicon-refresh" style="float: right;"></span>
+        </a>
+    </form>
+</h2>
+
+<style>
+    .border{
+        border-bottom: 1px solid #00426B;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+    .open:before {
+        font-family: 'Glyphicons Halflings';
+        font-size: 14px;
+        content: "\e114\2002";
+    }
+    .closed:before {
+        font-family: 'Glyphicons Halflings';
+        font-size: 14px;
+        content: "\e080\2002"; }
+    .panel {
+        margin-left: 10px;
+    }
+</style>
 
 <div class="list-group">
-    {{#wikis}}
-    <a class="list-group-item" href="{{request.contextPath}}{{request.servletPath}}/{{urlEncodedName}}">
-        <h4>{{displayName}}</h4> 
-        {{#description}}
-        <p class="list-group-item-text">{{description}}</p>
-        {{/description}}
-    </a>
-    {{/wikis}}
+    {{#groups}}
+    <h3 class="border open accordion">{{groupName}}</h3>
+    <div class="panel" style="display: block" >
+        {{#wikis}}
+        <a class="list-group-item" href="{{request.contextPath}}{{request.servletPath}}/{{urlEncodedName}}">
+            <h4>{{displayName}}</h4>
+            {{#description}}
+            <p class="list-group-item-text">{{description}}</p>
+            {{/description}}
+        </a>
+        {{/wikis}}
+    </div>
+    {{/groups}}
 </div>
 
 {{> footer}}
+
+<script>
+    // used for collapsing/expanding of repos by clicking on the groupname
+    var acc = document.getElementsByClassName("accordion");
+
+    for (var i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            this.classList.toggle("closed");
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        });
+    }
+</script>

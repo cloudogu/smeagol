@@ -10,17 +10,15 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.View;
+import javax.servlet.http.*;
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * The dispatcher servlet takes the current requested name of the wiki and
@@ -53,8 +51,15 @@ public class WikiDispatcherServlet extends HttpServlet {
         String repositoryId = getRepositoryId(req);
         String branchName = getBranchName(req);
 
+
         if (Strings.isNullOrEmpty(repositoryId)) {
-            renderOverview(req, resp);
+            try {
+                renderOverview(req, resp);
+            }
+            catch(ScmConnectionException ex){
+                LOG.error("no scm connection", ex);
+                renderNoConnectionToSCM(req, resp);
+            }
         } else if (Strings.isNullOrEmpty(branchName)) {
             renderBranchOverview(req, resp);
         } else {
@@ -76,17 +81,62 @@ public class WikiDispatcherServlet extends HttpServlet {
         }
     }
 
+    public List<Group> sortingWikisByGroups(Iterable<Wiki> wikis) {
+
+            /* getGroups gives a list with the groups including their repos.
+             * Therefore, the Wiki list (current order: 'repo 1 (group a), repo 2 (group a), ...')
+             * needs to be splitted into an order as 'group a (repo 1, ..), group b (repo x, ..), ..',
+             * that desired presentation in overviewRepos_en/de.html is possible.
+             */
+
+        String currentGroup = "";
+        List<Wiki> currentRepos = new ArrayList<Wiki>();
+        List<Group> groups = new ArrayList<Group>();
+
+        if(Iterables.size(wikis) != 0) {
+
+            for (Wiki wiki : wikis) { // wikis are already sorted by group name and alphabetically in ScmManager.getPotentialWikis
+
+                if (currentGroup != null && currentGroup.equals("")) { // first iteration -> currentGroup needs to get the current groupname
+                    currentGroup = wiki.getGroupName();
+                }
+                // after first iteration, groupname is the name of the group before
+                // if this equals with the current one, the current repo has the same group and can be added to currentRepos
+                if (currentGroup!=null && currentGroup.equals(wiki.getGroupName()) || currentGroup==wiki.getGroupName()) {
+                    currentRepos.add(wiki);
+                } else { //current repo does not have the same group as the repo before
+                    // -> the repos before can be added to groups, since all members of this group are found now
+                    if(currentGroup == null) currentGroup = "main";
+                    groups.add(new Group(currentGroup, currentRepos));
+                    currentRepos = new ArrayList<Wiki>(); // old currentRepos does not be needed anymore -> new initialisation
+                    currentRepos.add(wiki); //current repo has to be added
+                    // groupname of current repo has to be used for next iteration
+                    currentGroup = wiki.getGroupName();
+                }
+            }
+            if(currentGroup == null) currentGroup = "main";
+            groups.add(new Group(currentGroup, currentRepos)); //adding last group with last repos
+            return groups;
+        }
+        return null;
+    }
+
     private void renderNotFound(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(404);
         renderTemplate(response, "notfound", new NotFound(request));
     }
 
+    private void renderNoConnectionToSCM(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setStatus(500);
+        renderTemplate(response, "noSCMConnection", new NotFound(request));
+    }
+
     private void renderOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        renderTemplate(response, "overviewRepos", new Overview(request, provider.getAll(), getCasLogoutUrl(configuration)));
+        renderTemplate(response, "overviewRepos", new Overview(request, sortingWikisByGroups(provider.getAll()), getCasLogoutUrl(configuration)));
     }
 
     private void renderBranchOverview(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        renderTemplate(response, "overviewBranches", new Overview(request, provider.getAllBranches(getRepositoryId(request)), getCasLogoutUrl(configuration)));
+        renderTemplate(response, "overviewBranches", new BranchOverview(request, provider.getAllBranches(getRepositoryId(request)), getCasLogoutUrl(configuration)));
     }
 
     private void renderTemplate(HttpServletResponse response, String templateName, ViewModel viewModel) throws IOException {
@@ -221,12 +271,29 @@ public class WikiDispatcherServlet extends HttpServlet {
 
     }
 
-    private static class Overview extends ViewModel {
+    private static class Group {
+        private List<Wiki> wikis;
+        private String groupName;
 
+        public Group(String groupName, List<Wiki> wikis){
+            this.groupName = groupName;
+            this.wikis = wikis;
+        }
+
+        public String getGroupName(){
+            return groupName;
+        }
+
+        public List<Wiki> getWikis(){
+            return wikis;
+        }
+    }
+
+    private static class BranchOverview extends ViewModel {
         private final Iterable<Wiki> wikis;
         private final String casLogoutUrl;
 
-        public Overview(HttpServletRequest request, Iterable<Wiki> wikis, String casUrl) {
+        public BranchOverview(HttpServletRequest request, Iterable<Wiki> wikis, String casUrl) {
             super(request);
             this.wikis = wikis;
             this.casLogoutUrl = casUrl;
@@ -234,6 +301,25 @@ public class WikiDispatcherServlet extends HttpServlet {
 
         public Iterable<Wiki> getWikis() {
             return wikis;
+        }
+
+        public String getCasLogoutUrl() {
+            return casLogoutUrl;
+        }
+    }
+
+    private static class Overview extends ViewModel {
+        private final String casLogoutUrl;
+        private final Iterable<Group> groups;
+
+        public Overview(HttpServletRequest request, List<Group> groups, String casUrl) {
+            super(request);
+            this.casLogoutUrl = casUrl;
+            this.groups = groups;
+        }
+
+        public Iterable<Group> getGroups(){
+            return groups;
         }
 
         public String getCasLogoutUrl() {
