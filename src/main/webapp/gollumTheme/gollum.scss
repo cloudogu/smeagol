@@ -584,6 +584,17 @@ span.count {
   width: auto;
 }
 
+#gollum-dialog-dialog a.minibutton#gollum-dialog-action-ok {
+  @extend .btn ;
+  @extend .btn-primary
+;
+}
+
+#gollum-dialog-dialog a.minibutton#gollum-dialog-action-cancel {
+  @extend .btn;
+  @extend .btn-default;
+}
+
 #gollum-dialog-dialog-body fieldset .field:last-child {
   margin: 0 0 1em 0;
 }
