@@ -1,0 +1,12 @@
+server:
+  port: 8080
+  contextPath: /smeagol
+
+stage: development
+
+scm:
+  url: https://192.168.56.2/scm
+
+cas:
+  url: https://192.168.56.2/cas
+  serviceUrl: http://192.168.2.147:8080/smeagol
