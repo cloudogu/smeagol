@@ -19,6 +19,14 @@
 
         <!-- project serkis -->
 
+        <!-- TODO replace with release, after https://github.com/triologygmbh/command-bus/pull/9 is merged-->
+        <dependency>
+            <groupId>com.github.triologygmbh</groupId>
+            <artifactId>command-bus</artifactId>
+            <!-- snapshot version of PR #9 -->
+            <version>20ad1da</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -42,11 +50,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
         <dependency>
@@ -243,7 +246,7 @@
                     <dependency>
                         <groupId>org.springframework</groupId>
                         <artifactId>springloaded</artifactId>
-                        <version>1.2.5.RELEASE</version>
+                        <version>1.2.8.RELEASE</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -259,7 +262,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin-->
+            </plugin
 
             <plugin>
                 <groupId>com.github.sdorra</groupId>
@@ -299,7 +302,7 @@
                         <phase>package</phase>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin-->
             
         </plugins>
         

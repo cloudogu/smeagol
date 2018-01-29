@@ -9,6 +9,9 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 
+/**
+ * Main entry point for the whole application.
+ */
 @SpringBootApplication
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 public class Smeagol {
@@ -17,6 +20,11 @@ public class Smeagol {
 
     private final Stage stage;
 
+    /**
+     * Creates a new Smeagol application in the requested stage.
+     *
+     * @param stageName name of stage
+     */
     public Smeagol(@Value("${stage}") String stageName) {
         stage = Stage.fromString(stageName);
         if (stage == Stage.DEVELOPMENT) {
@@ -30,6 +38,8 @@ public class Smeagol {
     }
 
     public static void main(String[] args) {
+        // disable dev tools restart, because we are using spring loaded
+        System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(Smeagol.class, args);
     }
 }
