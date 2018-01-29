@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.9.RELEASE</version>
+        <relativePath/>
+    </parent>
+
     <groupId>com.cloudogu.wiki</groupId>
     <artifactId>smeagol</artifactId>
     <version>0.4.2</version>
@@ -8,6 +16,52 @@
     <packaging>jar</packaging>
     
     <dependencies>
+
+        <!-- project serkis -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-hateoas</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- old dependencies -->
         
         <!-- http/application server -->
         
@@ -39,7 +93,7 @@
         
         <!-- gollum ruby gem -->
         
-        <dependency>
+        <!--dependency>
             <groupId>rubygems</groupId>
             <artifactId>gollum</artifactId>
             <version>4.1.1</version>
@@ -65,7 +119,7 @@
             <artifactId>creole</artifactId>
             <version>0.5.0</version>
             <type>gem</type>
-        </dependency>
+        </dependency-->
 
         <!-- configuration -->
         
@@ -138,7 +192,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.1.7</version>
+            <version>1.2.3</version>
         </dependency>
         
         <!-- test scope -->
@@ -178,8 +232,23 @@
     
     <build>
         <plugins>
-            
+
             <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>springloaded</artifactId>
+                        <version>1.2.5.RELEASE</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <!--plugin>
                 <groupId>de.saumya.mojo</groupId>
                 <artifactId>gem-maven-plugin</artifactId>
                 <version>${jruby-plugins.version}</version>
@@ -190,7 +259,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin-->
 
             <plugin>
                 <groupId>com.github.sdorra</groupId>
@@ -238,10 +307,10 @@
     </build>
     
     <repositories>
-        <repository>
+        <!--repository>
             <id>rubygems-release</id>
             <url>http://rubygems-proxy.torquebox.org/releases</url>
-        </repository>
+        </repository-->
         <repository>
             <!-- Necessary for ces-build-lib -->
             <id>jitpack.io</id>
