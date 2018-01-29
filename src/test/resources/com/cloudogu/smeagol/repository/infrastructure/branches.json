@@ -1,0 +1,16 @@
+{
+  "branch": [
+    {
+      "name": "develop",
+      "revision": "b1ff380bca73e431db146927a2eb8bb483deedf1"
+    },
+    {
+      "name": "feature/junit5",
+      "revision": "3fd34565c7ce87b625ca34c7b2ce680667b32d30"
+    },
+    {
+      "name": "master",
+      "revision": "09dd563ba46df624c64e20ee8ca922b184978a6a"
+    }
+  ]
+}
