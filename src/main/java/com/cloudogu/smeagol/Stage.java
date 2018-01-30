@@ -19,7 +19,7 @@ import java.util.Locale;
 public enum Stage {
 
     /**
-     * Application is trimmed for security and perfomance. This stage should be used for production deployments. The
+     * Application is trimmed for security and performance. This stage should be used for production deployments. The
      * production stage is the default stage.
      */
     PRODUCTION, 
