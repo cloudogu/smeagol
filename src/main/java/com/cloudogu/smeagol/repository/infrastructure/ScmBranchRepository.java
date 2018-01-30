@@ -1,5 +1,6 @@
 package com.cloudogu.smeagol.repository.infrastructure;
 
+import com.cloudogu.smeagol.ScmHttpClient;
 import com.cloudogu.smeagol.repository.domain.Branch;
 import com.cloudogu.smeagol.repository.domain.BranchRepository;
 import com.cloudogu.smeagol.repository.domain.Name;
@@ -24,7 +25,7 @@ public class ScmBranchRepository implements BranchRepository {
     @Override
     public Iterable<Branch> findByRepositoryId(RepositoryId repositoryId) {
         String url = String.format("/api/rest/repositories/%s/branches.json", repositoryId);
-        BranchesDTO dto = scmHttpClient.get(url, BranchesDTO.class);
+        BranchesDTO dto = scmHttpClient.get(url, BranchesDTO.class).get();
         return dto.branch.stream()
                 .map(b -> new Branch(repositoryId, Name.valueOf(b.name)))
                 .collect(Collectors.toList());

@@ -1,8 +1,5 @@
-package com.cloudogu.smeagol.repository.infrastructure;
+package com.cloudogu.smeagol;
 
-import com.cloudogu.smeagol.Account;
-import com.cloudogu.smeagol.AccountService;
-import com.cloudogu.smeagol.Stage;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -15,12 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
@@ -29,6 +24,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
+import java.util.Optional;
 
 @Service
 public class ScmHttpClient {
@@ -76,17 +72,28 @@ public class ScmHttpClient {
         }
     }
 
-    public <T> T get(String url, Class<T> type) {
-        // TOOD use clear pass credentials
+    public <T> Optional<T> get(String url, Class<T> type, Object... urlVariables) {
+        return getEntity(url, type, urlVariables).map(e -> e.getBody());
+    }
+
+    public <T> Optional<ResponseEntity<T>> getEntity(String url, Class<T> type, Object... urlVariables) {
         HttpHeaders headers = createHeaders();
         HttpEntity<?> entity = new HttpEntity<>(headers);
-        ResponseEntity<T> response = this.restTemplate.exchange(
-            url,
-            HttpMethod.GET,
-            entity,
-            type
-        );
-        return response.getBody();
+        try {
+            ResponseEntity<T> response = this.restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    type,
+                    urlVariables
+            );
+            return Optional.of(response);
+        } catch (HttpClientErrorException ex) {
+            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
+                throw ex;
+            }
+        }
+        return Optional.empty();
     }
 
     private HttpHeaders createHeaders(){

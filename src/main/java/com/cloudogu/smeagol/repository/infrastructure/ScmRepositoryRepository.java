@@ -1,11 +1,10 @@
 package com.cloudogu.smeagol.repository.infrastructure;
 
+import com.cloudogu.smeagol.ScmHttpClient;
 import com.cloudogu.smeagol.repository.domain.*;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -24,9 +23,9 @@ public class ScmRepositoryRepository implements RepositoryRepository {
 
     @Override
     public Iterable<Repository> findAll() {
-        RepositoryDTO[] dtos = scmHttpClient.get("/api/rest/repositories.json", RepositoryDTO[].class);
+        Optional<RepositoryDTO[]> dtos = scmHttpClient.get("/api/rest/repositories.json", RepositoryDTO[].class);
 
-        return Arrays.stream(dtos)
+        return Arrays.stream(dtos.get())
             .filter(dto -> dto.type.equals("git"))
             .map(this::map)
             .collect(Collectors.toList());
@@ -34,17 +33,8 @@ public class ScmRepositoryRepository implements RepositoryRepository {
 
     @Override
     public Optional<Repository> findById(RepositoryId id) {
-        String url = String.format("/api/rest/repositories/%s.json", id);
-        Repository repository = null;
-        try {
-            RepositoryDTO dto = scmHttpClient.get(url, RepositoryDTO.class);
-            repository = map(dto);
-        } catch (HttpClientErrorException ex) {
-            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
-                throw ex;
-            }
-        }
-        return Optional.ofNullable(repository);
+        return scmHttpClient.get("/api/rest/repositories/{id}.json", RepositoryDTO.class, id)
+                .map(this::map);
     }
 
     private Repository map(RepositoryDTO dto) {

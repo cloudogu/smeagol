@@ -1,6 +1,7 @@
 package com.cloudogu.smeagol.repository.infrastructure;
 
 import com.cloudogu.smeagol.AccountService;
+import com.cloudogu.smeagol.ScmHttpClient;
 import com.cloudogu.smeagol.repository.domain.Branch;
 import com.cloudogu.smeagol.repository.domain.RepositoryId;
 import com.google.common.base.Charsets;
