@@ -3,6 +3,7 @@ server:
   contextPath: /smeagol
 
 stage: development
+homeDirectory: /tmp/smeagol
 
 scm:
   url: https://192.168.56.2/scm
