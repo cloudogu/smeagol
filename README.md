@@ -15,9 +15,19 @@ This can be achieved by using the provided groovy execution:
 ./mvnw groovy:execute@up
 ```
 
-This command will clone the ecosystem repository into the .workspace folder, creates a setup.json with a proper 
+his command will clone the ecosystem repository into the `.workspace` folder, creates a `setup.json` with a proper 
 configuration and starts the vm. After the vm has started, open the setup in your browser at 
 [192.168.56.2:8080](http://192.168.56.2:8080), register the instance and finish the setup.
+
+Then you can access SCMManager for example like so: [https://192.168.56.2/scm/](https://192.168.56.2/scm/).
+
+Username: `admin`, Password: `adminpw`
+
+With those credentials you can also enter the VM via SSH:
+
+* `ssh admin@192.168.56.2`
+* or `cd .workspace/ecosystem; vagrant ssh`  
+
 
 To stop the vm use the down execution:
 
@@ -38,10 +48,10 @@ environment variable for the service url. Without theses variable cas would not 
 The SMEAGOL_FQDN must be set to an fqdn or ip address which is accessible from the ces vm: 
 
 ```bash
-SMEAGOL_FQDN=192.168.2.42 ./mvnw spring-boot:run
+./mvnw clean spring-boot:run
 ```
-
 To open the development instance open [localhost:8080](http://localhost:8080) in your browser.
+For example, you can get all repositories from [http://localhost:8080/smeagol/api/v1/repositories](http://localhost:8080/smeagol/api/v1/repositories).
 
 ### Hot Reload
 
