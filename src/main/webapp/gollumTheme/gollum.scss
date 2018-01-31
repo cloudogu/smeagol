@@ -1,0 +1,799 @@
+@import "src/main/webapp/ces-theme/dist/css/ces";
+
+$color-grey-bright: #ddd;
+$color-grey-dark: #999;
+$color-blue-bright: #b9d1dc;
+$color-blue-dark: #1f93c8;
+
+$color-toc-background: #f5f5f5;
+$color-toc-font: #777777;
+
+
+body {
+  padding-top: 60px;
+}
+
+#wiki-wrapper {
+  @extend .container
+}
+
+/* Buttons */
+
+.minibutton:hover {
+  text-decoration: none !important;
+}
+
+li.minibutton {
+  @extend .btn;
+  @extend .btn-link;
+  font-weight: normal;
+  border-radius: 0;
+  padding-left: 0;
+}
+
+//put minibutton in head element closer together
+#head li.minibutton {
+  padding-top: 0;
+  padding-right: 0;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  //removes list-item-spacing in order to apply regular margin
+  float: left;
+}
+
+//make buttons wrap propperly
+#head li.minibutton.no-space {
+  margin-bottom: 0;
+}
+
+// position of buttons (next to heading if window is big enough)
+.actions {
+  padding-left: 0;
+}
+
+#head ul.actions {
+  clear: both;
+  @extend h1;
+  margin-top: 5px;
+  margin-bottom: 5px;
+
+}
+
+@media (min-width: 940px) {
+  div#wiki-wrapper.results #head ul.actions{
+    clear: none;
+    float: right !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  div#wiki-wrapper.history #head ul.actions{
+    clear: none;
+    float: right !important;
+  }
+}
+
+/* symbols */
+
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot");
+  src: url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("../fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("/smeagol/_static/ces-theme/dist/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
+
+li a.folder:before, li a.file:before{
+  @extend .glyphicon;
+}
+
+li a.folder:before {
+  content: "\e118\2003";
+}
+
+li a.file:before {
+  content: "\e022\2003";
+}
+
+/* structure of pages (e.g., footer and header) */
+
+#pages ul {
+  @extend .list-unstyled;
+  padding-left: 4em;
+}
+
+.page #footer {
+  clear: both;
+  border-top: 1px solid $color-grey-bright;
+  margin: 1em 0 7em;
+}
+
+#footer p#last-edit {
+  font-size: .9em;
+  line-height: 1.6em;
+  color: $color-grey-dark;
+  margin: 0.9em 0;
+}
+
+#head {
+  border-bottom: 1px solid $color-grey-bright;
+  margin: 0 0 1.5em;
+  padding: 0;
+  overflow: hidden;
+}
+
+@media (min-width: 940px) {
+  #head {
+    padding-bottom: 0.3em;
+    margin-bottom: 20px;
+  }
+}
+
+@media (min-width: 940px) {
+  #head h1 {
+    float: left;
+  }
+}
+
+// Table of Contents | copied from gollum and colors adjusted
+#wiki-toc-main {
+  background-color: $color-toc-background;
+  border: 1px solid $color-toc-font;
+  font-size: 13px;
+  padding: 0px 5px;
+  float: left;
+  margin-bottom: 20px;
+  min-width: 33%;
+
+  border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+}
+
+#wiki-toc-main > div {
+  border: none;
+}
+
+.toc {
+  background-color: $color-toc-background;
+  border: 1px solid $color-toc-font;
+  padding: 5px 10px;
+  margin: 0;
+  border-radius: 3px;
+}
+
+.toc-title {
+  color: $color-toc-font;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 2px;
+  border-bottom: 1px solid $color-toc-font;
+  margin-bottom: 3px;
+}
+
+.toc {
+
+  ul {
+    padding-left: 10px;
+    margin: 0;
+
+    li {
+      margin: 0;
+    }
+  }
+
+  > ul {
+    margin-left: 10px;
+    font-size: 17px;
+  }
+
+  ul ul {
+    font-size: 15px;
+  }
+
+  ul ul ul {
+    font-size: 14px;
+  }
+
+}
+
+#header-content .toc,
+#footer-content .toc,
+#sidebar-content .toc {
+  border: none;
+}
+
+//Searchbar | copied from gollum and adjusted for Smeagol colors
+#head #searchbar {
+  float: right;
+  padding: 0;
+  overflow: hidden;
+}
+
+#head #searchbar #searchbar-fauxtext {
+  background: #fff;
+  border: 1px solid $color-blue-dark;
+  overflow: hidden;
+  height: 2.2em;
+
+  border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+  -webkit-border-radius: 0.3em;
+}
+
+#head #searchbar #searchbar-fauxtext input#search-query {
+  border: none;
+  color: #000;
+  float: left;
+  font-size: 1em;
+  height: inherit;
+  padding: 0 .5em;
+
+  -webkit-focus-ring: none;
+}
+
+.ie8 #head #searchbar #searchbar-fauxtext input#search-query {
+  padding: 0.5em 0 0 0.5em;
+}
+
+#head #searchbar #searchbar-fauxtext input#search-query.ph {
+  color: #999;
+}
+
+#head #searchbar #searchbar-fauxtext #search-submit {
+  border: 0;
+  border-left: 1px solid $color-blue-dark;
+  cursor: pointer;
+  height: inherit;
+
+  border-radius: 0 3px 3px 0;
+  -moz-border-radius: 0 3px 3px 0;
+  -webkit-border-radius: 0 3px 3px 0;
+}
+
+.ff #head #searchbar #searchbar-fauxtext #search-submit span,
+.ie #head #searchbar #searchbar-fauxtext #search-submit span {
+  height: 2.2em;
+}
+
+@media all and (min-width: 940px) {
+  #head #searchbar {
+    padding: 0;
+  }
+
+}
+
+#wiki-body {
+  display: block;
+  float: left;
+  clear: left;
+  margin-right: 3%;
+  margin-bottom: 40px;
+  margin-top: 0;
+  width: 100%;
+}
+
+.markdown-body {
+  padding: 1em;
+  font-size: 15px;
+  line-height: 1.7;
+  overflow: hidden;
+  word-wrap: break-word;
+
+  h1 {
+      border-bottom: 1px solid $color-grey-bright;
+  }
+}
+
+@media (min-width: 940px) {
+  .markdown-body {
+    padding: 5px 30px 30px;
+  }
+}
+
+/* results of searching */
+
+div#results {
+  @extend #wiki-body;
+}
+
+div#results li {
+  border: none;
+  @extend .list-group-item;
+}
+
+span.count {
+  color: $color-grey-dark;
+}
+
+/* version overview / last changes */
+#wiki-wrapper.history div#head{
+  border-bottom: none;
+}
+
+#wiki-history {
+  padding-top: 15px;
+}
+
+#wiki-history table tr td.checkbox {
+  width: auto;
+  padding: 0 0.2em 0 0;
+  display: table-cell;
+}
+
+@media (min-width: 940px) {
+  #wiki-history table tr td.checkbox {
+    width: 4em;
+    padding: 0.3em;
+  }
+}
+
+#wiki-history table tr td.checkbox input {
+  cursor: pointer;
+  display: block;
+  padding-right: 0;
+  padding-top: 0.4em;
+  margin: 0 auto;
+  width: 1.2em;
+  height: 1.2em;
+  position: relative;
+}
+
+#wiki-history table tr td.author {
+  width: 20%;
+}
+
+#wiki-history table tr td.author a span.username {
+  display: block;
+  padding-top: 3px;
+}
+
+#wiki-history table tr td.author a {
+  color: #000;
+  font-weight: bold;
+}
+
+#wiki-history table tr td.commit-name {
+  border-left: 0;
+}
+
+#wiki-history table tr td.commit-name span.time-elapsed {
+  color: $color-grey-dark;
+}
+
+#wiki-history table tr td.commit-name a {
+  font-size: 0.9em;
+  font-family: 'Monaco', 'Andale Mono', Consolas, 'Courier New', monospace;
+  padding: 0 0.2em;
+}
+
+#wiki-history table tr td {
+  border-top: 1px solid $color-blue-bright;
+  border-bottom: 1px solid $color-blue-bright;
+  font-size: 1em;
+  line-height: 1.6em;
+  margin: 0;
+  padding: 0.3em 0.7em;
+}
+
+@media (min-width: 940px) {
+  #wiki-history table tr td {
+    border: 1px solid $color-blue-bright;
+    font-size: 1em;
+    line-height: 1.6em;
+    margin: 0;
+    padding: 0.3em 0.7em;
+  }
+}
+
+#wiki-history table, #wiki-history tbody {
+  border-collapse: collapse;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+#wiki-history table tr {
+  background-color: #d0e0e8;
+}
+
+#wiki-history table tr {
+  padding: 0;
+  margin: 0;
+}
+
+#wiki-history table tr:nth-child(2n), #wiki-history table tr.alt-row {
+  background-color: #e7eff3;
+}
+
+/* compare versions */
+
+.compare .data {
+  border: 1px solid $color-grey-bright;
+  margin: 1em 0 2em;
+  overflow: auto;
+}
+
+.highlight {
+  background: #fff;
+}
+.compare .data table {
+  width: 100%;
+}
+
+.compare .data td.line_numbers {
+  background: #f7f7f7;
+  border-right: 1px solid $color-grey-dark;
+  color: $color-grey-dark;
+  padding: 0 0 0 0.5em;
+}
+
+.compare .data tr td + td + td {
+  width: 100%;
+}
+
+.compare .data tr td {
+  font-family: "Consolas", "Monaco", "Andale Mono", "Courier New", monospace;
+  font-size: 1.2em;
+  line-height: 1.2em;
+  margin: 0;
+  padding: 0;
+}
+
+.compare .data pre {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 0;
+  line-height: 1.6em;
+
+}
+
+.compare .data pre div {
+  padding: 0 0 0 1em;
+}
+
+.highlight .gc {
+  color: $color-grey-dark;
+  background-color: #e7eff3;
+}
+
+.highlight .gd {
+  color: #000;
+  background-color: #f9d7dc;
+}
+
+.highlight .gi {
+  color: #000;
+  background-color: #e8efb2;
+}
+
+/* dialog */
+
+#gollum-dialog-dialog {
+  display: block;
+  overflow: visible;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999999;
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-width: 940px) {
+  #gollum-dialog-dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: auto;
+    height: auto;
+  }
+}
+
+@media (min-width: 480px) {
+  #gollum-dialog-dialog {
+    display: block;
+    overflow: visible;
+    position: absolute;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999999;
+    width: auto;
+    height: auto;
+  }
+}
+
+#gollum-dialog-dialog-inner {
+  margin: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+}
+
+@media (min-width: 940px) {
+  #gollum-dialog-dialog-inner {
+    margin: 0 0 0 -225px;
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+  }
+}
+
+@media (min-width: 480px) {
+  #gollum-dialog-dialog-inner {
+    margin: auto;
+    position: fixed;
+    min-width: 280px;
+    min-height: 380px;
+    max-width: 450px;
+    max-height: 450px;
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+  }
+}
+
+#gollum-dialog-dialog-bg {
+  @extend .well;
+}
+
+@media (min-width: 940px) {
+  #gollum-dialog-dialog-bg {
+    box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+  }
+}
+
+@media (min-width: 480px) {
+  #gollum-dialog-dialog-bg {
+    overflow: hidden;
+    padding: 1em;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+  }
+}
+
+#gollum-dialog-dialog-title{
+  @extend legend;
+}
+
+#gollum-dialog-dialog-body fieldset .field input[type="text"] {
+  @extend .form-control;
+}
+
+#gollum-dialog-dialog-body fieldset .field span.context {
+  @extend .help-block;
+}
+
+#gollum-dialog-dialog-buttons {
+  border-top: 1px solid #fff;
+  overflow: hidden;
+  margin: 1.5em 0 0 0;
+  padding: 1em 0 0 0;
+}
+
+#gollum-dialog-dialog a.minibutton {
+  float: right;
+  margin-right: 0.5em;
+  width: auto;
+}
+
+#gollum-dialog-dialog a.minibutton#gollum-dialog-action-ok {
+  @extend .btn ;
+  @extend .btn-primary
+;
+}
+
+#gollum-dialog-dialog a.minibutton#gollum-dialog-action-cancel {
+  @extend .btn;
+  @extend .btn-default;
+}
+
+#gollum-dialog-dialog-body fieldset .field:last-child {
+  margin: 0 0 1em 0;
+}
+
+#gollum-dialog-dialog-body fieldset:after {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+}
+
+/* editor */
+
+#gollum-editor {
+  margin-top: 15px;
+  @extend .well;
+}
+
+#gollum-editor-title-field input#gollum-editor-page-title {
+  @extend .form-control;
+}
+
+.jaws {
+  display: block;
+  height: 1px;
+  left: -5000px;
+  overflow: hidden;
+  position: absolute;
+  top: -5000px;
+  width: 1px;
+}
+
+#gollum-editor .path_note {
+  text-align: right;
+  font-size: small;
+  padding-right: 5px;
+  @extend .help-block;
+}
+
+#gollum-editor textarea {
+  @extend .form-control;
+}
+
+#gollum-editor-body + div {
+  display: none;
+  font-size: 1.5em;
+}
+
+#gollum-editor .singleline input.ph {
+  color: $color-grey-dark;
+}
+
+#gollum-editor .singleline input {
+  margin: 1em 0 0.4em;
+  @extend .form-control;
+}
+
+#gollum-editor-title-field.active {
+  border-bottom: 1px solid $color-grey-bright;
+  display: block;
+  padding: 0 0 0.5em 0;
+  margin-bottom: 1em;
+}
+
+#gollum-editor #gollum-editor-function-bar {
+  border-bottom: 1px solid $color-grey-bright;
+  padding: 0 0 0.5em 0;
+  margin-bottom: 1em;
+}
+
+#gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector select {
+  @extend .form-control;
+  width: auto;
+  display: inline-block;
+}
+
+#gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector label {
+  @extend .help-block;
+  padding: .3em 0.5em 0 0;
+  display: inline-block;
+}
+
+#gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector label:after {
+  content: "\003A";
+}
+
+#gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector {
+  padding: 0.2em 0 0.5em 0;
+  clear: both;
+}
+
+@media (min-width: 940px) {
+  #gollum-editor #gollum-editor-function-bar #gollum-editor-format-selector {
+    clear: none;
+    text-align: right;
+  }
+}
+
+#gollum-editor #gollum-editor-function-bar a.function-button {
+  height: 30px;
+  width: 30px;
+  overflow: hidden;
+  padding: 3px 6px;
+  color: #23A3DD;
+  background-color: #fff;
+  border-color: $color-blue-dark;
+  @extend .btn;
+}
+
+#gollum-editor #gollum-editor-function-bar a.function-button:focus {
+  color: #1b83b2;
+  background-color: #fff;
+  border-color: #0e4259;
+}
+#gollum-editor #gollum-editor-function-bar a.function-button:hover {
+  color: #1b83b2;
+  background-color: #fff;
+  border-color: #176c93;
+}
+
+a#function-bold, a#function-italic, a#function-ul, a#function-ol, a#function-link, a#function-image{
+  position: static;
+  line-height: 1.5 !important;
+  @extend .glyphicon;
+}
+
+a#function-ol {
+  padding-left: 0 !important;
+}
+
+a#function-h1, a#function-h2, a#function-h3, a#function-hr{
+  position: static;
+  line-height: 150% !important;
+}
+
+a#function-bold:before{
+  @extend .glyphicon-bold;
+}
+
+a#function-italic:before{
+  @extend .glyphicon-italic;
+}
+
+a#function-link:before{
+  @extend .glyphicon-link;
+}
+
+a#function-ul:before{
+  @extend .glyphicon-list;
+}
+
+a#function-ol:before{
+  content: "\e153\e056";
+}
+
+a#function-image:before{
+  @extend .glyphicon-picture;
+}
+
+a#function-code:before{
+  content: "\007B\007D";
+  font-weight: bold;
+}
+
+a#function-help:before{
+  content: "\2753";
+}
+
+a#function-blockquote:before{
+  content: "\275D";
+  font-weight: bold;
+  line-height: 30px;
+}
+
+a#function-h1:before{
+  content:"\0068\0031";
+  font-weight: bold;
+}
+
+a#function-h2:before{
+  content:"\0068\0032";
+  font-weight: bold;
+}
+
+a#function-h3:before{
+  content:"\0068\0033";
+  font-weight: bold;
+}
+
+a#function-hr:before{
+  content:"\0068\0072";
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+a.function-button span {
+  display: none;
+}
+
+.webkit #gollum-editor input#gollum-editor-submit {
+   @extend .btn, .btn-link;
+ }
