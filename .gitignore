@@ -37,6 +37,7 @@ nbactions.xml
 
 ### IntelliJ ###
 .idea
+!.idea/runConfigurations
 *.iml
 
 
@@ -57,6 +58,8 @@ hs_err_pid*
 # jrebel
 rebel.xml
 /src/main/webapp/ces-theme/
+/src/main/webapp/gollumTheme/*.css
+
 node_modules
 
 # Created by https://www.gitignore.io/api/osx

@@ -1,0 +1,19 @@
+{
+  "name": "smeagol",
+  "main": "index.js",
+  "repository": "git@github.com:cloudogu/smeagol.git",
+  "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "node-sass": "^4.7.2"
+  },
+  "scripts": {
+    "gollum-css": "node-sass -o src/main/webapp/gollumTheme/ src/main/webapp/gollumTheme/gollum.scss",
+    "file_view-css": "node-sass -o src/main/webapp/gollumTheme/ src/main/webapp/gollumTheme/file_view.scss",
+    "css": "npm run gollum-css && npm run file_view-css"
+  },
+  "dependencies": {
+    "bower": "^1.3.12"
+  }
+}
