@@ -16,9 +16,10 @@ public class RepositoryResourceAssembler extends ResourceAssemblerSupport<Reposi
     @Override
     public RepositoryResource toResource(Repository repository) {
         RepositoryResource resource = new RepositoryResource(
+                repository.getId().getValue(),
                 repository.getName().getValue(),
                 repository.getDescription().getValue(),
-                DateTimeFormatter.ISO_INSTANT.format(repository.getLastModified())
+                repository.getLastModified() != null ? DateTimeFormatter.ISO_INSTANT.format(repository.getLastModified()) : null
         );
         resource.add(selfLink(repository));
         return resource;
