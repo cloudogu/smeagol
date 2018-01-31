@@ -5,8 +5,8 @@ import classNames from 'classnames';
 
 import { Route } from 'react-router';
 
-import Repositories from './repositories/containers/Repositories';
-import Branches from './repositories/containers/Branches';
+import Repositories from './repository/containers/Repositories';
+import Branches from './repository/containers/Branches';
 
 const styles = {
     content: {
