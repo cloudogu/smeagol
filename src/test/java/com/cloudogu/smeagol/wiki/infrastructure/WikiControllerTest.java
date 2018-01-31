@@ -67,6 +67,7 @@ public class WikiControllerTest {
                 .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.displayName", is("Heart Of Gold")))
+                .andExpect(jsonPath("$.landingPage", is("docs/Home")))
                 .andExpect(jsonPath("$._links.self.href", is(self)))
                 .andExpect(jsonPath("$._links.repository.href", is(remoteUrl)))
                 .andExpect(jsonPath("$._links.landingPage.href", is(self + "/pages/docs/Home")));

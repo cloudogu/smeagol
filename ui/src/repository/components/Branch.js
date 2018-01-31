@@ -12,7 +12,7 @@ class Branch extends React.Component<Props> {
         const { branch } = this.props;
 
         return (
-            <Link className="list-group-item" to={ branch.name }>
+            <Link className="list-group-item" to={ branch.name + '/' }>
                 <h4>{ branch.name }</h4>
             </Link>
         );

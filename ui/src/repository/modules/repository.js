@@ -1,3 +1,6 @@
+// @flow
+import callApi from '../../apiclient';
+
 const FETCH_REPOSITORY = 'smeagol/repository/FETCH';
 const FETCH_REPOSITORY_SUCCESS = 'smeagol/repository/FETCH_SUCCESS';
 const FETCH_REPOSITORY_FAILURE = 'smeagol/repository/FETCH_FAILURE';
@@ -25,9 +28,7 @@ export function failedToFetchRepository(err) {
 export function fetchRepository(repository) {
     return function(dispatch) {
         dispatch(requestRepository())
-        return fetch(`/smeagol/api/v1/repositories/${repository}.json`, {
-            credentials: 'same-origin'
-        })
+        return callApi(`/smeagol/api/v1/repositories/${repository}.json`)
         .then(response => response.json())
         .then(json => dispatch(reveiveRepository(json)))
         .catch((err) => dispatch(failedToFetchRepository(err)));

@@ -17,15 +17,16 @@ public class WikiResourceAssembler extends ResourceAssemblerSupport<Wiki, WikiRe
 
     @Override
     public WikiResource toResource(Wiki wiki) {
-        WikiResource resource = new WikiResource(wiki.getDisplayName().getValue());
+        String path = wiki.getDirectory().concat(wiki.getLandingPage()).getValue();
+
+        WikiResource resource = new WikiResource(wiki.getDisplayName().getValue(), path);
         resource.add(selfLink(wiki));
         resource.add(gitLink(wiki));
-        resource.add(landingPageLink(wiki));
+        resource.add(landingPageLink(wiki, path));
         return resource;
     }
 
-    private Link landingPageLink(Wiki wiki) {
-        String path = wiki.getDirectory().concat(wiki.getLandingPage()).getValue();
+    private Link landingPageLink(Wiki wiki, String path) {
         return baseLink(wiki.getId()).slash("pages").slash(path).withRel("landingPage");
     }
 

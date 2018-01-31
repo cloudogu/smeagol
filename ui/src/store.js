@@ -5,6 +5,8 @@ import { routerReducer, routerMiddleware } from 'react-router-redux';
 
 import repositories from './repository/modules/repositories';
 import repository from './repository/modules/repository';
+import wiki from './wiki/modules/wiki';
+import page from './wiki/modules/page';
 
 function createReduxStore(history) {
     const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -12,7 +14,9 @@ function createReduxStore(history) {
     const reducer = combineReducers({
         router: routerReducer,
         repositories,
-        repository
+        repository,
+        wiki,
+        page
     });
 
     return createStore(

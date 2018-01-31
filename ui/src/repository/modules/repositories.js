@@ -1,4 +1,6 @@
 //@flow
+import callApi from '../../apiclient';
+
 const FETCH_REPOSITORIES = 'smeagol/repositories/FETCH';
 const FETCH_REPOSITORIES_SUCCESS = 'smeagol/repositories/FETCH_SUCCESS';
 const FETCH_REPOSITORIES_FAILURE = 'smeagol/repositories/FETCH_FAILURE';
@@ -27,9 +29,7 @@ export function fetchRepositories() {
     return function(dispatch) {
         dispatch(requestRepositories());
         // TODO context path
-        return fetch('/smeagol/api/v1/repositories.json', {
-            credentials: 'same-origin'
-        })
+        return callApi('/smeagol/api/v1/repositories.json')
         .then(response => response.json())
         .then(json => dispatch(reveiveRepositories(json)))
         .catch((err) => dispatch(failedToFetchRepositories(err)));
