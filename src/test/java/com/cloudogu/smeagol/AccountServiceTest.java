@@ -6,7 +6,6 @@
 
 package com.cloudogu.smeagol;
 
-import com.cloudogu.wiki.WikiAuthenticationException;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
 import org.jasig.cas.client.authentication.AttributePrincipal;
@@ -72,7 +71,7 @@ public class AccountServiceTest {
      */
     @Test
     public void testGetWithoutPrincipal(){
-        expectedException.expect(WikiAuthenticationException.class);
+        expectedException.expect(AuthenticationException.class);
         expectedException.expectMessage("principal");
 
         new AccountService(requestFactory, "com/cloudogu/smeagol").get();
@@ -85,7 +84,7 @@ public class AccountServiceTest {
     public void testGetWithoutProxyTicket(){
         when(request.getUserPrincipal()).thenReturn(principal);
 
-        expectedException.expect(WikiAuthenticationException.class);
+        expectedException.expect(AuthenticationException.class);
         expectedException.expectMessage("proxy");
         expectedException.expectMessage("ticket");
 
@@ -101,7 +100,7 @@ public class AccountServiceTest {
         when(request.getUserPrincipal()).thenReturn(principal);
         when(principal.getProxyTicketFor("com/cloudogu/smeagol/clearPass")).thenReturn("pt-123");
 
-        expectedException.expect(WikiAuthenticationException.class);
+        expectedException.expect(AuthenticationException.class);
         expectedException.expectMessage("fetch");
         expectedException.expectMessage("clear pass");
 
@@ -127,7 +126,7 @@ public class AccountServiceTest {
         when(request.getUserPrincipal()).thenReturn(principal);
         when(principal.getProxyTicketFor(url + "clearPass")).thenReturn("pt-123");
 
-        expectedException.expect(WikiAuthenticationException.class);
+        expectedException.expect(AuthenticationException.class);
         expectedException.expectMessage("extract");
         expectedException.expectMessage("clear pass");
         expectedException.expectMessage("password");
@@ -151,10 +150,9 @@ public class AccountServiceTest {
         String url = directory.toURI().toURL().toExternalForm();
 
         when(request.getUserPrincipal()).thenReturn(principal);
-        // when(configuration.getCasUrl()).thenReturn(url);
         when(principal.getProxyTicketFor(url + "clearPass")).thenReturn("pt-123");
 
-        expectedException.expect(WikiAuthenticationException.class);
+        expectedException.expect(AuthenticationException.class);
         expectedException.expectMessage("strange error");
         expectedException.expectMessage("cas");
 

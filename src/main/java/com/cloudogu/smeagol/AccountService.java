@@ -6,8 +6,6 @@
 
 package com.cloudogu.smeagol;
 
-import com.cloudogu.wiki.WikiAuthenticationException;
-import com.cloudogu.wiki.WikiServerConfiguration;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -61,7 +59,7 @@ public class AccountService {
         if (account == null) {
             AttributePrincipal principal = (AttributePrincipal) request.getUserPrincipal();
             if (principal == null){
-                throw new WikiAuthenticationException("could not find principal in request");
+                throw new AuthenticationException("could not find principal in request");
             }
             char[] password = getUserPassword(principal);
             Map<String, Object> attributes = principal.getAttributes();
@@ -81,12 +79,12 @@ public class AccountService {
         String clearPassUrl = clearPassUrl();
         String pt = principal.getProxyTicketFor(clearPassUrl);
         if (Strings.isNullOrEmpty(pt)){
-            throw new WikiAuthenticationException("could not get proxy ticket for clear pass");
+            throw new AuthenticationException("could not get proxy ticket for clear pass");
         }
         try {
             return fetchClearPassCredentials(new URL(clearPassUrl.concat("?ticket=").concat(pt)));
         } catch (IOException ex) {
-            throw new WikiAuthenticationException("failed to fetch clear pass credentials", ex);
+            throw new AuthenticationException("failed to fetch clear pass credentials", ex);
         }
     }
     
@@ -103,7 +101,7 @@ public class AccountService {
         char[] credentials = JAXB.unmarshal(url, ClearPassResponse.class).getCredentials();
         Preconditions.checkState(credentials != null, "failed to fetch password");
         if (credentials == null || credentials.length == 0){
-            throw new WikiAuthenticationException("could not extract password from clear pass response");
+            throw new AuthenticationException("could not extract password from clear pass response");
         }
         return credentials;
     }
@@ -120,7 +118,7 @@ public class AccountService {
         
         public char[] getCredentials() {
             if (!Strings.isNullOrEmpty(clearPassFailure)){
-                throw new WikiAuthenticationException("could not get user password, cas returned: " + clearPassFailure);
+                throw new AuthenticationException("could not get user password, cas returned: " + clearPassFailure);
             }
             if ( clearPassSuccess != null && clearPassSuccess.credentials != null ){
                 return clearPassSuccess.credentials.toCharArray();
