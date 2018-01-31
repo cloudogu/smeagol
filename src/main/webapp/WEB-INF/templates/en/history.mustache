@@ -1,15 +1,15 @@
 <div id="wiki-wrapper" class="history">
 <div id="head">
-  <h1>Versionsübersicht für <strong>{{title}}</strong></h1>
+  <h1>History for <strong>{{title}}</strong></h1>
   <ul class="actions">
     <li class="minibutton">
       {{>searchbar}}
     </li>
     <li class="minibutton"><a href="{{base_url}}/{{escaped_url_path}}"
-       class="btn btn-primary btn-sm">Seite anzeigen</a></li>
+       class="btn btn-primary btn-sm">View Page</a></li>
     {{#allow_editing}}
       <li class="minibutton"><a href="{{base_url}}/edit/{{escaped_url_path}}"
-         class="btn btn-primary btn-sm">Seite bearbeiten</a></li>
+         class="btn btn-primary btn-sm">Edit Page</a></li>
     {{/allow_editing}}
   </ul>
 </div>
@@ -17,7 +17,7 @@
 
   <ul class="actions">
     <li class="minibutton"><a href="javascript:void(0);"
-       class="btn btn-primary btn-sm">Vergleiche Versionen</a></li>
+       class="btn btn-primary btn-sm">Compare Revisions</a></li>
   </ul>
 
   <form name="compare-versions" id="version-form" method="post"
@@ -37,7 +37,7 @@
         <td class="commit-name">
           <span class="time-elapsed" title="{{date_full}}">{{date}}:</span>&nbsp;
           {{message}}
-          [<a href="{{base_url}}/{{escaped_url_path}}/{{id}}" title="Commit anschauen">{{id7}}</a>]
+          [<a href="{{base_url}}/{{escaped_url_path}}/{{id}}" title="View commit">{{id7}}</a>]
         </td>
       </tr>
       {{/versions}}
@@ -50,11 +50,11 @@
 <div id="footer">
   <ul class="actions">
     <li class="minibutton"><a href="javascript:void(0);"
-       class="btn btn-primary btn-sm">Vergleiche Versionen</a></li>
+       class="btn btn-primary btn-sm">Compare Revisions</a></li>
 
     <!-- only show this button if we have more than 20 revisions -->
     <li class="minibutton"><a href="#"
-       class="btn btn-primary btn-sm">Zum Anfang der Seite</a></li>
+       class="btn btn-primary btn-sm">Back to Top</a></li>
   </ul>
 </div>
 </div>

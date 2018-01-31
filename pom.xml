@@ -195,9 +195,11 @@
             <plugin>
                 <groupId>com.github.sdorra</groupId>
                 <artifactId>buildfrontend-maven-plugin</artifactId>
-                <version>1.0.8</version>
+                <version>1.2.1</version>
                 <configuration>
                     <allowRoot>true</allowRoot>
+                    <nodeVersion>v8.9.4</nodeVersion>
+                    <npmVersion>v5.6.0</npmVersion>
                 </configuration>
                 <executions>
                     <execution>
@@ -206,6 +208,33 @@
                         <goals>
                             <goal>bower-install</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>npm-install</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>npm-install</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>npm-run-gollum-css</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>npm-run</goal>
+                        </goals>
+                        <configuration>
+                            <script>gollum-css</script>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm-run-file_view-css</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>npm-run</goal>
+                        </goals>
+                        <configuration>
+                            <script>file_view-css</script>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -231,7 +260,6 @@
                     </execution>
                 </executions>
             </plugin>
-            
         </plugins>
         
         <finalName>smeagol</finalName>
