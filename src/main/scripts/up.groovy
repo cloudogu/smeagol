@@ -14,7 +14,9 @@ if (!Files.exists(workspace)) {
 }
 
 Path ecosystem = workspace.resolve("ecosystem")
-if (!Files.exists(workspace)) {
+if (!Files.exists(ecosystem)) {
+    Files.createDirectory(ecosystem)
+
     println("clone ${remote}")
 
     Git.cloneRepository()
@@ -23,7 +25,6 @@ if (!Files.exists(workspace)) {
         .setBranchesToClone(Collections.singleton("refs/head/" + branch))
         .setBranch(branch)
         .setProgressMonitor(new TextProgressMonitor(new PrintWriter(System.out)))
-        .set
         .call()
         .close()
 }
