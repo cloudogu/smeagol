@@ -2,9 +2,9 @@
 import React from 'react';
 import {fetchPage} from '../modules/page';
 import {connect} from 'react-redux';
-import PageHeader from '../components/PageHeader';
-import PageContent from '../components/PageContent';
-import PageFooter from '../components/PageFooter';
+import PageViewer from '../components/PageViewer';
+import * as queryString from 'query-string';
+import PageEditor from '../components/PageEditor';
 
 type Props = {}
 
@@ -22,19 +22,22 @@ class Page extends React.Component<Props> {
         return parts.slice(3).join('/');
     }
 
+    isEditMode() {
+        const queryParams = queryString.parse(this.props.location.search);
+        return queryParams.edit;
+    }
+
     render() {
         const { page } = this.props;
         if (!page) {
             return <div></div>
         }
 
-        return (
-            <div>
-                <PageHeader page={page} />
-                <PageContent page={page} />
-                <PageFooter page={page} />
-            </div>
-        );
+        if (this.isEditMode()) {
+            return <PageEditor page={page} />;
+        }
+
+        return <PageViewer page={page} />;
     }
 
 }
