@@ -1,4 +1,5 @@
 {
   "general-information_welcome": "Willkommen bei Smeagol, dem Wiki zur Dokumentation in einem Repository.",
-  "general-information_description": "Untenstehend siehst Du eine Liste aller Git-Repositories auf Deinem Repository-Server, auf die Du entsprechende Zugriffsrechte hast.Um eine Dokumentation für ein Repository zu schreiben, muss nur eine <em>.smeagol.yml</em> Datei in das Root-Verzeichnis des Repository abgelegt werden. Anschließend kann das Wiki in diesem Repository direkt genutzt werden. Alle Änderungen in einem Wiki werden nach dem Speichern von Smeagol an das Repository gepusht. Damit ist die Dokumentation immer auf dem neuesten Stand und dort, wo sie hingehört - nah am Code! "
+  "general-information_description": "Untenstehend siehst Du eine Liste aller Git-Repositories auf Deinem Repository-Server, auf die Du entsprechende Zugriffsrechte hast.Um eine Dokumentation für ein Repository zu schreiben, muss nur eine <em>.smeagol.yml</em> Datei in das Root-Verzeichnis des Repository abgelegt werden. Anschließend kann das Wiki in diesem Repository direkt genutzt werden. Alle Änderungen in einem Wiki werden nach dem Speichern von Smeagol an das Repository gepusht. Damit ist die Dokumentation immer auf dem neuesten Stand und dort, wo sie hingehört - nah am Code!",
+  "back-to-repositories-button_text": "Zurück zur Repository-Übersicht"
 }

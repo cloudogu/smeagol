@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import GeneralInformation from '../components/GeneralInformation';
 import RepositoryList from '../components/RepositoryList';
 
-import { fetchRepositories } from '../module';
+import { fetchRepositories } from '../modules/repositories';
 
 type Props = {
-    repositories: Repository[]
+    repositories: any
 }
 
 class Repositories extends React.Component<Props> {

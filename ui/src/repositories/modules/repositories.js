@@ -29,7 +29,6 @@ export function fetchRepositories() {
         // TODO context path
         return fetch('/smeagol/api/v1/repositories.json', {
             credentials: 'same-origin'
-
         })
         .then(response => response.json())
         .then(json => dispatch(reveiveRepositories(json)))
