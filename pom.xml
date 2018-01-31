@@ -256,6 +256,50 @@
                 </dependencies>
             </plugin>
 
+            <!-- groovy scripts for handing dev environment -->
+
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <version>2.0</version>
+                <executions>
+                    <execution>
+                        <id>up</id>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>${project.basedir}/src/main/scripts/up.groovy</source>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>down</id>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>${project.basedir}/src/main/scripts/down.groovy</source>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>destroy</id>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>${project.basedir}/src/main/scripts/destroy.groovy</source>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.eclipse.jgit</groupId>
+                        <artifactId>org.eclipse.jgit</artifactId>
+                        <version>4.5.0.201609210915-r</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
             <!--plugin>
                 <groupId>de.saumya.mojo</groupId>
                 <artifactId>gem-maven-plugin</artifactId>

@@ -1,0 +1,59 @@
+{
+  "region": {
+    "locale": "en_US.utf8",
+    "timeZone": "Europe/Berlin",
+    "completed": false
+  },
+  "naming": {
+    "fqdn": "192.168.56.2",
+    "hostname": "ecosystem",
+    "domain": "cloudogu.net",
+    "certificateType": "selfsigned",
+    "relayHost": "mail.cloudogu.net",
+    "completed": true
+  },
+  "dogus": {
+    "defaultDogu": "cockpit",
+    "install": [
+      "official/cas",
+      "official/nginx",
+      "official/ldap",
+      "official/postfix",
+      "official/registrator",
+      "official/scm",
+      "official/usermgt",
+      "official/plantuml"
+    ],
+    "completed": true
+  },
+  "admin": {
+    "username": "admin",
+    "mail": "admin@cloudogu.com",
+    "password": "adminpw",
+    "confirmPassword": "adminpw",
+    "adminGroup": "CesAdministrators",
+    "adminMember": true,
+    "completed": true
+  },
+  "userBackend": {
+    "port": "389",
+    "useUserConnectionToFetchAttributes": true,
+    "dsType": "embedded",
+    "attributeID": "uid",
+    "attributeFullname": "cn",
+    "attributeMail": "mail",
+    "attributeGroup": "memberOf",
+    "searchFilter": "(objectClass=person)",
+    "host": "ldap",
+    "completed": true
+  },
+  "unixUser": {
+    "Name": "admin",
+    "Password": "adminpw"
+  },
+  "registryConfig": {
+    "_global": {
+      "stage": "development"
+    }
+  }
+}
