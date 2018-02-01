@@ -1,6 +1,7 @@
 package com.cloudogu.smeagol;
 
 import de.triology.cb.CommandBus;
+import de.triology.cb.decorator.LoggingCommandBus;
 import de.triology.cb.spring.Registry;
 import de.triology.cb.spring.SpringCommandBus;
 import org.slf4j.Logger;
@@ -44,7 +45,9 @@ public class Smeagol {
 
     @Bean
     public CommandBus commandBus() {
-        return new SpringCommandBus(new Registry(applicationContext));
+        return new LoggingCommandBus(
+            new SpringCommandBus(new Registry(applicationContext))
+        );
     }
 
     public static void main(String[] args) {
