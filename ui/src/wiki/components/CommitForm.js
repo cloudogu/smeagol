@@ -8,7 +8,8 @@ type Props = {
     t: any,
     show: boolean,
     onSave: Function,
-    onAbort: Function
+    onAbort: Function,
+    defaultMessage: string
 };
 
 type State = {
@@ -20,7 +21,7 @@ class CommitForm extends React.Component<Props, State> {
     constructor(props) {
         super(props);
         this.state = {
-            message: 'Changed'
+            message: this.props.defaultMessage
         };
     }
 

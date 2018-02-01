@@ -28,7 +28,9 @@ const styles = {
 type Props = {
     onSave: Function,
     history: any,
-    classes: any
+    classes: any,
+    content: string,
+    path: string
 };
 
 type State = {
@@ -82,7 +84,9 @@ class MarkdownEditor extends Component<Props,State> {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, path } = this.props;
+        const defaultMessage = 'Updated ' + path + ' (smeagol)';
+
         return (
             <div>
                 <div ref={ref => this.editorNode = ref} />
@@ -90,7 +94,7 @@ class MarkdownEditor extends Component<Props,State> {
                     <ActionButton i18nKey="markdown-editor_save" type="primary" onClick={this.commit} />
                     <ActionLink i18nKey="markdown-editor_abort" to="?" />
                 </div>
-                <CommitForm show={ this.state.showCommitForm } onSave={ this.save } onAbort={ this.abortCommit } />
+                <CommitForm defaultMessage={ defaultMessage } show={ this.state.showCommitForm } onSave={ this.save } onAbort={ this.abortCommit } />
             </div>
         );
     }

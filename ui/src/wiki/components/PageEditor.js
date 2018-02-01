@@ -24,7 +24,7 @@ class PageEditor extends React.Component<Props> {
         return (
             <div>
                 <h1>{ page.path }</h1>
-                <MarkdownEditor content={ page.content } onSave={onSave} />
+                <MarkdownEditor path={ page.path } content={ page.content } onSave={onSave} />
             </div>
         );
     }
