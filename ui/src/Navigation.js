@@ -1,36 +1,62 @@
 //@flow
 import React from 'react';
 import Logo from 'ces-theme/dist/images/logo/blib-white-30px.png'
+import {Link} from 'react-router-dom';
 
 type Props = {};
 
-class Navigation extends React.Component<Props> {
+type State = {
+    collapsed: boolean
+};
+
+class Navigation extends React.Component<Props, State> {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            collapsed: true
+        };
+    }
+
+    toggleCollapse = () => {
+        this.setState({
+            collapsed: !this.state.collapsed
+        });
+    };
 
     render() {
-        // TODO links
+        const { collapsed } = this.state;
+
+        let navBarClasses;
+        if (collapsed) {
+            navBarClasses = "collapse navbar-collapse";
+        } else {
+            navBarClasses = "navbar-collapse"
+        }
+
         return (
             <nav className="navbar navbar-default navbar-fixed-top">
                 <div className="container">
                     <div className="navbar-header">
                         <button type="button" className="navbar-toggle collapsed" data-toggle="collapse"
-                                data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                data-target="#navbar" aria-expanded="false" aria-controls="navbar"
+                                onClick={this.toggleCollapse}>
                             <span className="sr-only">Toggle navigation</span>
                             <span className="icon-bar"></span>
                             <span className="icon-bar"></span>
                             <span className="icon-bar"></span>
                         </button>
-                        <a className="navbar-brand" href="">
-                            <img className="img-responsive" alt="Cloudogu"
-                                 src={ Logo } />
-                        </a>
-                        <a className="navbar-brand" href="">
+                        <Link className="navbar-brand" to="/">
+                            <img className="img-responsive" alt="Cloudogu" src={Logo}/>
+                        </Link>
+                        <Link className="navbar-brand" to="/">
                             Smeagol
-                        </a>
+                        </Link>
                     </div>
-                    <div className="collapse navbar-collapse">
+                    <div className={navBarClasses}>
                         <ul className="nav navbar-nav">
                             <li>
-                                { /* TODO context path */ }
+                                {/* TODO context path */}
                                 <a href="/smeagol/api/v1/logout">
                                     Logout
                                 </a>
@@ -39,9 +65,9 @@ class Navigation extends React.Component<Props> {
                     </div>
                 </div>
             </nav>
-    );
+        );
     }
 
-    }
+}
 
-    export default Navigation;
+export default Navigation;
