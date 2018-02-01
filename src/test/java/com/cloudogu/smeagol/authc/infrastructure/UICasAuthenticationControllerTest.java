@@ -6,18 +6,18 @@ import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UICasAuthenticationTest {
+public class UICasAuthenticationControllerTest {
 
     @Test
     public void testRedirectWithoutLocation() {
-        UICasAuthentication authentication = new UICasAuthentication();
+        UICasAuthenticationController authentication = new UICasAuthenticationController();
         ResponseEntity<Void> entity = authentication.redirect(null);
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
     public void testRedirect() {
-        UICasAuthentication authentication = new UICasAuthentication();
+        UICasAuthenticationController authentication = new UICasAuthenticationController();
         ResponseEntity<Void> entity = authentication.redirect("/hitchhikers");
 
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.TEMPORARY_REDIRECT);

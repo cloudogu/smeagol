@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
  * - user opens ui
  * - ui sends ajax request to api
  * - api responds with 401 ({@link AjaxAwareAuthenticationRedirectStrategy})
- * - ui redirects to /api/v1/authc ({@link UICasAuthentication}) with the current location as query parameter
+ * - ui redirects to /api/v1/authc ({@link UICasAuthenticationController}) with the current location as query parameter
  * - the request gets redirected to cas, by the cas authentication filter
  * - user authenticates himself on the cas login page
- * - cas redirects back to /api/v1/authc ({@link UICasAuthentication})
- * - {@link UICasAuthentication} extracts the location parameter and redirects back to ui
+ * - cas redirects back to /api/v1/authc ({@link UICasAuthenticationController})
+ * - {@link UICasAuthenticationController} extracts the location parameter and redirects back to ui
  */
 @RestController
 @RequestMapping("/api/v1/authc")
-public class UICasAuthentication {
+public class UICasAuthenticationController {
 
     @RequestMapping
     public ResponseEntity<Void> redirect(@RequestParam("location") String location) {

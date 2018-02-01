@@ -30,7 +30,8 @@ class Navigation extends React.Component<Props> {
                     <div className="collapse navbar-collapse">
                         <ul className="nav navbar-nav">
                             <li>
-                                <a href="">
+                                { /* TODO context path */ }
+                                <a href="/smeagol/api/v1/logout">
                                     Logout
                                 </a>
                             </li>

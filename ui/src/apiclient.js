@@ -13,7 +13,6 @@ const fetchOptions = {
 function isAuthenticationRedirect(response) {
     if (response.status === 401) {
         const redirectTarget = response.headers.get('location');
-        console.log(redirectTarget);
         if (redirectTarget) {
             return true;
         }
@@ -34,7 +33,6 @@ function callApi(url) {
         .then(response => {
             if (isAuthenticationRedirect(response)){
                 const redirectUrl = createRedirectUrl();
-                console.log(redirectUrl);
                 redirect(redirectUrl);
             }
             return response;

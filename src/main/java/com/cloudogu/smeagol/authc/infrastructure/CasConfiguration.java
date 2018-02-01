@@ -28,6 +28,10 @@ public class CasConfiguration {
         this.casUrl = casUrl;
     }
 
+    public String getLogoutUrl() {
+        return casUrl + "/logout";
+    }
+
     /**
      * Creates a map of cas settings for cas infrastructure components.
      *
