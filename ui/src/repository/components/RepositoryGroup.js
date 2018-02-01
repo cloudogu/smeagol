@@ -28,6 +28,18 @@ type State = {
     open: boolean
 };
 
+// @VisibleForTesting
+export function orderRepositoriesByName(repositories) {
+    repositories.sort(function(a, b){
+        if (a.name < b.name) {
+            return -1;
+        } else if (a.name > b.name) {
+            return 1;
+        }
+        return 0;
+    });
+}
+
 class RepositoryGroup extends React.Component<Props, State> {
 
     constructor(props) {
@@ -46,14 +58,7 @@ class RepositoryGroup extends React.Component<Props, State> {
     render() {
         const { group, classes } = this.props;
         let repositories = group.repositories;
-        repositories.sort(function(a, b){
-            if (a.name < b.name) {
-                return -1;
-            } else if (a.name > b.name) {
-                return 1;
-            }
-            return 0;
-        });
+        orderRepositoriesByName(repositories);
 
         const icon = this.state.open ? 'glyphicon-chevron-down' : 'glyphicon-chevron-right';
 

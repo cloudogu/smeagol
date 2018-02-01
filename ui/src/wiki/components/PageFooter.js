@@ -10,7 +10,6 @@ const styles = {
     }
 };
 
-
 type Props = {
     page: any,
     classes: any

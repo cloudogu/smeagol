@@ -11,6 +11,28 @@ type Props = {
     classes: any
 }
 
+//@VisibleForTesting
+// master should always be the first one,
+// followed by develop the rest should be ordered by its name
+export function orderBranches(branches) {
+    branches.sort((a, b) => {
+        if (a.name === 'master' && b.name !== 'master') {
+            return -10;
+        } else if (a.name !== 'master' && b.name === 'master') {
+            return 10;
+        } else if (a.name === 'develop' && b.name !== 'develop') {
+            return -5;
+        } else if (a.name !== 'develop' && b.name === 'develop') {
+            return 5;
+        } else if (a.name < b.name) {
+            return -1;
+        } else if (a.name > b.name) {
+            return 1;
+        }
+        return 0;
+    });
+}
+
 class BranchOverview extends React.Component<Props> {
 
     render() {
@@ -19,21 +41,12 @@ class BranchOverview extends React.Component<Props> {
             return <div />;
         }
 
-        console.log(repository);
-
         let branches = repository._embedded.branches;
         if (!branches) {
             branches = [];
         }
 
-        branches.sort((a, b) => {
-            if (a.name < b.name) {
-                return -1;
-            } else if (a.name > b.name) {
-                return 1;
-            }
-            return 0;
-        });
+        orderBranches(branches);
 
         return (
             <div>

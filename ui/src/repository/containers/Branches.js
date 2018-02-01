@@ -47,7 +47,7 @@ const mapStateToProps = (state) => {
     return state.repository
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
     return {
         fetchRepository: (repositories) => {
             dispatch(fetchRepository(repositories))

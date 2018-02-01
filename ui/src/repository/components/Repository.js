@@ -10,16 +10,20 @@ type Props = {
     classes: any
 }
 
+// @VisibleForTesting
+export function nameWithoutNamespace(name: string) {
+    const index = name.lastIndexOf('/');
+    if (index > 0) {
+        return name.substring(index + 1);
+    }
+    return name;
+}
+
 class Repository extends React.Component<Props> {
 
     render() {
         const { repository } = this.props;
-        let name = repository.name;
-        const index = name.lastIndexOf('/');
-        if (index > 0) {
-            name = name.substring(index + 1);
-        }
-
+        let name = nameWithoutNamespace(repository.name);
         return (
             <Link className="list-group-item" to={ repository.id + '/' }>
                 <h4>{ name }</h4>
