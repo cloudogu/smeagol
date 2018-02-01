@@ -1,4 +1,5 @@
 // @flow
+
 // fetch does not send the X-Requested-With header (https://github.com/github/fetch/issues/17),
 // but we need the header to detect ajax request (AjaxAwareAuthenticationRedirectStrategy).
 const fetchOptions = {
@@ -7,8 +8,6 @@ const fetchOptions = {
         'X-Requested-With': 'XMLHttpRequest'
     }
 };
-
-// TODO handle session timeout and cas redirect
 
 function isAuthenticationRedirect(response) {
     if (response.status === 401) {
@@ -21,6 +20,7 @@ function isAuthenticationRedirect(response) {
 }
 
 function createRedirectUrl() {
+    // TODO context path
     return '/smeagol/api/v1/authc?location=' + encodeURIComponent(window.location);
 }
 
