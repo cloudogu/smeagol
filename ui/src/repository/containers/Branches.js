@@ -4,32 +4,48 @@ import { fetchRepository } from '../modules/repository';
 import BranchOverview from '../components/BranchOverview';
 import { connect } from 'react-redux';
 import GeneralInformation from '../components/GeneralInformation';
+import Loading from '../../Loading';
+import I18nAlert from '../../I18nAlert';
 
-type Props = {}
+type Props = {
+    repository: any,
+    error: any,
+    loading: boolean
+}
 
 class Branches extends React.Component<Props> {
 
     componentDidMount() {
         this.props.fetchRepository(this.props.match.params.repository);
     }
+
     render() {
-        const { repository } = this.props;
+        const { repository, error, loading } = this.props;
+
+        let child = <div />;
+        if (error) {
+            child = <I18nAlert i18nKey="branches_failed_to_fetch" />;
+        } else if (loading) {
+            child = <Loading />;
+        } else if (repository) {
+            child = <BranchOverview repository={repository} />
+        }
 
         return (
             <div>
                 <h1>Smeagol</h1>
                 <GeneralInformation />
                 <h2>Branches</h2>
-                <BranchOverview repository={repository} />
+                { child }
             </div>
         );
     }
 
 }
 
-const mapStateToProps = (state) => ({
-    repository: state.repository ? state.repository.repository : null
-});
+const mapStateToProps = (state) => {
+    return state.repository
+};
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "better-react-spinkit": "^2.0.4",
     "ces-theme": "https://github.com/cloudogu/ces-theme.git",
     "classnames": "^2.2.5",
     "highlight.js": "^9.12.0",
@@ -36,6 +37,7 @@
     }
   },
   "devDependencies": {
+    "flow-bin": "^0.64.0",
     "redux-devtools-extension": "^2.13.2"
   }
 }

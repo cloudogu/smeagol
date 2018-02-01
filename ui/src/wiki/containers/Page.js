@@ -5,8 +5,14 @@ import {connect} from 'react-redux';
 import PageViewer from '../components/PageViewer';
 import * as queryString from 'query-string';
 import PageEditor from '../components/PageEditor';
+import Loading from '../../Loading';
+import I18nAlert from '../../I18nAlert';
 
-type Props = {}
+type Props = {
+    loading: boolean,
+    error: any,
+    page: any
+};
 
 class Page extends React.Component<Props> {
 
@@ -28,9 +34,28 @@ class Page extends React.Component<Props> {
     }
 
     render() {
-        const { page } = this.props;
-        if (!page) {
-            return <div></div>
+        const { error, loading, page } = this.props;
+
+        if (error) {
+            return (
+                <div>
+                    <h1>Smeagol</h1>
+                    <I18nAlert i18nKey="page_failed_to_fetch" />
+                </div>
+            );
+        } else if (loading) {
+            return (
+                <div>
+                    <h1>Smeagol</h1>
+                    <Loading />
+                </div>
+            );
+        } else if (!page) {
+            return (
+                <div>
+                    <h1>Smeagol</h1>
+                </div>
+            );
         }
 
         if (this.isEditMode()) {
@@ -42,11 +67,11 @@ class Page extends React.Component<Props> {
 
 }
 
-const mapStateToProps = (state) => ({
-    page: state.page ? state.page.page : null
-});
+const mapStateToProps = (state) => {
+    return state.page;
+};
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
     return {
         fetchPage: (repository, branch, path) => {
             dispatch(fetchPage(repository, branch, path))

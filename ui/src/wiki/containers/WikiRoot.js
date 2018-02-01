@@ -3,35 +3,47 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {fetchWiki} from '../modules/wiki';
 import {Redirect} from 'react-router-dom';
+import Loading from '../../Loading';
+import I18nAlert from '../../I18nAlert';
 
-type Props = {}
+type Props = {
+    loading: boolean,
+    error: any,
+    wiki: any
+};
 
 class WikiRoot extends React.Component<Props> {
 
     componentDidMount() {
         const { repository, branch } = this.props.match.params;
-
-        console.log(this.props.match);
-
         this.props.fetchWiki( repository, branch );
     }
 
     render() {
-        const { wiki } = this.props;
-        if (!wiki) {
-            return <div />
+        const { error, loading, wiki } = this.props;
+
+        let child = <div />;
+        if (error) {
+            child = <I18nAlert i18nKey="wikiroot_failed_to_fetch" />;
+        } else if (loading) {
+            child = <Loading />;
+        } else if (wiki) {
+            child = <Redirect to={wiki.landingPage} />
         }
 
         return (
-            <Redirect to={wiki.landingPage} />
+            <div>
+                <h1>Smeagol</h1>
+                { child }
+            </div>
         );
     }
 
 }
 
-const mapStateToProps = (state) => ({
-    wiki: state.wiki ? state.wiki.wiki : null
-});
+const mapStateToProps = (state) => {
+    return state.wiki;
+};
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {

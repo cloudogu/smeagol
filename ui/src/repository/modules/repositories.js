@@ -49,7 +49,7 @@ export default function reducer(state = {}, action = {}) {
                 ...state,
                 loading: false,
                 error: null,
-                items: action.payload
+                repositories: action.payload
             };
         case FETCH_REPOSITORIES_FAILURE:
             return {

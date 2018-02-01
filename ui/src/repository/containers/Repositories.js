@@ -5,8 +5,12 @@ import GeneralInformation from '../components/GeneralInformation';
 import RepositoryList from '../components/RepositoryList';
 
 import { fetchRepositories } from '../modules/repositories';
+import Loading from '../../Loading';
+import I18nAlert from '../../I18nAlert';
 
 type Props = {
+    loading: boolean,
+    error: any,
     repositories: any
 }
 
@@ -17,9 +21,15 @@ class Repositories extends React.Component<Props> {
     }
 
     render() {
-        let repositories = this.props.repositories;
-        if (!repositories) {
-            repositories = [];
+        const { loading, error, repositories } = this.props;
+
+        let child = <div />;
+        if (error) {
+            child = <I18nAlert i18nKey="repositories_failed_to_fetch" />;
+        } else if (loading) {
+            child = <Loading />;
+        } else if (repositories) {
+            child = <RepositoryList repositories={ repositories } />;
         }
 
         return (
@@ -27,18 +37,18 @@ class Repositories extends React.Component<Props> {
                 <h1>Smeagol</h1>
                 <GeneralInformation />
                 <h2>Wikis</h2>
-                <RepositoryList repositories={ repositories } />
+                { child }
             </div>
         );
     }
 
 }
 
-const mapStateToProps = (state) => ({
-    repositories: state.repositories ? state.repositories.items : []
-});
+const mapStateToProps = (state) => {
+    return state.repositories;
+};
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
     return {
         fetchRepositories: () => {
             dispatch(fetchRepositories())
