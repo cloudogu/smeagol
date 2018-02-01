@@ -41,6 +41,7 @@ public class CasConfiguration {
                 .put("proxyCallbackUrl", serviceUrl + "/proxyCallbackUrl")
                 .put("proxyReceptorUrl", contextPath + "/proxyCallbackUrl")
                 .put("acceptAnyProxy", "true")
+                .put("authenticationRedirectStrategyClass", AjaxAwareAuthenticationRedirectStrategy.class.getName())
                 .build();
     }
 }
