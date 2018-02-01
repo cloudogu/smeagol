@@ -1,6 +1,7 @@
 //@flow
 import React from 'react';
 import injectSheet from 'react-jss';
+import DateFromNow from '../../DateFromNow';
 
 const styles = {
     footer: {
@@ -22,7 +23,7 @@ class PageFooter extends React.Component<Props> {
         const commit = page.commit;
         return (
             <div className={classes.footer}>
-                Last edited by { commit.author.displayName }, { commit.date }
+                Last edited by { commit.author.displayName }, <DateFromNow date={ commit.date } />
             </div>
         );
     }

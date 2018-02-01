@@ -11,6 +11,7 @@
     "i18next": "^10.3.0",
     "i18next-browser-languagedetector": "^2.1.0",
     "i18next-fetch-backend": "^0.1.0",
+    "moment": "^2.20.1",
     "query-string": "^5.0.1",
     "react": "^16.2.0",
     "react-bootstrap": "^0.32.1",
