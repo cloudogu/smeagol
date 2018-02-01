@@ -7,9 +7,9 @@ import com.cloudogu.smeagol.wiki.domain.WikiId;
 import de.triology.cb.Command;
 
 /**
- * Command to change the content of a page.
+ * Command to create or edit a page.
  */
-public class EditPageCommand implements Command<Void> {
+public class EditOrCreatePageCommand implements Command<Void> {
 
     private final WikiId wikiId;
     private final Path path;
@@ -23,7 +23,7 @@ public class EditPageCommand implements Command<Void> {
      * @param path of the page
      * @param content new content
      */
-    public EditPageCommand(WikiId wikiId, Path path, Message message, Content content) {
+    public EditOrCreatePageCommand(WikiId wikiId, Path path, Message message, Content content) {
         this.wikiId = wikiId;
         this.path = path;
         this.message = message;

@@ -1,8 +1,7 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.*;
-import com.cloudogu.smeagol.wiki.usecase.EditPageCommand;
-import com.cloudogu.smeagol.wiki.usecase.PageNotFoundException;
+import com.cloudogu.smeagol.wiki.usecase.EditOrCreatePageCommand;
 import de.triology.cb.Command;
 import de.triology.cb.CommandBus;
 import org.junit.Before;
@@ -10,10 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -51,7 +48,7 @@ public class PageControllerTest {
     private CommandBus commandBus;
 
     @Captor
-    private ArgumentCaptor<EditPageCommand> commandCaptor;
+    private ArgumentCaptor<EditOrCreatePageCommand> commandCaptor;
 
     private MockMvc mockMvc;
 
@@ -118,7 +115,7 @@ public class PageControllerTest {
 
         verify(commandBus).execute(commandCaptor.capture());
 
-        EditPageCommand pageCommand = commandCaptor.getValue();
+        EditOrCreatePageCommand pageCommand = commandCaptor.getValue();
         assertEquals(wikiId, pageCommand.getWikiId());
         assertEquals(path, pageCommand.getPath());
         assertEquals("Hello", pageCommand.getMessage().getValue());
@@ -126,18 +123,22 @@ public class PageControllerTest {
     }
 
     @Test
-    public void editNotFound() throws Exception {
+    public void create() throws Exception {
         WikiId wikiId = new WikiId("4xQfahsId3", "master");
         Path path = Path.valueOf("docs/Home");
-
-        when(commandBus.execute(any(Command.class))).thenThrow(new PageNotFoundException(path));
 
         String content = "{\"message\": \"Hello\", \"content\": \"i said hello\"}";
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/repositories/4xQfahsId3/branches/master/pages/docs/Home")
                 .content(content)
                 .contentType("application/json"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNoContent());
+
+        verify(commandBus).execute(commandCaptor.capture());
+
+        EditOrCreatePageCommand pageCommand = commandCaptor.getValue();
+        assertEquals(wikiId, pageCommand.getWikiId());
+        assertEquals(path, pageCommand.getPath());
+        assertEquals("Hello", pageCommand.getMessage().getValue());
+        assertEquals("i said hello", pageCommand.getContent().getValue());
     }
-
-
 }

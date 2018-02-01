@@ -1,14 +1,10 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.*;
-import com.cloudogu.smeagol.wiki.usecase.EditPageCommand;
-import com.cloudogu.smeagol.wiki.usecase.PageNotFoundException;
+import com.cloudogu.smeagol.wiki.usecase.EditOrCreatePageCommand;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import de.triology.cb.Command;
 import de.triology.cb.CommandBus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,7 +47,7 @@ public class PageController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "**")
-    public ResponseEntity<Void> edit(
+    public ResponseEntity<Void> createOrEdit(
             HttpServletRequest request,
             @PathVariable("repositoryId") String repositoryId,
             @PathVariable("branch") String branch,
@@ -60,12 +56,14 @@ public class PageController {
         WikiId id = new WikiId(repositoryId, branch);
         Path path = createPathFromRequest(request, id);
 
-        try {
-            EditPageCommand command = new EditPageCommand(id, path, payload.getMessage(), payload.getContent());
-            commandBus.execute(command);
-        } catch (PageNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        // TODO split edit and create command, because:
+        // - better stats from command bus
+        // - more resty 201 created for new content and 204 for modified
+
+        // TODO return new page? this would safe us one request from the frontent. Is this resty?
+
+        EditOrCreatePageCommand command = new EditOrCreatePageCommand(id, path, payload.getMessage(), payload.getContent());
+        commandBus.execute(command);
 
         return ResponseEntity.noContent().build();
     }

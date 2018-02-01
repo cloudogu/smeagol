@@ -8,31 +8,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.Optional;
 
 /**
- * Handler for {@link EditPageCommand}.
+ * Handler for {@link EditOrCreatePageCommand}.
  */
 @Component
-public class EditPageCommandHandler implements CommandHandler<Void, EditPageCommand> {
+public class EditOrCreatePageCommandHandler implements CommandHandler<Void, EditOrCreatePageCommand> {
 
     private final PageRepository repository;
     private final AccountService accountService;
 
     @Autowired
-    public EditPageCommandHandler(PageRepository repository, AccountService accountService) {
+    public EditOrCreatePageCommandHandler(PageRepository repository, AccountService accountService) {
         this.repository = repository;
         this.accountService = accountService;
     }
 
     @Override
-    public Void handle(EditPageCommand command) {
+    public Void handle(EditOrCreatePageCommand command) {
         Path path = command.getPath();
-        Page page = repository.findByWikiIdAndPath(command.getWikiId(), path)
-                .orElseThrow(() -> new PageNotFoundException(path));
+        Optional<Page> pageByPath = repository.findByWikiIdAndPath(command.getWikiId(), path);
 
         Commit commit = createNewCommit(command.getMessage());
 
-        page.edit(commit, command.getContent());
+        Page page;
+        if (pageByPath.isPresent()) {
+            page = pageByPath.get();
+            page.edit(commit, command.getContent());
+        } else {
+            page = new Page(command.getWikiId(), path, command.getContent(), commit);
+        }
 
         repository.save(page);
 

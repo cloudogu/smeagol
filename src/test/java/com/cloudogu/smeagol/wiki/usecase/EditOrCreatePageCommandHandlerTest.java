@@ -5,6 +5,8 @@ import com.cloudogu.smeagol.repository.infrastructure.AccountTestData;
 import com.cloudogu.smeagol.wiki.domain.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -15,7 +17,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EditPageCommandHandlerTest {
+public class EditOrCreatePageCommandHandlerTest {
 
     @Mock
     private PageRepository pageRepository;
@@ -23,11 +25,14 @@ public class EditPageCommandHandlerTest {
     @Mock
     private AccountService accountService;
 
+    @Captor
+    private ArgumentCaptor<Page> pageCaptor;
+
     @InjectMocks
-    private EditPageCommandHandler commandHandler;
+    private EditOrCreatePageCommandHandler commandHandler;
 
     @Test
-    public void testHandle() {
+    public void testEdit() {
         when(accountService.get()).thenReturn(AccountTestData.TRILLIAN);
 
         WikiId id = new WikiId("123", "master");
@@ -39,7 +44,7 @@ public class EditPageCommandHandlerTest {
         Message message = Message.valueOf("hitchhiker is awesome");
         Content newContent = Content.valueOf("New Content");
 
-        commandHandler.handle(new EditPageCommand(id, path, message, newContent));
+        commandHandler.handle(new EditOrCreatePageCommand(id, path, message, newContent));
 
         assertEquals(newContent, page.getContent());
         assertEquals(message, page.getCommit().get().getMessage());
@@ -48,14 +53,26 @@ public class EditPageCommandHandlerTest {
         verify(pageRepository).save(page);
     }
 
-    @Test(expected = PageNotFoundException.class)
-    public void testHandleWithNonExistingPage() {
+    @Test
+    public void testCreate() {
+        when(accountService.get()).thenReturn(AccountTestData.TRILLIAN);
+
         WikiId id = new WikiId("123", "master");
         Path path = Path.valueOf("Home");
+
         when(pageRepository.findByWikiIdAndPath(id, path)).thenReturn(Optional.empty());
 
         Message message = Message.valueOf("hitchhiker is awesome");
-        commandHandler.handle(new EditPageCommand(id, path, message, Content.valueOf("New Content")));
+        Content newContent = Content.valueOf("New Content");
+
+        commandHandler.handle(new EditOrCreatePageCommand(id, path, message, newContent));
+
+        verify(pageRepository).save(pageCaptor.capture());
+
+        Page page = pageCaptor.getValue();
+        assertEquals(newContent, page.getContent());
+        assertEquals(message, page.getCommit().get().getMessage());
+        assertEquals("Tricia McMillan", page.getCommit().get().getAuthor().getDisplayName().getValue());
     }
 
 }
