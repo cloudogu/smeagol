@@ -10,11 +10,6 @@ import com.cloudogu.wiki.scmm.NotifyServlet;
 import com.cloudogu.wiki.scmm.ScmWikiProvider;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Throwables;
-import java.util.EnumSet;
-import java.util.Map;
-import javax.servlet.DispatcherType;
-import javax.servlet.Filter;
-
 import com.mashape.unirest.http.Unirest;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
@@ -30,6 +25,11 @@ import org.jasig.cas.client.util.HttpServletRequestWrapperFilter;
 import org.jasig.cas.client.validation.Cas30ProxyReceivingTicketValidationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.Filter;
+import java.util.EnumSet;
+import java.util.Map;
 
 /**
  * The server glues filters, servlets and listeners together and starts the application server.
@@ -81,7 +81,7 @@ public class WikiServer {
         context.addEventListener(new SingleSignOutHttpSessionListener());
         FilterHolder filter = new FilterHolder(SingleSignOutFilter.class);
         filter.setInitParameters(casSettings);
-        context.addFilter(filter, "/*", EnumSet.allOf(DispatcherType.class));
+        context.addFilter(filter, "/", EnumSet.allOf(DispatcherType.class));
         
         // cas authentication
         casFilter(context, Cas30ProxyReceivingTicketValidationFilter.class, casSettings);
