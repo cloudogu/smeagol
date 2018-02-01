@@ -1,5 +1,5 @@
 //@flow
-import callApi from '../../apiclient';
+import apiClient from '../../apiclient';
 
 const FETCH_WIKI = 'smeagol/wiki/FETCH';
 const FETCH_WIKI_SUCCESS = 'smeagol/wiki/FETCH_SUCCESS';
@@ -29,7 +29,7 @@ export function fetchWiki(repositoryId, branch) {
     return function(dispatch) {
         dispatch(requestWiki());
         // TODO context path
-        return callApi(`/smeagol/api/v1/repositories/${repositoryId}/branches/${branch}.json`)
+        return apiClient.get(`/smeagol/api/v1/repositories/${repositoryId}/branches/${branch}.json`)
         .then(response => response.json())
         .then(json => dispatch(reveiveWiki(json)))
         .catch((err) => dispatch(failedToFetchWiki(err)));

@@ -1,6 +1,6 @@
 //@flow
 import React from 'react';
-import {fetchPage} from '../modules/page';
+import {editPage, fetchPage} from '../modules/page';
 import {connect} from 'react-redux';
 import PageViewer from '../components/PageViewer';
 import * as queryString from 'query-string';
@@ -11,7 +11,9 @@ import I18nAlert from '../../I18nAlert';
 type Props = {
     loading: boolean,
     error: any,
-    page: any
+    page: any,
+    fetchPage: Function,
+    editPage: Function
 };
 
 class Page extends React.Component<Props> {
@@ -32,6 +34,10 @@ class Page extends React.Component<Props> {
         const queryParams = queryString.parse(this.props.location.search);
         return queryParams.edit;
     }
+
+    edit = (message: string, content: string) => {
+        this.props.editPage(this.props.page, message, content);
+    };
 
     render() {
         const { error, loading, page } = this.props;
@@ -59,7 +65,7 @@ class Page extends React.Component<Props> {
         }
 
         if (this.isEditMode()) {
-            return <PageEditor page={page} />;
+            return <PageEditor page={page} onSave={this.edit} />;
         }
 
         return <PageViewer page={page} />;
@@ -75,6 +81,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchPage: (repository, branch, path) => {
             dispatch(fetchPage(repository, branch, path))
+        },
+        editPage: (page: any, message: string, content: string) => {
+            dispatch(editPage(page, message, content))
         }
     }
 };

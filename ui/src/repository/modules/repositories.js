@@ -1,5 +1,5 @@
 //@flow
-import callApi from '../../apiclient';
+import apiClient from '../../apiclient';
 
 const FETCH_REPOSITORIES = 'smeagol/repositories/FETCH';
 const FETCH_REPOSITORIES_SUCCESS = 'smeagol/repositories/FETCH_SUCCESS';
@@ -29,7 +29,7 @@ export function fetchRepositories() {
     return function(dispatch) {
         dispatch(requestRepositories());
         // TODO context path
-        return callApi('/smeagol/api/v1/repositories.json')
+        return apiClient.get('/smeagol/api/v1/repositories.json')
         .then(response => response.json())
         .then(json => dispatch(reveiveRepositories(json)))
         .catch((err) => dispatch(failedToFetchRepositories(err)));

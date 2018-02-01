@@ -1,4 +1,4 @@
-import callApi from './apiclient';
+import apiClient from './apiclient';
 
 const DEFAULT_LOCATION = 'http://localhost';
 
@@ -27,9 +27,9 @@ function mockFetchAndWindow(status, location) {
     })
 }
 
-test('test apicall', async () => {
+test('test apiClient.get', async () => {
     mockFetchAndWindow(200);
-    const response = await callApi('/api/v1/marvinctl');
+    const response = await apiClient.get('/api/v1/marvinctl');
 
     expect(response.status).toBe(200);
 
@@ -37,9 +37,9 @@ test('test apicall', async () => {
     expect(window.location.href).toBe(DEFAULT_LOCATION);
 });
 
-test('test apicall with status 401 and without location header', async () => {
+test('test apiClient.get with status 401 and without location header', async () => {
     mockFetchAndWindow(401);
-    const response = await callApi('/api/v1/marvinctl');
+    const response = await apiClient.get('/api/v1/marvinctl');
 
     expect(response.status).toBe(401);
 
@@ -47,9 +47,9 @@ test('test apicall with status 401 and without location header', async () => {
     expect(window.location.href).toBe(DEFAULT_LOCATION);
 });
 
-test('test apicall with status 401 and location header', async () => {
+test('test ApiClient.get with status 401 and location header', async () => {
     mockFetchAndWindow(401, '/hitchhikers');
-    await callApi('/api/v1/marvinctl');
+    await apiClient.get('/api/v1/marvinctl');
 
     expect(window.location.href).toBe('/smeagol/api/v1/authc?location=http%3A%2F%2Flocalhost%2F');
 });

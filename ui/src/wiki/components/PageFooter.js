@@ -19,9 +19,10 @@ class PageFooter extends React.Component<Props> {
 
     render() {
         const { page, classes } = this.props;
+        const commit = page.commit;
         return (
             <div className={classes.footer}>
-                Last edited by { page.author.displayName }, { page.lastModified }
+                Last edited by { commit.author.displayName }, { commit.date }
             </div>
         );
     }

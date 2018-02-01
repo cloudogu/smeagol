@@ -123,4 +123,21 @@ public class GitClientTest {
         assertEquals("added b.md", commit.get().getFullMessage());
     }
 
+    @Test
+    public void testCommit() throws IOException, GitAPIException {
+        target.refresh();
+
+        File file = new File(targetDirectory, "myfile.md");
+        Files.write("# My Files Headline", file, Charsets.UTF_8);
+
+        target.commit("myfile.md", "Tricia McMillian", "trillian@hitchhiker.com", "added myfile");
+
+        remote.checkout().setName("master").call();
+
+        RevCommit lastRemoteCommit = remote.log().addPath("myfile.md").setMaxCount(1).call().iterator().next();
+        assertEquals("added myfile", lastRemoteCommit.getFullMessage());
+        assertEquals("Tricia McMillian", lastRemoteCommit.getAuthorIdent().getName());
+        assertEquals("trillian@hitchhiker.com", lastRemoteCommit.getAuthorIdent().getEmailAddress());
+    }
+
 }

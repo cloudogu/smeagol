@@ -28,15 +28,32 @@ function redirect(redirectUrl: string) {
     window.location.href = redirectUrl;
 }
 
-function callApi(url) {
-    return fetch(url, fetchOptions)
-        .then(response => {
-            if (isAuthenticationRedirect(response)){
-                const redirectUrl = createRedirectUrl();
-                redirect(redirectUrl);
-            }
-            return response;
-        });
+class ApiClient {
+
+    get(url: string) {
+        return fetch(url, fetchOptions)
+            .then(this.handleCasAuthentication);
+    }
+
+    post(url: string, payload: any) {
+        const postOptions = {
+            method: 'POST',
+            body: JSON.stringify(payload),
+        };
+        const options = Object.assign(postOptions, fetchOptions);
+        options.headers['Content-Type'] = 'application/json';
+        return fetch(url, options)
+            .then(this.handleCasAuthentication);
+    }
+
+    handleCasAuthentication(response: any) {
+        if (isAuthenticationRedirect(response)){
+            const redirectUrl = createRedirectUrl();
+            redirect(redirectUrl);
+        }
+        return response;
+    }
+
 }
 
-export default callApi;
+export default new ApiClient();

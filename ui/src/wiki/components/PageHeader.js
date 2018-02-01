@@ -21,11 +21,13 @@ class PageHeader extends React.Component<Props> {
 
     render() {
         const { page, classes } = this.props;
+
+        const edit = page._links.edit ? <ActionLink to="?edit=true"  i18nKey="page-header_edit" type="primary" /> : '';
         return (
             <div className={classes.header}>
                 <h1>{ page.path }</h1>
                 <div className={classes.actions}>
-                    <ActionLink to="?edit=true"  value={ 'Edit' } />
+                    {edit}
                 </div>
             </div>
         );

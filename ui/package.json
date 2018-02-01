@@ -13,6 +13,7 @@
     "i18next-fetch-backend": "^0.1.0",
     "query-string": "^5.0.1",
     "react": "^16.2.0",
+    "react-bootstrap": "^0.32.1",
     "react-dom": "^16.2.0",
     "react-i18next": "^7.3.4",
     "react-jss": "^8.2.1",

@@ -38,7 +38,7 @@ public final class Email {
      * @return repository name
      */
     public static Email valueOf(String value) {
-        Preconditions.checkArgument(EMAIL_PATTERN.matcher(value).matches(), "%s is not a valid email");
+        Preconditions.checkArgument(EMAIL_PATTERN.matcher(value).matches(), "%s is not a valid email", value);
         return new Email(value);
     }
 

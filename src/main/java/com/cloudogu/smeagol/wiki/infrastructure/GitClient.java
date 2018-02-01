@@ -5,6 +5,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,6 +112,32 @@ public class GitClient implements AutoCloseable {
     private CredentialsProvider credentialsProvider(Account account) {
         return new UsernamePasswordCredentialsProvider(account.getUsername(), account.getPassword());
     }
+
+    public void commit(String path, String displayName, String email, String message) throws GitAPIException, IOException {
+        Git git = open();
+        git.add()
+                .addFilepattern(path)
+                .call();
+
+        git.commit()
+                .setAuthor(displayName, email)
+                .setMessage(message)
+                .call();
+
+        pushChanges();
+    }
+
+    private void pushChanges() throws GitAPIException {
+        CredentialsProvider credentials = credentialsProvider(account);
+
+        LOG.info("push changes to remote {} on branch {}", remoteUrl, branch);
+        git.push()
+                .setRemote("origin")
+                .setRefSpecs(new RefSpec(branch+":"+branch))
+                .setCredentialsProvider(credentials)
+                .call();
+    }
+
 
     @Override
     public void close()  {

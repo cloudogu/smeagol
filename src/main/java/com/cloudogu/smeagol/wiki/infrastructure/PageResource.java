@@ -6,14 +6,14 @@ public class PageResource extends ResourceSupport {
 
     private String path;
     private String content;
-    private AuthorResource author;
-    private String lastModified;
 
-    public PageResource(String path, String content, AuthorResource author, String lastModified) {
+    // TODO is commit embedded ???
+    private CommitResource commit;
+
+    public PageResource(String path, String content, CommitResource commit) {
         this.path = path;
         this.content = content;
-        this.author = author;
-        this.lastModified = lastModified;
+        this.commit = commit;
     }
 
     public String getPath() {
@@ -24,31 +24,7 @@ public class PageResource extends ResourceSupport {
         return content;
     }
 
-    public AuthorResource getAuthor() {
-        return author;
+    public CommitResource getCommit() {
+        return commit;
     }
-
-    public String getLastModified() {
-        return lastModified;
-    }
-
-    public static class AuthorResource {
-
-        private String displayName;
-        private String email;
-
-        public AuthorResource(String displayName, String email) {
-            this.displayName = displayName;
-            this.email = email;
-        }
-
-        public String getDisplayName() {
-            return displayName;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-    }
-
 }

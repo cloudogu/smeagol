@@ -80,10 +80,6 @@ public class ScmGitPageRepositoryTest {
                     .call();
             when(gitClient.lastCommit("Home.md")).thenReturn(Optional.of(commit));
 
-
-            int timestamp = commit.getCommitTime();
-
-
             Optional<Page> optionalPage = pageRepository.findByWikiIdAndPath(wikiId, Path.valueOf("Home"));
             assertTrue(optionalPage.isPresent());
 
@@ -91,7 +87,7 @@ public class ScmGitPageRepositoryTest {
             assertEquals("Home", page.getPath().getValue());
             assertEquals("my content", page.getContent().getValue());
 
-            Author author = page.getAuthor().get();
+            Author author = page.getCommit().get().getAuthor();
             assertEquals("Tricia McMillian", author.getDisplayName().getValue());
             assertEquals("trillian@hitchhiker.com", author.getEmail().getValue());
         }
