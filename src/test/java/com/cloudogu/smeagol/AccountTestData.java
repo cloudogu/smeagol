@@ -1,6 +1,4 @@
-package com.cloudogu.smeagol.repository.infrastructure;
-
-import com.cloudogu.smeagol.Account;
+package com.cloudogu.smeagol;
 
 public final class AccountTestData {
 

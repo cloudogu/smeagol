@@ -1,7 +1,7 @@
 package com.cloudogu.smeagol.wiki.usecase;
 
 import com.cloudogu.smeagol.AccountService;
-import com.cloudogu.smeagol.repository.infrastructure.AccountTestData;
+import com.cloudogu.smeagol.AccountTestData;
 import com.cloudogu.smeagol.wiki.domain.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;

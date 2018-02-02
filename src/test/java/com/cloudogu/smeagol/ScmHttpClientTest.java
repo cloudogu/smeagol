@@ -1,6 +1,5 @@
 package com.cloudogu.smeagol;
 
-import com.cloudogu.smeagol.repository.infrastructure.AccountTestData;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

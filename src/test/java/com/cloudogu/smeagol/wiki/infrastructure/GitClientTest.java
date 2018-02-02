@@ -1,6 +1,6 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import com.cloudogu.smeagol.repository.infrastructure.AccountTestData;
+import com.cloudogu.smeagol.AccountTestData;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.eclipse.jgit.api.Git;
