@@ -207,10 +207,21 @@
                     <execution>
                         <id>npm-install</id>
                         <!-- use prepare-package to avoid installing durring spring-boot:run -->
-                        <phase>prepare-package</phase>
+                        <phase>process-test-resources</phase>
                         <goals>
                             <goal>npm-install</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>npm-run-test</id>
+                        <!-- use prepare-package to avoid installing durring spring-boot:run -->
+                        <phase>test</phase>
+                        <goals>
+                            <goal>npm-run</goal>
+                        </goals>
+                        <configuration>
+                            <script>test-mvn</script>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>npm-run-build</id>

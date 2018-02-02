@@ -1,4 +1,7 @@
 'use strict';
+const fs = require('fs');
+const paths = require('../config/paths');
+
 
 // Do this as the first thing so that any code reading it knows the right env.
 process.env.BABEL_ENV = 'test';
@@ -17,6 +20,16 @@ require('../config/env');
 
 const jest = require('jest');
 const argv = process.argv.slice(2);
+
+
+// use junit reports for ci builds
+if (process.env.CI) {
+  if (!fs.existsSync(paths.testsReportDir)) {
+    fs.mkdirSync(paths.testsReportDir);
+  }
+  process.env.TEST_REPORT_PATH = paths.testsReportDir;
+  argv.push('--testResultsProcessor=./node_modules/jest-junit-reporter');
+}
 
 // Watch unless on CI or in coverage mode
 if (!process.env.CI && argv.indexOf('--coverage') < 0) {

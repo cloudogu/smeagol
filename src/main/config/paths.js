@@ -49,6 +49,7 @@ module.exports = {
   appSrc: resolveApp('src/main/js'),
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveApp('src/main/js/setupTests.js'),
+  testsReportDir: resolveApp('target/jest-reports'),
   appNodeModules: resolveApp('node_modules'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
