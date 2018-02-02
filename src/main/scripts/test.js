@@ -23,10 +23,12 @@ const argv = process.argv.slice(2);
 
 
 // use junit reports for ci builds
+// https://github.com/michaelleeallen/jest-junit-reporter
 if (process.env.CI) {
   if (!fs.existsSync(paths.testsReportDir)) {
     fs.mkdirSync(paths.testsReportDir);
   }
+  process.env.TEST_REPORT_FILENAME = paths.testsReportFilename;
   process.env.TEST_REPORT_PATH = paths.testsReportDir;
   argv.push('--testResultsProcessor=./node_modules/jest-junit-reporter');
 }
