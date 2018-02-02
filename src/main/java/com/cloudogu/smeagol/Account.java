@@ -8,12 +8,16 @@ package com.cloudogu.smeagol;
 
 import com.google.common.base.MoreObjects;
 
+import java.io.Serializable;
+
 /**
  * Account represents an authenticated user on the application.
  *
  * @author Sebastian Sdorra
  */
-public final class Account {
+public final class Account implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String username;
     private final char[] password;

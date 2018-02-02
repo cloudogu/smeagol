@@ -3,12 +3,15 @@ package com.cloudogu.smeagol.wiki.domain;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Path represents the path of a page within the wiki.
  */
-public final class Path {
+public final class Path implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String value;
 
