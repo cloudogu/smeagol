@@ -1,6 +1,11 @@
 server:
   port: 8080
   contextPath: /smeagol
+  session:
+    timeout: 7200
+    tracking-modes: cookie
+    cookie:
+      http-only: true
 
 stage: development
 homeDirectory: /tmp/smeagol
