@@ -318,7 +318,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin
+            </plugin-->
 
             <plugin>
                 <groupId>com.github.sdorra</groupId>
@@ -331,43 +331,28 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>bower</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>bower-install</goal>
-                        </goals>
-                    </execution>
-                    <execution>
                         <id>npm-install</id>
-                        <phase>process-resources</phase>
+                        <!-- use prepare-package to avoid installing durring spring-boot:run -->
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>npm-install</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>npm-run-gollum-css</id>
-                        <phase>process-resources</phase>
+                        <id>npm-run-build</id>
+                        <!-- use prepare-package to avoid installing durring spring-boot:run -->
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>npm-run</goal>
                         </goals>
                         <configuration>
-                            <script>gollum-css</script>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm-run-file_view-css</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>npm-run</goal>
-                        </goals>
-                        <configuration>
-                            <script>file_view-css</script>
+                            <script>build</script>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
             
-            <plugin>
+            <!--plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.6</version>

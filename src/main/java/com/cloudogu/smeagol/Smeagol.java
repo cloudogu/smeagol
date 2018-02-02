@@ -9,9 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
+
+import java.util.Collections;
 
 /**
  * Main entry point for the whole application.
@@ -48,6 +51,14 @@ public class Smeagol {
         return new LoggingCommandBus(
             new SpringCommandBus(new Registry(applicationContext))
         );
+    }
+
+    @Bean
+    public FilterRegistrationBean uiFilter() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new UiFilter());
+        registration.setUrlPatterns(Collections.singleton("/*"));
+        return registration;
     }
 
     public static void main(String[] args) {
