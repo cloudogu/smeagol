@@ -12,7 +12,14 @@ public interface PageRepository {
      *
      * @param page modified page
      */
-    void save(Page page);
+    Page save(Page page);
+
+    /**
+     * Returns {@core true} if the path exists.
+     *
+     * @return {@code true} if path exists
+     */
+    boolean exists(WikiId wikiId, Path path);
 
     /**
      * Find the page with the given path in the requested wiki.

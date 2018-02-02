@@ -22,13 +22,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
+import static com.cloudogu.smeagol.wiki.DomainTestData.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ScmGitPageRepositoryTest {
 
-    private final WikiId wikiId = new WikiId("123", "master");
+    private final WikiId wikiId = WIKI_ID_42;
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -91,6 +94,48 @@ public class ScmGitPageRepositoryTest {
             assertEquals("Tricia McMillian", author.getDisplayName().getValue());
             assertEquals("trillian@hitchhiker.com", author.getEmail().getValue());
         }
+    }
+
+    @Test
+    public void testSave() throws IOException, GitAPIException {
+        File file = temporaryFolder.newFile();
+        String homePagePath = PATH_HOME.getValue().concat(".md");
+        when(gitClient.file(homePagePath)).thenReturn(file);
+
+        RevCommit rc = createRevCommit();
+
+        when(gitClient.commit(
+                homePagePath,
+                DISPLAY_NAME_TRILLIAN.getValue(),
+                EMAIL_TRILLIAN.getValue(),
+                MESSAGE_PANIC.getValue()
+        )).thenReturn(rc);
+
+        Page page = pageRepository.save(PAGE);
+        assertNotNull(page);
+        assertNotSame(page, PAGE);
+
+        verify(gitClient).refresh();
+    }
+
+    private RevCommit createRevCommit() throws IOException, GitAPIException {
+        File folder = temporaryFolder.newFolder();
+        try ( Git git = Git.init().setDirectory(folder).call() ) {
+            return git.commit()
+                    .setMessage(MESSAGE_PANIC.getValue())
+                    .setAuthor(DISPLAY_NAME_TRILLIAN.getValue(), EMAIL_TRILLIAN.getValue())
+                    .call();
+        }
+    }
+
+    @Test
+    public void testExists() throws IOException {
+        File existingFile = temporaryFolder.newFile();
+        when(gitClient.file("docs/Index.md")).thenReturn(existingFile);
+        when(gitClient.file("docs/Home.md")).thenReturn(new File("file/that/does/not/exists"));
+
+        assertFalse(pageRepository.exists(wikiId, Path.valueOf("docs/Home")));
+        assertTrue(pageRepository.exists(wikiId, Path.valueOf("docs/Index")));
     }
 
 }

@@ -8,41 +8,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.util.Optional;
 
 /**
- * Handler for {@link EditOrCreatePageCommand}.
+ * Handler for {@link CreatePageCommand}.
  */
 @Component
-public class EditOrCreatePageCommandHandler implements CommandHandler<Void, EditOrCreatePageCommand> {
+public class CreatePageCommandHandler implements CommandHandler<Page, CreatePageCommand> {
 
     private final PageRepository repository;
     private final AccountService accountService;
 
     @Autowired
-    public EditOrCreatePageCommandHandler(PageRepository repository, AccountService accountService) {
+    public CreatePageCommandHandler(PageRepository repository, AccountService accountService) {
         this.repository = repository;
         this.accountService = accountService;
     }
 
     @Override
-    public Void handle(EditOrCreatePageCommand command) {
-        Path path = command.getPath();
-        Optional<Page> pageByPath = repository.findByWikiIdAndPath(command.getWikiId(), path);
-
-        Commit commit = createNewCommit(command.getMessage());
-
-        Page page;
-        if (pageByPath.isPresent()) {
-            page = pageByPath.get();
-            page.edit(commit, command.getContent());
-        } else {
-            page = new Page(command.getWikiId(), path, command.getContent(), commit);
+    public Page handle(CreatePageCommand command) {
+        if (repository.exists(command.getWikiId(), command.getPath())) {
+            throw new PageAlreadyExistsException(command.getPath(), "the page already exists");
         }
 
-        repository.save(page);
-
-        return null;
+        Commit commit = createNewCommit(command.getMessage());
+        Page page = new Page(command.getWikiId(), command.getPath(), command.getContent(), commit);
+        return repository.save(page);
     }
 
     private Commit createNewCommit(Message message) {

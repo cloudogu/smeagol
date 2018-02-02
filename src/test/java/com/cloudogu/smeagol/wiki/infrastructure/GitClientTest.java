@@ -130,11 +130,12 @@ public class GitClientTest {
         File file = new File(targetDirectory, "myfile.md");
         Files.write("# My Files Headline", file, Charsets.UTF_8);
 
-        target.commit("myfile.md", "Tricia McMillian", "trillian@hitchhiker.com", "added myfile");
+        RevCommit commit = target.commit("myfile.md", "Tricia McMillian", "trillian@hitchhiker.com", "added myfile");
 
         remote.checkout().setName("master").call();
 
         RevCommit lastRemoteCommit = remote.log().addPath("myfile.md").setMaxCount(1).call().iterator().next();
+        assertEquals(commit, lastRemoteCommit);
         assertEquals("added myfile", lastRemoteCommit.getFullMessage());
         assertEquals("Tricia McMillian", lastRemoteCommit.getAuthorIdent().getName());
         assertEquals("trillian@hitchhiker.com", lastRemoteCommit.getAuthorIdent().getEmailAddress());

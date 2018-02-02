@@ -5,19 +5,18 @@ import com.cloudogu.smeagol.AccountTestData;
 import com.cloudogu.smeagol.wiki.domain.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EditOrCreatePageCommandHandlerTest {
+public class EditPageCommandHandlerTest {
 
     @Mock
     private PageRepository pageRepository;
@@ -25,11 +24,8 @@ public class EditOrCreatePageCommandHandlerTest {
     @Mock
     private AccountService accountService;
 
-    @Captor
-    private ArgumentCaptor<Page> pageCaptor;
-
     @InjectMocks
-    private EditOrCreatePageCommandHandler commandHandler;
+    private EditPageCommandHandler commandHandler;
 
     @Test
     public void testEdit() {
@@ -44,7 +40,7 @@ public class EditOrCreatePageCommandHandlerTest {
         Message message = Message.valueOf("hitchhiker is awesome");
         Content newContent = Content.valueOf("New Content");
 
-        commandHandler.handle(new EditOrCreatePageCommand(id, path, message, newContent));
+        commandHandler.handle(new EditPageCommand(id, path, message, newContent));
 
         assertEquals(newContent, page.getContent());
         assertEquals(message, page.getCommit().get().getMessage());
@@ -53,8 +49,8 @@ public class EditOrCreatePageCommandHandlerTest {
         verify(pageRepository).save(page);
     }
 
-    @Test
-    public void testCreate() {
+    @Test(expected = PageNotFoundException.class)
+    public void testEditNotFound() {
         when(accountService.get()).thenReturn(AccountTestData.TRILLIAN);
 
         WikiId id = new WikiId("123", "master");
@@ -65,14 +61,7 @@ public class EditOrCreatePageCommandHandlerTest {
         Message message = Message.valueOf("hitchhiker is awesome");
         Content newContent = Content.valueOf("New Content");
 
-        commandHandler.handle(new EditOrCreatePageCommand(id, path, message, newContent));
-
-        verify(pageRepository).save(pageCaptor.capture());
-
-        Page page = pageCaptor.getValue();
-        assertEquals(newContent, page.getContent());
-        assertEquals(message, page.getCommit().get().getMessage());
-        assertEquals("Tricia McMillan", page.getCommit().get().getAuthor().getDisplayName().getValue());
+        commandHandler.handle(new EditPageCommand(id, path, message, newContent));
     }
 
 }

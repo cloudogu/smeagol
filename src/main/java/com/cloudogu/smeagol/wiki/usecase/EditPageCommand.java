@@ -1,20 +1,17 @@
 package com.cloudogu.smeagol.wiki.usecase;
 
-import com.cloudogu.smeagol.wiki.domain.Content;
-import com.cloudogu.smeagol.wiki.domain.Message;
-import com.cloudogu.smeagol.wiki.domain.Path;
-import com.cloudogu.smeagol.wiki.domain.WikiId;
+import com.cloudogu.smeagol.wiki.domain.*;
 import de.triology.cb.Command;
 
 /**
- * Command to create or edit a page.
+ * Command to edit a page.
  */
-public class EditOrCreatePageCommand implements Command<Void> {
+public class EditPageCommand implements Command<Page> {
 
     private final WikiId wikiId;
     private final Path path;
-    private final Content content;
     private final Message message;
+    private final Content content;
 
     /**
      * Modifies an existing wiki page.
@@ -23,7 +20,7 @@ public class EditOrCreatePageCommand implements Command<Void> {
      * @param path of the page
      * @param content new content
      */
-    public EditOrCreatePageCommand(WikiId wikiId, Path path, Message message, Content content) {
+    public EditPageCommand(WikiId wikiId, Path path, Message message, Content content) {
         this.wikiId = wikiId;
         this.path = path;
         this.message = message;

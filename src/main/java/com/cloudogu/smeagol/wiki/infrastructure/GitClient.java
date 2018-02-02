@@ -113,18 +113,20 @@ public class GitClient implements AutoCloseable {
         return new UsernamePasswordCredentialsProvider(account.getUsername(), account.getPassword());
     }
 
-    public void commit(String path, String displayName, String email, String message) throws GitAPIException, IOException {
+    public RevCommit commit(String path, String displayName, String email, String message) throws GitAPIException, IOException {
         Git git = open();
         git.add()
                 .addFilepattern(path)
                 .call();
 
-        git.commit()
+        RevCommit commit = git.commit()
                 .setAuthor(displayName, email)
                 .setMessage(message)
                 .call();
 
         pushChanges();
+
+        return commit;
     }
 
     private void pushChanges() throws GitAPIException {

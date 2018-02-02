@@ -1,14 +1,20 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.*;
-import com.cloudogu.smeagol.wiki.usecase.EditOrCreatePageCommand;
+import com.cloudogu.smeagol.wiki.usecase.CreatePageCommand;
+import com.cloudogu.smeagol.wiki.usecase.EditPageCommand;
+import com.cloudogu.smeagol.wiki.usecase.PageAlreadyExistsException;
+import com.cloudogu.smeagol.wiki.usecase.PageNotFoundException;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import de.triology.cb.CommandBus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 @RestController
@@ -51,20 +57,28 @@ public class PageController {
             HttpServletRequest request,
             @PathVariable("repositoryId") String repositoryId,
             @PathVariable("branch") String branch,
-            @RequestBody EditRequestPayload payload
-    ){
+            @RequestBody CreateOrEditRequestPayload payload
+    ) throws URISyntaxException {
         WikiId id = new WikiId(repositoryId, branch);
         Path path = createPathFromRequest(request, id);
 
-        // TODO split edit and create command, because:
-        // - better stats from command bus
-        // - more resty 201 created for new content and 204 for modified
-
         // TODO return new page? this would safe us one request from the frontent. Is this resty?
 
-        EditOrCreatePageCommand command = new EditOrCreatePageCommand(id, path, payload.getMessage(), payload.getContent());
-        commandBus.execute(command);
+        if ( repository.exists(id, path) ) {
+            return edit(id, path, payload);
+        }
+        return create(request, id, path, payload);
+    }
 
+    private ResponseEntity<Void> create(HttpServletRequest request, WikiId id, Path path, CreateOrEditRequestPayload payload) throws URISyntaxException {
+        CreatePageCommand command = new CreatePageCommand(id, path, payload.getMessage(), payload.getContent());
+        commandBus.execute(command);
+        return ResponseEntity.created(new URI(request.getRequestURI())).build();
+    }
+
+    private ResponseEntity<Void> edit(WikiId id, Path path, CreateOrEditRequestPayload payload) {
+        EditPageCommand command = new EditPageCommand(id, path, payload.getMessage(), payload.getContent());
+        commandBus.execute(command);
         return ResponseEntity.noContent().build();
     }
 
@@ -78,7 +92,7 @@ public class PageController {
     }
 
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-    public static class EditRequestPayload {
+    public static class CreateOrEditRequestPayload {
         private String message;
         private String content;
 

@@ -1,8 +1,8 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.*;
-import com.cloudogu.smeagol.wiki.usecase.EditOrCreatePageCommand;
-import de.triology.cb.Command;
+import com.cloudogu.smeagol.wiki.usecase.CreatePageCommand;
+import com.cloudogu.smeagol.wiki.usecase.EditPageCommand;
 import de.triology.cb.CommandBus;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +48,10 @@ public class PageControllerTest {
     private CommandBus commandBus;
 
     @Captor
-    private ArgumentCaptor<EditOrCreatePageCommand> commandCaptor;
+    private ArgumentCaptor<EditPageCommand> editCommandCaptor;
+
+    @Captor
+    private ArgumentCaptor<CreatePageCommand> createCommandCaptor;
 
     private MockMvc mockMvc;
 
@@ -103,9 +106,7 @@ public class PageControllerTest {
         WikiId wikiId = new WikiId("4xQfahsId3", "master");
         Path path = Path.valueOf("docs/Home");
 
-        Page page = createTestPage(wikiId, path);
-
-        when(pageRepository.findByWikiIdAndPath(wikiId, path)).thenReturn(Optional.of(page));
+        when(pageRepository.exists(wikiId, path)).thenReturn(true);
 
         String content = "{\"message\": \"Hello\", \"content\": \"i said hello\"}";
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/repositories/4xQfahsId3/branches/master/pages/docs/Home")
@@ -113,9 +114,9 @@ public class PageControllerTest {
                 .contentType("application/json"))
                 .andExpect(status().isNoContent());
 
-        verify(commandBus).execute(commandCaptor.capture());
+        verify(commandBus).execute(editCommandCaptor.capture());
 
-        EditOrCreatePageCommand pageCommand = commandCaptor.getValue();
+        EditPageCommand pageCommand = editCommandCaptor.getValue();
         assertEquals(wikiId, pageCommand.getWikiId());
         assertEquals(path, pageCommand.getPath());
         assertEquals("Hello", pageCommand.getMessage().getValue());
@@ -131,11 +132,11 @@ public class PageControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/repositories/4xQfahsId3/branches/master/pages/docs/Home")
                 .content(content)
                 .contentType("application/json"))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isCreated());
 
-        verify(commandBus).execute(commandCaptor.capture());
+        verify(commandBus).execute(createCommandCaptor.capture());
 
-        EditOrCreatePageCommand pageCommand = commandCaptor.getValue();
+        CreatePageCommand pageCommand = createCommandCaptor.getValue();
         assertEquals(wikiId, pageCommand.getWikiId());
         assertEquals(path, pageCommand.getPath());
         assertEquals("Hello", pageCommand.getMessage().getValue());
