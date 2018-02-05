@@ -3,7 +3,7 @@ import React from 'react';
 import injectSheet from 'react-jss';
 import classNames from 'classnames';
 
-import { Route } from 'react-router';
+import { Route, withRouter } from 'react-router';
 
 import Repositories from './repository/containers/Repositories';
 import Branches from './repository/containers/Branches';
@@ -37,4 +37,4 @@ class Main extends React.Component<Props> {
 
 }
 
-export default injectSheet(styles)(Main);
+export default withRouter(injectSheet(styles)(Main));

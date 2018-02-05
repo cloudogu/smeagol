@@ -4,20 +4,21 @@ import { connect } from 'react-redux';
 import GeneralInformation from '../components/GeneralInformation';
 import RepositoryList from '../components/RepositoryList';
 
-import { fetchRepositories } from '../modules/repositories';
+import { fetchRepositoriesIfNeeded } from '../modules/repositories';
 import Loading from '../../Loading';
 import I18nAlert from '../../I18nAlert';
 
 type Props = {
     loading: boolean,
     error: any,
-    repositories: any
+    repositories: any,
+    fetchRepositoriesIfNeeded: () => void
 }
 
 class Repositories extends React.Component<Props> {
 
     componentDidMount() {
-        this.props.fetchRepositories();
+        this.props.fetchRepositoriesIfNeeded();
     }
 
     render() {
@@ -50,8 +51,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchRepositories: () => {
-            dispatch(fetchRepositories())
+        fetchRepositoriesIfNeeded: () => {
+            dispatch(fetchRepositoriesIfNeeded())
         }
     }
 };

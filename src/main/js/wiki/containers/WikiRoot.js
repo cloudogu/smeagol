@@ -1,22 +1,25 @@
 //@flow
 import React from 'react';
 import {connect} from 'react-redux';
-import {fetchWiki} from '../modules/wiki';
+import {fetchWikiIfNeeded, selectByRepositoryAndBranch} from '../modules/wiki';
 import {Redirect} from 'react-router-dom';
 import Loading from '../../Loading';
 import I18nAlert from '../../I18nAlert';
 
 type Props = {
     loading: boolean,
-    error: any,
-    wiki: any
+    error: Error,
+    wiki: any,
+    repository: string,
+    branch: string,
+    fetchWikiIfNeeded: (repository: string, branch: string) => void
 };
 
 class WikiRoot extends React.Component<Props> {
 
     componentDidMount() {
-        const { repository, branch } = this.props.match.params;
-        this.props.fetchWiki( repository, branch );
+        const { repository, branch } = this.props;
+        this.props.fetchWikiIfNeeded(repository, branch);
     }
 
     render() {
@@ -41,14 +44,19 @@ class WikiRoot extends React.Component<Props> {
 
 }
 
-const mapStateToProps = (state) => {
-    return state.wiki;
+const mapStateToProps = (state, ownProps) => {
+    const { repository, branch } = ownProps.match.params;
+    return {
+        ...selectByRepositoryAndBranch(state, repository, branch),
+        repository,
+        branch
+    };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
     return {
-        fetchWiki: (repository, branch) => {
-            dispatch(fetchWiki(repository, branch))
+        fetchWikiIfNeeded: (repository, branch) => {
+            dispatch(fetchWikiIfNeeded(repository, branch))
         }
     }
 };

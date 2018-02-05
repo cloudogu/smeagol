@@ -16,9 +16,14 @@ const history = createHistory({
     basename: process.env.PUBLIC_URL
 });
 
+window.appHistory = history;
+
 // Add the reducer to your store on the `router` key
 // Also apply our middleware for navigating
 const store = createReduxStore(history);
+
+// dirty hack, but required for editor extension
+window.store = store;
 
 ReactDOM.render(
     <Provider store={store}>

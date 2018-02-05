@@ -5,34 +5,46 @@ const FETCH_REPOSITORIES = 'smeagol/repositories/FETCH';
 const FETCH_REPOSITORIES_SUCCESS = 'smeagol/repositories/FETCH_SUCCESS';
 const FETCH_REPOSITORIES_FAILURE = 'smeagol/repositories/FETCH_FAILURE';
 
-export function requestRepositories() {
+function requestRepositories() {
     return {
         type: FETCH_REPOSITORIES
     };
 }
 
-export function reveiveRepositories(repositories) {
+function receiveRepositories(repositories) {
     return {
         type: FETCH_REPOSITORIES_SUCCESS,
         payload: repositories
     };
 }
 
-export function failedToFetchRepositories(err) {
+function failedToFetchRepositories(err) {
     return {
         type: FETCH_REPOSITORIES_FAILURE,
         payload: err
     };
 }
 
-export function fetchRepositories() {
+function fetchRepositories() {
     return function(dispatch) {
         dispatch(requestRepositories());
-        // TODO context path
-        return apiClient.get('/smeagol/api/v1/repositories.json')
+        return apiClient.get('/repositories')
         .then(response => response.json())
-        .then(json => dispatch(reveiveRepositories(json)))
+        .then(json => dispatch(receiveRepositories(json)))
         .catch((err) => dispatch(failedToFetchRepositories(err)));
+    }
+}
+
+export function shouldFetchRepositories(state: any): boolean {
+    const repositories = state.repositories;
+    return ! (repositories.repositories || repositories.loading);
+}
+
+export function fetchRepositoriesIfNeeded() {
+    return (dispatch, getState) => {
+        if (shouldFetchRepositories(getState())) {
+            dispatch(fetchRepositories());
+        }
     }
 }
 

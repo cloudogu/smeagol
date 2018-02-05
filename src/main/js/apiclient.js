@@ -1,5 +1,8 @@
 // @flow
 
+// get api base url from environment
+const apiUrl = process.env.API_URL || process.env.PUBLIC_URL || '/smeagol';
+
 // fetch does not send the X-Requested-With header (https://github.com/github/fetch/issues/17),
 // but we need the header to detect ajax request (AjaxAwareAuthenticationRedirectStrategy).
 const fetchOptions = {
@@ -20,8 +23,11 @@ function isAuthenticationRedirect(response) {
 }
 
 function createRedirectUrl() {
-    // TODO context path
-    return '/smeagol/api/v1/authc?location=' + encodeURIComponent(window.location);
+    return createUrl('authc?location=' + encodeURIComponent(window.location));
+}
+
+function createUrl(url: string) {
+    return `${apiUrl}/api/v1/${url}`;
 }
 
 function redirect(redirectUrl: string) {
@@ -31,7 +37,7 @@ function redirect(redirectUrl: string) {
 class ApiClient {
 
     get(url: string) {
-        return fetch(url, fetchOptions)
+        return fetch(createUrl(url), fetchOptions)
             .then(this.handleCasAuthentication);
     }
 
@@ -42,7 +48,7 @@ class ApiClient {
         };
         const options = Object.assign(postOptions, fetchOptions);
         options.headers['Content-Type'] = 'application/json';
-        return fetch(url, options)
+        return fetch(createUrl(url), options)
             .then(this.handleCasAuthentication);
     }
 

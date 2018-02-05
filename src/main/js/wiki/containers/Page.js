@@ -1,6 +1,6 @@
 //@flow
 import React from 'react';
-import {editPage, fetchPage, createPage} from '../modules/page';
+import {editPage, createPage, createPageUrl, fetchPageIfNeeded} from '../modules/page';
 import {connect} from 'react-redux';
 import PageViewer from '../components/PageViewer';
 import * as queryString from 'query-string';
@@ -9,45 +9,38 @@ import Loading from '../../Loading';
 import I18nAlert from '../../I18nAlert';
 
 type Props = {
+    url: string,
+    path: string,
     loading: boolean,
     notFound: boolean,
+    editMode: boolean,
     error: any,
     page: any,
-    fetchPage: Function,
-    editPage: Function
+    fetchPageIfNeeded: (url: string) => void,
+    editPage: (url: string, message: string, content: string) => void,
+    createPage: (url: string, message: string, content: string) => void
 };
 
 class Page extends React.Component<Props> {
 
     componentDidMount() {
-        const { repository, branch } = this.props.match.params;
-        const path = this.findPagePath();
-        this.props.fetchPage(repository, branch, path);
+        this.props.fetchPageIfNeeded(this.props.url);
     }
 
-    findPagePath() {
-        const { pathname } = this.props.location;
-        const parts = pathname.split('/');
-        return parts.slice(3).join('/');
-    }
-
-    isEditMode() {
-        const queryParams = queryString.parse(this.props.location.search);
-        return queryParams.edit;
+    componentDidUpdate() {
+        this.props.fetchPageIfNeeded(this.props.url);
     }
 
     edit = (message: string, content: string) => {
-        this.props.editPage(this.props.page, message, content);
+        this.props.editPage(this.props.url, message, content);
     };
 
     create = (message: string, content: string) => {
-        const { repository, branch } = this.props.match.params;
-        const path = this.findPagePath();
-        this.props.createPage(repository, branch, path, message, content);
+        this.props.createPage(this.props.url, message, content);
     };
 
     render() {
-        const { error, loading, page, notFound } = this.props;
+        const { error, loading, page, path, notFound, editMode } = this.props;
 
         if (error) {
             return (
@@ -64,8 +57,6 @@ class Page extends React.Component<Props> {
                 </div>
             );
         } else if (notFound) {
-            const path = this.findPagePath();
-
             return (
                 <PageEditor path={path} content="" onSave={this.create} />
             );
@@ -77,29 +68,50 @@ class Page extends React.Component<Props> {
             );
         }
 
-        if (this.isEditMode()) {
+        if (editMode) {
             return <PageEditor path={page.path} content={page.content} onSave={this.edit} />;
         }
 
         return <PageViewer page={page} />;
     }
-
 }
 
-const mapStateToProps = (state) => {
-    return state.page;
+function isEditMode(props): boolean {
+    const queryParams = queryString.parse(props.location.search);
+    return queryParams.edit === 'true';
+}
+
+function findPagePath(props) {
+    const { pathname } = props.location;
+    const parts = pathname.split('/');
+    return parts.slice(3).join('/');
+}
+
+const mapStateToProps = (state, ownProps) => {
+    const { repository, branch } = ownProps.match.params;
+    const path = findPagePath(ownProps);
+    const url = createPageUrl(repository, branch, path);
+
+    const props = {
+        ...state.page[url],
+        path,
+        url,
+        editMode: isEditMode(ownProps)
+    };
+
+    return props;
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchPage: (repository, branch, path) => {
-            dispatch(fetchPage(repository, branch, path))
+        fetchPageIfNeeded: (url: string) => {
+            dispatch(fetchPageIfNeeded(url))
         },
-        editPage: (page: any, message: string, content: string) => {
-            dispatch(editPage(page, message, content))
+        editPage: (url: string, message: string, content: string) => {
+            dispatch(editPage(url, message, content))
         },
-        createPage: (repository: string, branch: string, path: string, message: string, content: string) => {
-            dispatch(createPage(repository, branch, path, message, content))
+        createPage: (url: string, message: string, content: string) => {
+            dispatch(createPage(url, message, content))
         }
     }
 };

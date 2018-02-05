@@ -1,6 +1,6 @@
 //@flow
 import React from 'react';
-import { fetchRepository } from '../modules/repository';
+import { fetchRepositoryByIdIfNeeded, selectById } from '../modules/repository';
 import BranchOverview from '../components/BranchOverview';
 import { connect } from 'react-redux';
 import GeneralInformation from '../components/GeneralInformation';
@@ -8,15 +8,16 @@ import Loading from '../../Loading';
 import I18nAlert from '../../I18nAlert';
 
 type Props = {
+    id: string,
     repository: any,
     error: any,
-    loading: boolean
+    loading: boolean,
+    fetchRepositoryByIdIfNeeded: (id: string) => void
 }
 
 class Branches extends React.Component<Props> {
-
     componentDidMount() {
-        this.props.fetchRepository(this.props.match.params.repository);
+        this.props.fetchRepositoryByIdIfNeeded(this.props.id);
     }
 
     render() {
@@ -43,14 +44,18 @@ class Branches extends React.Component<Props> {
 
 }
 
-const mapStateToProps = (state) => {
-    return state.repository
+const mapStateToProps = (state, ownProps) => {
+    const id = ownProps.match.params.repository;
+    return {
+        ...selectById(state, id),
+        id
+    }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchRepository: (repositories) => {
-            dispatch(fetchRepository(repositories))
+        fetchRepositoryByIdIfNeeded: (id: string) => {
+            dispatch(fetchRepositoryByIdIfNeeded(id))
         }
     }
 };

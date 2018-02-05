@@ -15,42 +15,41 @@ const CREATE_PAGE = 'smeagol/page/CREATE';
 const CREATE_PAGE_SUCCESS = 'smeagol/page/CREATE_SUCCESS';
 const CREATE_PAGE_FAILURE = 'smeagol/page/CREATE_FAILURE';
 
-export function requestPage() {
+function requestPage(url: string) {
     return {
-        type: FETCH_PAGE
+        type: FETCH_PAGE,
+        url
     };
 }
 
-export function reveivePage(page) {
+function receivePage(url: string, page: any) {
     return {
         type: FETCH_PAGE_SUCCESS,
-        payload: page
+        payload: page,
+        url
     };
 }
 
-export function failedToFetchPage(err) {
+function failedToFetchPage(url: string, err: Error) {
     return {
         type: FETCH_PAGE_FAILURE,
-        payload: err
+        payload: err,
+        url
     };
 }
 
-export function pageNotFound() {
+function pageNotFound(url: string) {
     return {
-        type: FETCH_PAGE_NOTFOUND
+        type: FETCH_PAGE_NOTFOUND,
+        url
     };
-}
-
-export function fetchPage(repositoryId, branch, path) {
-    return fetchPageFromUrl(`/smeagol/api/v1/repositories/${repositoryId}/branches/${branch}/pages/${path}`);
 }
 
 const PAGE_NOTFOUND_ERROR = new Error('page not found');
 
-export function fetchPageFromUrl(url: string) {
+function fetchPage(url: string) {
     return function(dispatch) {
-        dispatch(requestPage());
-        // TODO context path
+        dispatch(requestPage(url));
         return apiClient.get(url)
             .then(response => {
                 if (!response.ok) {
@@ -62,122 +61,147 @@ export function fetchPageFromUrl(url: string) {
                 return response;
             })
             .then(response => response.json())
-            .then(json => dispatch(reveivePage(json)))
+            .then(json => dispatch(receivePage(url, json)))
             .catch((err) => {
                 if (err === PAGE_NOTFOUND_ERROR) {
-                    dispatch(pageNotFound());
+                    dispatch(pageNotFound(url));
                 } else {
-                    dispatch(failedToFetchPage(err));
+                    dispatch(failedToFetchPage(url, err));
                 }
             });
     }
 }
 
-export function requestEditPage() {
-    return {
-        type: EDIT_PAGE
-    };
+export function createPageUrl(repositoryId: string, branch: string, path: string) {
+    return `/repositories/${repositoryId}/branches/${branch}/pages/${path}`;
 }
 
-export function editPageSuccess() {
-    return {
-        type: EDIT_PAGE_SUCCESS
-    };
+export function shouldFetchPage(state: any, url: string): boolean {
+    const byUrl = state.page[url];
+    if (byUrl) {
+        return ! (byUrl.error || byUrl.loading || byUrl.notFound || byUrl.page);
+    }
+    return true;
 }
 
-export function editPageFailure(err) {
-    return {
-        type: EDIT_PAGE_FAILURE,
-        payload: err
-    };
-}
-
-export function editPage(page: any, message: string, content: string) {
-    return function(dispatch) {
-        dispatch(requestEditPage());
-        return apiClient.post(page._links.edit.href, { message: message, content: content })
-            .then(() => dispatch(editPageSuccess()))
-            .then(() => dispatch(fetchPageFromUrl(page._links.self.href)))
-            .catch((err) => dispatch(editPageFailure(err)));
+export function fetchPageIfNeeded(url: string) {
+    return function(dispatch, getState) {
+        if (shouldFetchPage(getState(), url)) {
+            dispatch(fetchPage(url));
+        }
     }
 }
 
-export function requestCreatePage() {
+function requestEditPage(url: string) {
     return {
-        type: CREATE_PAGE
+        type: EDIT_PAGE,
+        url
     };
 }
 
-export function createPageSuccess() {
+function editPageSuccess(url: string) {
     return {
-        type: CREATE_PAGE_SUCCESS
+        type: EDIT_PAGE_SUCCESS,
+        url
     };
 }
 
-export function createPageFailure(err) {
+function editPageFailure(url: string, err: Error) {
+    return {
+        type: EDIT_PAGE_FAILURE,
+        payload: err,
+        url
+    };
+}
+
+export function editPage(url: string, message: string, content: string) {
+    return function(dispatch) {
+        dispatch(requestEditPage(url));
+        return apiClient.post(url, { message: message, content: content })
+            .then(() => dispatch(editPageSuccess(url)))
+            .catch((err) => dispatch(editPageFailure(url, err)));
+    }
+}
+
+function requestCreatePage(url: string) {
+    return {
+        type: CREATE_PAGE,
+        url
+    };
+}
+
+function createPageSuccess(url: string) {
+    return {
+        type: CREATE_PAGE_SUCCESS,
+        url
+    };
+}
+
+function createPageFailure(url: string, err: Error) {
     return {
         type: CREATE_PAGE_FAILURE,
-        payload: err
+        payload: err,
+        url
     };
 }
 
-export function createPage(repository: string, branch: string, path: string, message: string, content: string) {
+export function createPage(url: string, message: string, content: string) {
     return function(dispatch) {
-        dispatch(requestCreatePage());
-        const url = `/smeagol/api/v1/repositories/${repository}/branches/${branch}/pages/${path}`;
+        dispatch(requestCreatePage(url));
         return apiClient.post(url, { message: message, content: content })
-            .then(() => dispatch(createPageSuccess()))
-            .then(() => dispatch(fetchPage(repository, branch, path)))
-            .catch((err) => dispatch(createPageFailure(err)));
+            .then(() => dispatch(createPageSuccess(url)))
+            .catch((err) => dispatch(createPageFailure(url, err)));
     }
 }
 
 export default function reducer(state = {}, action = {}) {
     switch (action.type) {
         case FETCH_PAGE:
+        case EDIT_PAGE:
+        case CREATE_PAGE:
             return {
                 ...state,
-                loading: true,
-                error: null,
-                notFound: false
+                [action.url] : {
+                    loading: true,
+                    error: null,
+                    notFound: false
+                }
             };
         case FETCH_PAGE_SUCCESS:
             return {
                 ...state,
-                loading: false,
-                page: action.payload
+                [action.url] : {
+                    loading: false,
+                    page: action.payload
+                }
             };
         case FETCH_PAGE_FAILURE:
+        case EDIT_PAGE_FAILURE:
+        case CREATE_PAGE_FAILURE:
             return {
                 ...state,
-                loading: false,
-                error: action.payload
+                [action.url] : {
+                    loading: false,
+                    error: action.payload
+                }
             };
         case FETCH_PAGE_NOTFOUND:
             return {
                 ...state,
-                loading: false,
-                notFound: true
+                [action.url] : {
+                    loading: false,
+                    notFound: true
+                }
             };
-
-        case EDIT_PAGE:
-            return {
-                ...state,
-                loading: true,
-                error: null
-            };
+        case CREATE_PAGE_SUCCESS:
         case EDIT_PAGE_SUCCESS:
             return {
                 ...state,
-                loading: false,
-                error: null,
-                page: null
-            };
-        case EDIT_PAGE_FAILURE:
-            return {
-                ...state,
-                loading: false,
-                error: action.payload
+                [action.url] : {
+                    loading: false,
+                    error: null,
+                    page: null
+                }
             };
 
         default:

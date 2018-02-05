@@ -6,7 +6,7 @@ import Viewer from 'tui-editor/dist/tui-editor-Viewer';
 import 'tui-editor/dist/tui-editor-extTable';
 import 'tui-editor/dist/tui-editor-extScrollSync';
 import 'tui-editor/dist/tui-editor-extUML';
-
+import './HistoryEditorExtension';
 
 import 'codemirror/lib/codemirror.css';
 
@@ -27,8 +27,14 @@ class Markdown extends React.Component<Props> {
             el: this.viewerNode,
             initialEditType: 'markdown',
             initialValue: this.props.content,
-            exts: ['colorSyntax', 'uml', 'chart', 'mark', 'table', 'taskCounter'],
+            exts: ['colorSyntax', 'uml', 'chart', 'mark', 'table', 'taskCounter', 'history'],
         });
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.content !== this.props.content) {
+            this.editor.setMarkdown(this.props.content);
+        }
     }
 
     render() {
