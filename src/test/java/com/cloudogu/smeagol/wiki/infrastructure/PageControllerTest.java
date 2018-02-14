@@ -2,6 +2,7 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.*;
 import com.cloudogu.smeagol.wiki.usecase.CreatePageCommand;
+import com.cloudogu.smeagol.wiki.usecase.DeletePageCommand;
 import com.cloudogu.smeagol.wiki.usecase.EditPageCommand;
 import de.triology.cb.CommandBus;
 import org.junit.Before;
@@ -52,6 +53,9 @@ public class PageControllerTest {
 
     @Captor
     private ArgumentCaptor<CreatePageCommand> createCommandCaptor;
+
+    @Captor
+    private ArgumentCaptor<DeletePageCommand> deleteCommandCaptor;
 
     private MockMvc mockMvc;
 
@@ -141,5 +145,26 @@ public class PageControllerTest {
         assertEquals(path, pageCommand.getPath());
         assertEquals("Hello", pageCommand.getMessage().getValue());
         assertEquals("i said hello", pageCommand.getContent().getValue());
+    }
+
+    @Test
+    public void delete() throws Exception {
+        WikiId wikiId = new WikiId("4xQfahsId3", "master");
+        Path path = Path.valueOf("docs/Home");
+
+        when(pageRepository.exists(wikiId, path)).thenReturn(true);
+
+        String content = "{\"message\": \"Hello\"}";
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/repositories/4xQfahsId3/branches/master/pages/docs/Home")
+                .content(content)
+                .contentType("application/json"))
+                .andExpect(status().isNoContent());
+
+        verify(commandBus).execute(deleteCommandCaptor.capture());
+
+        DeletePageCommand pageCommand = deleteCommandCaptor.getValue();
+        assertEquals(wikiId, pageCommand.getWikiId());
+        assertEquals(path, pageCommand.getPath());
+        assertEquals("Hello", pageCommand.getMessage().getValue());
     }
 }
