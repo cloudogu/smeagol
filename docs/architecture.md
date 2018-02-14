@@ -3,7 +3,7 @@
 ## Bounded Contexts
 
 Smeagol comprises of Bounded Contexts (BC) in terms of Domain-Driven Design (DDD) that ideally would share nothing.
-This promises to separates domain from technical concerns. It divides complexity into different bounded contexts.
+This promises to separate domain from technical concerns. It divides complexity into different bounded contexts.
 
 As the account must be read from the session in all BCs, we avoid duplication by using a Shared Kernel. 
  
