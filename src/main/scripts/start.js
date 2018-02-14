@@ -89,7 +89,10 @@ choosePort(HOST, DEFAULT_PORT)
         clearConsole();
       }
       console.log(chalk.cyan('Starting the development server...\n'));
-      openBrowser(urls.localUrlForBrowser);
+      // CHANGED open spring-boot url, instead of webpack-dev-server
+      // openBrowser(urls.localUrlForBrowser);
+      // TODO url logged by webpack show webpack-dev-port (3000) instead the spring-boot one (8080)
+      openBrowser('http://192.168.56.1:8080');
     });
 
     ['SIGINT', 'SIGTERM'].forEach(function(sig) {

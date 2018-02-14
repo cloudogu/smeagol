@@ -1,29 +1,35 @@
 package com.cloudogu.smeagol;
 
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.util.UrlPathHelper;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * The ui filter dispatches every ui request to the index html in order to support html5 routing.
- *
- * TODO images stored in wiki
  */
 public class UiFilter implements Filter {
 
     private static final Logger LOG = LoggerFactory.getLogger(UiFilter.class);
 
-    private static final Pattern NON_UI_PREFIX = Pattern.compile("/?(api|locales|static)/.*");
+    private static final String STATIC_WIKI_FILE_URL_TEMPLATE = "/api/v1/repositories/%s/branches/%s/static/%s";
+    private static final Pattern STATIC_WIKI_IMAGE = Pattern.compile("(?i)/?([^/]+)/([^/]+)/(.*\\.(gif|jpg|jpeg|tiff|png|svg|webp))");
 
-    private static final Pattern STATIC_ROOT_FILES = Pattern.compile("/?[^/]+\\.[^/]+");
+    private final Dispatcher dispatcher;
 
-    private final UrlPathHelper urlPathHelper = new UrlPathHelper();
+    @Autowired
+    public UiFilter(Dispatcher dispatcher) {
+        this.dispatcher = dispatcher;
+    }
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -35,30 +41,34 @@ public class UiFilter implements Filter {
         HttpServletRequest request = cast(servletRequest);
         HttpServletResponse response = cast(servletResponse);
 
-        String uri = urlPathHelper.getPathWithinApplication(request);
-        if (isNonUiRequest(uri)) {
-            chain.doFilter(request, response);
+        String uri = getPathWithinApplication(request);
+        Matcher matcher = STATIC_WIKI_IMAGE.matcher(uri);
+        if (matcher.matches()) {
+            handleStaticWikiFile(request, response, matcher);
+        } else if (dispatcher.needsToBeDispatched(uri)) {
+            dispatcher.dispatch(request, response, uri);
         } else {
-            LOG.trace("forward ui request {} to /index.html", uri);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/index.html");
-            dispatcher.forward(request, response);
+            chain.doFilter(request, response);
         }
     }
 
-    private boolean isNonUiRequest(String uri) {
-        return isRoot(uri) || hasNonUiPrefix(uri) || isStaticRootFile(uri);
+    private String getPathWithinApplication(HttpServletRequest request) {
+        return request.getRequestURI().substring(Strings.nullToEmpty(request.getContextPath()).length());
     }
 
-    private boolean isRoot(String uri) {
-        return uri.isEmpty() || uri.equals("/");
+    private void handleStaticWikiFile(HttpServletRequest request, HttpServletResponse response, Matcher matcher) throws ServletException, IOException {
+        String staticWikiFileUri = createStaticWikiFileUri(matcher);
+        LOG.trace("forward static file request to {}", staticWikiFileUri);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(staticWikiFileUri);
+        dispatcher.forward(request, response);
     }
 
-    private boolean hasNonUiPrefix(String uri) {
-        return NON_UI_PREFIX.matcher(uri).matches();
-    }
+    private String createStaticWikiFileUri(Matcher matcher) {
+        String repository = matcher.group(1);
+        String branch = matcher.group(2);
+        String path = matcher.group(3);
 
-    private boolean isStaticRootFile(String uri) {
-        return STATIC_ROOT_FILES.matcher(uri).matches();
+        return String.format(STATIC_WIKI_FILE_URL_TEMPLATE, repository, branch, path);
     }
 
     private HttpServletResponse cast(ServletResponse servletResponse) throws ServletException {

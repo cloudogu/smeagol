@@ -2,7 +2,6 @@
   "name": "smeagol",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/smeagol",
   "dependencies": {
     "ces-theme": "https://github.com/cloudogu/ces-theme.git",
     "classnames": "^2.2.5",
@@ -72,14 +71,9 @@
   },
   "scripts": {
     "start": "cross-env HOST=192.168.56.1 node src/main/scripts/start.js",
-    "build": "node src/main/scripts/build.js",
+    "build": "cross-env PUBLIC_URL=/smeagol node src/main/scripts/build.js",
     "test": "node src/main/scripts/test.js --env=jsdom",
     "test-mvn": "cross-env CI=true node src/main/scripts/test.js --env=jsdom"
-  },
-  "proxy": {
-    "/smeagol/api": {
-      "target": "http://192.168.56.1:8080"
-    }
   },
   "jest": {
     "collectCoverageFrom": [
