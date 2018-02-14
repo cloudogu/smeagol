@@ -29,11 +29,11 @@ The Wiki BC is the heart of Smeagol and is responsible for the wiki itself. This
 
 Within each Bounded Context we our interpretation of a hexagonal architecture (aka [Clean Architecutre, Onion Architecture, etc.](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html)) with the following layers:
 
-* Domain: Contains Domain logic only (no technical stuff). Defines value objects, entities, repository *interfaces* and services
-* UseCases: Exposes actions (write operations) that are possible on the domain.
+* Domain: Contains Domain logic only (no technical stuff). Defines value objects, entities, repository *interfaces* and services.
+* Use cases: Exposes actions (write operations) that are possible on the domain.
   We use the Command Bus pattern here. Advantage: Commands provide an overview of domain operations allowed by the system. 
   They are implementing using a concrete pattern and are not just another thing called "service".   
-* Infrastructure: Contains all the technical stuff: REST controllers and repository *implementations* and all the glue.
+* Infrastructure: Contains all the technical stuff: REST controllers, repository *implementations* and all the glue.
 
 Access is only allowed in the following direction: Infrastructure -> Use cases -> Domain
 
