@@ -5,6 +5,7 @@
   "page_failed_to_fetch": "Failed to fetch page",
   "page-editor_no_write_permissions": "You have not enough permission to edit this page",
   "page-header_edit": "Edit",
+  "page-header_delete": "Delete",
   "markdown-editor_save": "Save",
   "markdown-editor_abort": "Abort",
   "commit-form_save": "Save",

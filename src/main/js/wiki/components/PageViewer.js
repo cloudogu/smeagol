@@ -5,17 +5,18 @@ import PageHeader from './PageHeader';
 import PageFooter from './PageFooter';
 
 type Props = {
-    page: any
+    page: any,
+    deletePage: () => void,
 };
 
 class PageViewer extends React.Component<Props> {
 
     render() {
-        const { page } = this.props;
+        const { page, deletePage } = this.props;
 
         return (
             <div>
-                <PageHeader page={page} />
+                <PageHeader page={page} deletePage={deletePage} />
                 <PageContent page={page} />
                 <PageFooter page={page} />
             </div>

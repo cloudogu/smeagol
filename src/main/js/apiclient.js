@@ -52,6 +52,17 @@ class ApiClient {
             .then(this.handleCasAuthentication);
     }
 
+    delete(url: string, payload: any) {
+        const deleteOptions = {
+            method: 'DELETE',
+            body: JSON.stringify(payload),
+        };
+        const options = Object.assign(deleteOptions, fetchOptions);
+        options.headers['Content-Type'] = 'application/json';
+        return fetch(createUrl(url), options)
+            .then(this.handleCasAuthentication);
+    }
+
     handleCasAuthentication(response: any) {
         if (isAuthenticationRedirect(response)){
             const redirectUrl = createRedirectUrl();
