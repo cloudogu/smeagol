@@ -1,10 +1,7 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.*;
-import com.cloudogu.smeagol.wiki.usecase.CreatePageCommand;
-import com.cloudogu.smeagol.wiki.usecase.EditPageCommand;
-import com.cloudogu.smeagol.wiki.usecase.PageAlreadyExistsException;
-import com.cloudogu.smeagol.wiki.usecase.PageNotFoundException;
+import com.cloudogu.smeagol.wiki.usecase.*;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import de.triology.cb.CommandBus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +86,21 @@ public class PageController {
         String base = MAPPING.replace("{repositoryId}", id.getRepositoryID())
                 .replace("{branch}", id.getBranch());
         return Path.valueOf(pathExtractor.extract(request, base));
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "**")
+    public ResponseEntity<Void> delete(
+            HttpServletRequest request,
+            @PathVariable("repositoryId") String repositoryId,
+            @PathVariable("branch") String branch,
+            @RequestBody CreateOrEditRequestPayload payload
+    ) throws URISyntaxException {
+        WikiId id = new WikiId(repositoryId, branch);
+        Path path = createPathFromRequest(request, id);
+
+        DeletePageCommand command = new DeletePageCommand(id, path, payload.getMessage());
+        commandBus.execute(command);
+        return ResponseEntity.noContent().build();
     }
 
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
