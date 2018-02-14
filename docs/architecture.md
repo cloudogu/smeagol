@@ -11,11 +11,19 @@ As the account must be read from the session in all BCs, we avoid duplication by
 
 ### Shared Kernel
 
+The shared kernel hosts classes, which are required by each BC.
+
 ### Authc
+
+This BC is responsible for the whole process of authentication.
 
 ### Repository
 
+The Repository BC is responsible for the listing of available repositories and their branches.
+
 ### Wiki
+
+The Wiki BC is the heart of Smeagol and is responsible for the wiki itself. This part was previously realized with [Gollum](https://github.com/gollum/gollum).
 
 ## Hexagonal Architecture 
 
@@ -29,7 +37,26 @@ Within each Bounded Context we our interpretation of a hexagonal architecture (a
 
 Access is only allowed in the following direction: Infrastructure -> Use cases -> Domain
 
+## UI Architecture
+
+The UI uses a [Flux based architecture](https://facebook.github.io/flux), which is build with [Redux](https://redux.js.org/).
+The code is separated in a shared kernel and the BC's analog to the RESTApi. The shared kernel consists only of 
+components which are required in each BC, some infrastructure and bootstrap logic. Each BC is divided into components,
+containers and modules. 
+
+* Components should be stateless (or should only have a local state), this means each required property
+must hand over by a higher ordered intelligent component. 
+* Containers are higher ordered components and this are the components which are connected to the store. 
+* __Modules__ are the last part of the puzzle. Modules are responsible for the state of the application. They manage the 
+actions and reducers which are required to modify the state.
+
+Access is only allowed in the following direction: Containers -> Components -> Modules
+
+**TODO**: modules is to general, perhaps store?
+
 ## Mapping to Code
+
+### Java (src/main/java)
 
 * Shared Kernel: Base Package `com.cloudogu.smeagol`
   The base package als contains the entry point of our application.
@@ -40,8 +67,16 @@ Access is only allowed in the following direction: Infrastructure -> Use cases -
    * `com.cloudogu.smeagol.repository.infrastructure`
    * `com.cloudogu.smeagol.repository.domain`
    
+### JavaScript (src/main/js)
+
+* Shared Kernel: The js files directly under js
+* Bounded Contexts map to folders, e.g.:
+   * `repository`
+   * `wiki`
+* Containers, components and __modules__ are mapped to sub folders of each Bounded Context.
+   
 ### Technical Terms
 
-* Repository: repository in terms of DDD for accessing -> Note: We also have a domain object called repository referring to a Git or SCMManager repository
+* Repository: repository in terms of DDD for accessing -> Note: We also have a domain object called repository referring to a Git or SCM-Manager repository
 * Controller: REST Controller, i.e. endpoint (returns Resources).
 * Resource: DTO that maps entity to the REST interface (returned by a Controller)
