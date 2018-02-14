@@ -34,6 +34,8 @@ class Navigation extends React.Component<Props, State> {
             navBarClasses = "navbar-collapse"
         }
 
+        const contextPath = process.env.PUBLIC_URL || '';
+
         return (
             <nav className="navbar navbar-default navbar-fixed-top">
                 <div className="container">
@@ -57,7 +59,7 @@ class Navigation extends React.Component<Props, State> {
                         <ul className="nav navbar-nav">
                             <li>
                                 {/* TODO context path */}
-                                <a href="/smeagol/api/v1/logout">
+                                <a href={contextPath + "/api/v1/logout" }>
                                     Logout
                                 </a>
                             </li>
