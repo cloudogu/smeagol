@@ -93,7 +93,7 @@ class Page extends React.Component<Props> {
             return <PageEditor path={page.path} content={page.content} onSave={this.edit} />;
         }
 
-        return <PageViewer page={page} deletePage={ this.delete } />;
+        return <PageViewer page={page} deletePage={ this.delete } clickHome={ this.pushLandingPageState } />;
     }
 }
 

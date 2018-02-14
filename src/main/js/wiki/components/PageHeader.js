@@ -16,20 +16,23 @@ const styles = {
 type Props = {
     page: any,
     deletePage: () => void,
+    clickHome: () => void,
     classes: any
 }
 
 class PageHeader extends React.Component<Props> {
 
     render() {
-        const { page, classes, deletePage } = this.props;
+        const { page, classes, deletePage, clickHome } = this.props;
 
+        const homeButton = <ActionButton onClick={clickHome}  i18nKey="page-header_home" type="primary" />;
         const edit = page._links.edit ? <ActionLink to="?edit=true" i18nKey="page-header_edit" type="primary" /> : '';
         const deleteButton = page._links.delete ? <ActionButton onClick={deletePage}  i18nKey="page-header_delete" type="primary" /> : '';
         return (
             <div className={classes.header}>
                 <h1>{ page.path }</h1>
                 <div className={classes.actions}>
+                    {homeButton}
                     {edit}
                     {deleteButton}
                 </div>
