@@ -32,7 +32,7 @@ Within each Bounded Context we our interpretation of a hexagonal architecture (a
 * Domain: Contains Domain logic only (no technical stuff). Defines value objects, entities, repository *interfaces* and services.
 * Use cases: Exposes actions (write operations) that are possible on the domain.
   We use the Command Bus pattern here. Advantage: Commands provide an overview of domain operations allowed by the system. 
-  They are implementing using a concrete pattern and are not just another thing called "service".   
+  They are implemented using a concrete pattern and are not just another thing called "service".   
 * Infrastructure: Contains all the technical stuff: REST controllers, repository *implementations* and all the glue.
 
 Access is only allowed in the following direction: Infrastructure -> Use cases -> Domain
@@ -40,11 +40,11 @@ Access is only allowed in the following direction: Infrastructure -> Use cases -
 ## UI Architecture
 
 The UI uses a [Flux based architecture](https://facebook.github.io/flux), which is build with [Redux](https://redux.js.org/).
-The code is separated in a shared kernel and the BC's analog to the RESTApi. The shared kernel consists only of 
+The code is separated in a shared kernel and the BC's analog to the REST API. The shared kernel consists only of 
 components which are required in each BC, some infrastructure and bootstrap logic. Each BC is divided into components,
 containers and modules. 
 
-* Components should be stateless (or should only have a local state), this means each required property
+* Components should be stateless (or should only have a local state). This means each required property
 must hand over by a higher ordered intelligent component. 
 * Containers are higher ordered components and this are the components which are connected to the store. 
 * __Modules__ are the last part of the puzzle. Modules are responsible for the state of the application. They manage the 
@@ -59,17 +59,17 @@ Access is only allowed in the following direction: Containers -> Components -> M
 ### Java (src/main/java)
 
 * Shared Kernel: Base Package `com.cloudogu.smeagol`
-  The base package als contains the entry point of our application.
+  The base package also contains the entry point of our application.
 * Bounded Contexts map to subpackages of the base package, e.g.
    * `com.cloudogu.smeagol.authc`
    * `com.cloudogu.smeagol.repository`
-* The hexagonal layers map to subpackages of the individual Bounded Context pacakgages, e.g.
+* The hexagonal layers map to subpackages of the individual Bounded Context packages, e.g.
    * `com.cloudogu.smeagol.repository.infrastructure`
    * `com.cloudogu.smeagol.repository.domain`
    
 ### JavaScript (src/main/js)
 
-* Shared Kernel: The js files directly under js
+* Shared Kernel: The .js files directly under js
 * Bounded Contexts map to folders, e.g.:
    * `repository`
    * `wiki`
@@ -78,5 +78,5 @@ Access is only allowed in the following direction: Containers -> Components -> M
 ### Technical Terms
 
 * Repository: repository in terms of DDD for accessing -> Note: We also have a domain object called repository referring to a Git or SCM-Manager repository
-* Controller: REST Controller, i.e. endpoint (returns Resources).
+* Controller: REST Controller, i.e. endpoint (returns resources).
 * Resource: DTO that maps entity to the REST interface (returned by a Controller)
