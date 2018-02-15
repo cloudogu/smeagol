@@ -6,18 +6,18 @@ import PageFooter from './PageFooter';
 
 type Props = {
     page: any,
-    deletePage: () => void,
-    clickHome: () => void
+    onDeleteClick: () => void,
+    onHomeClick: () => void
 };
 
 class PageViewer extends React.Component<Props> {
 
     render() {
-        const { page, deletePage, clickHome } = this.props;
+        const { page, onDeleteClick, onHomeClick } = this.props;
 
         return (
             <div>
-                <PageHeader page={page} deletePage={deletePage} clickHome={clickHome} />
+                <PageHeader page={page} onDeleteClick={onDeleteClick} onHomeClick={onHomeClick} />
                 <PageContent page={page} />
                 <PageFooter page={page} />
             </div>

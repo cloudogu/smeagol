@@ -69,7 +69,7 @@ public class ScmGitPageRepository implements PageRepository {
 
             Author author = commit.getAuthor();
 
-            RevCommit revCommit = client.commit(
+            client.commit(
                     pagePath,
                     author.getDisplayName().getValue(),
                     author.getEmail().getValue(),

@@ -25,7 +25,7 @@ type Props = {
     fetchWikiIfNeeded: (repository: string, branch: string) => void,
     editPage: (url: string, message: string, content: string) => void,
     createPage: (url: string, message: string, content: string) => void,
-    deletePage: (url: string, message: string, callback: () => void) => void
+    onDeleteClick: (url: string, message: string, callback: () => void) => void
 };
 
 class Page extends React.Component<Props> {
@@ -61,7 +61,7 @@ class Page extends React.Component<Props> {
     };
 
     render() {
-        const { error, loading, page, path, notFound, editMode, wiki } = this.props;
+        const { error, loading, page, path, notFound, editMode } = this.props;
 
         if (error) {
             return (
@@ -93,7 +93,7 @@ class Page extends React.Component<Props> {
             return <PageEditor path={page.path} content={page.content} onSave={this.edit} />;
         }
 
-        return <PageViewer page={page} deletePage={ this.delete } clickHome={ this.pushLandingPageState } />;
+        return <PageViewer page={page} onDeleteClick={ this.delete } onHomeClick={ this.pushLandingPageState } />;
     }
 }
 

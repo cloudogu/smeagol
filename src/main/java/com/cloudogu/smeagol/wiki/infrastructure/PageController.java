@@ -93,7 +93,7 @@ public class PageController {
             HttpServletRequest request,
             @PathVariable("repositoryId") String repositoryId,
             @PathVariable("branch") String branch,
-            @RequestBody CreateOrEditRequestPayload payload
+            @RequestBody DeleteRequestPayload payload
     ) throws URISyntaxException {
         WikiId id = new WikiId(repositoryId, branch);
         Path path = createPathFromRequest(request, id);
@@ -103,18 +103,22 @@ public class PageController {
         return ResponseEntity.noContent().build();
     }
 
-    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-    public static class CreateOrEditRequestPayload {
+    public abstract static class RequestPayload {
         private String message;
-        private String content;
-
-        private Message getMessage() {
+        protected Message getMessage() {
             return Message.valueOf(message);
         }
+    }
 
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+    public static class CreateOrEditRequestPayload extends RequestPayload {
+        private String content;
         private Content getContent() {
             return Content.valueOf(content);
         }
     }
+
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+    public static class DeleteRequestPayload extends RequestPayload {}
 
 }
