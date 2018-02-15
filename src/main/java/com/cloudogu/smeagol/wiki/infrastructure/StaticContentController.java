@@ -2,6 +2,7 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.Path;
 import com.cloudogu.smeagol.wiki.domain.WikiId;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
@@ -11,15 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Serves static content, such as images, from a wiki repository.
  *
  * TODO:
- * - is it okay, that we bypass the domain?
- * - do we need to refresh the repository?
- * - integration test
- * - does FileSystemResource set a valid content-type?
  * - createPathFromRequest is copied from {@link PageController}, we need a util
  */
 @RestController
@@ -42,11 +40,14 @@ public class StaticContentController {
             HttpServletRequest request,
             @PathVariable("repositoryId") String repositoryId,
             @PathVariable("branch") String branch
-    ) {
+    ) throws GitAPIException, IOException
+    {
         WikiId id = new WikiId(repositoryId, branch);
         Path path = createPathFromRequest(request, id);
 
-        try( GitClient gitClient = gitClientProvider.createGitClient(id)) {
+        try(GitClient gitClient = gitClientProvider.createGitClient(id)) {
+            gitClient.refresh();
+
             File file = gitClient.file(path.getValue());
             if (file.exists()) {
                 return ResponseEntity.ok(new FileSystemResource(file));
@@ -64,6 +65,4 @@ public class StaticContentController {
                 .replace("{branch}", id.getBranch());
         return Path.valueOf(pathExtractor.extract(request, base));
     }
-
-
 }
