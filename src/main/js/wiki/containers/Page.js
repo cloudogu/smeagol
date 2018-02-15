@@ -60,6 +60,15 @@ class Page extends React.Component<Props> {
         deletePage(url, message, this.pushLandingPageState);
     };
 
+    onAbortEditClick = () => {
+        const { history } = this.props;
+        history.push('?');
+    };
+
+    onAbortCreateClick = () => {
+        this.pushLandingPageState();
+    };
+
     render() {
         const { error, loading, page, path, notFound, editMode } = this.props;
 
@@ -79,7 +88,7 @@ class Page extends React.Component<Props> {
             );
         } else if (notFound) {
             return (
-                <PageEditor path={path} content="" onSave={this.create} />
+                <PageEditor path={path} content="" onSave={this.create} onAbortClick={this.onAbortCreateClick} />
             );
         } else if (!page) {
             return (
@@ -90,7 +99,7 @@ class Page extends React.Component<Props> {
         }
 
         if (editMode) {
-            return <PageEditor path={page.path} content={page.content} onSave={this.edit} />;
+            return <PageEditor path={page.path} content={page.content} onSave={this.edit} onAbortClick={this.onAbortEditClick} />;
         }
 
         return <PageViewer page={page} onDeleteClick={ this.delete } onHomeClick={ this.pushLandingPageState } />;
