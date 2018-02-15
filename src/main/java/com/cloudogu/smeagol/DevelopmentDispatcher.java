@@ -1,5 +1,6 @@
 package com.cloudogu.smeagol;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.ByteStreams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,8 +19,6 @@ import java.util.Map;
 
 /**
  * The development dispatcher proxies every non api request to configured {@code ui.url}.
- *
- * TODO we need to test the proxy requests
  */
 public class DevelopmentDispatcher implements Dispatcher {
 
@@ -39,7 +38,7 @@ public class DevelopmentDispatcher implements Dispatcher {
     public void dispatch(HttpServletRequest request, HttpServletResponse response, String uri) throws IOException {
         URL url = createProxyUrl(uri);
 
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        HttpURLConnection connection = openConnection(url);
         connection.setRequestMethod(request.getMethod());
         copyRequestHeaders(request, connection);
 
@@ -54,7 +53,6 @@ public class DevelopmentDispatcher implements Dispatcher {
     }
 
     private void copyResponseBody(HttpServletResponse response, HttpURLConnection connection) throws IOException {
-        // connection.setDoInput(true);
         try (InputStream input = connection.getInputStream(); OutputStream output = response.getOutputStream()) {
             ByteStreams.copy(input, output);
         }
@@ -92,5 +90,10 @@ public class DevelopmentDispatcher implements Dispatcher {
 
     private URL createProxyUrl(String uri) throws MalformedURLException {
         return new URL(target + uri);
+    }
+
+    @VisibleForTesting
+    protected HttpURLConnection openConnection(URL url) throws IOException {
+        return (HttpURLConnection) url.openConnection();
     }
 }
