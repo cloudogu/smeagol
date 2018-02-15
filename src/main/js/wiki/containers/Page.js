@@ -25,7 +25,7 @@ type Props = {
     fetchWikiIfNeeded: (repository: string, branch: string) => void,
     editPage: (url: string, message: string, content: string) => void,
     createPage: (url: string, message: string, content: string) => void,
-    onDeleteClick: (url: string, message: string, callback: () => void) => void
+    onDelete: (url: string, message: string, callback: () => void) => void
 };
 
 class Page extends React.Component<Props> {
@@ -60,12 +60,12 @@ class Page extends React.Component<Props> {
         deletePage(url, message, this.pushLandingPageState);
     };
 
-    onAbortEditClick = () => {
+    onAbortEdit = () => {
         const { history } = this.props;
         history.push('?');
     };
 
-    onAbortCreateClick = () => {
+    onAbortCreate = () => {
         this.pushLandingPageState();
     };
 
@@ -88,7 +88,7 @@ class Page extends React.Component<Props> {
             );
         } else if (notFound) {
             return (
-                <PageEditor path={path} content="" onSave={this.create} onAbortClick={this.onAbortCreateClick} />
+                <PageEditor path={path} content="" onSave={this.create} onAbort={this.onAbortCreate} />
             );
         } else if (!page) {
             return (
@@ -99,10 +99,10 @@ class Page extends React.Component<Props> {
         }
 
         if (editMode) {
-            return <PageEditor path={page.path} content={page.content} onSave={this.edit} onAbortClick={this.onAbortEditClick} />;
+            return <PageEditor path={page.path} content={page.content} onSave={this.edit} onAbort={this.onAbortEdit} />;
         }
 
-        return <PageViewer page={page} onDeleteClick={ this.delete } onHomeClick={ this.pushLandingPageState } />;
+        return <PageViewer page={page} onDelete={ this.delete } onHome={ this.pushLandingPageState } />;
     }
 }
 

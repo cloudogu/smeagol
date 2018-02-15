@@ -15,7 +15,6 @@ import 'codemirror/lib/codemirror.css';
 import 'highlight.js/lib';
 import 'highlight.js/styles/default.css';
 import ActionButton from './ActionButton';
-import ActionLink from './ActionLink';
 import CommitForm from './CommitForm';
 import { withRouter } from 'react-router-dom';
 
