@@ -27,7 +27,7 @@ The Wiki BC is the heart of Smeagol and is responsible for the wiki itself. This
 
 ## Hexagonal Architecture 
 
-Within each Bounded Context we our interpretation of a hexagonal architecture (aka [Clean Architecutre, Onion Architecture, etc.](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html)) with the following layers:
+Within each Bounded Context we use our interpretation of a hexagonal architecture (aka [Clean Architecutre, Onion Architecture, etc.](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html)) with the following layers:
 
 * Domain: Contains Domain logic only (no technical stuff). Defines value objects, entities, repository *interfaces* and services.
 * Use cases: Exposes actions (write operations) that are possible on the domain.
