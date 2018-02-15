@@ -42,12 +42,21 @@ class ApiClient {
     }
 
     post(url: string, payload: any) {
-        const postOptions = {
-            method: 'POST',
+        return this.jsonHttpRequest(url, payload, 'POST');
+    }
+
+    delete(url: string, payload: any) {
+        return this.jsonHttpRequest(url, payload, 'DELETE');
+    }
+
+    jsonHttpRequest(url:string, payload:any, method:string) {
+        let options = {
+            method: method,
             body: JSON.stringify(payload),
         };
-        const options = Object.assign(postOptions, fetchOptions);
+        options = Object.assign(options, fetchOptions);
         options.headers['Content-Type'] = 'application/json';
+
         return fetch(createUrl(url), options)
             .then(this.handleCasAuthentication);
     }

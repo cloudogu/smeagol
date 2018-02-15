@@ -1,6 +1,7 @@
 //@flow
 import React from 'react';
-import {editPage, createPage, createPageUrl, fetchPageIfNeeded} from '../modules/page';
+import {editPage, createPage, createPageUrl, fetchPageIfNeeded, deletePage} from '../modules/page';
+import {createId, fetchWikiIfNeeded} from '../modules/wiki';
 import {connect} from 'react-redux';
 import PageViewer from '../components/PageViewer';
 import * as queryString from 'query-string';
@@ -16,15 +17,23 @@ type Props = {
     editMode: boolean,
     error: any,
     page: any,
+    wiki:any,
+    repository: string,
+    branch: string,
+    history: any,
     fetchPageIfNeeded: (url: string) => void,
+    fetchWikiIfNeeded: (repository: string, branch: string) => void,
     editPage: (url: string, message: string, content: string) => void,
-    createPage: (url: string, message: string, content: string) => void
+    createPage: (url: string, message: string, content: string) => void,
+    onDelete: (url: string, message: string, callback: () => void) => void
 };
 
 class Page extends React.Component<Props> {
 
     componentDidMount() {
-        this.props.fetchPageIfNeeded(this.props.url);
+        const { url, repository, branch } = this.props;
+        this.props.fetchPageIfNeeded(url);
+        this.props.fetchWikiIfNeeded(repository, branch);
     }
 
     componentDidUpdate() {
@@ -37,6 +46,27 @@ class Page extends React.Component<Props> {
 
     create = (message: string, content: string) => {
         this.props.createPage(this.props.url, message, content);
+    };
+
+    pushLandingPageState = () => {
+        const { history, repository, branch, wiki } = this.props;
+        history.push(`/${repository}/${branch}/${wiki.landingPage}`);
+    };
+
+    delete = () => {
+        const { path, url, deletePage } = this.props;
+        // TODO i18n
+        const message = 'delete page ' + path + ' (smeagol)';
+        deletePage(url, message, this.pushLandingPageState);
+    };
+
+    onAbortEdit = () => {
+        const { history } = this.props;
+        history.push('?');
+    };
+
+    onAbortCreate = () => {
+        this.pushLandingPageState();
     };
 
     render() {
@@ -58,7 +88,7 @@ class Page extends React.Component<Props> {
             );
         } else if (notFound) {
             return (
-                <PageEditor path={path} content="" onSave={this.create} />
+                <PageEditor path={path} content="" onSave={this.create} onAbort={this.onAbortCreate} />
             );
         } else if (!page) {
             return (
@@ -69,10 +99,10 @@ class Page extends React.Component<Props> {
         }
 
         if (editMode) {
-            return <PageEditor path={page.path} content={page.content} onSave={this.edit} />;
+            return <PageEditor path={page.path} content={page.content} onSave={this.edit} onAbort={this.onAbortEdit} />;
         }
 
-        return <PageViewer page={page} />;
+        return <PageViewer page={page} onDelete={ this.delete } onHome={ this.pushLandingPageState } />;
     }
 }
 
@@ -91,12 +121,17 @@ const mapStateToProps = (state, ownProps) => {
     const { repository, branch } = ownProps.match.params;
     const path = findPagePath(ownProps);
     const url = createPageUrl(repository, branch, path);
+    const wikiId = createId(repository, branch);
+    const wiki = state.wiki[wikiId] ||{};
 
     const props = {
         ...state.page[url],
         path,
         url,
-        editMode: isEditMode(ownProps)
+        repository,
+        branch,
+        editMode: isEditMode(ownProps),
+        wiki: wiki.wiki || {}
     };
 
     return props;
@@ -104,6 +139,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        fetchWikiIfNeeded: (repository: string, branch: string) => {
+            dispatch(fetchWikiIfNeeded(repository, branch))
+        },
         fetchPageIfNeeded: (url: string) => {
             dispatch(fetchPageIfNeeded(url))
         },
@@ -112,6 +150,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         createPage: (url: string, message: string, content: string) => {
             dispatch(createPage(url, message, content))
+        },
+        deletePage: (url: string, message: string, callback: () => void) => {
+            dispatch(deletePage(url, message, callback))
         }
     }
 };

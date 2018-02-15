@@ -15,7 +15,6 @@ import 'codemirror/lib/codemirror.css';
 import 'highlight.js/lib';
 import 'highlight.js/styles/default.css';
 import ActionButton from './ActionButton';
-import ActionLink from './ActionLink';
 import CommitForm from './CommitForm';
 import { withRouter } from 'react-router-dom';
 
@@ -30,7 +29,8 @@ type Props = {
     history: any,
     classes: any,
     content: string,
-    path: string
+    path: string,
+    onAbortClick: () => void
 };
 
 type State = {
@@ -84,7 +84,7 @@ class MarkdownEditor extends Component<Props,State> {
     };
 
     render() {
-        const { classes, path } = this.props;
+        const { classes, path, onAbortClick } = this.props;
         const defaultMessage = 'Updated ' + path + ' (smeagol)';
 
         return (
@@ -92,7 +92,7 @@ class MarkdownEditor extends Component<Props,State> {
                 <div ref={ref => this.editorNode = ref} />
                 <div className={classes.action}>
                     <ActionButton i18nKey="markdown-editor_save" type="primary" onClick={this.commit} />
-                    <ActionLink i18nKey="markdown-editor_abort" to="?" />
+                    <ActionButton i18nKey="markdown-editor_abort" onClick={onAbortClick} />
                 </div>
                 <CommitForm defaultMessage={ defaultMessage } show={ this.state.showCommitForm } onSave={ this.save } onAbort={ this.abortCommit } />
             </div>

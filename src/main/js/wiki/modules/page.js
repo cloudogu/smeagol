@@ -15,6 +15,10 @@ const CREATE_PAGE = 'smeagol/page/CREATE';
 const CREATE_PAGE_SUCCESS = 'smeagol/page/CREATE_SUCCESS';
 const CREATE_PAGE_FAILURE = 'smeagol/page/CREATE_FAILURE';
 
+const DELETE_PAGE = 'smeagol/page/DELETE';
+const DELETE_PAGE_SUCCESS = 'smeagol/page/DELETE_SUCCESS';
+const DELETE_PAGE_FAILURE = 'smeagol/page/DELETE_FAILURE';
+
 function requestPage(url: string) {
     return {
         type: FETCH_PAGE,
@@ -154,11 +158,46 @@ export function createPage(url: string, message: string, content: string) {
     }
 }
 
+function requestDeletePage(url: string) {
+    return {
+        type: DELETE_PAGE,
+        url
+    };
+}
+
+function deletePageSuccess(url: string) {
+    return {
+        type: DELETE_PAGE_SUCCESS,
+        url
+    };
+}
+
+function deletePageFailure(url: string, err: Error) {
+    return {
+        type: DELETE_PAGE_FAILURE,
+        payload: err,
+        url
+    };
+}
+
+export function deletePage(url: string, message: string, callback: () => void) {
+    return function(dispatch) {
+        dispatch(requestDeletePage(url));
+        return apiClient.delete(url, { message })
+            .then(() => {
+                callback();
+                dispatch(deletePageSuccess(url));
+            })
+            .catch((err) => dispatch(deletePageFailure(url, err)));
+    }
+}
+
 export default function reducer(state = {}, action = {}) {
     switch (action.type) {
         case FETCH_PAGE:
         case EDIT_PAGE:
         case CREATE_PAGE:
+        case DELETE_PAGE:
             return {
                 ...state,
                 [action.url] : {
@@ -178,6 +217,7 @@ export default function reducer(state = {}, action = {}) {
         case FETCH_PAGE_FAILURE:
         case EDIT_PAGE_FAILURE:
         case CREATE_PAGE_FAILURE:
+        case DELETE_PAGE_FAILURE:
             return {
                 ...state,
                 [action.url] : {
@@ -195,6 +235,7 @@ export default function reducer(state = {}, action = {}) {
             };
         case CREATE_PAGE_SUCCESS:
         case EDIT_PAGE_SUCCESS:
+        case DELETE_PAGE_SUCCESS:
             return {
                 ...state,
                 [action.url] : {

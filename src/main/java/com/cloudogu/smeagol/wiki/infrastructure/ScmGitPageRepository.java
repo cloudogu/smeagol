@@ -55,6 +55,32 @@ public class ScmGitPageRepository implements PageRepository {
         return Optional.empty();
     }
 
+    public void delete(Page page, Commit commit) {
+        WikiId id = page.getWikiId();
+        Path path = page.getPath();
+        try (GitClient client = gitClientProvider.createGitClient(id)) {
+            client.refresh();
+
+            String pagePath = pagePath(path);
+            File file = client.file(pagePath);
+            if (!file.delete()) {
+                throw new IOException("could not delete file: " + file.getPath());
+            }
+
+            Author author = commit.getAuthor();
+
+            client.commit(
+                    pagePath,
+                    author.getDisplayName().getValue(),
+                    author.getEmail().getValue(),
+                    commit.getMessage().getValue()
+            );
+
+        } catch (IOException | GitAPIException ex) {
+            throw Throwables.propagate(ex);
+        }
+    }
+
     private String pagePath(Path path) {
         return path.getValue().concat(EXTENSION);
     }

@@ -97,6 +97,28 @@ public class ScmGitPageRepositoryTest {
     }
 
     @Test
+    public void testDelete() throws IOException, GitAPIException {
+        File file = temporaryFolder.newFile();
+        String homePagePath = PATH_HOME.getValue().concat(".md");
+        when(gitClient.file(homePagePath)).thenReturn(file);
+
+        RevCommit rc = createRevCommit();
+
+        when(gitClient.commit(
+                homePagePath,
+                DISPLAY_NAME_TRILLIAN.getValue(),
+                EMAIL_TRILLIAN.getValue(),
+                MESSAGE_PANIC.getValue()
+        )).thenReturn(rc);
+
+        assertTrue(file.exists());
+        pageRepository.delete(PAGE, COMMIT);
+        assertFalse(file.exists());
+
+        verify(gitClient).refresh();
+    }
+
+    @Test
     public void testSave() throws IOException, GitAPIException {
         File file = temporaryFolder.newFile();
         String homePagePath = PATH_HOME.getValue().concat(".md");
