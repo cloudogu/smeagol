@@ -3,6 +3,8 @@ import React from 'react';
 import injectSheet from 'react-jss';
 import ActionLink from './ActionLink';
 import ActionButton from './ActionButton';
+import CreateForm from './CreateForm';
+import { withRouter } from 'react-router-dom';
 
 const styles = {
     header: {
@@ -17,29 +19,62 @@ type Props = {
     page: any,
     onDeleteClick: () => void,
     onHomeClick: () => void,
+    history: any,
     classes: any
 }
 
-class PageHeader extends React.Component<Props> {
+type State = {
+    showCreateForm: boolean
+};
+
+class PageHeader extends React.Component<Props,State> {
+
+    constructor(props) {
+        super(props);
+        this.state =  {
+            showCreateForm: false
+        };
+    }
+
+    onCreateClick = () =>  {
+        this.setState({
+            showCreateForm: true
+        });
+    };
+
+    onAbortCreateClick = () => {
+        this.setState({
+            showCreateForm: false
+        });
+    };
+
+    onOkCreate = (name) => {
+        this.props.history.push(name);
+    };
 
     render() {
         const { page, classes, onDeleteClick, onHomeClick } = this.props;
 
         const homeButton = <ActionButton onClick={onHomeClick}  i18nKey="page-header_home" type="primary" />;
+        const createButton = <ActionButton onClick={this.onCreateClick}  i18nKey="page-header_create" type="primary" />;
         const edit = page._links.edit ? <ActionLink to="?edit=true" i18nKey="page-header_edit" type="primary" /> : '';
         const deleteButton = page._links.delete ? <ActionButton onClick={onDeleteClick}  i18nKey="page-header_delete" type="primary" /> : '';
+
+        const createForm = <CreateForm show={ this.state.showCreateForm } onOk={ this.onOkCreate } onAbortClick={ this.onAbortCreateClick } />
         return (
             <div className={classes.header}>
                 <h1>{ page.path }</h1>
                 <div className={classes.actions}>
                     {homeButton}
+                    {createButton}
                     {edit}
                     {deleteButton}
                 </div>
+                {createForm}
             </div>
         );
     }
 
 }
 
-export default injectSheet(styles)(PageHeader);
+export default withRouter(injectSheet(styles)(PageHeader));
