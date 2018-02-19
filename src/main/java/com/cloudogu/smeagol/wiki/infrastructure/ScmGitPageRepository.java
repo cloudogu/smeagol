@@ -110,6 +110,7 @@ public class ScmGitPageRepository implements PageRepository {
 
             String pagePath = pagePath(path);
             File file = client.file(pagePath);
+            file.getParentFile().mkdirs();
 
             Content content = page.getContent();
             Files.write(content.getValue(), file, Charsets.UTF_8);
