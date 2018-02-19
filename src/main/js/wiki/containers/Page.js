@@ -70,7 +70,9 @@ class Page extends React.Component<Props> {
     };
 
     render() {
-        const { error, loading, page, path, notFound, editMode } = this.props;
+        const { error, loading, page, wiki, repository, branch, path, notFound, editMode } = this.props;
+        wiki.repository = repository;
+        wiki.branch = branch;
 
         if (error) {
             return (
@@ -102,7 +104,7 @@ class Page extends React.Component<Props> {
             return <PageEditor path={page.path} content={page.content} onSave={this.edit} onAbort={this.onAbortEdit} />;
         }
 
-        return <PageViewer page={page} onDelete={ this.delete } onHome={ this.pushLandingPageState } />;
+        return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState } />;
     }
 }
 

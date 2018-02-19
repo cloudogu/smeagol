@@ -17,6 +17,7 @@ const styles = {
 
 type Props = {
     page: any,
+    wiki: any,
     onDeleteClick: () => void,
     onHomeClick: () => void,
     history: any,
@@ -49,7 +50,17 @@ class PageHeader extends React.Component<Props,State> {
     };
 
     onOkCreate = (name) => {
-        this.props.history.push(name);
+        const { repository, branch } = this.props.wiki;
+
+        let path = `/${repository}/${branch}`;
+
+        if (name.startsWith('/')) {
+            path = `${path}${name}`;
+        } else {
+            path = `${path}/docs/${name}`;
+        }
+
+        this.props.history.push(path);
     };
 
     render() {
