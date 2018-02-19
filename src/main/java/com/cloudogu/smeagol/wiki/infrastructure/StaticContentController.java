@@ -43,7 +43,7 @@ public class StaticContentController {
     ) throws GitAPIException, IOException
     {
         WikiId id = new WikiId(repositoryId, branch);
-        Path path = createPathFromRequest(request, id);
+        Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
 
         try(GitClient gitClient = gitClientProvider.createGitClient(id)) {
             gitClient.refresh();
@@ -55,14 +55,5 @@ public class StaticContentController {
         }
 
         return ResponseEntity.notFound().build();
-    }
-
-    private Path createPathFromRequest(HttpServletRequest request, WikiId id) {
-        // we need to extract the path from request, because there is no matcher which allos slashes in spring
-        // https://stackoverflow.com/questions/4542489/match-the-rest-of-the-url-using-spring-3-requestmapping-annotation
-        // and we must mock the path extractor in our tests, because request.getServletPath is empty in the tests.
-        String base = MAPPING.replace("{repositoryId}", id.getRepositoryID())
-                .replace("{branch}", id.getBranch());
-        return Path.valueOf(pathExtractor.extract(request, base));
     }
 }

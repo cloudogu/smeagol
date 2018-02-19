@@ -3,12 +3,9 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 import com.cloudogu.smeagol.wiki.domain.*;
 import com.cloudogu.smeagol.wiki.usecase.CreatePageCommand;
 import com.cloudogu.smeagol.wiki.usecase.EditPageCommand;
-import com.cloudogu.smeagol.wiki.usecase.PageAlreadyExistsException;
-import com.cloudogu.smeagol.wiki.usecase.PageNotFoundException;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import de.triology.cb.CommandBus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +40,7 @@ public class PageController {
             @PathVariable("branch") String branch
     ) {
         WikiId id = new WikiId(repositoryId, branch);
-        Path path = createPathFromRequest(request, id);
+        Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
 
         Optional<Page> byWikiIdAndPath = repository.findByWikiIdAndPath(id, path);
         if (byWikiIdAndPath.isPresent()) {
@@ -60,9 +57,9 @@ public class PageController {
             @RequestBody CreateOrEditRequestPayload payload
     ) throws URISyntaxException {
         WikiId id = new WikiId(repositoryId, branch);
-        Path path = createPathFromRequest(request, id);
+        Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
 
-        // TODO return new page? this would safe us one request from the frontent. Is this resty?
+        // TODO return new page? this would safe us one request from the frontend. Is this resty?
 
         if ( repository.exists(id, path) ) {
             return edit(id, path, payload);
@@ -80,15 +77,6 @@ public class PageController {
         EditPageCommand command = new EditPageCommand(id, path, payload.getMessage(), payload.getContent());
         commandBus.execute(command);
         return ResponseEntity.noContent().build();
-    }
-
-    private Path createPathFromRequest(HttpServletRequest request, WikiId id) {
-        // we need to extract the path from request, because there is no matcher which allos slashes in spring
-        // https://stackoverflow.com/questions/4542489/match-the-rest-of-the-url-using-spring-3-requestmapping-annotation
-        // and we must mock the path extractor in our tests, because request.getServletPath is empty in the tests.
-        String base = MAPPING.replace("{repositoryId}", id.getRepositoryID())
-                .replace("{branch}", id.getBranch());
-        return Path.valueOf(pathExtractor.extract(request, base));
     }
 
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)

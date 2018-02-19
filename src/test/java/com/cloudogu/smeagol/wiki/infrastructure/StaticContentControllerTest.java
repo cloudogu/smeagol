@@ -1,5 +1,6 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
+import com.cloudogu.smeagol.wiki.domain.Path;
 import com.cloudogu.smeagol.wiki.domain.WikiId;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -56,7 +57,14 @@ public class StaticContentControllerTest {
         when(gitClientProvider.createGitClient(wikiId)).thenReturn(gitClient);
 
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        when(pathExtractor.extract(any(HttpServletRequest.class), anyString())).thenReturn("docs/arch.txt");
+        // we need to mock the WildcardPathExtractor, because request.getServletPath seems to be empty in MockMvc
+        when(
+                pathExtractor.extractPathFromRequest(
+                        any(HttpServletRequest.class),
+                        anyString(),
+                        any(WikiId.class)
+                )
+        ).thenReturn(Path.valueOf("docs/arch.txt"));
     }
 
     @Test

@@ -43,7 +43,14 @@ public class WikiControllerTest {
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        when(pathExtractor.extract(any(HttpServletRequest.class), anyString())).thenReturn("docs/Home");
+        // we need to mock the WildcardPathExtractor, because request.getServletPath seems to be empty in MockMvc
+        when(
+                pathExtractor.extractPathFromRequest(
+                        any(HttpServletRequest.class),
+                        anyString(),
+                        any(WikiId.class)
+                )
+        ).thenReturn(Path.valueOf("docs/arch.txt"));
     }
 
     @Test
