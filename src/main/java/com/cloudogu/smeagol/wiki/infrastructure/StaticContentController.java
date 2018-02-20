@@ -17,8 +17,6 @@ import java.io.IOException;
 /**
  * Serves static content, such as images, from a wiki repository.
  *
- * TODO:
- * - createPathFromRequest is copied from {@link PageController}, we need a util
  */
 @RestController
 @RequestMapping(StaticContentController.MAPPING)
