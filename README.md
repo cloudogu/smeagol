@@ -15,11 +15,11 @@ This can be achieved by using the provided groovy execution:
 ./mvnw groovy:execute@up
 ```
 
-his command will clone the ecosystem repository into the `.workspace` folder, creates a `setup.json` with a proper 
+This command will clone the ecosystem repository into the `.workspace` folder, creates a `setup.json` with a proper 
 configuration and starts the vm. After the vm has started, open the setup in your browser at 
 [192.168.56.2:8080](http://192.168.56.2:8080), register the instance and finish the setup.
 
-Then you can access SCMManager for example like so: [https://192.168.56.2/scm/](https://192.168.56.2/scm/).
+Then you can access SCM-Manager at: [https://192.168.56.2/scm/](https://192.168.56.2/scm/).
 
 Username: `admin`, Password: `adminpw`
 
@@ -41,19 +41,34 @@ If the vm is not longer required, it can be removed with the destroy execution:
 ./mvnw groovy:execute@destroy
 ```
 
-### Development Server
+### REST API
 
-The development server can be started with the run goal of the spring-boot maven plugin, but we need to add a 
-environment variable for the service url. Without theses variable cas would not be able to communicate with smeagol.
-The SMEAGOL_FQDN must be set to an fqdn or ip address which is accessible from the ces vm: 
-
+The server for the REST API can be started with the run goal of the spring-boot maven plugin:
 ```bash
 ./mvnw clean spring-boot:run
 ```
-To open the development instance open [localhost:8080](http://localhost:8080) in your browser.
-For example, you can get all repositories from [http://localhost:8080/smeagol/api/v1/repositories](http://localhost:8080/smeagol/api/v1/repositories).
+To access the development instance open [192.168.56.1:8080](http://192.168.56.1:8080) in your browser.
+For example, you can get all repositories from [http://192.168.56.1:8080/smeagol/api/v1/repositories](http://192.168.56.1:8080/smeagol/api/v1/repositories).
+
+### UI
+
+To start the UI development server, you should use yarn. First install the required dependencies:
+
+```bash
+yarn install
+```
+
+After the dependency installation has finished, start the development server:
+
+```bash
+yarn run start
+```
+
+The command above should automatically open a browser at [192.168.56.1:3000](http://192.168.56.1:3000)
 
 ### Hot Reload
+
+Hot reload should work out of the box for the ui. 
 
 To enable hot reload for java classes, the application must be started with the maven goal "spring-boot:run". For 
 Intellij we have to recompile the project or enable "Make project automatically", but this requires some sort of hack. 

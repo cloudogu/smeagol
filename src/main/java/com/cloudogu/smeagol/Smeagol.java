@@ -13,6 +13,9 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.util.UrlPathHelper;
 
 import java.util.Collections;
 
@@ -21,7 +24,7 @@ import java.util.Collections;
  */
 @SpringBootApplication
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
-public class Smeagol {
+public class Smeagol extends WebMvcConfigurerAdapter {
 
     private static final Logger LOG = LoggerFactory.getLogger(Smeagol.class);
 
@@ -39,6 +42,13 @@ public class Smeagol {
         if (stage == Stage.DEVELOPMENT) {
             LOG.warn("smeagol is running in development stage, never use this stage for production deployments");
         }
+    }
+
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        UrlPathHelper urlPathHelper = new UrlPathHelper();
+        urlPathHelper.setUrlDecode(false);
+        configurer.setUrlPathHelper(urlPathHelper);
     }
 
     @Bean
@@ -64,6 +74,8 @@ public class Smeagol {
     public static void main(String[] args) {
         // disable dev tools restart, because we are using spring loaded
         System.setProperty("spring.devtools.restart.enabled", "false");
+        // allow encoded slashes for branches like feature/one
+        System.setProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "true");
         SpringApplication.run(Smeagol.class, args);
     }
 }
