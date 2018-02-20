@@ -81,6 +81,35 @@ public class ScmGitPageRepository implements PageRepository {
         }
     }
 
+    @Override
+    public Page move(Page page, Path target, Commit commit) {
+        WikiId id = page.getWikiId();
+        Path path = page.getPath();
+        try (GitClient client = gitClientProvider.createGitClient(id)) {
+            client.refresh();
+
+            String sourcePath = pagePath(path);
+            String targetPath = pagePath(target);
+            File oldFile = client.file(sourcePath);
+            File newFile = client.file(targetPath);
+            Files.move(oldFile, newFile);
+
+            Author author = commit.getAuthor();
+
+            String[] paths = {sourcePath, targetPath};
+            RevCommit revCommit = client.commit(
+                    paths,
+                    author.getDisplayName().getValue(),
+                    author.getEmail().getValue(),
+                    commit.getMessage().getValue()
+            );
+
+            return new Page(id, Path.valueOf(targetPath), page.getContent(), createCommit(revCommit));
+        } catch (IOException | GitAPIException ex) {
+            throw Throwables.propagate(ex);
+        }
+    }
+
     private String pagePath(Path path) {
         return path.getValue().concat(EXTENSION);
     }
