@@ -8,4 +8,6 @@ COPY ces-startup.sh /app/startup.sh
 
 VOLUME /var/lib/smeagol
 EXPOSE 8080
+
+WORKDIR /app
 CMD /app/startup.sh

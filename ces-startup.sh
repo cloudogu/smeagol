@@ -17,6 +17,8 @@ create_truststore.sh "${TRUSTSTORE}" > /dev/null
 FQDN=$(doguctl config --global fqdn)
 cat > /app/application.yml <<EOF
 stage: production
+server:
+  contextPath: /smeagol
 homeDirectory: ${SMEAGOL_HOME}
 scm:
   url: https://${FQDN}/scm

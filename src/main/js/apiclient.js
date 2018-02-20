@@ -1,7 +1,7 @@
 // @flow
 
 // get api base url from environment
-const apiUrl = process.env.API_URL || process.env.PUBLIC_URL || '/smeagol';
+const apiUrl = process.env.API_URL || process.env.PUBLIC_URL || '';
 
 // fetch does not send the X-Requested-With header (https://github.com/github/fetch/issues/17),
 // but we need the header to detect ajax request (AjaxAwareAuthenticationRedirectStrategy).

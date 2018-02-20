@@ -1,24 +1,38 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
+import com.cloudogu.smeagol.wiki.domain.Path;
+import com.cloudogu.smeagol.wiki.domain.WikiId;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Extracts the wildcard part from a request path.
+ * Extracts the wildcard part as {@link Path} from the request.
  */
 @Component
 public class WildcardPathExtractor {
 
     /**
-     * Extract the wildcard part of the request, by using the servlet path to get the url if the endpoint.
+     * Extracts the wildcard part of the request as {@link Path}, by using the servlet path to get the url of the
+     * endpoint.
      *
      * @param request http servlet request
-     * @param base base path of the endpoint
+     * @param pathMapping mapping of the rest endpoint with placeholders e.g.: /v1/{repositoryId}/{branch}/mypath
+     * @param wikiId id of wiki
      *
-     * @return wildcard part of the request path
+     * @return wildcard part of the request as {@link Path}
      */
-    public String extract(HttpServletRequest request, String base) {
+    public Path extractPathFromRequest(HttpServletRequest request, String pathMapping, WikiId wikiId) {
+        // we need to extract the path from request, because there is no matcher which allows slashes in spring
+        // https://stackoverflow.com/questions/4542489/match-the-rest-of-the-url-using-spring-3-requestmapping-annotation
+        // and we must mock the path extractor in our tests, because request.getServletPath is empty in the tests.
+        String base = pathMapping.replace("{repositoryId}", wikiId.getRepositoryID())
+                                 .replace("{branch}", wikiId.getBranch());
+
+        return Path.valueOf(extract(request, base));
+    }
+
+    private String extract(HttpServletRequest request, String base) {
         String servletPath = request.getServletPath();
 
         String path = servletPath.substring(base.length());
@@ -27,5 +41,4 @@ public class WildcardPathExtractor {
         }
         return path;
     }
-
 }
