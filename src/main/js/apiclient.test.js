@@ -51,5 +51,5 @@ test('test ApiClient.get with status 401 and location header', async () => {
     mockFetchAndWindow(401, '/hitchhikers');
     await apiClient.get('/api/v1/marvinctl');
 
-    expect(window.location.href).toBe('/smeagol/api/v1/authc?location=http%3A%2F%2Flocalhost%2F');
+    expect(window.location.href).toBe('/api/v1/authc?location=http%3A%2F%2Flocalhost%2F');
 });

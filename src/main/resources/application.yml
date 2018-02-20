@@ -1,6 +1,6 @@
 server:
   port: 8080
-  contextPath: /smeagol
+  contextPath: /
   session:
     timeout: 7200
     tracking-modes: cookie
@@ -10,9 +10,12 @@ server:
 stage: development
 homeDirectory: /tmp/smeagol
 
+ui:
+  url: http://192.168.56.1:3000
+
 scm:
   url: https://192.168.56.2/scm
 
 cas:
   url: https://192.168.56.2/cas
-  serviceUrl: http://192.168.56.1:8080/smeagol
+  serviceUrl: http://192.168.56.1:8080/

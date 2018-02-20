@@ -17,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.util.UrlPathHelper;
 
+import javax.servlet.DispatcherType;
 import java.util.Collections;
 
 /**
@@ -30,18 +31,20 @@ public class Smeagol extends WebMvcConfigurerAdapter {
 
     private final ApplicationContext applicationContext;
     private final Stage stage;
+    private final String uiUrl;
 
     /**
      * Creates a new Smeagol application in the requested stage.
      *
      * @param stageName name of stage
      */
-    public Smeagol(ApplicationContext applicationContext, @Value("${stage}") String stageName) {
+    public Smeagol(ApplicationContext applicationContext, @Value("${stage}") String stageName, @Value("${ui.url}") String uiUrl) {
         this.applicationContext = applicationContext;
-        stage = Stage.fromString(stageName);
+        this.stage = Stage.fromString(stageName);
         if (stage == Stage.DEVELOPMENT) {
             LOG.warn("smeagol is running in development stage, never use this stage for production deployments");
         }
+        this.uiUrl = uiUrl;
     }
 
     @Override
@@ -66,9 +69,20 @@ public class Smeagol extends WebMvcConfigurerAdapter {
     @Bean
     public FilterRegistrationBean uiFilter() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new UiFilter());
+        registration.setFilter(new UiFilter(createDispatcher()));
+        registration.setDispatcherTypes(DispatcherType.REQUEST);
         registration.setUrlPatterns(Collections.singleton("/*"));
         return registration;
+    }
+
+    private Dispatcher createDispatcher() {
+        if (stage == Stage.DEVELOPMENT) {
+            LOG.warn("uifilter uses development dispatcher, every ui request is proxied to {}", uiUrl);
+            return new DevelopmentDispatcher(uiUrl);
+        }
+
+        LOG.info("uifilter uses production dispatcher, every ui request is forwarded to /index.html");
+        return new ProductionDispatcher();
     }
 
     public static void main(String[] args) {

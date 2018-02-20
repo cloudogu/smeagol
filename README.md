@@ -64,7 +64,8 @@ After the dependency installation has finished, start the development server:
 yarn run start
 ```
 
-The command above should automatically open a browser at [192.168.56.1:3000](http://192.168.56.1:3000)
+After the RESTApi and the UI are successfully started, we can open Smeagol in our browser at [192.168.56.1:8080](http://192.168.56.1:8080).
+The spring-boot server from the RESTApi will proxy every ui request to the UI server.
 
 ### Hot Reload
 
