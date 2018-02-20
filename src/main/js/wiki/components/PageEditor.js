@@ -5,17 +5,18 @@ import MarkdownEditor from './MarkdownEditor';
 type Props = {
     path: string,
     content: string,
-    onSave: Function
+    onSave: Function,
+    onAbort: () => void
 };
 
 class PageEditor extends React.Component<Props> {
 
     render() {
-        const { path, content, onSave } = this.props;
+        const { path, content, onSave, onAbort } = this.props;
         return (
             <div>
                 <h1>{ path }</h1>
-                <MarkdownEditor path={ path } content={ content } onSave={onSave} />
+                <MarkdownEditor path={ path } content={ content } onSave={onSave} onAbortClick={onAbort} />
             </div>
         );
     }

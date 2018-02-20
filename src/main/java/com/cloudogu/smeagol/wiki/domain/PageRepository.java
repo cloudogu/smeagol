@@ -30,4 +30,12 @@ public interface PageRepository {
      * @return page with path
      */
     Optional<Page> findByWikiIdAndPath(WikiId wikiId, Path path);
+
+    /**
+     * Deletes the page.
+     *
+     * @param page deleted page
+     * @param commit delete commit
+     */
+    void delete(Page page, Commit commit);
 }

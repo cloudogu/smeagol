@@ -29,7 +29,10 @@ export function createRepositoryGroups(repositories) {
         group.repositories.push(repository);
     }
 
-    let groupArray = Object.values(groups);
+    let groupArray = [];
+    for(let groupName in groups) {
+        groupArray.push(groups[groupName]);
+    }
     groupArray.sort(function(a, b){
         if (a.name === 'main' && b.name !== 'main') {
             return 10;

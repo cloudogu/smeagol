@@ -30,6 +30,7 @@ public class PageResourceAssembler extends ResourceAssemblerSupport<Page, PageRe
         );
         resource.add(selfLink(page));
         resource.add(editLink(page));
+        resource.add(deleteLink(page));
 
         return resource;
     }
@@ -62,6 +63,10 @@ public class PageResourceAssembler extends ResourceAssemblerSupport<Page, PageRe
 
     private Link selfLink(Page page) {
         return baseLink(page).withSelfRel();
+    }
+
+    private Link deleteLink(Page page) {
+        return baseLink(page).withRel("delete");
     }
 
     private ControllerLinkBuilder baseLink(Page page) {

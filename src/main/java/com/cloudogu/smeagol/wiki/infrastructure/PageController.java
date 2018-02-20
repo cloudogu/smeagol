@@ -1,8 +1,7 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.*;
-import com.cloudogu.smeagol.wiki.usecase.CreatePageCommand;
-import com.cloudogu.smeagol.wiki.usecase.EditPageCommand;
+import com.cloudogu.smeagol.wiki.usecase.*;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import de.triology.cb.CommandBus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,18 +78,37 @@ public class PageController {
         return ResponseEntity.noContent().build();
     }
 
-    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-    public static class CreateOrEditRequestPayload {
-        private String message;
-        private String content;
+    @RequestMapping(method = RequestMethod.DELETE, value = "**")
+    public ResponseEntity<Void> delete(
+            HttpServletRequest request,
+            @PathVariable("repositoryId") String repositoryId,
+            @PathVariable("branch") String branch,
+            @RequestBody DeleteRequestPayload payload
+    ) throws URISyntaxException {
+        WikiId id = new WikiId(repositoryId, branch);
+        Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
 
-        private Message getMessage() {
+        DeletePageCommand command = new DeletePageCommand(id, path, payload.getMessage());
+        commandBus.execute(command);
+        return ResponseEntity.noContent().build();
+    }
+
+    public abstract static class RequestPayload {
+        private String message;
+        protected Message getMessage() {
             return Message.valueOf(message);
         }
+    }
 
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+    public static class CreateOrEditRequestPayload extends RequestPayload {
+        private String content;
         private Content getContent() {
             return Content.valueOf(content);
         }
     }
+
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+    public static class DeleteRequestPayload extends RequestPayload {}
 
 }

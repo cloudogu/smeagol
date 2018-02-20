@@ -41,13 +41,13 @@ If the vm is not longer required, it can be removed with the destroy execution:
 ./mvnw groovy:execute@destroy
 ```
 
-### RESTApi
+### REST API
 
-The server for the RESTApi can be started with the run goal of the spring-boot maven plugin:
+The server for the REST API can be started with the run goal of the spring-boot maven plugin:
 ```bash
 ./mvnw clean spring-boot:run
 ```
-To open the development instance open [192.168.56.1:8080](http://192.168.56.1:8080) in your browser.
+To access the development instance open [192.168.56.1:8080](http://192.168.56.1:8080) in your browser.
 For example, you can get all repositories from [http://192.168.56.1:8080/smeagol/api/v1/repositories](http://192.168.56.1:8080/smeagol/api/v1/repositories).
 
 ### UI
