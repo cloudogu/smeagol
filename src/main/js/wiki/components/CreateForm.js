@@ -32,9 +32,15 @@ class CreateForm extends React.Component<Props, State> {
         this.props.onOk(this.state.name);
     };
 
+    validPage = () => {
+        const pageName = this.state.name;
+        const containsIllegalSequence = decodeURI(pageName).includes('..');
+        return pageName.length > 0 && !containsIllegalSequence;
+    };
+
     render() {
         const { show, onAbortClick, t } = this.props;
-
+        const isButtonEnabled = this.validPage();
         return (
             <Modal show={ show } onHide={onAbortClick}>
                 <Modal.Header closeButton>
@@ -42,12 +48,12 @@ class CreateForm extends React.Component<Props, State> {
                 </Modal.Header>
                 <Modal.Body>
                     <h2>{ t('create-form_name_label')} </h2>
-                    <textarea rows="1" className="form-control" value={this.state.name} onChange={ this.handleChange } />
+                    <input type="text" className="form-control" value={this.state.name} onChange={ this.handleChange } />
                     <br />
                     <p>{ t('create-form_info')} </p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <ActionButton type="primary" onClick={this.onOkClick} i18nKey="create-form_ok" />
+                    <ActionButton disabled={!isButtonEnabled} type="primary" onClick={this.onOkClick} i18nKey="create-form_ok" />
                     <ActionButton onClick={onAbortClick} i18nKey="create-form_abort" />
                 </Modal.Footer>
             </Modal>
