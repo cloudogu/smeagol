@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 public class WildcardPathExtractor {
 
     /**
-     * Extracts the wildcard part of the request as {@link Path}, by using the servlet path to get the url if the
+     * Extracts the wildcard part of the request as {@link Path}, by using the servlet path to get the url of the
      * endpoint.
      *
      * @param request http servlet request
