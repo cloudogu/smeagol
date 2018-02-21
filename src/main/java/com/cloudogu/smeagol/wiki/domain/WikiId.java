@@ -7,7 +7,6 @@ import java.util.Objects;
  */
 public class WikiId {
 
-    // TODO should be name and repositorID ???
     private final String repositoryID;
     private final String branch;
 
