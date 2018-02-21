@@ -7,7 +7,6 @@ public class PageResource extends ResourceSupport {
     private String path;
     private String content;
 
-    // TODO is commit embedded ???
     private CommitResource commit;
 
     public PageResource(String path, String content, CommitResource commit) {
