@@ -24,6 +24,25 @@ import java.security.cert.X509Certificate;
  */
 public final class SSL {
 
+    private static final TrustManager[] UNSECURE_TRUSTMANAGER = new TrustManager[]{
+            new X509TrustManager() {
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+
+                @Override
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                    // all clients are trusted
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                    // all servers are trusted
+                }
+            }
+    };
+
     private SSL() {
     }
 
@@ -46,22 +65,4 @@ public final class SSL {
             throw Throwables.propagate(ex);
         }
     }
-
-    private static final TrustManager[] UNSECURE_TRUSTMANAGER = new TrustManager[]{
-        new X509TrustManager() {
-            @Override
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-
-            @Override
-            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-            }
-
-            @Override
-            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-            }
-
-        }
-    };
 }

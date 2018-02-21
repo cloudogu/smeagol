@@ -4,8 +4,6 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.util.UrlPathHelper;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +31,7 @@ public class UiFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) {
-
+        // nothing to initialize
     }
 
     @Override
@@ -59,8 +57,8 @@ public class UiFilter implements Filter {
     private void handleStaticWikiFile(HttpServletRequest request, HttpServletResponse response, Matcher matcher) throws ServletException, IOException {
         String staticWikiFileUri = createStaticWikiFileUri(matcher);
         LOG.trace("forward static file request to {}", staticWikiFileUri);
-        RequestDispatcher dispatcher = request.getRequestDispatcher(staticWikiFileUri);
-        dispatcher.forward(request, response);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher(staticWikiFileUri);
+        requestDispatcher.forward(request, response);
     }
 
     private String createStaticWikiFileUri(Matcher matcher) {
@@ -87,6 +85,6 @@ public class UiFilter implements Filter {
 
     @Override
     public void destroy() {
-
+        // nothing to close or destroy
     }
 }

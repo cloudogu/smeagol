@@ -26,7 +26,7 @@ public class ScmRepositoryRepository implements RepositoryRepository {
         Optional<RepositoryDTO[]> dtos = scmHttpClient.get("/api/rest/repositories.json", RepositoryDTO[].class);
 
         return Arrays.stream(dtos.get())
-            .filter(dto -> dto.type.equals("git"))
+            .filter(dto -> "git".equals(dto.type))
             .map(this::map)
             .collect(Collectors.toList());
     }

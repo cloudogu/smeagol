@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import static java.util.Collections.singleton;
 
+@SuppressWarnings("squid:S1160") // ignore multiple exception rule
 public class GitClient implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(GitClient.class);
@@ -29,7 +30,7 @@ public class GitClient implements AutoCloseable {
     private final URL remoteUrl;
     private final String branch;
 
-    private Git git;
+    private Git gitRepository;
 
     public GitClient(Account account, File repository, URL remoteUrl, String branch) {
         this.account = account;
@@ -47,10 +48,10 @@ public class GitClient implements AutoCloseable {
     }
 
     private Git open() throws IOException {
-        if (git == null) {
-            git = Git.open(repository);
+        if (gitRepository == null) {
+            gitRepository = Git.open(repository);
         }
-        return git;
+        return gitRepository;
     }
 
     public File file(String path) {
@@ -74,7 +75,7 @@ public class GitClient implements AutoCloseable {
 
     private void pullChanges()  throws GitAPIException, IOException {
         LOG.trace("open repository {}", repository);
-        git = open();
+        Git git = open();
 
         LOG.debug("pull changes from remote for repository {}", repository);
         git.pull()
@@ -86,7 +87,7 @@ public class GitClient implements AutoCloseable {
 
     private void createClone()  throws GitAPIException, IOException {
         LOG.info("clone repository {} to {}", remoteUrl, repository);
-        git = Git.cloneRepository()
+        gitRepository = Git.cloneRepository()
                 .setURI(remoteUrl.toExternalForm())
                 .setDirectory(repository)
                 .setBranchesToClone(singleton("refs/head" + branch))
@@ -129,8 +130,10 @@ public class GitClient implements AutoCloseable {
         return commit;
     }
 
-    private void pushChanges() throws GitAPIException {
+    private void pushChanges() throws GitAPIException, IOException {
         CredentialsProvider credentials = credentialsProvider(account);
+
+        Git git = open();
 
         LOG.info("push changes to remote {} on branch {}", remoteUrl, branch);
         git.push()
@@ -143,8 +146,8 @@ public class GitClient implements AutoCloseable {
 
     @Override
     public void close()  {
-        if (git != null) {
-            git.close();
+        if (gitRepository != null) {
+            gitRepository.close();
         }
     }
 }

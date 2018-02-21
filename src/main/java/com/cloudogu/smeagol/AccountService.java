@@ -100,7 +100,7 @@ public class AccountService {
     static char[] fetchClearPassCredentials(URL url) {
         char[] credentials = JAXB.unmarshal(url, ClearPassResponse.class).getCredentials();
         Preconditions.checkState(credentials != null, "failed to fetch password");
-        if (credentials == null || credentials.length == 0){
+        if (credentials.length == 0){
             throw new AuthenticationException("could not extract password from clear pass response");
         }
         return credentials;
@@ -123,7 +123,7 @@ public class AccountService {
             if ( clearPassSuccess != null && clearPassSuccess.credentials != null ){
                 return clearPassSuccess.credentials.toCharArray();
             }
-            return null;
+            return new char[0];
         }
 
     }

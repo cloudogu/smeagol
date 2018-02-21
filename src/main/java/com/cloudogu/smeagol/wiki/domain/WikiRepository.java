@@ -5,6 +5,7 @@ import java.util.Optional;
 /**
  * Wiki repositories are able to query wiki objects.
  */
+@SuppressWarnings("squid:S1609") // ignore FunctionalInterface warning
 public interface WikiRepository {
 
     /**

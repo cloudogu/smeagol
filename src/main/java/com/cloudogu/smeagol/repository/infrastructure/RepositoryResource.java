@@ -6,6 +6,7 @@ import org.springframework.hateoas.ResourceSupport;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class RepositoryResource extends ResourceSupport {
 
@@ -44,5 +45,26 @@ public class RepositoryResource extends ResourceSupport {
 
     public void embed(String relationShip, Object resource) {
         embedded.put(relationShip, resource);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        RepositoryResource resource = (RepositoryResource) o;
+        return Objects.equals(id, resource.id);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), id);
     }
 }
