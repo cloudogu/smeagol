@@ -114,19 +114,8 @@ public class GitClient implements AutoCloseable {
     }
 
     public RevCommit commit(String path, String displayName, String email, String message) throws GitAPIException, IOException {
-        Git git = open();
-        git.add()
-                .addFilepattern(path)
-                .call();
-
-        RevCommit commit = git.commit()
-                .setAuthor(displayName, email)
-                .setMessage(message)
-                .call();
-
-        pushChanges();
-
-        return commit;
+        String[] paths = {path};
+        return commit(paths, displayName, email, message);
     }
 
     public RevCommit commit(String[] paths, String displayName, String email, String message) throws GitAPIException, IOException {
