@@ -1,5 +1,5 @@
 #!groovy
-@Library('github.com/cloudogu/ces-build-lib@e97ae0e')
+@Library('github.com/cloudogu/ces-build-lib@ac17d45')
 import com.cloudogu.ces.cesbuildlib.*
 
 node() { // No specific label
@@ -15,10 +15,7 @@ node() { // No specific label
 
     catchError {
 
-        def mvnHome = tool 'M3'
-        def javaHome = tool 'JDK8'
-
-        Maven mvn = new MavenLocal(this, mvnHome, javaHome)
+        Maven mvn = new MavenWrapper(this)
         Git git = new Git(this)
 
         stage('Checkout') {
@@ -45,7 +42,7 @@ node() { // No specific label
     }
 
     // Archive Unit and integration test results, if any
-    junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml'
+    junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
 
     mailIfStatusChanged(findEmailRecipients(defaultEmailRecipients))
 }

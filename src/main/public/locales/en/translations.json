@@ -1,0 +1,18 @@
+{
+  "repositories_failed_to_fetch": "Failed to fetch repositories",
+  "branches_failed_to_fetch": "Failed to fetch repository",
+  "wikiroot_failed_to_fetch": "Failed to fetch wiki",
+  "page_failed_to_fetch": "Failed to fetch page",
+  "page-editor_no_write_permissions": "You have not enough permission to edit this page",
+  "page-header_home": "Home",
+  "page-header_edit": "Edit",
+  "page-header_delete": "Delete",
+  "markdown-editor_save": "Save",
+  "markdown-editor_abort": "Abort",
+  "commit-form_save": "Save",
+  "commit-form_abort": "Abort",
+  "commit-form_title": "Commit Message",
+  "general-information_welcome": "Welcome to Smeagol, the repository documentation wiki.",
+  "general-information_description": "Below you see a list of all Git repositories on your repository server that you have access to. If you want to write documentation for a repository you simply have to add a <em>.smeagol.yml</em> file to the root of the repository. Once that is done you can use the wiki. Whenever you save changes to a wiki Smeagol pushes them to the repository. This way the documentation is always up-to-date and where it belongs - close to the code!.",
+  "back-to-repositories-button_text": "Back to Repository Overview"
+}

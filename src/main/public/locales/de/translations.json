@@ -1,0 +1,18 @@
+{
+  "repositories_failed_to_fetch": "Die Repositories konnten nicht geladen werden.",
+  "branches_failed_to_fetch": "Das Repository konnte nicht geladen werden",
+  "wikiroot_failed_to_fetch": "Das Wiki konnte nicht geladen werden",
+  "page_failed_to_fetch": "Die Seite konnte nicht geladen werden",
+  "page-editor_no_write_permissions": "Du hast nicht genügend Berechtigungen um diese Seite zu bearbeiten",
+  "page-header_home": "Startseite",
+  "page-header_edit": "Bearbeiten",
+  "page-header_delete": "Löschen",
+  "markdown-editor_save": "Speichern",
+  "markdown-editor_abort": "Abbrechen",
+  "commit-form_save": "Speichern",
+  "commit-form_abort": "Abbrechen",
+  "commit-form_title": "Commit Message",
+  "general-information_welcome": "Willkommen bei Smeagol, dem Wiki zur Dokumentation in einem Repository.",
+  "general-information_description": "Untenstehend siehst Du eine Liste aller Git-Repositories auf Deinem Repository-Server, auf die Du entsprechende Zugriffsrechte hast.Um eine Dokumentation für ein Repository zu schreiben, muss nur eine <em>.smeagol.yml</em> Datei in das Root-Verzeichnis des Repository abgelegt werden. Anschließend kann das Wiki in diesem Repository direkt genutzt werden. Alle Änderungen in einem Wiki werden nach dem Speichern von Smeagol an das Repository gepusht. Damit ist die Dokumentation immer auf dem neuesten Stand und dort, wo sie hingehört - nah am Code!",
+  "back-to-repositories-button_text": "Zurück zur Repository-Übersicht"
+}

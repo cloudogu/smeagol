@@ -3,13 +3,6 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-FQDN=$(doguctl config --global fqdn)
-export SMEAGOL_SERVICE_URL="https://${FQDN}/smeagol"
-export SMEAGOL_CAS_URL="https://${FQDN}/cas"
-export SCM_INSTANCE_URL="https://${FQDN}/scm"
-export PLANTUML_URL="https://${FQDN}/plantuml/png"
-
-
 # wait until scm passes all health checks
 echo "wait until scm passes all health checks"
 if ! doguctl healthy --wait --timeout 300 scm; then
@@ -17,12 +10,25 @@ if ! doguctl healthy --wait --timeout 300 scm; then
   exit 1
 fi
 
-
 TRUSTSTORE="${SMEAGOL_HOME}/truststore.jks"
 create_truststore.sh "${TRUSTSTORE}" > /dev/null
+
+# override setting from src/main/resources/application.yml
+FQDN=$(doguctl config --global fqdn)
+cat > /app/application.yml <<EOF
+stage: production
+server:
+  contextPath: /smeagol
+homeDirectory: ${SMEAGOL_HOME}
+scm:
+  url: https://${FQDN}/scm
+cas:
+  url: https://${FQDN}/cas
+  serviceUrl: https://${FQDN}/smeagol
+EOF
 
 java -Djava.awt.headless=true \
   -Djava.net.preferIPv4Stack=true \
   -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
   -Djavax.net.ssl.trustStorePassword=changeit \
-  -jar /app/smeagol-app.jar
+  -jar /app/smeagol.jar

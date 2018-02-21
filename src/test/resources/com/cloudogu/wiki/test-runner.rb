@@ -1,1 +1,0 @@
-lambda { |env| [200, {}, ['Hello, ' + wiki.getName()]] }
