@@ -18,8 +18,6 @@ import java.util.Optional;
 @Service
 public class ScmGitPageRepository implements PageRepository {
 
-    private static final String EXTENSION = ".md";
-
     private final GitClientProvider gitClientProvider;
 
     @Autowired
@@ -38,7 +36,7 @@ public class ScmGitPageRepository implements PageRepository {
     }
 
     private Optional<Page> createPageFromFile(GitClient client, WikiId id, Path path) throws IOException, GitAPIException {
-        String pagePath = pagePath(path);
+        String pagePath = Pages.filepath(path);
         File file = client.file(pagePath);
 
         if (file.exists()) {
@@ -61,7 +59,7 @@ public class ScmGitPageRepository implements PageRepository {
         try (GitClient client = gitClientProvider.createGitClient(id)) {
             client.refresh();
 
-            String pagePath = pagePath(path);
+            String pagePath = Pages.filepath(path);
             File file = client.file(pagePath);
             if (!file.delete()) {
                 throw new IOException("could not delete file: " + file.getPath());
@@ -79,10 +77,6 @@ public class ScmGitPageRepository implements PageRepository {
         } catch (IOException | GitAPIException ex) {
             throw Throwables.propagate(ex);
         }
-    }
-
-    private String pagePath(Path path) {
-        return path.getValue().concat(EXTENSION);
     }
 
     private Content createContent(File file) throws IOException {
@@ -108,7 +102,7 @@ public class ScmGitPageRepository implements PageRepository {
         try (GitClient client = gitClientProvider.createGitClient(id)) {
             client.refresh();
 
-            String pagePath = pagePath(path);
+            String pagePath = Pages.filepath(path);
             File file = client.file(pagePath);
 
             Content content = page.getContent();
@@ -133,7 +127,7 @@ public class ScmGitPageRepository implements PageRepository {
     @Override
     public boolean exists(WikiId id, Path path) {
         try (GitClient client = gitClientProvider.createGitClient(id)) {
-            String pagePath = pagePath(path);
+            String pagePath = Pages.filepath(path);
             return client.file(pagePath).exists();
         }
     }

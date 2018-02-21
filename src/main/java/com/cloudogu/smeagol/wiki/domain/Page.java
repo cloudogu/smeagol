@@ -3,6 +3,9 @@ package com.cloudogu.smeagol.wiki.domain;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * The page aggregate represents a single wiki page.
  */
@@ -11,24 +14,22 @@ public class Page {
     private WikiId wikiId;
     private Path path;
     private Content content;
-    private Optional<Commit> commit;
+    private Commit commit;
 
     public Page(WikiId wikiId, Path path, Content content) {
-        this.wikiId = wikiId;
-        this.path = path;
-        this.content = content;
+        this(wikiId, path, content, null);
     }
 
     public Page(WikiId wikiId, Path path, Content content, Commit commit) {
         this.wikiId = wikiId;
-        this.path = path;
+        this.path = checkPath(path);
         this.content = content;
-        this.commit = Optional.of(commit);
+        this.commit = commit;
     }
 
     public void edit(Commit commit, Content content) {
-        this.commit = Optional.of(commit);
-        this.content = content;
+        this.commit = checkNotNull(commit, "commit is required for edit");
+        this.content = checkNotNull(content, "content is required for edit");
     }
 
     public WikiId getWikiId() {
@@ -44,7 +45,7 @@ public class Page {
     }
 
     public Optional<Commit> getCommit() {
-        return commit;
+        return Optional.ofNullable(commit);
     }
 
     @Override
@@ -62,7 +63,11 @@ public class Page {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(wikiId, path);
+    }
+
+    private static Path checkPath(Path path) {
+        checkArgument(path.isFile(), "path %s is not file", path);
+        return path;
     }
 }
