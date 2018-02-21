@@ -10,7 +10,7 @@
   "page-header_create": "Neu",
   "create-form_title": "Seite anlegen",
   "create-form_name_label": "Name der Seite",
-  "create-form_info": "Die Seite wird unter /docs erstellt, außer ein absoluter Pfad ist angegeben.",
+  "create-form_info": "Die Seite wird unter /docs erstellt, außer ein absoluter Pfad ist angegeben. Der Name darf nicht '..' enthalten oder leer sein.",
   "create-form_ok": "OK",
   "create-form_abort": "Abbrechen",
   "markdown-editor_save": "Speichern",
