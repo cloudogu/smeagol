@@ -19,6 +19,10 @@ const DELETE_PAGE = 'smeagol/page/DELETE';
 const DELETE_PAGE_SUCCESS = 'smeagol/page/DELETE_SUCCESS';
 const DELETE_PAGE_FAILURE = 'smeagol/page/DELETE_FAILURE';
 
+const MOVE_PAGE = 'smeagol/page/MOVE';
+const MOVE_PAGE_SUCCESS = 'smeagol/page/MOVE_SUCCESS';
+const MOVE_PAGE_FAILURE = 'smeagol/page/MOVE_FAILURE';
+
 function requestPage(url: string) {
     return {
         type: FETCH_PAGE,
@@ -189,6 +193,39 @@ export function deletePage(url: string, message: string, callback: () => void) {
                 dispatch(deletePageSuccess(url));
             })
             .catch((err) => dispatch(deletePageFailure(url, err)));
+    }
+}
+
+function requestMovePage(url: string) {
+    return {
+        type: MOVE_PAGE,
+        url
+    };
+}
+
+function movePageSuccess(url: string) {
+    return {
+        type: MOVE_PAGE_SUCCESS,
+        url
+    };
+}
+
+function movePageFailure(url: string, err: Error) {
+    return {
+        type: MOVE_PAGE_FAILURE,
+        payload: err,
+        url
+    };
+}
+
+export function movePage(url: string, message: string, target:string) {
+    return function(dispatch) {
+        dispatch(requestMovePage(url));
+        return apiClient.post(url, { message , "moveTo": target })
+            .then(() => {
+                dispatch(movePageSuccess(url));
+            })
+            .catch((err) => dispatch(movePageFailure(url, err)));
     }
 }
 
