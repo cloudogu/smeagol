@@ -73,7 +73,7 @@ public class ScmHttpClient {
     }
 
     public <T> Optional<T> get(String url, Class<T> type, Object... urlVariables) {
-        return getEntity(url, type, urlVariables).map(e -> e.getBody());
+        return getEntity(url, type, urlVariables).map(HttpEntity::getBody);
     }
 
     public <T> Optional<ResponseEntity<T>> getEntity(String url, Class<T> type, Object... urlVariables) {
@@ -98,11 +98,11 @@ public class ScmHttpClient {
 
     private HttpHeaders createHeaders(){
         Account account = accountService.get();
-        return new HttpHeaders() {{
-            String auth = account.getUsername() + ":" + new String(account.getPassword());
-            byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(Charsets.US_ASCII));
-            String authHeader = "Basic " + new String( encodedAuth );
-            set("Authorization", authHeader);
-        }};
+        HttpHeaders headers = new HttpHeaders();
+        String auth = account.getUsername() + ":" + new String(account.getPassword());
+        byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(Charsets.US_ASCII));
+        String authHeader = "Basic " + new String( encodedAuth );
+        headers.set("Authorization", authHeader);
+        return headers;
     }
 }

@@ -39,8 +39,12 @@ public class RepositoryId {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         RepositoryId that = (RepositoryId) o;
         return Objects.equals(value, that.value);
     }

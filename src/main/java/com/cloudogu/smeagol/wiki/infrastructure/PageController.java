@@ -84,7 +84,7 @@ public class PageController {
             @PathVariable("repositoryId") String repositoryId,
             @PathVariable("branch") String branch,
             @RequestBody DeleteRequestPayload payload
-    ) throws URISyntaxException {
+    )  {
         WikiId id = new WikiId(repositoryId, branch);
         Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
 

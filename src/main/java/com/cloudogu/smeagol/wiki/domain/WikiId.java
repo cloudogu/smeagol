@@ -26,8 +26,12 @@ public class WikiId {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         WikiId wikiId = (WikiId) o;
         return Objects.equals(repositoryID, wikiId.repositoryID) &&
                 Objects.equals(branch, wikiId.branch);
