@@ -10,6 +10,7 @@ import Branches from './repository/containers/Branches';
 import WikiRoot from './wiki/containers/WikiRoot';
 import Page from './wiki/containers/Page';
 import {Switch} from 'react-router-dom';
+import Directory from './wiki/containers/Directory';
 
 const styles = {
     content: {
@@ -17,7 +18,9 @@ const styles = {
     },
 };
 
-type Props = {}
+type Props = {
+    classes: any
+}
 
 class Main extends React.Component<Props> {
 
@@ -29,6 +32,7 @@ class Main extends React.Component<Props> {
                 <Route exact path="/" component={Repositories} />
                 <Route exact path="/:repository" component={Branches} />
                 <Route exact path="/:repository/:branch" component={WikiRoot} />
+                <Route path="/:repository/:branch/pages" component={Directory} />
                 <Route path="/:repository/:branch" component={Page} />
                 </Switch>
             </div>

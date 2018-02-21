@@ -15,6 +15,7 @@ const styles = {
 
 type Props = {
     page: any,
+    pagesLink: string,
     onDeleteClick: () => void,
     onHomeClick: () => void,
     classes: any
@@ -23,9 +24,10 @@ type Props = {
 class PageHeader extends React.Component<Props> {
 
     render() {
-        const { page, classes, onDeleteClick, onHomeClick } = this.props;
+        const { page, pagesLink, classes, onDeleteClick, onHomeClick } = this.props;
 
         const homeButton = <ActionButton onClick={onHomeClick}  i18nKey="page-header_home" type="primary" />;
+        const pagesButton = <ActionLink to={ pagesLink }  i18nKey="page-header_pages" type="primary" />;
         const edit = page._links.edit ? <ActionLink to="?edit=true" i18nKey="page-header_edit" type="primary" /> : '';
         const deleteButton = page._links.delete ? <ActionButton onClick={onDeleteClick}  i18nKey="page-header_delete" type="primary" /> : '';
         return (
@@ -33,6 +35,7 @@ class PageHeader extends React.Component<Props> {
                 <h1>{ page.path }</h1>
                 <div className={classes.actions}>
                     {homeButton}
+                    {pagesButton}
                     {edit}
                     {deleteButton}
                 </div>

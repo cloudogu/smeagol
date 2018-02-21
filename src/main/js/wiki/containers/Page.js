@@ -8,8 +8,10 @@ import * as queryString from 'query-string';
 import PageEditor from '../components/PageEditor';
 import Loading from '../../Loading';
 import I18nAlert from '../../I18nAlert';
+import {createDirectoryUrl} from '../modules/directory';
 
 type Props = {
+    pagesLink: string,
     url: string,
     path: string,
     loading: boolean,
@@ -70,7 +72,7 @@ class Page extends React.Component<Props> {
     };
 
     render() {
-        const { error, loading, page, path, notFound, editMode } = this.props;
+        const { error, loading, page, path, notFound, editMode, pagesLink } = this.props;
 
         if (error) {
             return (
@@ -102,7 +104,7 @@ class Page extends React.Component<Props> {
             return <PageEditor path={page.path} content={page.content} onSave={this.edit} onAbort={this.onAbortEdit} />;
         }
 
-        return <PageViewer page={page} onDelete={ this.delete } onHome={ this.pushLandingPageState } />;
+        return <PageViewer page={page} pagesLink={pagesLink} onDelete={ this.delete } onHome={ this.pushLandingPageState } />;
     }
 }
 
@@ -124,8 +126,18 @@ const mapStateToProps = (state, ownProps) => {
     const wikiId = createId(repository, branch);
     const wiki = state.wiki[wikiId] ||{};
 
+    let pagesLink = '#';
+    if (wiki.wiki && wiki.wiki.directory) {
+        pagesLink = `/${repository}/${branch}/pages/${wiki.wiki.directory}`;
+        // TODO check for polyfil
+        if (!pagesLink.endsWith('/')) {
+            pagesLink += '/';
+        }
+    }
+
     const props = {
         ...state.page[url],
+        pagesLink,
         path,
         url,
         repository,
