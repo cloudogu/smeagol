@@ -3,7 +3,7 @@ import React from 'react';
 import injectSheet from 'react-jss';
 import ActionLink from './ActionLink';
 import ActionButton from './ActionButton';
-import CreateForm from './CreateForm';
+import PageNameForm from './PageNameForm';
 import { withRouter } from 'react-router-dom';
 
 const styles = {
@@ -63,15 +63,20 @@ class PageHeader extends React.Component<Props,State> {
         this.props.history.push(path);
     };
 
+    onMoveClick = () => {
+        this.setState({
+            showMoveForm: true
+        });
+    };
+
     render() {
         const { page, classes, onDeleteClick, onHomeClick } = this.props;
 
         const homeButton = <ActionButton onClick={onHomeClick}  i18nKey="page-header_home" type="primary" />;
-        const createButton = <ActionButton onClick={this.onCreateClick}  i18nKey="page-header_create" type="primary" />;
+        const createButton = <ActionButton onClick={this.onCreateClick} i18nKey="page-header_create" type="primary" />;
         const edit = page._links.edit ? <ActionLink to="?edit=true" i18nKey="page-header_edit" type="primary" /> : '';
-        const deleteButton = page._links.delete ? <ActionButton onClick={onDeleteClick}  i18nKey="page-header_delete" type="primary" /> : '';
-
-        const createForm = <CreateForm show={ this.state.showCreateForm } onOk={ this.onOkCreate } onAbortClick={ this.onAbortCreateClick } />
+        const deleteButton = page._links.delete ? <ActionButton onClick={onDeleteClick} i18nKey="page-header_delete" type="primary" /> : '';
+        const createForm = <PageNameForm show={ this.state.showCreateForm } onOk={ this.onOkCreate } onAbortClick={ this.onAbortCreateClick } labelPrefix="create" />
         return (
             <div className={classes.header}>
                 <h1>{ page.path }</h1>

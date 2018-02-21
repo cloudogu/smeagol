@@ -6,6 +6,7 @@ import ActionButton from './ActionButton';
 
 type Props = {
     t: any,
+    labelPrefix: string,
     show: boolean,
     onOk: Function,
     onAbortClick: Function,
@@ -15,7 +16,7 @@ type State = {
     name: string
 };
 
-class CreateForm extends React.Component<Props, State> {
+class PageNameForm extends React.Component<Props, State> {
 
     constructor(props) {
         super(props);
@@ -39,22 +40,22 @@ class CreateForm extends React.Component<Props, State> {
     };
 
     render() {
-        const { show, onAbortClick, t } = this.props;
+        const { show, onAbortClick, t, labelPrefix } = this.props;
         const isButtonEnabled = this.validPage();
         return (
             <Modal show={ show } onHide={onAbortClick}>
                 <Modal.Header closeButton>
-                    <Modal.Title>{ t('create-form_title') }</Modal.Title>
+                    <Modal.Title>{ t(`${labelPrefix}-form_title`) }</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h2>{ t('create-form_name_label')} </h2>
+                    <h2>{ t(`${labelPrefix}-form_name_label`)} </h2>
                     <input type="text" className="form-control" value={this.state.name} onChange={ this.handleChange } />
                     <br />
-                    <p>{ t('create-form_info')} </p>
+                    <p>{ t(`${labelPrefix}-form_info`)} </p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <ActionButton disabled={!isButtonEnabled} type="primary" onClick={this.onOkClick} i18nKey="create-form_ok" />
-                    <ActionButton onClick={onAbortClick} i18nKey="create-form_abort" />
+                    <ActionButton disabled={!isButtonEnabled} type="primary" onClick={this.onOkClick} i18nKey={labelPrefix+"-form_ok"} />
+                    <ActionButton onClick={onAbortClick} i18nKey={labelPrefix+"-form_abort"} />
                 </Modal.Footer>
             </Modal>
         );
@@ -62,4 +63,4 @@ class CreateForm extends React.Component<Props, State> {
 
 }
 
-export default translate()(CreateForm);
+export default translate()(PageNameForm);
