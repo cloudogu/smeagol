@@ -110,7 +110,10 @@ public class ScmGitPageRepository implements PageRepository {
 
             String pagePath = pagePath(path);
             File file = client.file(pagePath);
-
+            File parentDir = file.getParentFile();
+            if(!parentDir.mkdirs() && !parentDir.exists()) {
+                throw new IOException("could not create directory for page: " + file.getPath());
+            }
             Content content = page.getContent();
             Files.write(content.getValue(), file, Charsets.UTF_8);
 
