@@ -58,8 +58,6 @@ public class PageController {
         WikiId id = new WikiId(repositoryId, branch);
         Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
 
-        // TODO return new page? this would safe us one request from the frontend. Is this resty?
-
         if ( repository.exists(id, path) ) {
             return edit(id, path, payload);
         }
