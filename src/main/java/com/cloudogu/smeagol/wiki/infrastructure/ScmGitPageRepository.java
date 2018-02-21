@@ -92,6 +92,10 @@ public class ScmGitPageRepository implements PageRepository {
             String targetPath = pagePath(target);
             File oldFile = client.file(sourcePath);
             File newFile = client.file(targetPath);
+            File newFileParentDir = newFile.getParentFile();
+            if(!newFileParentDir.mkdirs() && !newFileParentDir.exists()) {
+                throw new IOException("could not create directory for page: " + newFile.getPath());
+            }
             Files.move(oldFile, newFile);
 
             Author author = commit.getAuthor();
