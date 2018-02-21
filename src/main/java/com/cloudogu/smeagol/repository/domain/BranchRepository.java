@@ -3,6 +3,7 @@ package com.cloudogu.smeagol.repository.domain;
 /**
  * Repository to query branches.
  */
+@SuppressWarnings("squid:S1609") // ignore FunctionalInterface warning
 public interface BranchRepository {
 
     /**

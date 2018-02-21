@@ -20,7 +20,7 @@ public class BranchResourceAssembler extends ResourceAssemblerSupport<Branch, Br
 
     private Link selfLink(Branch branch) {
         return linkTo(methodOn(RepositoryController.class).findById(branch.getRepositoryId()))
-                .slash("branches") // TODO not so nice ...
+                .slash("branches")
                 .slash(branch.getName().getValue())
                 .withSelfRel();
     }
