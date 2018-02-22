@@ -25,11 +25,10 @@ type Props = {
 class Directory extends React.Component<Props> {
 
     componentDidMount() {
-        const { url, repository, branch } = this.props;
+        const { url, repository, branch, fetchDirectoryIfNeeded, fetchWikiIfNeeded } = this.props;
 
-        this.props.fetchDirectoryIfNeeded(url);
-        this.props.fetchWikiIfNeeded(repository, branch);
-
+        fetchDirectoryIfNeeded(url);
+        fetchWikiIfNeeded(repository, branch);
     }
 
     componentDidUpdate() {
@@ -114,14 +113,12 @@ const mapStateToProps = (state, ownProps) => {
     const url = createDirectoryUrl(repository, branch, path);
 
     const wikiId = createId(repository, branch);
-    const wiki = state.wiki[wikiId] ||{};
-
+    const stateWiki = state.wiki[wikiId] ||{};
 
     let baseDirectory = '';
-    if (wiki.wiki && wiki.wiki.directory) {
-        baseDirectory = wiki.wiki.directory;
+    if (stateWiki.wiki && stateWiki.wiki.directory) {
+        baseDirectory = stateWiki.wiki.directory;
     }
-
 
     return {
         ...state.directory[url],

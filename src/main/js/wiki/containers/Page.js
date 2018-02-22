@@ -124,11 +124,11 @@ const mapStateToProps = (state, ownProps) => {
     const path = findPagePath(ownProps);
     const url = createPageUrl(repository, branch, path);
     const wikiId = createId(repository, branch);
-    const wiki = state.wiki[wikiId] ||{};
+    const stateWiki = state.wiki[wikiId] ||{};
 
     let pagesLink = '#';
-    if (wiki.wiki && wiki.wiki.directory) {
-        pagesLink = `/${repository}/${branch}/pages/${wiki.wiki.directory}`;
+    if (stateWiki.wiki && stateWiki.wiki.directory) {
+        pagesLink = `/${repository}/${branch}/pages/${stateWiki.wiki.directory}`;
         // TODO check for polyfil
         if (!pagesLink.endsWith('/')) {
             pagesLink += '/';
@@ -143,7 +143,7 @@ const mapStateToProps = (state, ownProps) => {
         repository,
         branch,
         editMode: isEditMode(ownProps),
-        wiki: wiki.wiki || {}
+        wiki: stateWiki.wiki || {}
     };
 
     return props;
