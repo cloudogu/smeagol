@@ -18,6 +18,7 @@ const styles = {
 type Props = {
     page: any,
     wiki: any,
+    pagesLink: string,
     onDeleteClick: () => void,
     onHomeClick: () => void,
     onOkMoveClick: () => void,
@@ -86,10 +87,11 @@ class PageHeader extends React.Component<Props,State> {
 
 
     render() {
-        const { page, classes, onDeleteClick, onHomeClick } = this.props;
+        const { page, pagesLink, classes, onDeleteClick, onHomeClick } = this.props;
 
         const homeButton = <ActionButton onClick={onHomeClick}  i18nKey="page-header_home" type="primary" />;
         const createButton = <ActionButton onClick={this.onCreateClick} i18nKey="page-header_create" type="primary" />;
+        const pagesButton = <ActionLink to={ pagesLink }  i18nKey="page-header_pages" type="primary" />;
         const edit = page._links.edit ? <ActionLink to="?edit=true" i18nKey="page-header_edit" type="primary" /> : '';
         const moveButton = page._links.move ? <ActionButton onClick={this.onMoveClick} i18nKey="page-header_move" type="primary" /> : '';
         const deleteButton = page._links.delete ? <ActionButton onClick={onDeleteClick} i18nKey="page-header_delete" type="primary" /> : '';
@@ -103,6 +105,7 @@ class PageHeader extends React.Component<Props,State> {
                     {homeButton}
                     {createButton}
                     {moveButton}
+                    {pagesButton}
                     {edit}
                     {deleteButton}
                 </div>

@@ -6,16 +6,22 @@ import java.util.Objects;
 
 public class WikiResource extends ResourceSupport {
 
-    private String displayName;
-    private String landingPage;
+    private final String displayName;
+    private final String directory;
+    private final String landingPage;
 
-    public WikiResource(String displayName, String landingPage) {
+    public WikiResource(String displayName, String directory, String landingPage) {
         this.displayName = displayName;
+        this.directory = directory;
         this.landingPage = landingPage;
     }
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public String getDirectory() {
+        return directory;
     }
 
     public String getLandingPage() {
@@ -35,12 +41,12 @@ public class WikiResource extends ResourceSupport {
         }
         WikiResource resource = (WikiResource) o;
         return Objects.equals(displayName, resource.displayName) &&
+                Objects.equals(directory, resource.directory) &&
                 Objects.equals(landingPage, resource.landingPage);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(super.hashCode(), displayName, landingPage);
+        return Objects.hash(super.hashCode(), displayName, directory, landingPage);
     }
 }

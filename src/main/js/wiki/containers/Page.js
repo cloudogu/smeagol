@@ -8,8 +8,10 @@ import * as queryString from 'query-string';
 import PageEditor from '../components/PageEditor';
 import Loading from '../../Loading';
 import I18nAlert from '../../I18nAlert';
+import {createDirectoryUrl} from '../modules/directory';
 
 type Props = {
+    pagesLink: string,
     url: string,
     path: string,
     loading: boolean,
@@ -81,7 +83,7 @@ class Page extends React.Component<Props> {
     };
 
     render() {
-        const { error, loading, page, wiki, repository, branch, path, notFound, editMode } = this.props;
+        const { error, loading, page, wiki, repository, branch, path, notFound, editMode, pagesLink } = this.props;
         wiki.repository = repository;
         wiki.branch = branch;
 
@@ -115,7 +117,7 @@ class Page extends React.Component<Props> {
             return <PageEditor path={page.path} content={page.content} onSave={this.edit} onAbort={this.onAbortEdit} />;
         }
 
-        return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState } onMove={ this.onMove } />;
+        return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState } onMove={ this.onMove } pagesLink={pagesLink} />;
     }
 }
 
@@ -135,16 +137,26 @@ const mapStateToProps = (state, ownProps) => {
     const path = findPagePath(ownProps);
     const url = createPageUrl(repository, branch, path);
     const wikiId = createId(repository, branch);
-    const wiki = state.wiki[wikiId] ||{};
+    const stateWiki = state.wiki[wikiId] ||{};
+
+    let pagesLink = '#';
+    if (stateWiki.wiki && stateWiki.wiki.directory) {
+        pagesLink = `/${repository}/${branch}/pages/${stateWiki.wiki.directory}`;
+        // TODO check for polyfil
+        if (!pagesLink.endsWith('/')) {
+            pagesLink += '/';
+        }
+    }
 
     const props = {
         ...state.page[url],
+        pagesLink,
         path,
         url,
         repository,
         branch,
         editMode: isEditMode(ownProps),
-        wiki: wiki.wiki || {}
+        wiki: stateWiki.wiki || {}
     };
 
     return props;
