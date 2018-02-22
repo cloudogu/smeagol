@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface DirectoryRepository {
 
     /**
-     * Returns the directory for the path with in the wiki.
+     * Returns the directory for the path within the wiki.
      *
      * @param wikiId id of wiki
      * @param path the path of the directory
