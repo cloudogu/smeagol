@@ -154,18 +154,18 @@ public class ScmGitPageRepositoryTest {
     }
 
     @Test
-    public void testMove() throws GitAPIException, IOException {
+    public void testSaveOnMove() throws GitAPIException, IOException {
         String targetFileWithoutExtension = String.format("docs%stest", File.separator);
-        testMoveWithTargetName(targetFileWithoutExtension);
+        testSaveOnMoveWithTargetName(targetFileWithoutExtension);
     }
 
     @Test
-    public void testMoveTargetInSubdir() throws GitAPIException, IOException {
+    public void testSaveOnMoveTargetInSubdir() throws GitAPIException, IOException {
         String targetFileWithoutExtension = String.format("docs%ssub%sdir%stest", File.separator, File.separator, File.separator);
-        testMoveWithTargetName(targetFileWithoutExtension);
+        testSaveOnMoveWithTargetName(targetFileWithoutExtension);
     }
 
-    private void testMoveWithTargetName(String targetFileWithoutExtension) throws IOException, GitAPIException {
+    private void testSaveOnMoveWithTargetName(String targetFileWithoutExtension) throws IOException, GitAPIException {
         File folder = temporaryFolder.newFolder();
 
         String sourceFileString = String.format("docs%sHome.md", File.separator);
@@ -192,7 +192,11 @@ public class ScmGitPageRepositoryTest {
         assertTrue(sourceFile.exists());
         assertFalse(targetFile.exists());
         Path targetPath = Path.valueOf(targetFileWithoutExtension);
-        pageRepository.move(PAGE, targetPath, COMMIT);
+
+        Page page = new Page(WIKI_ID_42, PATH_HOME, CONTENT_GUIDE, COMMIT);
+        page.move(COMMIT, targetPath);
+
+        pageRepository.save(page);
         assertTrue(targetFile.exists());
         assertFalse(sourceFile.exists());
 

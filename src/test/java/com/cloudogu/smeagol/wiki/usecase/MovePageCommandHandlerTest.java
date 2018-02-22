@@ -34,19 +34,22 @@ public class MovePageCommandHandlerTest {
         when(accountService.get()).thenReturn(AccountTestData.TRILLIAN);
 
         WikiId id = new WikiId("123", "master");
-        Path sourePath = Path.valueOf("Home");
+        Path sourcePath = Path.valueOf("Home");
         Path targetPath = Path.valueOf("Target");
-        Page page = new Page(id, sourePath, Content.valueOf("Content"));
+        Page page = new Page(id, sourcePath, Content.valueOf("Content"));
 
-        when(pageRepository.findByWikiIdAndPath(id, sourePath)).thenReturn(Optional.of(page));
+        when(pageRepository.findByWikiIdAndPath(id, sourcePath)).thenReturn(Optional.of(page));
+        when(pageRepository.save(page)).thenReturn(page);
 
         Message message = Message.valueOf("hitchhiker is awesome");
 
-        commandHandler.handle(new MovePageCommand(id, sourePath, targetPath, message));
+        Page newPage = commandHandler.handle(new MovePageCommand(id, sourcePath, targetPath, message));
 
-        ArgumentCaptor<Commit> captor = ArgumentCaptor.forClass(Commit.class);
-        verify(pageRepository).move(eq(page), eq(targetPath), captor.capture());
-        assertEquals(message, captor.getValue().getMessage());
+        assertEquals(message, newPage.getCommit().get().getMessage());
+        assertEquals(targetPath, newPage.getPath());
+        assertEquals(sourcePath, newPage.getOldPath().get());
+
+        verify(pageRepository).save(page);
     }
 
     @Test(expected = PageNotFoundException.class)

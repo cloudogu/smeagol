@@ -81,38 +81,6 @@ public class ScmGitPageRepository implements PageRepository {
         }
     }
 
-    @Override
-    public Page move(Page page, Path target, Commit commit) {
-        WikiId id = page.getWikiId();
-        Path path = page.getPath();
-        try (GitClient client = gitClientProvider.createGitClient(id)) {
-            client.refresh();
-
-            String sourcePath = pagePath(path);
-            String targetPath = pagePath(target);
-            File oldFile = client.file(sourcePath);
-            File newFile = client.file(targetPath);
-            File newFileParentDir = newFile.getParentFile();
-            if(!newFileParentDir.mkdirs() && !newFileParentDir.exists()) {
-                throw new IOException("could not create directory for page: " + newFile.getPath());
-            }
-            Files.move(oldFile, newFile);
-
-            Author author = commit.getAuthor();
-
-            String[] paths = {sourcePath, targetPath};
-            RevCommit revCommit = client.commit(
-                    paths,
-                    author.getDisplayName().getValue(),
-                    author.getEmail().getValue(),
-                    commit.getMessage().getValue()
-            );
-
-            return new Page(id, Path.valueOf(targetPath), page.getContent(), createCommit(revCommit));
-        } catch (IOException | GitAPIException ex) {
-            throw Throwables.propagate(ex);
-        }
-    }
 
     private String pagePath(Path path) {
         return path.getValue().concat(EXTENSION);
@@ -136,6 +104,13 @@ public class ScmGitPageRepository implements PageRepository {
 
     @Override
     public Page save(Page page) {
+        if (page.getOldPath().isPresent()) {
+            return move(page);
+        }
+        return createOrEdit(page);
+    }
+
+    private Page createOrEdit(Page page) {
         WikiId id = page.getWikiId();
         Path path = page.getPath();
         try (GitClient client = gitClientProvider.createGitClient(id)) {
@@ -143,7 +118,7 @@ public class ScmGitPageRepository implements PageRepository {
 
             String pagePath = pagePath(path);
             File file = client.file(pagePath);
-            file.getParentFile().mkdirs();
+            mkdirs(file.getParentFile());
 
             Content content = page.getContent();
             Files.write(content.getValue(), file, Charsets.UTF_8);
@@ -161,6 +136,43 @@ public class ScmGitPageRepository implements PageRepository {
             return new Page(page.getWikiId(), path, content, createCommit(revCommit));
         } catch (IOException | GitAPIException ex) {
             throw Throwables.propagate(ex);
+        }
+    }
+
+    private Page move(Page page) {
+        WikiId id = page.getWikiId();
+        Path oldPath = page.getOldPath().get();
+        Commit commit = page.getCommit().get();
+
+        try (GitClient client = gitClientProvider.createGitClient(id)) {
+            client.refresh();
+
+            String sourcePath = pagePath(oldPath);
+            String targetPath = pagePath(page.getPath());
+            File oldFile = client.file(sourcePath);
+            File newFile = client.file(targetPath);
+            mkdirs(newFile.getParentFile());
+            Files.move(oldFile, newFile);
+
+            Author author = commit.getAuthor();
+
+            String[] paths = {sourcePath, targetPath};
+            RevCommit revCommit = client.commit(
+                    paths,
+                    author.getDisplayName().getValue(),
+                    author.getEmail().getValue(),
+                    commit.getMessage().getValue()
+            );
+
+            return new Page(id, Path.valueOf(targetPath), Path.valueOf(sourcePath), page.getContent(), createCommit(revCommit));
+        } catch (IOException | GitAPIException ex) {
+            throw Throwables.propagate(ex);
+        }
+    }
+
+    private void mkdirs(File directory) throws IOException {
+        if(!directory.mkdirs() && !directory.exists()) {
+            throw new IOException("could not create directory: " + directory.getPath());
         }
     }
 

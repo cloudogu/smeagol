@@ -37,7 +37,9 @@ public class MovePageCommandHandler implements CommandHandler<Page, MovePageComm
 
         Commit commit = createNewCommit(command.getMessage());
 
-        return repository.move(page, target, commit);
+        page.move(commit, target);
+
+        return repository.save(page);
     }
 
     private Commit createNewCommit(Message message) {

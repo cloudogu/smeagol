@@ -38,13 +38,4 @@ public interface PageRepository {
      * @param commit delete commit
      */
     void delete(Page page, Commit commit);
-
-    /**
-     * Moves the page.
-     *
-     * @param page moved page
-     * @param target new page path
-     * @param commit move commit
-     */
-    Page move(Page page, Path target, Commit commit);
 }

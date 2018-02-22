@@ -218,7 +218,7 @@ function movePageFailure(url: string, err: Error) {
     };
 }
 
-export function movePage(url: string, message: string, target:string, callback: (target) => void) {
+export function movePage(url: string, message: string, target: string, callback: (target) => void) {
     return function(dispatch) {
         dispatch(requestMovePage(url));
         return apiClient.post(url, { message , "moveTo": target })
