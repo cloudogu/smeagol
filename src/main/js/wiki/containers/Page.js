@@ -49,8 +49,7 @@ class Page extends React.Component<Props> {
     };
 
     pushLandingPageState = () => {
-        const { history, repository, branch, wiki } = this.props;
-        history.push(`/${repository}/${branch}/${wiki.landingPage}`);
+        this.pushPageState(this.props.wiki.landingPage);
     };
 
     delete = () => {
@@ -64,10 +63,15 @@ class Page extends React.Component<Props> {
         const { path, url, movePage } = this.props;
         // TODO i18n
         const message = 'Move page ' + path + ' to ' + target + ' (smeagol)';
-        movePage(url, message, target);
+        movePage(url, message, target, this.pushPageState);
     };
 
-    onAbortEdit = () => {
+    pushPageState = (pagePath: string) => {
+        const { history, repository, branch } = this.props;
+        history.push(`/${repository}/${branch}/${pagePath}`);
+    };
+
+    onAbortEdit= () => {
         const { history } = this.props;
         history.push('?');
     };
@@ -163,8 +167,8 @@ const mapDispatchToProps = (dispatch) => {
         deletePage: (url: string, message: string, callback: () => void) => {
             dispatch(deletePage(url, message, callback))
         },
-        movePage: (url: string, message: string, target: string) => {
-            dispatch(movePage(url, message, target))
+        movePage: (url: string, message: string, target: string, callback: (target) => void) => {
+            dispatch(movePage(url, message, target, callback))
         }
     }
 };

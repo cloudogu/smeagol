@@ -218,12 +218,13 @@ function movePageFailure(url: string, err: Error) {
     };
 }
 
-export function movePage(url: string, message: string, target:string) {
+export function movePage(url: string, message: string, target:string, callback: (target) => void) {
     return function(dispatch) {
         dispatch(requestMovePage(url));
         return apiClient.post(url, { message , "moveTo": target })
             .then(() => {
                 dispatch(movePageSuccess(url));
+                callback(target);
             })
             .catch((err) => dispatch(movePageFailure(url, err)));
     }
@@ -233,6 +234,7 @@ export default function reducer(state = {}, action = {}) {
     switch (action.type) {
         case FETCH_PAGE:
         case EDIT_PAGE:
+        case MOVE_PAGE:
         case CREATE_PAGE:
         case DELETE_PAGE:
             return {
@@ -253,6 +255,7 @@ export default function reducer(state = {}, action = {}) {
             };
         case FETCH_PAGE_FAILURE:
         case EDIT_PAGE_FAILURE:
+        case MOVE_PAGE_FAILURE:
         case CREATE_PAGE_FAILURE:
         case DELETE_PAGE_FAILURE:
             return {
@@ -272,6 +275,7 @@ export default function reducer(state = {}, action = {}) {
             };
         case CREATE_PAGE_SUCCESS:
         case EDIT_PAGE_SUCCESS:
+        case MOVE_PAGE_SUCCESS:
         case DELETE_PAGE_SUCCESS:
             return {
                 ...state,

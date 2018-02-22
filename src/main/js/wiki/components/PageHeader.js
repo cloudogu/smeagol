@@ -51,18 +51,25 @@ class PageHeader extends React.Component<Props,State> {
         });
     };
 
+    onOkMoveClick = (name) => {
+        const path = this.getPathFromPagename(name);
+        this.props.onOkMoveClick(path);
+    };
+
     onOkCreate = (name) => {
         const { repository, branch } = this.props.wiki;
+        let wikiPath = `/${repository}/${branch}/`;
+        const pagePath = this.getPathFromPagename(name);
 
-        let path = `/${repository}/${branch}`;
+        this.props.history.push(wikiPath + pagePath);
+    };
 
+    getPathFromPagename = (name) => {
         if (name.startsWith('/')) {
-            path = `${path}${name}`;
+            return name.substr(1);
         } else {
-            path = `${path}/docs/${name}`;
+            return `docs/${name}`;
         }
-
-        this.props.history.push(path);
     };
 
     onMoveClick = () => {
@@ -79,7 +86,7 @@ class PageHeader extends React.Component<Props,State> {
 
 
     render() {
-        const { page, classes, onDeleteClick, onHomeClick, onOkMoveClick } = this.props;
+        const { page, classes, onDeleteClick, onHomeClick } = this.props;
 
         const homeButton = <ActionButton onClick={onHomeClick}  i18nKey="page-header_home" type="primary" />;
         const createButton = <ActionButton onClick={this.onCreateClick} i18nKey="page-header_create" type="primary" />;
@@ -87,7 +94,7 @@ class PageHeader extends React.Component<Props,State> {
         const moveButton = page._links.move ? <ActionButton onClick={this.onMoveClick} i18nKey="page-header_move" type="primary" /> : '';
         const deleteButton = page._links.delete ? <ActionButton onClick={onDeleteClick} i18nKey="page-header_delete" type="primary" /> : '';
         const createForm = <PageNameForm show={ this.state.showCreateForm } onOk={ this.onOkCreate } onAbortClick={ this.onAbortCreateClick } labelPrefix="create" />
-        const moveForm = <PageNameForm show={ this.state.showMoveForm } onOk={ onOkMoveClick } onAbortClick={ this.onAbortMoveClick } labelPrefix="move" />
+        const moveForm = <PageNameForm show={ this.state.showMoveForm } onOk={ this.onOkMoveClick } onAbortClick={ this.onAbortMoveClick } labelPrefix="move" />
 
         return (
             <div className={classes.header}>
