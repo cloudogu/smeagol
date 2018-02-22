@@ -13,7 +13,8 @@ const styles = {
 type Props = {
     onClick: Function,
     i18nKey: string,
-    type?: string
+    type?: string,
+    disabled: boolean
 }
 
 class ActionButton extends React.Component<Props> {
@@ -23,10 +24,10 @@ class ActionButton extends React.Component<Props> {
     };
 
     render() {
-        const { onClick, i18nKey, type, classes, t } = this.props;
+        const { onClick, i18nKey, type, classes, t, disabled } = this.props;
         const typeClass = 'btn-' + type;
         return (
-            <button className={classNames('btn', typeClass, classes.button)} onClick={onClick}>
+            <button disabled={disabled} className={classNames('btn', typeClass, classes.button)} onClick={onClick}>
                 {t(i18nKey)}
             </button>
         );

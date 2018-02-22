@@ -121,6 +121,19 @@ public class ScmGitPageRepositoryTest {
     @Test
     public void testSave() throws IOException, GitAPIException {
         File file = temporaryFolder.newFile();
+        testSaveWithFile(file);
+    }
+
+    @Test
+    public void testSaveWithMissingDirectory() throws IOException, GitAPIException {
+        File folder = temporaryFolder.newFolder();
+        File file = new File(folder, String.format("docs%stest%sHome.md", File.separator, File.separator));
+        assertFalse(file.exists());
+        testSaveWithFile(file);
+        assertTrue(file.exists());
+    }
+
+    private void testSaveWithFile(File file) throws IOException, GitAPIException {
         String homePagePath = PATH_HOME.getValue().concat(".md");
         when(gitClient.file(homePagePath)).thenReturn(file);
 
