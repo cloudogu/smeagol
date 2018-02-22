@@ -29,5 +29,6 @@ public interface Dispatcher {
      * @throws ServletException servlet exception
      * @throws IOException io exception
      */
+    @SuppressWarnings("squid:S1160") // ignore warning about multiple exceptions
     void dispatch(HttpServletRequest request, HttpServletResponse response, String uri) throws ServletException, IOException;
 }

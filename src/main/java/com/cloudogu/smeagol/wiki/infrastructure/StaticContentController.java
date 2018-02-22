@@ -38,20 +38,31 @@ public class StaticContentController {
             HttpServletRequest request,
             @PathVariable("repositoryId") String repositoryId,
             @PathVariable("branch") String branch
-    ) throws GitAPIException, IOException
+    ) throws IOException
     {
         WikiId id = new WikiId(repositoryId, branch);
         Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
 
-        try(GitClient gitClient = gitClientProvider.createGitClient(id)) {
+        FileSystemResource fileSystemResource = createFileSystemResource(id, path);
+        if (fileSystemResource != null) {
+            return ResponseEntity.ok(fileSystemResource);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    private FileSystemResource createFileSystemResource(WikiId wiki, Path path) throws IOException {
+        try(GitClient gitClient = gitClientProvider.createGitClient(wiki)) {
             gitClient.refresh();
 
             File file = gitClient.file(path.getValue());
             if (file.exists()) {
-                return ResponseEntity.ok(new FileSystemResource(file));
+                return new FileSystemResource(file);
             }
+        } catch (GitAPIException e) {
+            throw new IOException("could not create filesystem resource", e);
         }
 
-        return ResponseEntity.notFound().build();
+        return null;
     }
 }

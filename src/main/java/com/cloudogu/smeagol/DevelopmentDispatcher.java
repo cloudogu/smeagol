@@ -61,7 +61,7 @@ public class DevelopmentDispatcher implements Dispatcher {
     private void copyResponseHeaders(HttpServletResponse response, HttpURLConnection connection) {
         Map<String, List<String>> headerFields = connection.getHeaderFields();
         for (Map.Entry<String,List<String>> entry : headerFields.entrySet()) {
-            if (entry.getKey() != null && ! entry.getKey().equalsIgnoreCase("Transfer-Encoding")) {
+            if (!"Transfer-Encoding".equalsIgnoreCase(entry.getKey())) {
                 for (String value : entry.getValue()) {
                     response.addHeader(entry.getKey(), value);
                 }

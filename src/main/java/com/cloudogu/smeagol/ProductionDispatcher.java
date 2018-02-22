@@ -35,7 +35,7 @@ public class ProductionDispatcher implements Dispatcher {
     }
 
     private boolean isRoot(String uri) {
-        return uri.isEmpty() || uri.equals("/");
+        return uri.isEmpty() || "/".equals(uri);
     }
 
     private boolean hasNonUiPrefix(String uri) {

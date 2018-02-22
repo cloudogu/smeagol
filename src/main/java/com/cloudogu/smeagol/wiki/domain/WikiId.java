@@ -7,7 +7,6 @@ import java.util.Objects;
  */
 public class WikiId {
 
-    // TODO should be name and repositorID ???
     private final String repositoryID;
     private final String branch;
 
@@ -26,8 +25,12 @@ public class WikiId {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         WikiId wikiId = (WikiId) o;
         return Objects.equals(repositoryID, wikiId.repositoryID) &&
                 Objects.equals(branch, wikiId.branch);
