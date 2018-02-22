@@ -7,26 +7,64 @@ import {createDirectoryUrl, fetchDirectoryIfNeeded} from '../modules/directory';
 import I18nAlert from '../../I18nAlert';
 import Loading from '../../Loading';
 import {translate} from 'react-i18next';
+import {createId, fetchWikiIfNeeded} from "../modules/wiki";
 
 type Props = {
     loading: boolean,
     error: Error,
     directory: any,
+    repository: string,
+    branch: string,
     path: string,
     url: string,
     t: any,
+    fetchWikiIfNeeded: (repository: string, branch: string) => void,
     fetchDirectoryIfNeeded: (url: string) => void
 }
 
 class Directory extends React.Component<Props> {
 
     componentDidMount() {
-        this.props.fetchDirectoryIfNeeded(this.props.url);
+        const { url, repository, branch } = this.props;
+
+        this.props.fetchDirectoryIfNeeded(url);
+        this.props.fetchWikiIfNeeded(repository, branch);
+
     }
 
     componentDidUpdate() {
         this.props.fetchDirectoryIfNeeded(this.props.url);
     }
+
+    createDirectoryLink = (path: string) => {
+        const { repository, branch } = this.props;
+        return `/${repository}/${branch}/pages/${path}`;
+    };
+
+    createPageLink = (path: string) => {
+        const { repository, branch } = this.props;
+        return `/${repository}/${branch}/${path}`;
+    };
+
+    createLink = (directory: any, file: any) => {
+        let path = this.endingSlash(directory.path) + file.name;
+
+        if (file.type === 'directory') {
+            return this.createDirectoryLink(this.endingSlash(path));
+        } else if (file.type === 'page') {
+            return this.createPageLink(path);
+        } else {
+            return '#';
+        }
+    };
+
+    endingSlash = (value: string) => {
+        // TODO check polyfil
+        if (!value.endsWith('/')) {
+            return value + '/';
+        }
+        return value;
+    };
 
     render() {
         const { path, error, loading, directory, t } = this.props;
@@ -56,8 +94,8 @@ class Directory extends React.Component<Props> {
         return (
             <div>
                 <h1>{ t('directory_heading') }</h1>
-                <Breadcrumb path={ path } />
-                <FileBrowser directory={ directory } />
+                <Breadcrumb path={ path } createLink={this.createDirectoryLink}/>
+                <FileBrowser directory={ directory } createLink={this.createLink} />
             </div>
         );
     }
@@ -75,8 +113,21 @@ const mapStateToProps = (state, ownProps) => {
     const path = findDirectoryPath(ownProps);
     const url = createDirectoryUrl(repository, branch, path);
 
+    const wikiId = createId(repository, branch);
+    const wiki = state.wiki[wikiId] ||{};
+
+
+    let baseDirectory = '';
+    if (wiki.wiki && wiki.wiki.directory) {
+        baseDirectory = wiki.wiki.directory;
+    }
+
+
     return {
         ...state.directory[url],
+        baseDirectory,
+        repository,
+        branch,
         url,
         path
     }
@@ -86,7 +137,10 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchDirectoryIfNeeded: (url: string) => {
             dispatch(fetchDirectoryIfNeeded(url))
-        }
+        },
+        fetchWikiIfNeeded: (repository: string, branch: string) => {
+            dispatch(fetchWikiIfNeeded(repository, branch))
+        },
     }
 };
 

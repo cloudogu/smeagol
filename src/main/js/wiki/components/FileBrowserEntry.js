@@ -11,6 +11,7 @@ const styles = {
 };
 
 type Props = {
+    createLink: (file: any) => string,
     file: any,
     classes: any;
 }
@@ -28,18 +29,10 @@ class FileBrowserEntry extends React.Component<Props> {
         return 'file';
     }
 
-    createLink(file: any) {
-        let link = file.name;
-        if (this.isDirectory(file)) {
-            link += '/';
-        }
-        return link;
-    }
-
     render() {
         const { file, classes } = this.props;
         const icon = this.createIcon(file);
-        const link = this.createLink(file);
+        const link = this.props.createLink(file);
 
         return (
             <Link to={ link }>

@@ -10,11 +10,16 @@ const styles = {
 };
 
 type Props = {
+    createLink: (directory: any, file: any) => string,
     directory: any,
     classes: any
 }
 
 class FileBrowser extends React.Component<Props> {
+
+    createFileLink = (file: any) => {
+        return this.props.createLink(this.props.directory, file);
+    };
 
     render() {
         const { directory } = this.props;
@@ -23,7 +28,7 @@ class FileBrowser extends React.Component<Props> {
             { directory.children.map((file) => {
                 return (
                     <li key={file.name}>
-                        <FileBrowserEntry file={file} />
+                        <FileBrowserEntry file={file} createLink={this.createFileLink} />
                     </li>
                 );
             }) }
