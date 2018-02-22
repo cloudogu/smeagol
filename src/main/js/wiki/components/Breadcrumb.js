@@ -1,6 +1,7 @@
 //@flow
 import React from 'react';
 import injectSheet from 'react-jss';
+import {Link} from "react-router-dom";
 
 const styles = {};
 
@@ -37,7 +38,7 @@ class Breadcrumb extends React.Component<Props> {
             <div className="breadcrumb">
                 { entries.map((entry) => {
                     return (
-                        <span>/ <a href={entry.link}>{entry.name}</a> </span>
+                        <span key={entry.name}>/ <Link to={entry.link}>{entry.name}</Link> </span>
                     );
                 }) }
             </div>
