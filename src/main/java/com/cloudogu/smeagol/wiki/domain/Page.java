@@ -13,10 +13,20 @@ public class Page {
     private Content content;
     private Optional<Commit> commit;
 
+    private Path oldPath;
+
     public Page(WikiId wikiId, Path path, Content content) {
         this.wikiId = wikiId;
         this.path = path;
         this.content = content;
+    }
+
+    public Page(WikiId wikiId, Path path, Path oldPath, Content content, Commit commit) {
+        this.wikiId = wikiId;
+        this.path = path;
+        this.oldPath = oldPath;
+        this.content = content;
+        this.commit = Optional.of(commit);
     }
 
     public Page(WikiId wikiId, Path path, Content content, Commit commit) {
@@ -29,6 +39,12 @@ public class Page {
     public void edit(Commit commit, Content content) {
         this.commit = Optional.of(commit);
         this.content = content;
+    }
+
+    public void move(Commit commit, Path newPath) {
+        this.commit = Optional.of(commit);
+        this.oldPath = path;
+        this.path = newPath;
     }
 
     public WikiId getWikiId() {
@@ -45,6 +61,10 @@ public class Page {
 
     public Optional<Commit> getCommit() {
         return commit;
+    }
+
+    public Optional<Path> getOldPath() {
+        return Optional.ofNullable(oldPath);
     }
 
     @Override

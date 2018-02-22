@@ -153,6 +153,56 @@ public class ScmGitPageRepositoryTest {
         verify(gitClient).refresh();
     }
 
+    @Test
+    public void testSaveOnMove() throws GitAPIException, IOException {
+        String targetFileWithoutExtension = String.format("docs%stest", File.separator);
+        testSaveOnMoveWithTargetName(targetFileWithoutExtension);
+    }
+
+    @Test
+    public void testSaveOnMoveTargetInSubdir() throws GitAPIException, IOException {
+        String targetFileWithoutExtension = String.format("docs%ssub%sdir%stest", File.separator, File.separator, File.separator);
+        testSaveOnMoveWithTargetName(targetFileWithoutExtension);
+    }
+
+    private void testSaveOnMoveWithTargetName(String targetFileWithoutExtension) throws IOException, GitAPIException {
+        File folder = temporaryFolder.newFolder();
+
+        String sourceFileString = String.format("docs%sHome.md", File.separator);
+        File sourceFile = new File(folder, sourceFileString);
+        sourceFile.getParentFile().mkdirs();
+        sourceFile.createNewFile();
+
+        String targetFileString = targetFileWithoutExtension + ".md";
+        File targetFile = new File(folder, targetFileString);
+
+        when(gitClient.file(sourceFileString)).thenReturn(sourceFile);
+        when(gitClient.file(targetFileString)).thenReturn(targetFile);
+
+        RevCommit rc = createRevCommit();
+
+        String[] paths = {sourceFileString, targetFileString};
+        when(gitClient.commit(
+                paths,
+                DISPLAY_NAME_TRILLIAN.getValue(),
+                EMAIL_TRILLIAN.getValue(),
+                MESSAGE_PANIC.getValue()
+        )).thenReturn(rc);
+
+        assertTrue(sourceFile.exists());
+        assertFalse(targetFile.exists());
+        Path targetPath = Path.valueOf(targetFileWithoutExtension);
+
+        Page page = new Page(WIKI_ID_42, PATH_HOME, CONTENT_GUIDE, COMMIT);
+        page.move(COMMIT, targetPath);
+
+        pageRepository.save(page);
+        assertTrue(targetFile.exists());
+        assertFalse(sourceFile.exists());
+
+        verify(gitClient).refresh();
+    }
+
     private RevCommit createRevCommit() throws IOException, GitAPIException {
         File folder = temporaryFolder.newFolder();
         try ( Git git = Git.init().setDirectory(folder).call() ) {

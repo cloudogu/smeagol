@@ -19,6 +19,10 @@ const DELETE_PAGE = 'smeagol/page/DELETE';
 const DELETE_PAGE_SUCCESS = 'smeagol/page/DELETE_SUCCESS';
 const DELETE_PAGE_FAILURE = 'smeagol/page/DELETE_FAILURE';
 
+const MOVE_PAGE = 'smeagol/page/MOVE';
+const MOVE_PAGE_SUCCESS = 'smeagol/page/MOVE_SUCCESS';
+const MOVE_PAGE_FAILURE = 'smeagol/page/MOVE_FAILURE';
+
 function requestPage(url: string) {
     return {
         type: FETCH_PAGE,
@@ -192,10 +196,45 @@ export function deletePage(url: string, message: string, callback: () => void) {
     }
 }
 
+function requestMovePage(url: string) {
+    return {
+        type: MOVE_PAGE,
+        url
+    };
+}
+
+function movePageSuccess(url: string) {
+    return {
+        type: MOVE_PAGE_SUCCESS,
+        url
+    };
+}
+
+function movePageFailure(url: string, err: Error) {
+    return {
+        type: MOVE_PAGE_FAILURE,
+        payload: err,
+        url
+    };
+}
+
+export function movePage(url: string, message: string, target: string, callback: (target) => void) {
+    return function(dispatch) {
+        dispatch(requestMovePage(url));
+        return apiClient.post(url, { message , "moveTo": target })
+            .then(() => {
+                dispatch(movePageSuccess(url));
+                callback(target);
+            })
+            .catch((err) => dispatch(movePageFailure(url, err)));
+    }
+}
+
 export default function reducer(state = {}, action = {}) {
     switch (action.type) {
         case FETCH_PAGE:
         case EDIT_PAGE:
+        case MOVE_PAGE:
         case CREATE_PAGE:
         case DELETE_PAGE:
             return {
@@ -216,6 +255,7 @@ export default function reducer(state = {}, action = {}) {
             };
         case FETCH_PAGE_FAILURE:
         case EDIT_PAGE_FAILURE:
+        case MOVE_PAGE_FAILURE:
         case CREATE_PAGE_FAILURE:
         case DELETE_PAGE_FAILURE:
             return {
@@ -235,6 +275,7 @@ export default function reducer(state = {}, action = {}) {
             };
         case CREATE_PAGE_SUCCESS:
         case EDIT_PAGE_SUCCESS:
+        case MOVE_PAGE_SUCCESS:
         case DELETE_PAGE_SUCCESS:
             return {
                 ...state,

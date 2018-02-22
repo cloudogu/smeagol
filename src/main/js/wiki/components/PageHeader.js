@@ -3,7 +3,7 @@ import React from 'react';
 import injectSheet from 'react-jss';
 import ActionLink from './ActionLink';
 import ActionButton from './ActionButton';
-import CreateForm from './CreateForm';
+import PageNameForm from './PageNameForm';
 import { withRouter } from 'react-router-dom';
 
 const styles = {
@@ -20,12 +20,14 @@ type Props = {
     wiki: any,
     onDeleteClick: () => void,
     onHomeClick: () => void,
+    onOkMoveClick: () => void,
     history: any,
     classes: any
 }
 
 type State = {
-    showCreateForm: boolean
+    showCreateForm: boolean,
+    showMoveForm: boolean
 };
 
 class PageHeader extends React.Component<Props,State> {
@@ -49,39 +51,63 @@ class PageHeader extends React.Component<Props,State> {
         });
     };
 
+    onOkMoveClick = (name) => {
+        const path = this.getPathFromPagename(name);
+        this.props.onOkMoveClick(path);
+    };
+
     onOkCreate = (name) => {
         const { repository, branch } = this.props.wiki;
+        let wikiPath = `/${repository}/${branch}/`;
+        const pagePath = this.getPathFromPagename(name);
 
-        let path = `/${repository}/${branch}`;
-
-        if (name.startsWith('/')) {
-            path = `${path}${name}`;
-        } else {
-            path = `${path}/docs/${name}`;
-        }
-
-        this.props.history.push(path);
+        this.props.history.push(wikiPath + pagePath);
     };
+
+    getPathFromPagename = (name) => {
+        if (name.startsWith('/')) {
+            return name.substr(1);
+        } else {
+            return `docs/${name}`;
+        }
+    };
+
+    onMoveClick = () => {
+        this.setState({
+            showMoveForm: true
+        });
+    };
+
+    onAbortMoveClick = () => {
+        this.setState({
+            showMoveForm: false
+        });
+    };
+
 
     render() {
         const { page, classes, onDeleteClick, onHomeClick } = this.props;
 
         const homeButton = <ActionButton onClick={onHomeClick}  i18nKey="page-header_home" type="primary" />;
-        const createButton = <ActionButton onClick={this.onCreateClick}  i18nKey="page-header_create" type="primary" />;
+        const createButton = <ActionButton onClick={this.onCreateClick} i18nKey="page-header_create" type="primary" />;
         const edit = page._links.edit ? <ActionLink to="?edit=true" i18nKey="page-header_edit" type="primary" /> : '';
-        const deleteButton = page._links.delete ? <ActionButton onClick={onDeleteClick}  i18nKey="page-header_delete" type="primary" /> : '';
+        const moveButton = page._links.move ? <ActionButton onClick={this.onMoveClick} i18nKey="page-header_move" type="primary" /> : '';
+        const deleteButton = page._links.delete ? <ActionButton onClick={onDeleteClick} i18nKey="page-header_delete" type="primary" /> : '';
+        const createForm = <PageNameForm show={ this.state.showCreateForm } onOk={ this.onOkCreate } onAbortClick={ this.onAbortCreateClick } labelPrefix="create" />
+        const moveForm = <PageNameForm show={ this.state.showMoveForm } onOk={ this.onOkMoveClick } onAbortClick={ this.onAbortMoveClick } labelPrefix="move" />
 
-        const createForm = <CreateForm show={ this.state.showCreateForm } onOk={ this.onOkCreate } onAbortClick={ this.onAbortCreateClick } />
         return (
             <div className={classes.header}>
                 <h1>{ page.path }</h1>
                 <div className={classes.actions}>
                     {homeButton}
                     {createButton}
+                    {moveButton}
                     {edit}
                     {deleteButton}
                 </div>
                 {createForm}
+                {moveForm}
             </div>
         );
     }

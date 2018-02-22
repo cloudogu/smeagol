@@ -101,7 +101,8 @@ public class PageControllerTest {
                 .andExpect(jsonPath("$.path", is("docs/Home")))
                 .andExpect(jsonPath("$._links.self.href", is(self)))
                 .andExpect(jsonPath("$._links.delete.href", is(self)))
-                .andExpect(jsonPath("$._links.edit.href", is(self)));
+                .andExpect(jsonPath("$._links.edit.href", is(self)))
+                .andExpect(jsonPath("$._links.move.href", is(self)));
     }
 
     @Test

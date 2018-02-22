@@ -3,6 +3,7 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 import com.cloudogu.smeagol.wiki.domain.*;
 import com.cloudogu.smeagol.wiki.usecase.*;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.google.common.base.Strings;
 import de.triology.cb.CommandBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,10 +54,16 @@ public class PageController {
             HttpServletRequest request,
             @PathVariable("repositoryId") String repositoryId,
             @PathVariable("branch") String branch,
-            @RequestBody CreateOrEditRequestPayload payload
+            @RequestBody CreateOrEditOrMoveRequestPayload payload
     ) throws URISyntaxException {
         WikiId id = new WikiId(repositoryId, branch);
         Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
+
+        // TODO return new page? this would safe us one request from the frontend. Is this resty?
+
+        if (payload.getMoveTo() != null) {
+            return move(id, path, payload);
+        }
 
         if ( repository.exists(id, path) ) {
             return edit(id, path, payload);
@@ -64,13 +71,19 @@ public class PageController {
         return create(request, id, path, payload);
     }
 
-    private ResponseEntity<Void> create(HttpServletRequest request, WikiId id, Path path, CreateOrEditRequestPayload payload) throws URISyntaxException {
+    private ResponseEntity<Void> move(WikiId id, Path source, CreateOrEditOrMoveRequestPayload payload) {
+        MovePageCommand command = new MovePageCommand(id, source, payload.getMoveTo(), payload.getMessage());
+        commandBus.execute(command);
+        return ResponseEntity.noContent().build();
+    }
+
+    private ResponseEntity<Void> create(HttpServletRequest request, WikiId id, Path path, CreateOrEditOrMoveRequestPayload payload) throws URISyntaxException {
         CreatePageCommand command = new CreatePageCommand(id, path, payload.getMessage(), payload.getContent());
         commandBus.execute(command);
         return ResponseEntity.created(new URI(request.getRequestURI())).build();
     }
 
-    private ResponseEntity<Void> edit(WikiId id, Path path, CreateOrEditRequestPayload payload) {
+    private ResponseEntity<Void> edit(WikiId id, Path path, CreateOrEditOrMoveRequestPayload payload) {
         EditPageCommand command = new EditPageCommand(id, path, payload.getMessage(), payload.getContent());
         commandBus.execute(command);
         return ResponseEntity.noContent().build();
@@ -99,10 +112,15 @@ public class PageController {
     }
 
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-    public static class CreateOrEditRequestPayload extends RequestPayload {
+    public static class CreateOrEditOrMoveRequestPayload extends RequestPayload {
         private String content;
+        private String moveTo;
         private Content getContent() {
             return Content.valueOf(content);
+        }
+        private Path getMoveTo() {
+            if (Strings.isNullOrEmpty(moveTo)) return null;
+            return Path.valueOf(moveTo);
         }
     }
 

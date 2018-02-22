@@ -1,6 +1,6 @@
 //@flow
 import React from 'react';
-import {editPage, createPage, createPageUrl, fetchPageIfNeeded, deletePage} from '../modules/page';
+import {editPage, createPage, createPageUrl, fetchPageIfNeeded, deletePage, movePage} from '../modules/page';
 import {createId, fetchWikiIfNeeded} from '../modules/wiki';
 import {connect} from 'react-redux';
 import PageViewer from '../components/PageViewer';
@@ -49,8 +49,7 @@ class Page extends React.Component<Props> {
     };
 
     pushLandingPageState = () => {
-        const { history, repository, branch, wiki } = this.props;
-        history.push(`/${repository}/${branch}/${wiki.landingPage}`);
+        this.pushPageState(this.props.wiki.landingPage);
     };
 
     delete = () => {
@@ -60,7 +59,19 @@ class Page extends React.Component<Props> {
         deletePage(url, message, this.pushLandingPageState);
     };
 
-    onAbortEdit = () => {
+    onMove = (target: string) => {
+        const { path, url, movePage } = this.props;
+        // TODO i18n
+        const message = 'Move page ' + path + ' to ' + target + ' (smeagol)';
+        movePage(url, message, target, this.pushPageState);
+    };
+
+    pushPageState = (pagePath: string) => {
+        const { history, repository, branch } = this.props;
+        history.push(`/${repository}/${branch}/${pagePath}`);
+    };
+
+    onAbortEdit= () => {
         const { history } = this.props;
         history.push('?');
     };
@@ -104,7 +115,7 @@ class Page extends React.Component<Props> {
             return <PageEditor path={page.path} content={page.content} onSave={this.edit} onAbort={this.onAbortEdit} />;
         }
 
-        return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState } />;
+        return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState } onMove={ this.onMove } />;
     }
 }
 
@@ -155,6 +166,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         deletePage: (url: string, message: string, callback: () => void) => {
             dispatch(deletePage(url, message, callback))
+        },
+        movePage: (url: string, message: string, target: string, callback: (target) => void) => {
+            dispatch(movePage(url, message, target, callback))
         }
     }
 };
