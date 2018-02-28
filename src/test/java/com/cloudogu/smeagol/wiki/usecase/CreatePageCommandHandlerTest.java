@@ -5,10 +5,13 @@ import com.cloudogu.smeagol.AccountTestData;
 import com.cloudogu.smeagol.wiki.domain.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.springframework.context.ApplicationEventPublisher;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -19,6 +22,9 @@ import static org.mockito.Mockito.when;
 public class CreatePageCommandHandlerTest {
 
     @Mock
+    private ApplicationEventPublisher publisher;
+
+    @Mock
     private PageRepository pageRepository;
 
     @Mock
@@ -26,6 +32,9 @@ public class CreatePageCommandHandlerTest {
 
     @InjectMocks
     private CreatePageCommandHandler handler;
+
+    @Captor
+    private ArgumentCaptor<PageCreatedEvent> eventCaptor;
 
     // some test data
     private final WikiId id = new WikiId("42", "galaxis");
@@ -53,6 +62,11 @@ public class CreatePageCommandHandlerTest {
         Author author = commit.getAuthor();
         assertThat(author.getDisplayName().getValue()).isEqualTo(AccountTestData.TRILLIAN.getDisplayName());
         assertThat(author.getEmail().getValue()).isEqualTo(AccountTestData.TRILLIAN.getMail());
+
+        // check published event
+        verify(publisher).publishEvent(eventCaptor.capture());
+        PageCreatedEvent event = eventCaptor.getValue();
+        assertThat(event.getPage()).isSameAs(page);
     }
 
     @Test(expected = PageAlreadyExistsException.class)

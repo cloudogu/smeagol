@@ -6,19 +6,27 @@ import com.cloudogu.smeagol.wiki.domain.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEventPublisher;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MovePageCommandHandlerTest {
+
+    @Mock
+    private ApplicationEventPublisher publisher;
 
     @Mock
     private PageRepository pageRepository;
@@ -28,6 +36,9 @@ public class MovePageCommandHandlerTest {
 
     @InjectMocks
     private MovePageCommandHandler commandHandler;
+
+    @Captor
+    private ArgumentCaptor<Object> eventCaptor;
 
     @Test
     public void testMove() {
@@ -50,6 +61,15 @@ public class MovePageCommandHandlerTest {
         assertEquals(sourcePath, newPage.getOldPath().get());
 
         verify(pageRepository).save(page);
+
+        verify(publisher, times(2)).publishEvent(eventCaptor.capture());
+        List<Object> events = eventCaptor.getAllValues();
+
+        PageDeletedEvent deletedEvent = (PageDeletedEvent) events.get(0);
+        assertEquals(deletedEvent.getPath(), sourcePath);
+
+        PageCreatedEvent createdEvent = (PageCreatedEvent) events.get(1);
+        assertEquals(createdEvent.getPage().getPath(), targetPath);
     }
 
     @Test(expected = PageNotFoundException.class)

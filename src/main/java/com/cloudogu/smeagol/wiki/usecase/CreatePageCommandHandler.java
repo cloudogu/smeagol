@@ -5,6 +5,7 @@ import com.cloudogu.smeagol.AccountService;
 import com.cloudogu.smeagol.wiki.domain.*;
 import de.triology.cb.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -15,11 +16,13 @@ import java.time.Instant;
 @Component
 public class CreatePageCommandHandler implements CommandHandler<Page, CreatePageCommand> {
 
+    private final ApplicationEventPublisher publisher;
     private final PageRepository repository;
     private final AccountService accountService;
 
     @Autowired
-    public CreatePageCommandHandler(PageRepository repository, AccountService accountService) {
+    public CreatePageCommandHandler(ApplicationEventPublisher publisher, PageRepository repository, AccountService accountService) {
+        this.publisher = publisher;
         this.repository = repository;
         this.accountService = accountService;
     }
@@ -32,7 +35,12 @@ public class CreatePageCommandHandler implements CommandHandler<Page, CreatePage
 
         Commit commit = createNewCommit(command.getMessage());
         Page page = new Page(command.getWikiId(), command.getPath(), command.getContent(), commit);
-        return repository.save(page);
+
+        Page createdPage = repository.save(page);
+
+        publisher.publishEvent(new PageCreatedEvent(createdPage));
+
+        return createdPage;
     }
 
     private Commit createNewCommit(Message message) {
