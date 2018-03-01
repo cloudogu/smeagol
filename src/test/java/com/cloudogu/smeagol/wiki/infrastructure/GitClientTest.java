@@ -14,6 +14,7 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -121,6 +122,18 @@ public class GitClientTest {
 
         Optional<RevCommit> commit = target.lastCommit("b.md");
         assertEquals("added b.md", commit.get().getFullMessage());
+    }
+
+    @Test
+    public void testCommits() throws IOException, GitAPIException {
+        try (Git git = Git.init().setDirectory(targetDirectory).call()) {
+            commit(git, "b.md", "# My Headline");
+            commit(git, "b.md", "# My Headline2");
+        }
+
+        List<RevCommit> commits = target.findCommits("b.md");
+        assertEquals("added b.md", commits.get(0).getFullMessage());
+        assertEquals("added b.md", commits.get(1).getFullMessage());
     }
 
     @Test

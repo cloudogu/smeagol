@@ -15,7 +15,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singleton;
@@ -71,6 +73,21 @@ public class GitClient implements AutoCloseable {
         }
 
         return Optional.empty();
+    }
+
+    public List<RevCommit> findCommits(String path) throws IOException, GitAPIException {
+        Git git = open();
+        List<RevCommit> commits = new ArrayList<>();
+        Iterator<RevCommit> iterator = git.log()
+                .addPath(path)
+                .call()
+                .iterator();
+
+        if (iterator.hasNext()) {
+            iterator.forEachRemaining(revCommit -> commits.add(revCommit));
+        }
+
+        return commits;
     }
 
     private void pullChanges()  throws GitAPIException, IOException {
