@@ -72,6 +72,26 @@ public class LuceneIndexerTest {
         assertTerm();
     }
 
+    @Test
+    public void testHandlePageBatchEvent() throws IOException {
+        PageBatchEvent event = new PageBatchEvent(WIKI_ID_42);
+        event.added(PAGE);
+        event.modified(PAGE);
+        event.deleted(PATH_HOME);
+
+        indexer.handle(event);
+
+        verify(writer).addDocument(documentCaptor.capture());
+        assertDocument();
+
+        verify(writer).updateDocument(termCaptor.capture(), documentCaptor.capture());
+        assertTerm();
+        assertDocument();
+
+        verify(writer).deleteDocuments(termCaptor.capture());
+        assertTerm();
+    }
+
     private void assertTerm() {
         Term term = termCaptor.getValue();
         assertThat(term.field()).isEqualTo("path");

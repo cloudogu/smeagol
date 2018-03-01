@@ -73,11 +73,35 @@ public class LuceneIndexer {
     @EventListener
     public void handle(PageDeletedEvent event) {
         try (IndexWriter writer = context.createWriter(event.getWikiId())) {
-            writer.deleteDocuments(createPathTerm(event.getPath()));
+            deleteIndexedPage(writer, event.getPath());
         } catch (IOException e) {
             throw Throwables.propagate(e);
         }
     }
 
+    private void deleteIndexedPage(IndexWriter writer, Path path) throws IOException {
+        writer.deleteDocuments(createPathTerm(path));
+    }
+
+    @EventListener
+    public void handle(PageBatchEvent event) {
+        try (IndexWriter writer = context.createWriter(event.getWikiId())) {
+            for (PageBatchEvent.Change change : event) {
+                handleBatchChange(writer, change);
+            }
+        } catch (IOException e) {
+            throw Throwables.propagate(e);
+        }
+    }
+
+    private void handleBatchChange(IndexWriter writer, PageBatchEvent.Change change) throws IOException {
+        if (change.getType() == ChangeType.ADDED) {
+            addPageToIndex(writer, change.getPage().get());
+        } else if (change.getType() == ChangeType.DELETED) {
+            deleteIndexedPage(writer, change.getPath());
+        } else {
+            updateIndexedPage(writer, change.getPage().get());
+        }
+    }
 
 }

@@ -1,6 +1,8 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.AccountTestData;
+import com.cloudogu.smeagol.wiki.domain.Wiki;
+import com.cloudogu.smeagol.wiki.domain.WikiId;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.eclipse.jgit.api.Git;
@@ -11,23 +13,41 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static com.cloudogu.smeagol.wiki.DomainTestData.WIKI_ID_42;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 
+@RunWith(MockitoJUnitRunner.class)
 public class GitClientTest {
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    @Mock
+    private ApplicationEventPublisher publisher;
 
     private GitClient target;
     private File targetDirectory;
 
     private Git remote;
     private File remoteDirectory;
+
+    @Captor
+    private ArgumentCaptor<RepositoryChangedEvent> eventCaptor;
+
+    private final WikiId wikiId = new WikiId("42", "master");
 
     @Before
     public void setUp() throws IOException, GitAPIException {
@@ -38,10 +58,11 @@ public class GitClientTest {
         targetDirectory.delete();
 
         target = new GitClient(
+                publisher,
                 AccountTestData.TRILLIAN,
                 targetDirectory,
                 remoteDirectory.toURI().toURL(),
-                "master"
+                wikiId
         );
     }
 
@@ -80,7 +101,6 @@ public class GitClientTest {
     }
 
     private RevCommit commit( Git git, String fileName, String content ) throws IOException, GitAPIException {
-        System.out.println( git.getRepository().getWorkTree() );
         File file = new File(git.getRepository().getWorkTree(), fileName);
         Files.write(content, file, Charsets.UTF_8);
 
@@ -141,4 +161,70 @@ public class GitClientTest {
         assertEquals("trillian@hitchhiker.com", lastRemoteCommit.getAuthorIdent().getEmailAddress());
     }
 
+    @Test
+    public void testRepositoryChangedEventOnClone() throws IOException, GitAPIException {
+        commit(remote, "a.md", "# My Headline");
+        commit(remote, "b.md", "# My Second Headline");
+
+        target.refresh();
+
+        verify(publisher).publishEvent(eventCaptor.capture());
+
+        RepositoryChangedEvent event = eventCaptor.getValue();
+        assertSame(wikiId, event.getWikiId());
+
+        Iterator<RepositoryChangedEvent.Change> iterator = event.iterator();
+        RepositoryChangedEvent.Change change = iterator.next();
+        assertEquals(ChangeType.ADDED, change.getType());
+        assertTrue(change.getPath().matches("(a|b).md"));
+
+        change = iterator.next();
+        assertEquals(ChangeType.ADDED, change.getType());
+        assertTrue(change.getPath().matches("(a|b).md"));
+
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testRepositoryChangedEventOnPull() throws IOException, GitAPIException {
+        commit(remote, "a.md", "# My Headline");
+        commit(remote, "b.md", "# My Second Headline");
+
+        Git.cloneRepository()
+                .setDirectory(targetDirectory)
+                .setURI(remoteDirectory.toURI().toURL().toExternalForm())
+                .call()
+                .close();
+
+        commit(remote, "a.md", "# My Changed Headline");
+        remote.rm().addFilepattern("b.md").call();
+        remote.commit()
+                .setMessage("removed b.md")
+                .setAuthor("Tricia McMillian", "trillian@hitchhiker.com")
+                .call();
+        commit(remote, "c.md", "# My Third Headline");
+
+        target.refresh();
+
+        verify(publisher).publishEvent(eventCaptor.capture());
+
+        RepositoryChangedEvent event = eventCaptor.getValue();
+        assertSame(wikiId, event.getWikiId());
+
+        Iterator<RepositoryChangedEvent.Change> iterator = event.iterator();
+
+        RepositoryChangedEvent.Change change = iterator.next();
+        assertEquals(ChangeType.MODIFIED, change.getType());
+        assertEquals("a.md", change.getPath());
+
+        change = iterator.next();
+        assertEquals(ChangeType.DELETED, change.getType());
+        assertEquals("b.md", change.getPath());
+
+        change = iterator.next();
+        assertEquals(ChangeType.ADDED, change.getType());
+        assertEquals("c.md", change.getPath());
+
+        assertFalse(iterator.hasNext());
+    }
 }

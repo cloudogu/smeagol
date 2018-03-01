@@ -21,6 +21,17 @@ public class PagesTest {
     }
 
     @Test
+    public void testIsPagefilename() {
+        assertTrue(Pages.isPageFilename("some.md"));
+        assertTrue(Pages.isPageFilename("ka/some.md"));
+        assertFalse(Pages.isPageFilename("some"));
+        assertFalse(Pages.isPageFilename("ka/some"));
+        assertFalse(Pages.isPageFilename("ka/some.md.rdoc"));
+        assertFalse(Pages.isPageFilename(""));
+        assertFalse(Pages.isPageFilename(null));
+    }
+
+    @Test
     public void testIsPage() throws IOException {
         File pageFile = temporaryFolder.newFile("one.md");
         File file = temporaryFolder.newFile("one");
@@ -36,6 +47,11 @@ public class PagesTest {
         File pageFile = temporaryFolder.newFile("one.md");
         Path parent = Path.valueOf("dir/");
         assertEquals(Path.valueOf("dir/one"), Pages.path(parent, pageFile));
+    }
+
+    @Test
+    public void testPagePath() {
+        assertEquals(Path.valueOf("docs/Home"), Pages.pagepath("docs/Home.md"));
     }
 
 }

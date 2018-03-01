@@ -6,6 +6,7 @@ import com.cloudogu.smeagol.wiki.domain.Wiki;
 import com.cloudogu.smeagol.wiki.domain.WikiId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -13,12 +14,14 @@ import java.io.File;
 @Component
 public class GitClientProvider {
 
+    private ApplicationEventPublisher publisher;
     private AccountService accountService;
     private ScmWikiRepository wikiRepository;
     private String homeDirectory;
 
     @Autowired
-    public GitClientProvider(ScmWikiRepository wikiRepository, AccountService accountService, @Value("${homeDirectory}") String homeDirectory) {
+    public GitClientProvider(ApplicationEventPublisher publisher, ScmWikiRepository wikiRepository, AccountService accountService, @Value("${homeDirectory}") String homeDirectory) {
+        this.publisher = publisher;
         this.wikiRepository = wikiRepository;
         this.accountService = accountService;
         this.homeDirectory = homeDirectory;
@@ -28,7 +31,7 @@ public class GitClientProvider {
         File repository = getRepositoryDirectory(wikiId);
         Account account = accountService.get();
         Wiki wiki = wikiRepository.findById(wikiId).get();
-        return new GitClient(account, repository, wiki.getRepositoryUrl(), wikiId.getBranch());
+        return new GitClient(publisher, account, repository, wiki.getRepositoryUrl(), wikiId);
     }
 
 
