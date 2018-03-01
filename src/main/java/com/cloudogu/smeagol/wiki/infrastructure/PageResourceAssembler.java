@@ -1,9 +1,6 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import com.cloudogu.smeagol.wiki.domain.Author;
-import com.cloudogu.smeagol.wiki.domain.Commit;
-import com.cloudogu.smeagol.wiki.domain.Page;
-import com.cloudogu.smeagol.wiki.domain.WikiId;
+import com.cloudogu.smeagol.wiki.domain.*;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
@@ -42,9 +39,10 @@ public class PageResourceAssembler extends ResourceAssemblerSupport<Page, PageRe
         }
 
         Commit commit = optionalCommit.get();
+        String id = commit.getId().get().getValue();
         AuthorResource author = createAuthor(commit.getAuthor());
         String date = createDate(commit.getDate());
-        return new CommitResource(author, date, commit.getMessage().getValue());
+        return new CommitResource(id, author, date, commit.getMessage().getValue());
     }
 
     private String createDate(Instant date) {

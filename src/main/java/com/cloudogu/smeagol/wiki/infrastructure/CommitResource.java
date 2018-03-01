@@ -6,14 +6,20 @@ import java.util.Objects;
 
 public class CommitResource extends ResourceSupport {
 
+    private String commitId;
     private AuthorResource author;
     private String date;
     private String message;
 
-    public CommitResource(AuthorResource author, String date, String message) {
+    public CommitResource(String id, AuthorResource author, String date, String message) {
+        this.commitId = id;
         this.author = author;
         this.date = date;
         this.message = message;
+    }
+
+    public String getCommitId() {
+        return commitId;
     }
 
     public AuthorResource getAuthor() {
