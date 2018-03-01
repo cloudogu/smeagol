@@ -35,6 +35,11 @@ public class ScmGitPageRepository implements PageRepository {
         }
     }
 
+    @Override
+    public Optional<Page> findByWikiIdAndPathAndCommit(WikiId wikiId, Path path, String commitId) {
+        return null;
+    }
+
     private Optional<Page> createPageFromFile(GitClient client, WikiId id, Path path) throws IOException, GitAPIException {
         String pagePath = Pages.filepath(path);
         File file = client.file(pagePath);

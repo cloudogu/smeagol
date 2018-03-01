@@ -32,6 +32,17 @@ public interface PageRepository {
     Optional<Page> findByWikiIdAndPath(WikiId wikiId, Path path);
 
     /**
+     * Find the page with the given path and commitId in the requested wiki.
+     *
+     * @param wikiId id of the wiki
+     * @param path path of the page
+     * @param commitId id of the commit
+     *
+     * @return page with path
+     */
+    Optional<Page> findByWikiIdAndPathAndCommit(WikiId wikiId, Path path, String commitId);
+
+    /**
      * Deletes the page.
      *
      * @param page deleted page

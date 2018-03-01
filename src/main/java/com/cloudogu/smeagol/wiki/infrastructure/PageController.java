@@ -37,12 +37,17 @@ public class PageController {
     public ResponseEntity<PageResource> findByWikiIdAndPath(
             HttpServletRequest request,
             @PathVariable("repositoryId") String repositoryId,
-            @PathVariable("branch") String branch
+            @PathVariable("branch") String branch,
+            @RequestParam("commit") Optional<String> commitId
     ) {
         WikiId id = new WikiId(repositoryId, branch);
         Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
-
-        Optional<Page> byWikiIdAndPath = repository.findByWikiIdAndPath(id, path);
+        Optional<Page> byWikiIdAndPath;
+        if (commitId.isPresent()) {
+            byWikiIdAndPath = repository.findByWikiIdAndPathAndCommit(id, path, commitId.get());
+        } else {
+            byWikiIdAndPath = repository.findByWikiIdAndPath(id, path);
+        }
         if (byWikiIdAndPath.isPresent()) {
             return ResponseEntity.ok(assembler.toResource(byWikiIdAndPath.get()));
         }
