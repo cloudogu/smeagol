@@ -2,6 +2,8 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.WikiId;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.FSDirectory;
@@ -37,6 +39,20 @@ public class LuceneContext {
     public IndexWriter createWriter(WikiId wikiId) throws IOException {
         File indexDirectory = indexDirectory(wikiId);
         return createWriter(indexDirectory);
+    }
+
+    /**
+     * Creates an index reader for the given wiki.
+     *
+     * @param wikiId id of wiki
+     *
+     * @return index reader
+     *
+     * @throws IOException
+     */
+    public IndexReader createReader(WikiId wikiId) throws IOException {
+        File indexDirectory = indexDirectory(wikiId);
+        return DirectoryReader.open(FSDirectory.open(indexDirectory.toPath()));
     }
 
     private File indexDirectory(WikiId wikiId) {

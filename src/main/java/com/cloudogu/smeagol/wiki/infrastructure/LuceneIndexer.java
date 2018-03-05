@@ -43,10 +43,11 @@ public class LuceneIndexer {
 
     private Document createDocumentFrom(Page page) {
         Document doc = new Document();
-        doc.add(new StringField("path", page.getPath().getValue(), Field.Store.YES));
-        doc.add(new TextField("content", page.getContent().getValue(), Field.Store.YES));
+        doc.add(new StringField(LuceneFields.PATH, page.getPath().getValue(), Field.Store.YES));
+        doc.add(new TextField(LuceneFields.CONTENT, page.getContent().getValue(), Field.Store.YES));
         if (page.getCommit().isPresent()) {
-            doc.add(new TextField("message", page.getCommit().get().getMessage().getValue(), Field.Store.YES));
+            Commit commit = page.getCommit().get();
+            doc.add(new TextField(LuceneFields.MESSAGE, commit.getMessage().getValue(), Field.Store.YES));
             // TODO last modified ???
         }
         return doc;
@@ -67,7 +68,7 @@ public class LuceneIndexer {
     }
 
     private Term createPathTerm(Path path) {
-        return new Term("path", path.getValue());
+        return new Term(LuceneFields.PATH, path.getValue());
     }
 
     @EventListener
