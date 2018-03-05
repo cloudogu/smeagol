@@ -5,6 +5,8 @@ import ActionLink from './ActionLink';
 import ActionButton from './ActionButton';
 import PageNameForm from './PageNameForm';
 import { withRouter } from 'react-router-dom';
+import classNames from 'classnames';
+import SearchBar from "./SearchBar";
 
 const styles = {
     header: {
@@ -22,6 +24,7 @@ type Props = {
     onDeleteClick: () => void,
     onHomeClick: () => void,
     onOkMoveClick: () => void,
+    search: (string) => void,
     history: any,
     classes: any
 }
@@ -87,7 +90,7 @@ class PageHeader extends React.Component<Props,State> {
 
 
     render() {
-        const { page, pagesLink, classes, onDeleteClick, onHomeClick } = this.props;
+        const { page, pagesLink, classes, onDeleteClick, onHomeClick, search } = this.props;
 
         const homeButton = <ActionButton onClick={onHomeClick}  i18nKey="page-header_home" type="primary" />;
         const createButton = <ActionButton onClick={this.onCreateClick} i18nKey="page-header_create" type="primary" />;
@@ -101,13 +104,18 @@ class PageHeader extends React.Component<Props,State> {
         return (
             <div className={classes.header}>
                 <h1>{ page.path }</h1>
-                <div className={classes.actions}>
-                    {homeButton}
-                    {createButton}
-                    {moveButton}
-                    {pagesButton}
-                    {edit}
-                    {deleteButton}
+                <div className={classNames(classes.actions, "row")}>
+                    <div className="col-xs-9">
+                        {homeButton}
+                        {createButton}
+                        {moveButton}
+                        {pagesButton}
+                        {edit}
+                        {deleteButton}
+                    </div>
+                    <div className="col-xs-3">
+                        <SearchBar search={search}/>
+                    </div>
                 </div>
                 {createForm}
                 {moveForm}
