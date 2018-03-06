@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import injectSheet from 'react-jss';
 import SearchBar from "./SearchBar";
 import {Link} from "react-router-dom";
+import {translate} from "react-i18next";
 
 const styles = {
     searchBar: {
@@ -20,12 +21,12 @@ type Props = {
 class SearchResultHeader extends Component<Props> {
 
     render() {
-        // TODO i18n
-        const { query, classes, search, homeLink } = this.props;
+        const { query, classes, search, homeLink, t } = this.props;
+
         return (
             <div className="row">
                 <div className="col-xs-8">
-                    <h1>Search Results for <strong>{query}</strong></h1>
+                    <h1>{ t('search-result-header_title') } <strong>{query}</strong></h1>
                 </div>
                 <div className="col-xs-4">
                     <div className={classes.searchBar}>
@@ -33,7 +34,7 @@ class SearchResultHeader extends Component<Props> {
                             <SearchBar search={search} />
                         </div>
                         <Link to={homeLink} className="btn btn-primary col-xs-3">
-                            Home
+                            { t('page-header_home') }
                         </Link>
                     </div>
                 </div>
@@ -42,4 +43,4 @@ class SearchResultHeader extends Component<Props> {
     }
 }
 
-export default injectSheet(styles)(SearchResultHeader);
+export default injectSheet(styles)(translate()(SearchResultHeader));

@@ -1,8 +1,6 @@
 //@flow
 import React from 'react';
-import PageContent from './PageContent';
-import PageHeader from './PageHeader';
-import PageFooter from './PageFooter';
+import {translate} from "react-i18next";
 
 type Props = {
     search: (string) => void
@@ -31,13 +29,13 @@ class SearchBar extends React.Component<Props, State> {
     };
 
     render() {
-        // TODO i18n
+        const { t } = this.props;
         return (
             <form className="input-group" method="GET" onSubmit={this.search}>
-                <input type="text" className="form-control" placeholder="Search for..." onChange={this.handleChange} />
+                <input type="text" className="form-control" placeholder={ t('search-bar_placeholder') } onChange={this.handleChange} />
                 <span className="input-group-btn">
                     <button className="btn btn-default" type="button" onClick={this.search}>
-                        <i className="glyphicon glyphicon-search"></i>
+                        <i className="glyphicon glyphicon-search" />
                     </button>
                 </span>
             </form>
@@ -46,4 +44,4 @@ class SearchBar extends React.Component<Props, State> {
 
 }
 
-export default SearchBar;
+export default translate()(SearchBar);

@@ -16,7 +16,7 @@ class SearchResult extends React.Component<Props> {
             <Link to={pageLink} className="list-group-item">
                 <span className="badge">{ result.score.toFixed(2) }</span>
                 <h4 className="list-group-item-heading">{ result.path }</h4>
-                <p className="list-group-item-text" dangerouslySetInnerHTML={{__html: result.contentFragment}}></p>
+                <p className="list-group-item-text" dangerouslySetInnerHTML={{__html: result.contentFragment}} />
             </Link>
         );
     }

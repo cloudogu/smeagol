@@ -55,7 +55,6 @@ class Search extends React.Component<Props> {
             results = [];
         }
 
-        // TODO i18n
         if (error) {
             return (
                 <div>
