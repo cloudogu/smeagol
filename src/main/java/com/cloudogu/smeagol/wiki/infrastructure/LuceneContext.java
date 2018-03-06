@@ -1,6 +1,7 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.WikiId;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -55,6 +56,15 @@ public class LuceneContext {
         return DirectoryReader.open(FSDirectory.open(indexDirectory.toPath()));
     }
 
+    /**
+     * Creates an analyzer which can be used for indexing and or searching.
+     *
+     * @return analyzer
+     */
+    public Analyzer createAnalyzer() {
+        return new StandardAnalyzer();
+    }
+
     private File indexDirectory(WikiId wikiId) {
         return indexDirectory(wikiDirectory(wikiId));
     }
@@ -70,7 +80,7 @@ public class LuceneContext {
     }
 
     private IndexWriter createWriter(File directory) throws IOException {
-        IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
+        IndexWriterConfig config = new IndexWriterConfig(createAnalyzer());
         config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
         return new IndexWriter(FSDirectory.open(directory.toPath()), config);
     }

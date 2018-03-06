@@ -15,7 +15,12 @@ public class SearchResultResourceAssembler extends ResourceAssemblerSupport<Sear
 
     @Override
     public SearchResultResource toResource(SearchResult searchResult) {
-        SearchResultResource resource = new SearchResultResource(searchResult.getPath().getValue());
+        SearchResultResource resource = new SearchResultResource(
+                searchResult.getPath().getValue(),
+                searchResult.getScore().getValue(),
+                searchResult.getContentFragment().getValue()
+        );
+
         resource.add(pageLink(searchResult));
         return resource;
     }

@@ -1,6 +1,8 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
+import com.cloudogu.smeagol.wiki.domain.ContentFragment;
 import com.cloudogu.smeagol.wiki.domain.Path;
+import com.cloudogu.smeagol.wiki.domain.Score;
 import com.cloudogu.smeagol.wiki.domain.SearchResult;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -51,6 +53,7 @@ public class LuceneSearchResultRepositoryTest {
         Document doc = createSampleDocument();
         addDocumentToIndex(doc);
 
+        when(context.createAnalyzer()).thenReturn(new StandardAnalyzer());
         when(context.createReader(WIKI_ID_42)).then((Answer<IndexReader>) invocationOnMock -> DirectoryReader.open(directory));
     }
 
@@ -81,6 +84,8 @@ public class LuceneSearchResultRepositoryTest {
         assertThat(iterator.hasNext()).isTrue();
         SearchResult result = iterator.next();
         assertThat(result.getPath()).isEqualTo(Path.valueOf("docs/Home"));
+        assertThat(result.getScore().getValue()).isGreaterThan(0f);
+        assertThat(result.getContentFragment().getValue()).containsIgnoringCase("guide");
         assertThat(iterator.hasNext()).isFalse();
     }
 
@@ -89,8 +94,8 @@ public class LuceneSearchResultRepositoryTest {
         Document doc = createDocument("docs/Galaxy", "A Guide to the galaxy", "keep calm");
         addDocumentToIndex(doc);
 
-        SearchResult resultHome = new SearchResult(WIKI_ID_42, Path.valueOf("docs/Home"));
-        SearchResult resultGalaxy = new SearchResult(WIKI_ID_42, Path.valueOf("docs/Galaxy"));
+        SearchResult resultHome = new SearchResult(WIKI_ID_42, Path.valueOf("docs/Home"), Score.valueOf(42), ContentFragment.valueOf("as"));
+        SearchResult resultGalaxy = new SearchResult(WIKI_ID_42, Path.valueOf("docs/Galaxy"), Score.valueOf(42), ContentFragment.valueOf("as"));
 
         Iterable<SearchResult> results = resultRepository.search(WIKI_ID_42, "content:guide");
         assertThat(results).containsExactlyInAnyOrder(resultHome, resultGalaxy);

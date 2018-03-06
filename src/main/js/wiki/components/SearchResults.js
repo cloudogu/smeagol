@@ -13,11 +13,11 @@ class SearchResults extends React.Component<Props> {
     render() {
         const { results, createPageLink } = this.props;
         return (
-          <ul>
+          <div className="list-group">
               { results.map((result) => {
                   return <SearchResult key={ result.path } result={result} createPageLink={createPageLink} />
               }) }
-          </ul>
+          </div>
         );
     }
 }

@@ -1,12 +1,9 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import com.cloudogu.smeagol.wiki.domain.Path;
-import com.cloudogu.smeagol.wiki.domain.SearchResult;
-import com.cloudogu.smeagol.wiki.domain.SearchResultRepository;
-import com.cloudogu.smeagol.wiki.domain.WikiId;
+import com.cloudogu.smeagol.wiki.domain.*;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -15,6 +12,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.highlight.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,31 +41,51 @@ public class LuceneSearchResultRepository implements SearchResultRepository {
         try(IndexReader reader = context.createReader(wikiId)) {
             IndexSearcher searcher = new IndexSearcher(reader);
 
-            Query query = createQuery(queryString);
+            Analyzer analyzer = context.createAnalyzer();
+
+            Query query = createQuery(analyzer, queryString);
             TopDocs docs = searcher.search(query, 25);
 
+            Highlighter highlighter = createHighlighter(query);
+
             for (ScoreDoc hit : docs.scoreDocs) {
-                SearchResult result = createSearchResultFromHit(searcher, wikiId, hit);
+                Document document = searcher.doc(hit.doc);
+
+                String bestFragment = findBestFragment(analyzer, highlighter, document);
+                SearchResult result = createSearchResultFromHit(wikiId, hit, document, bestFragment);
+
                 searchResults.add(result);
             }
 
-        } catch (IOException | ParseException e) {
+        } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
             throw Throwables.propagate(e);
         }
         return searchResults;
     }
 
-    private Query createQuery(String queryString) throws ParseException {
-        StandardAnalyzer analyzer = new StandardAnalyzer();
-        QueryParser queryParser = new QueryParser(DEFAULT_QUERY_FIELD, analyzer);
+    private String findBestFragment(Analyzer analyzer, Highlighter highlighter, Document document) throws IOException, InvalidTokenOffsetsException {
+        String text = document.get(LuceneFields.CONTENT);
+        return highlighter.getBestFragment(analyzer, LuceneFields.CONTENT, text);
+    }
 
+    private Highlighter createHighlighter(Query query) {
+        Formatter formatter = new SimpleHTMLFormatter();
+        QueryScorer scorer = new QueryScorer(query);
+
+        Highlighter highlighter = new Highlighter(formatter, scorer);
+        highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer));
+
+        return highlighter;
+    }
+
+    private Query createQuery(Analyzer analyzer, String queryString) throws ParseException {
+        QueryParser queryParser = new QueryParser(DEFAULT_QUERY_FIELD, analyzer);
         return queryParser.parse(queryString);
     }
 
-    private SearchResult createSearchResultFromHit(IndexSearcher searcher, WikiId wikiId, ScoreDoc hit) throws IOException {
-        Document document = searcher.doc(hit.doc);
+    private SearchResult createSearchResultFromHit(WikiId wikiId, ScoreDoc hit, Document document, String bestFragment) {
         String path = document.get(LuceneFields.PATH);
-        return new SearchResult(wikiId, Path.valueOf(path));
+        return new SearchResult(wikiId, Path.valueOf(path), Score.valueOf(hit.score), ContentFragment.valueOf(bestFragment));
     }
 
 }

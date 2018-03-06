@@ -11,10 +11,14 @@ public class SearchResult {
 
     private final WikiId wikiId;
     private final Path path;
+    private final Score score;
+    private final ContentFragment contentFragment;
 
-    public SearchResult(WikiId wikiId, Path path) {
+    public SearchResult(WikiId wikiId, Path path, Score score, ContentFragment contentFragment) {
         this.wikiId = wikiId;
         this.path = path;
+        this.score = score;
+        this.contentFragment = contentFragment;
     }
 
     public WikiId getWikiId() {
@@ -23,6 +27,14 @@ public class SearchResult {
 
     public Path getPath() {
         return path;
+    }
+
+    public Score getScore() {
+        return score;
+    }
+
+    public ContentFragment getContentFragment() {
+        return contentFragment;
     }
 
     @Override
