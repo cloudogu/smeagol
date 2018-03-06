@@ -2,6 +2,8 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 
 import org.springframework.hateoas.ResourceSupport;
 
+import java.util.Objects;
+
 public class SearchResultResource extends ResourceSupport {
 
     private String path;
@@ -24,5 +26,25 @@ public class SearchResultResource extends ResourceSupport {
 
     public String getContentFragment() {
         return contentFragment;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        SearchResultResource resource = (SearchResultResource) o;
+        return Float.compare(resource.score, score) == 0 &&
+                Objects.equals(path, resource.path) &&
+                Objects.equals(contentFragment, resource.contentFragment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path, score, contentFragment);
     }
 }

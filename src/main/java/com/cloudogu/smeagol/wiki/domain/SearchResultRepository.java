@@ -3,6 +3,7 @@ package com.cloudogu.smeagol.wiki.domain;
 /**
  * SearchResultRepository is responsible for search pages within a wiki.
  */
+@SuppressWarnings("squid:S1609") // ignore functional interface warning
 public interface SearchResultRepository {
 
     /**

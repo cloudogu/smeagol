@@ -59,8 +59,6 @@ public class PageController {
         WikiId id = new WikiId(repositoryId, branch);
         Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
 
-        // TODO return new page? this would safe us one request from the frontend. Is this resty?
-
         if (payload.getMoveTo() != null) {
             return move(id, path, payload);
         }
@@ -119,7 +117,9 @@ public class PageController {
             return Content.valueOf(content);
         }
         private Path getMoveTo() {
-            if (Strings.isNullOrEmpty(moveTo)) return null;
+            if (Strings.isNullOrEmpty(moveTo)) {
+                return null;
+            }
             return Path.valueOf(moveTo);
         }
     }

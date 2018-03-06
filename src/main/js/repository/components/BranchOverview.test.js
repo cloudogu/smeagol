@@ -1,7 +1,7 @@
 import { orderBranches } from './BranchOverview';
 
 test('orderBranches', () => {
-    let branches = [{
+    const branches = [{
         "name": "feature/two"
     }, {
         "name": "feature/one"

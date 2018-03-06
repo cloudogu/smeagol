@@ -132,8 +132,6 @@ public class GitClient implements AutoCloseable {
         CanonicalTreeParser oldTree = new CanonicalTreeParser();
         oldTree.reset(reader, oldHead);
 
-        // TODO add path filter for wiki docs path
-
         List<DiffEntry> diffs = git.diff()
                 .setNewTree(newTree)
                 .setOldTree(oldTree)
@@ -203,8 +201,6 @@ public class GitClient implements AutoCloseable {
     }
 
     private void createRepositoryChangedEvent() throws IOException {
-        // TODO add path filter for wiki docs path
-
         URI repositoryUri = repository.toURI();
 
         RepositoryChangedEvent repositoryChangedEvent = new RepositoryChangedEvent(wikiId);

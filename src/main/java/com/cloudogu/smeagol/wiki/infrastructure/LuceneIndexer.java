@@ -2,10 +2,7 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.*;
 import com.google.common.base.Throwables;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.*;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.slf4j.Logger;
@@ -56,7 +53,6 @@ public class LuceneIndexer {
         if (page.getCommit().isPresent()) {
             Commit commit = page.getCommit().get();
             doc.add(new TextField(LuceneFields.MESSAGE, commit.getMessage().getValue(), Field.Store.YES));
-            // TODO last modified ???
         }
         return doc;
     }
