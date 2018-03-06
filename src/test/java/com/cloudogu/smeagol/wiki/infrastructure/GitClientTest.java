@@ -259,11 +259,11 @@ public class GitClientTest {
         Iterator<RepositoryChangedEvent.Change> iterator = event.iterator();
         RepositoryChangedEvent.Change change = iterator.next();
         assertEquals(ChangeType.ADDED, change.getType());
-        assertEquals("a.md", change.getPath());
+        assertTrue(change.getPath().matches("(a|b).md"));
 
         change = iterator.next();
         assertEquals(ChangeType.ADDED, change.getType());
-        assertEquals("b.md", change.getPath());
+        assertTrue(change.getPath().matches("(a|b).md"));
 
         assertFalse(iterator.hasNext());
     }
