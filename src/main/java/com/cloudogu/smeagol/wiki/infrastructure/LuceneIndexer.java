@@ -8,6 +8,8 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ import java.io.IOException;
 @Service
 public class LuceneIndexer {
 
+    private static final Logger LOG = LoggerFactory.getLogger(LuceneIndexer.class);
+
     private final LuceneContext context;
 
     @Autowired
@@ -30,14 +34,18 @@ public class LuceneIndexer {
     @EventListener
     public void handle(PageCreatedEvent event) {
         Page page = event.getPage();
-        try (IndexWriter writer = context.createWriter(page.getWikiId())) {
+        IndexWriter writer = context.openWriter(page.getWikiId());
+
+        try {
             addPageToIndex(writer, page);
+            writer.commit();
         } catch (IOException e) {
             throw Throwables.propagate(e);
         }
     }
 
     private void addPageToIndex(IndexWriter writer, Page page) throws IOException {
+        LOG.debug("add page {} to index {}", page.getPath(), page.getWikiId());
         writer.addDocument(createDocumentFrom(page));
     }
 
@@ -56,14 +64,17 @@ public class LuceneIndexer {
     @EventListener
     public void handle(PageModifiedEvent event) {
         Page page = event.getPage();
-        try (IndexWriter writer = context.createWriter(page.getWikiId())) {
+        IndexWriter writer = context.openWriter(page.getWikiId());
+        try {
             updateIndexedPage(writer, page);
+            writer.commit();
         } catch (IOException e) {
             throw Throwables.propagate(e);
         }
     }
 
     private void updateIndexedPage(IndexWriter writer, Page page) throws IOException {
+        LOG.debug("update page {} of index {}", page.getPath(), page.getWikiId());
         writer.updateDocument(createPathTerm(page.getPath()), createDocumentFrom(page));
     }
 
@@ -73,33 +84,38 @@ public class LuceneIndexer {
 
     @EventListener
     public void handle(PageDeletedEvent event) {
-        try (IndexWriter writer = context.createWriter(event.getWikiId())) {
-            deleteIndexedPage(writer, event.getPath());
+        IndexWriter writer = context.openWriter(event.getWikiId());
+        try {
+            deleteIndexedPage(writer, event.getWikiId(), event.getPath());
+            writer.commit();
         } catch (IOException e) {
             throw Throwables.propagate(e);
         }
     }
 
-    private void deleteIndexedPage(IndexWriter writer, Path path) throws IOException {
+    private void deleteIndexedPage(IndexWriter writer, WikiId wikiId, Path path) throws IOException {
+        LOG.debug("delete page {} from index {}", path, wikiId);
         writer.deleteDocuments(createPathTerm(path));
     }
 
     @EventListener
     public void handle(PageBatchEvent event) {
-        try (IndexWriter writer = context.createWriter(event.getWikiId())) {
+        IndexWriter writer = context.openWriter(event.getWikiId());
+        try {
             for (PageBatchEvent.Change change : event) {
-                handleBatchChange(writer, change);
+                handleBatchChange(writer, event.getWikiId(), change);
             }
+            writer.commit();
         } catch (IOException e) {
             throw Throwables.propagate(e);
         }
     }
 
-    private void handleBatchChange(IndexWriter writer, PageBatchEvent.Change change) throws IOException {
+    private void handleBatchChange(IndexWriter writer, WikiId wikiId, PageBatchEvent.Change change) throws IOException {
         if (change.getType() == ChangeType.ADDED) {
             addPageToIndex(writer, change.getPage().get());
         } else if (change.getType() == ChangeType.DELETED) {
-            deleteIndexedPage(writer, change.getPath());
+            deleteIndexedPage(writer, wikiId, change.getPath());
         } else {
             updateIndexedPage(writer, change.getPage().get());
         }
