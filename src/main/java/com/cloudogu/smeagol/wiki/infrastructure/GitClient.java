@@ -16,10 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.FileVisitResult;
@@ -41,26 +38,40 @@ public class GitClient implements AutoCloseable {
     private final ApplicationEventPublisher publisher;
 
     private final Account account;
-    private final File repository;
+    private final DirectoryResolver directoryResolver;
     private final URL remoteUrl;
     private final WikiId wikiId;
 
+    private final File repository;
+
     private Git gitRepository;
 
-    public GitClient(ApplicationEventPublisher publisher, Account account, File repository, URL remoteUrl, WikiId wikiId) {
+    public GitClient(ApplicationEventPublisher publisher, DirectoryResolver directoryResolver, Account account, URL remoteUrl, WikiId wikiId) {
         this.publisher = publisher;
+        this.directoryResolver = directoryResolver;
         this.account = account;
-        this.repository = repository;
         this.remoteUrl = remoteUrl;
         this.wikiId = wikiId;
+
+        this.repository = directoryResolver.resolve(wikiId);
     }
 
     public void refresh() throws GitAPIException, IOException {
-        // TODO check version and if it is an old repository fire same event as for clone
         if ( repository.exists() ) {
+            checkSearchIndex();
             pullChanges();
         } else {
             createClone();
+        }
+    }
+
+    private void checkSearchIndex() throws IOException {
+        File searchIndex = directoryResolver.resolveSearchIndex(wikiId);
+        if (!searchIndex.exists()) {
+            if (!searchIndex.mkdirs()){
+                throw new IOException("failed to create directory for search index: " + searchIndex);
+            }
+            createRepositoryChangedEvent();
         }
     }
 
@@ -188,6 +199,10 @@ public class GitClient implements AutoCloseable {
             }
         }
 
+        createRepositoryChangedEvent();
+    }
+
+    private void createRepositoryChangedEvent() throws IOException {
         // TODO add path filter for wiki docs path
 
         URI repositoryUri = repository.toURI();
@@ -196,7 +211,7 @@ public class GitClient implements AutoCloseable {
         Files.walkFileTree(repository.toPath(), new SimpleFileVisitor<java.nio.file.Path>() {
 
             @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
                 if (".git".equals(dir.getFileName().toString())) {
                     return FileVisitResult.SKIP_SUBTREE;
                 }

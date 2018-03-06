@@ -1,7 +1,6 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.AccountTestData;
-import com.cloudogu.smeagol.wiki.domain.Wiki;
 import com.cloudogu.smeagol.wiki.domain.WikiId;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -25,9 +24,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Optional;
 
-import static com.cloudogu.smeagol.wiki.DomainTestData.WIKI_ID_42;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GitClientTest {
@@ -38,8 +37,12 @@ public class GitClientTest {
     @Mock
     private ApplicationEventPublisher publisher;
 
+    @Mock
+    private DirectoryResolver directoryResolver;
+
     private GitClient target;
     private File targetDirectory;
+    private File targetSearchIndexDirectory;
 
     private Git remote;
     private File remoteDirectory;
@@ -57,10 +60,15 @@ public class GitClientTest {
         targetDirectory = temporaryFolder.newFolder();
         targetDirectory.delete();
 
+        targetSearchIndexDirectory = temporaryFolder.newFolder();
+        when(directoryResolver.resolveSearchIndex(wikiId)).thenReturn(targetSearchIndexDirectory);
+
+        when(directoryResolver.resolve(wikiId)).thenReturn(targetDirectory);
+
         target = new GitClient(
                 publisher,
+                directoryResolver,
                 AccountTestData.TRILLIAN,
-                targetDirectory,
                 remoteDirectory.toURI().toURL(),
                 wikiId
         );
@@ -196,6 +204,8 @@ public class GitClientTest {
                 .call()
                 .close();
 
+        new File(new File(targetDirectory, ".git"), "search-index").mkdirs();
+
         commit(remote, "a.md", "# My Changed Headline");
         remote.rm().addFilepattern("b.md").call();
         remote.commit()
@@ -224,6 +234,36 @@ public class GitClientTest {
         change = iterator.next();
         assertEquals(ChangeType.ADDED, change.getType());
         assertEquals("c.md", change.getPath());
+
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testRepositoryChangedEventOnPullWithoutSearchIndex() throws IOException, GitAPIException {
+        commit(remote, "a.md", "# My Headline");
+        commit(remote, "b.md", "# My Second Headline");
+
+        Git.cloneRepository()
+                .setDirectory(targetDirectory)
+                .setURI(remoteDirectory.toURI().toURL().toExternalForm())
+                .call()
+                .close();
+
+        targetSearchIndexDirectory.delete();
+
+        target.refresh();
+
+        verify(publisher).publishEvent(eventCaptor.capture());
+        RepositoryChangedEvent event = eventCaptor.getValue();
+
+        Iterator<RepositoryChangedEvent.Change> iterator = event.iterator();
+        RepositoryChangedEvent.Change change = iterator.next();
+        assertEquals(ChangeType.ADDED, change.getType());
+        assertEquals("a.md", change.getPath());
+
+        change = iterator.next();
+        assertEquals(ChangeType.ADDED, change.getType());
+        assertEquals("b.md", change.getPath());
 
         assertFalse(iterator.hasNext());
     }

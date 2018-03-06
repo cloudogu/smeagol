@@ -12,7 +12,6 @@ import org.apache.lucene.store.FSDirectory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
@@ -20,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiFunction;
 
 /**
  * LuceneContext is responsible for creating writer and reader for lucene operations.
@@ -30,13 +28,13 @@ public class LuceneContext {
 
     private static final Logger LOG = LoggerFactory.getLogger(LuceneContext.class);
 
-    private final String homeDirectory;
+    private final DirectoryResolver directoryResolver;
 
     private ConcurrentHashMap<WikiId, IndexWriter> writers = new ConcurrentHashMap<>();
 
     @Autowired
-    public LuceneContext(@Value("${homeDirectory}") String homeDirectory) {
-        this.homeDirectory = homeDirectory;
+    public LuceneContext(DirectoryResolver directoryResolver) {
+        this.directoryResolver = directoryResolver;
     }
 
 
@@ -63,7 +61,7 @@ public class LuceneContext {
     }
 
     private IndexWriter createWriter(WikiId wikiId) {
-        File indexDirectory = indexDirectory(wikiId);
+        File indexDirectory = directoryResolver.resolveSearchIndex(wikiId);
         try {
             return createWriter(indexDirectory);
         } catch (IOException ex) {
@@ -96,7 +94,7 @@ public class LuceneContext {
      * @throws IOException
      */
     public IndexReader createReader(WikiId wikiId) throws IOException {
-        File indexDirectory = indexDirectory(wikiId);
+        File indexDirectory = directoryResolver.resolveSearchIndex(wikiId);
         return DirectoryReader.open(FSDirectory.open(indexDirectory.toPath()));
     }
 
@@ -107,20 +105,6 @@ public class LuceneContext {
      */
     public Analyzer createAnalyzer() {
         return new StandardAnalyzer();
-    }
-
-    private File indexDirectory(WikiId wikiId) {
-        return indexDirectory(wikiDirectory(wikiId));
-    }
-
-    private File indexDirectory(File repositoryDirectory) {
-        File gitDirectory = new File(repositoryDirectory, ".git");
-        return new File(gitDirectory, "search-index");
-    }
-
-    private File wikiDirectory(WikiId wikiId) {
-        File repositoryDirectory = new File(homeDirectory, wikiId.getRepositoryID());
-        return new File(repositoryDirectory, wikiId.getBranch());
     }
 
     private IndexWriter createWriter(File directory) throws IOException {

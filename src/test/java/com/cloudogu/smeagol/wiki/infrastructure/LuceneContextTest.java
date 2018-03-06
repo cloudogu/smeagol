@@ -25,7 +25,7 @@ public class LuceneContextTest {
     @Before
     public void setUp() throws IOException {
         home = temporaryFolder.newFolder();
-        context = new LuceneContext(home.getPath());
+        context = new LuceneContext(new DirectoryResolver(home.getPath()));
     }
 
     @Test
