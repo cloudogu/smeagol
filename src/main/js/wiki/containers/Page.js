@@ -11,6 +11,7 @@ import I18nAlert from '../../I18nAlert';
 import {createDirectoryUrl} from '../modules/directory';
 
 type Props = {
+    historyLink: string,
     pagesLink: string,
     url: string,
     path: string,
@@ -83,7 +84,7 @@ class Page extends React.Component<Props> {
     };
 
     render() {
-        const { error, loading, page, wiki, repository, branch, path, notFound, editMode, pagesLink } = this.props;
+        const { error, loading, page, wiki, repository, branch, path, notFound, editMode, pagesLink, historyLink } = this.props;
         wiki.repository = repository;
         wiki.branch = branch;
 
@@ -117,7 +118,7 @@ class Page extends React.Component<Props> {
             return <PageEditor path={page.path} content={page.content} onSave={this.edit} onAbort={this.onAbortEdit} />;
         }
 
-        return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState } onMove={ this.onMove } pagesLink={pagesLink} />;
+        return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState } onMove={ this.onMove } pagesLink={pagesLink} historyLink={historyLink} />;
     }
 }
 
@@ -140,17 +141,21 @@ const mapStateToProps = (state, ownProps) => {
     const stateWiki = state.wiki[wikiId] ||{};
 
     let pagesLink = '#';
+    let historyLink = '#';
     if (stateWiki.wiki && stateWiki.wiki.directory) {
         pagesLink = `/${repository}/${branch}/pages/${stateWiki.wiki.directory}`;
+        historyLink = `/${repository}/${branch}/history/${stateWiki.wiki.landingPage}`; //TODO: find out which page is shown! landingPage does always show home!
         // TODO check for polyfil
         if (!pagesLink.endsWith('/')) {
             pagesLink += '/';
+            historyLink += '/';
         }
     }
 
     const props = {
         ...state.page[url],
         pagesLink,
+        historyLink,
         path,
         url,
         repository,
