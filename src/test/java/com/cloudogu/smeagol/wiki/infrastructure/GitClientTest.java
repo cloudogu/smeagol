@@ -1,6 +1,9 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.AccountTestData;
+import com.cloudogu.smeagol.wiki.domain.DisplayName;
+import com.cloudogu.smeagol.wiki.domain.Path;
+import com.cloudogu.smeagol.wiki.domain.Wiki;
 import com.cloudogu.smeagol.wiki.domain.WikiId;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -65,12 +68,19 @@ public class GitClientTest {
 
         when(directoryResolver.resolve(wikiId)).thenReturn(targetDirectory);
 
+        Wiki wiki = new Wiki(
+                wikiId,
+                remoteDirectory.toURI().toURL(),
+                DisplayName.valueOf("42"),
+                Path.valueOf("docs"),
+                Path.valueOf("docs/Home")
+        );
+
         target = new GitClient(
                 publisher,
                 directoryResolver,
                 AccountTestData.TRILLIAN,
-                remoteDirectory.toURI().toURL(),
-                wikiId
+                wiki
         );
     }
 

@@ -32,8 +32,7 @@ public class GitClientProvider {
                 publisher,
                 directoryResolver,
                 account,
-                wiki.getRepositoryUrl(),
-                wikiId
+                wiki
         );
     }
 
