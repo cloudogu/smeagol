@@ -8,7 +8,6 @@ import * as queryString from 'query-string';
 import PageEditor from '../components/PageEditor';
 import Loading from '../../Loading';
 import I18nAlert from '../../I18nAlert';
-import {createDirectoryUrl} from '../modules/directory';
 
 type Props = {
     pagesLink: string,
