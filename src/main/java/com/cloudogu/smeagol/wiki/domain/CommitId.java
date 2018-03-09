@@ -3,6 +3,8 @@ package com.cloudogu.smeagol.wiki.domain;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
+import java.util.Objects;
+
 /**
  * The id of a commit in a source code management system.
  */
@@ -33,5 +35,17 @@ public final class CommitId {
     public static CommitId valueOf(String value) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(value), "commit id is null or empty");
         return new CommitId(value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CommitId commitId = (CommitId) o;
+        return Objects.equals(value, commitId.getValue());
     }
 }

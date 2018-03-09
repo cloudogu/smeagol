@@ -143,9 +143,9 @@ public class GitClientTest {
             rc = commit(git, "b.md", "# My Headline");
             commit(git, "b.md", "# My Headline2");
         }
-        Optional<RevCommit> receivedRc = target.getCommitFromId(rc.getId().getName());
+        RevCommit receivedRc = target.getCommitFromId(rc.getId().getName());
 
-        assertEquals(rc, receivedRc.get());
+        assertEquals(rc, receivedRc);
     }
 
     @Test
@@ -155,11 +155,11 @@ public class GitClientTest {
             rc = commit(git, "b.md", "Content 0");
             rc1 = commit(git, "b.md", "Content 1");
         }
-        Optional<RevCommit> receivedRc = target.getCommitFromId(rc.getId().getName());
-        Optional<RevCommit> receivedRc1 = target.getCommitFromId(rc1.getId().getName());
+        RevCommit receivedRc = target.getCommitFromId(rc.getId().getName());
+        RevCommit receivedRc1 = target.getCommitFromId(rc1.getId().getName());
 
-        Optional<String> content = target.pathContentAtCommit("b.md", receivedRc.get());
-        Optional<String> content1 = target.pathContentAtCommit("b.md", receivedRc1.get());
+        Optional<String> content = target.pathContentAtCommit("b.md", receivedRc);
+        Optional<String> content1 = target.pathContentAtCommit("b.md", receivedRc1);
 
         assertEquals("Content 0", content.get());
         assertEquals("Content 1", content1.get());

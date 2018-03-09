@@ -97,7 +97,7 @@ public class ScmGitPageRepositoryTest {
     public void testFindByWikiIdAndPathAndCommit() throws Exception {
         CommitId commitId = COMMIT_ID;
         RevCommit rc = createRevCommit();
-        when(gitClient.getCommitFromId(commitId.getValue())).thenReturn(Optional.of(rc));
+        when(gitClient.getCommitFromId(commitId.getValue())).thenReturn(rc);
         when(gitClient.pathContentAtCommit(Pages.filepath(Path.valueOf("Home")), rc)).thenReturn(Optional.of("Content 0"));
         Optional<Page> optionalPage = pageRepository.findByWikiIdAndPathAndCommit(wikiId, Path.valueOf("Home"), commitId);
         assertEquals("Content 0", optionalPage.get().getContent().getValue());

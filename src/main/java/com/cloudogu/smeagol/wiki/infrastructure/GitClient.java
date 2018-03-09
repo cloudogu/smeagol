@@ -158,16 +158,13 @@ public class GitClient implements AutoCloseable {
         return commit;
     }
 
-    public Optional<RevCommit> getCommitFromId(String commitId) throws IOException {
+    public RevCommit getCommitFromId(String commitId) throws IOException {
         Git git = open();
         try (RevWalk revWalk = new RevWalk(git.getRepository())) {
             RevCommit commit = revWalk.parseCommit(ObjectId.fromString(commitId));
             revWalk.dispose();
-            return Optional.of(commit);
-        } catch (IOException e) {
-            e.printStackTrace();
+            return commit;
         }
-        return Optional.empty();
     }
 
     public Optional<String> pathContentAtCommit(String path, RevCommit commit) throws IOException {
@@ -185,10 +182,7 @@ public class GitClient implements AutoCloseable {
             ObjectLoader loader = git.getRepository().open(objectId);
             loader.copyTo(baos);
             return Optional.of(new String(baos.toByteArray()));
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return Optional.empty();
     }
 
     private void pushChanges() throws GitAPIException, IOException {

@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -103,6 +104,20 @@ public class PageControllerTest {
                 .andExpect(jsonPath("$._links.delete.href", is(self)))
                 .andExpect(jsonPath("$._links.edit.href", is(self)))
                 .andExpect(jsonPath("$._links.move.href", is(self)));
+    }
+
+    @Test
+    public void findByWikiIdAndPathAndCommit() throws Exception {
+        WikiId wikiId = new WikiId("4xQfahsId3", "master");
+        Path path = Path.valueOf("docs/Home");
+        String commitId = "42";
+
+        // to prevent NullPointerException
+        when(pageRepository.findByWikiIdAndPathAndCommit(any(), any(), any())).thenReturn(Optional.empty());
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/repositories/4xQfahsId3/branches/master/pages/docs/Home?commit="+commitId)
+                .contentType("application/json"));
+
+        verify(pageRepository).findByWikiIdAndPathAndCommit(wikiId, path, CommitId.valueOf(commitId));
     }
 
     @Test
