@@ -3,17 +3,20 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 import com.cloudogu.smeagol.Account;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.treewalk.TreeWalk;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -155,6 +158,39 @@ public class GitClient implements AutoCloseable {
         return commit;
     }
 
+    public Optional<RevCommit> getCommitFromId(String commitId) throws IOException {
+        Git git = open();
+        try (RevWalk revWalk = new RevWalk(git.getRepository())) {
+            RevCommit commit = revWalk.parseCommit(ObjectId.fromString(commitId));
+            revWalk.dispose();
+            return Optional.of(commit);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    public Optional<String> pathContentAtCommit(String path, RevCommit commit) throws IOException {
+        Git git = open();
+        RevTree tree = commit.getTree();
+        try (TreeWalk treeWalk = new TreeWalk(git.getRepository())) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            treeWalk.addTree(tree);
+            treeWalk.setRecursive(true);
+            treeWalk.setFilter(PathFilter.create(path));
+            if (!treeWalk.next()) {
+                return Optional.empty();
+            }
+            ObjectId objectId = treeWalk.getObjectId(0);
+            ObjectLoader loader = git.getRepository().open(objectId);
+            loader.copyTo(baos);
+            return Optional.of(new String(baos.toByteArray()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
     private void pushChanges() throws GitAPIException, IOException {
         CredentialsProvider credentials = credentialsProvider(account);
 
@@ -167,7 +203,6 @@ public class GitClient implements AutoCloseable {
                 .setCredentialsProvider(credentials)
                 .call();
     }
-
 
     @Override
     public void close()  {

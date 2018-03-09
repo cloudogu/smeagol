@@ -35,11 +35,6 @@ public class ScmGitPageRepository implements PageRepository {
         }
     }
 
-    @Override
-    public Optional<Page> findByWikiIdAndPathAndCommit(WikiId wikiId, Path path, String commitId) {
-        return null;
-    }
-
     private Optional<Page> createPageFromFile(GitClient client, WikiId id, Path path) throws IOException, GitAPIException {
         String pagePath = Pages.filepath(path);
         File file = client.file(pagePath);
@@ -55,6 +50,34 @@ public class ScmGitPageRepository implements PageRepository {
             }
         }
 
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Page> findByWikiIdAndPathAndCommit(WikiId wikiId, Path path, CommitId commitId) {
+        try (GitClient client = gitClientProvider.createGitClient(wikiId)) {
+            client.refresh();
+            return createPageFromFileAtCommit(client, wikiId, path, commitId);
+        } catch (IOException | GitAPIException ex) {
+            throw Throwables.propagate(ex);
+        }
+    }
+
+    private Optional<Page> createPageFromFileAtCommit(GitClient client, WikiId wikiId, Path path, CommitId commitId) {
+        try {
+            Optional<RevCommit> optCommit = client.getCommitFromId(commitId.getValue());
+            if (optCommit.isPresent()) {
+                Optional<String> optFileContent = client.pathContentAtCommit(Pages.filepath(path), optCommit.get());
+                if (optFileContent.isPresent()) {
+                    Content content = Content.valueOf(optFileContent.get());
+                    Commit commit = createCommit(optCommit.get());
+                    Page page = new Page(wikiId, path, content, commit);
+                    return Optional.of(page);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return Optional.empty();
     }
 

@@ -44,7 +44,7 @@ public class PageController {
         Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
         Optional<Page> byWikiIdAndPath;
         if (commitId.isPresent()) {
-            byWikiIdAndPath = repository.findByWikiIdAndPathAndCommit(id, path, commitId.get());
+            byWikiIdAndPath = repository.findByWikiIdAndPathAndCommit(id, path, CommitId.valueOf(commitId.get()));
         } else {
             byWikiIdAndPath = repository.findByWikiIdAndPath(id, path);
         }

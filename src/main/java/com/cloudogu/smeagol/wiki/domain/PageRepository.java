@@ -40,7 +40,7 @@ public interface PageRepository {
      *
      * @return page with path
      */
-    Optional<Page> findByWikiIdAndPathAndCommit(WikiId wikiId, Path path, String commitId);
+    Optional<Page> findByWikiIdAndPathAndCommit(WikiId wikiId, Path path, CommitId commitId);
 
     /**
      * Deletes the page.

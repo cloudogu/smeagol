@@ -137,6 +137,35 @@ public class GitClientTest {
     }
 
     @Test
+    public void testGetCommitFromId() throws IOException, GitAPIException {
+        RevCommit rc;
+        try (Git git = Git.init().setDirectory(targetDirectory).call()) {
+            rc = commit(git, "b.md", "# My Headline");
+            commit(git, "b.md", "# My Headline2");
+        }
+        Optional<RevCommit> receivedRc = target.getCommitFromId(rc.getId().getName());
+
+        assertEquals(rc, receivedRc.get());
+    }
+
+    @Test
+    public void testPathContentAtCommit() throws GitAPIException, IOException {
+        RevCommit rc, rc1;
+        try (Git git = Git.init().setDirectory(targetDirectory).call()) {
+            rc = commit(git, "b.md", "Content 0");
+            rc1 = commit(git, "b.md", "Content 1");
+        }
+        Optional<RevCommit> receivedRc = target.getCommitFromId(rc.getId().getName());
+        Optional<RevCommit> receivedRc1 = target.getCommitFromId(rc1.getId().getName());
+
+        Optional<String> content = target.pathContentAtCommit("b.md", receivedRc.get());
+        Optional<String> content1 = target.pathContentAtCommit("b.md", receivedRc1.get());
+
+        assertEquals("Content 0", content.get());
+        assertEquals("Content 1", content1.get());
+    }
+
+    @Test
     public void testCommit() throws IOException, GitAPIException {
         target.refresh();
 
