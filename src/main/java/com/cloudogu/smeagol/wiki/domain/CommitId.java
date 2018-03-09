@@ -48,4 +48,9 @@ public final class CommitId {
         CommitId commitId = (CommitId) o;
         return Objects.equals(value, commitId.getValue());
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
 }
