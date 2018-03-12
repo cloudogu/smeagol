@@ -14,7 +14,7 @@ public class TimeBasedPullChangesStrategyTest {
         assertThat(strategy.shouldPull(WIKI_ID_42)).isTrue();
         assertThat(strategy.shouldPull(WIKI_ID_42)).isFalse();
         assertThat(strategy.shouldPull(new WikiId("42", "develop"))).isTrue();
-        Thread.sleep(100L);
+        Thread.sleep(101L);
         assertThat(strategy.shouldPull(WIKI_ID_42)).isTrue();
     }
 }
