@@ -1,13 +1,14 @@
 package com.cloudogu.smeagol.wiki.usecase;
 
-import com.cloudogu.smeagol.Account;
 import com.cloudogu.smeagol.AccountService;
-import com.cloudogu.smeagol.wiki.domain.*;
+import com.cloudogu.smeagol.wiki.domain.Commit;
+import com.cloudogu.smeagol.wiki.domain.Page;
+import com.cloudogu.smeagol.wiki.domain.PageRepository;
 import de.triology.cb.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
+import static com.cloudogu.smeagol.wiki.usecase.Commits.createNewCommit;
 
 /**
  * Handler for {@link CreatePageCommand}.
@@ -30,19 +31,8 @@ public class CreatePageCommandHandler implements CommandHandler<Page, CreatePage
             throw new PageAlreadyExistsException(command.getPath(), "the page already exists");
         }
 
-        Commit commit = createNewCommit(command.getMessage());
+        Commit commit = createNewCommit(accountService, command.getMessage());
         Page page = new Page(command.getWikiId(), command.getPath(), command.getContent(), commit);
         return repository.save(page);
-    }
-
-    private Commit createNewCommit(Message message) {
-        Account account = accountService.get();
-
-        Author author = new Author(
-                DisplayName.valueOf(account.getDisplayName()),
-                Email.valueOf(account.getMail())
-        );
-
-        return new Commit(Instant.now(), author, message);
     }
 }

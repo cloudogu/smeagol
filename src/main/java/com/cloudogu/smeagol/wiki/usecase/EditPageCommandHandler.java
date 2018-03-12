@@ -1,13 +1,15 @@
 package com.cloudogu.smeagol.wiki.usecase;
 
-import com.cloudogu.smeagol.Account;
 import com.cloudogu.smeagol.AccountService;
-import com.cloudogu.smeagol.wiki.domain.*;
+import com.cloudogu.smeagol.wiki.domain.Commit;
+import com.cloudogu.smeagol.wiki.domain.Page;
+import com.cloudogu.smeagol.wiki.domain.PageRepository;
+import com.cloudogu.smeagol.wiki.domain.Path;
 import de.triology.cb.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
+import static com.cloudogu.smeagol.wiki.usecase.Commits.createNewCommit;
 
 /**
  * Handler for {@link EditPageCommand}.
@@ -30,20 +32,9 @@ public class EditPageCommandHandler implements CommandHandler<Page, EditPageComm
         Page page = repository.findByWikiIdAndPath(command.getWikiId(), path)
                 .orElseThrow(() -> new PageNotFoundException(path, "page not found"));
 
-        Commit commit = createNewCommit(command.getMessage());
+        Commit commit = createNewCommit(accountService, command.getMessage());
         page.edit(commit, command.getContent());
 
         return repository.save(page);
-    }
-
-    private Commit createNewCommit(Message message) {
-        Account account = accountService.get();
-
-        Author author = new Author(
-                DisplayName.valueOf(account.getDisplayName()),
-                Email.valueOf(account.getMail())
-        );
-
-        return new Commit(Instant.now(), author, message);
     }
 }
