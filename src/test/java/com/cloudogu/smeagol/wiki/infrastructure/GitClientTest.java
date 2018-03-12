@@ -79,6 +79,7 @@ public class GitClientTest {
         target = new GitClient(
                 publisher,
                 directoryResolver,
+                new AlwaysPullChangesStrategy(),
                 AccountTestData.TRILLIAN,
                 wiki
         );
@@ -276,5 +277,43 @@ public class GitClientTest {
         assertTrue(change.getPath().matches("(a|b).md"));
 
         assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testRefreshWithPullStrategy() throws IOException, GitAPIException {
+        RevCommit commit = commit(remote, "a.md", "# My Headline");
+
+        Git.cloneRepository()
+                .setDirectory(targetDirectory)
+                .setURI(remoteDirectory.toURI().toURL().toExternalForm())
+                .call()
+                .close();
+
+        Wiki wiki = new Wiki(
+                wikiId,
+                remoteDirectory.toURI().toURL(),
+                DisplayName.valueOf("42"),
+                Path.valueOf("docs"),
+                Path.valueOf("docs/Home")
+        );
+
+        target = new GitClient(
+                publisher,
+                directoryResolver,
+                new TimeBasedPullChangesStrategy(2000L),
+                AccountTestData.TRILLIAN,
+                wiki
+        );
+
+        target.refresh();
+
+        commit(remote, "b.md", "File b");
+
+        target.refresh();
+
+        try (Git git = Git.open(targetDirectory)) {
+            RevCommit c = git.log().call().iterator().next();
+            assertEquals(commit, c);
+        }
     }
 }

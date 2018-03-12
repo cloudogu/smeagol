@@ -15,13 +15,15 @@ public class GitClientProvider {
     private final DirectoryResolver directoryResolver;
     private final AccountService accountService;
     private final ScmWikiRepository wikiRepository;
+    private final PullChangesStrategy strategy;
 
     @Autowired
-    public GitClientProvider(ApplicationEventPublisher publisher, DirectoryResolver directoryResolver, ScmWikiRepository wikiRepository, AccountService accountService) {
+    public GitClientProvider(ApplicationEventPublisher publisher, DirectoryResolver directoryResolver, PullChangesStrategy strategy, AccountService accountService, ScmWikiRepository wikiRepository) {
         this.publisher = publisher;
         this.directoryResolver = directoryResolver;
         this.wikiRepository = wikiRepository;
         this.accountService = accountService;
+        this.strategy = strategy;
     }
 
     public GitClient createGitClient(WikiId wikiId) {
@@ -31,6 +33,7 @@ public class GitClientProvider {
         return new GitClient(
                 publisher,
                 directoryResolver,
+                strategy,
                 account,
                 wiki
         );

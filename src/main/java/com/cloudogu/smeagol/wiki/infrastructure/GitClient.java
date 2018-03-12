@@ -2,7 +2,7 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.Account;
 import com.cloudogu.smeagol.wiki.domain.Wiki;
-import com.cloudogu.smeagol.wiki.domain.WikiId;
+import com.google.common.base.Stopwatch;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -17,9 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,10 +48,13 @@ public class GitClient implements AutoCloseable {
 
     private Git gitRepository;
 
-    public GitClient(ApplicationEventPublisher publisher, DirectoryResolver directoryResolver, Account account, Wiki wiki) {
-        this.publisher = publisher;
+    private PullChangesStrategy strategy;
 
+    public GitClient(ApplicationEventPublisher publisher, DirectoryResolver directoryResolver, PullChangesStrategy strategy, Account account, Wiki wiki) {
+        this.publisher = publisher;
         this.directoryResolver = directoryResolver;
+        this.strategy = strategy;
+
         this.account = account;
         this.wiki = wiki;
 
@@ -59,9 +64,26 @@ public class GitClient implements AutoCloseable {
     public void refresh() throws GitAPIException, IOException {
         if (repository.exists()) {
             checkSearchIndex();
-            pullChanges();
+            pullChangesIfNeeded();
         } else {
             createClone();
+        }
+    }
+
+    private void pullChangesIfNeeded() throws GitAPIException, IOException {
+        if (strategy.shouldPull(wiki.getId())) {
+            pullChangesAndLogTime();
+        } else {
+            LOG.debug("skip pulling changes, because pull strategy {}" , strategy.getClass());
+        }
+    }
+
+    private void pullChangesAndLogTime() throws GitAPIException, IOException {
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
+            pullChanges();
+        } finally {
+            LOG.trace("pull changes of {} finished in {}", wiki.getId(), sw);
         }
     }
 

@@ -19,3 +19,6 @@ scm:
 cas:
   url: https://192.168.56.2/cas
   serviceUrl: http://192.168.56.1:8080/
+
+git:
+  pull-strategy: once-a-minute

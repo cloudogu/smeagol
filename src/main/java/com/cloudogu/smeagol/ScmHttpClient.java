@@ -1,6 +1,7 @@
 package com.cloudogu.smeagol;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Stopwatch;
 import com.google.common.base.Throwables;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
@@ -77,6 +78,9 @@ public class ScmHttpClient {
     }
 
     public <T> Optional<ResponseEntity<T>> getEntity(String url, Class<T> type, Object... urlVariables) {
+        LOG.trace("fetch {} from {} with {}", type, url, urlVariables);
+        Stopwatch sw = Stopwatch.createStarted();
+
         HttpHeaders headers = createHeaders();
         HttpEntity<?> entity = new HttpEntity<>(headers);
         try {
@@ -92,6 +96,8 @@ public class ScmHttpClient {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;
             }
+        } finally {
+            LOG.trace("scm request {} finished in {}", url, sw.stop());
         }
         return Optional.empty();
     }
