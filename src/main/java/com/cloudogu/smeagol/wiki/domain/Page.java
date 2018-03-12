@@ -64,6 +64,10 @@ public class Page {
         return Optional.ofNullable(commit);
     }
 
+    public void setCommit(Commit commit) {
+        this.commit = commit;
+    }
+
     public Optional<Path> getOldPath() {
         return Optional.ofNullable(oldPath);
     }

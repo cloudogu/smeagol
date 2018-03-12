@@ -4,13 +4,13 @@ import com.cloudogu.smeagol.wiki.domain.*;
 import com.cloudogu.smeagol.wiki.usecase.CreatePageCommand;
 import com.cloudogu.smeagol.wiki.usecase.DeletePageCommand;
 import com.cloudogu.smeagol.wiki.usecase.EditPageCommand;
+import com.cloudogu.smeagol.wiki.usecase.RestorePageCommand;
 import de.triology.cb.CommandBus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,7 +25,7 @@ import java.time.Instant;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -57,6 +57,9 @@ public class PageControllerTest {
 
     @Captor
     private ArgumentCaptor<DeletePageCommand> deleteCommandCaptor;
+
+    @Captor
+    private ArgumentCaptor<RestorePageCommand> restoreCommandCaptor;
 
     private MockMvc mockMvc;
 
@@ -190,5 +193,25 @@ public class PageControllerTest {
         assertEquals(wikiId, pageCommand.getWikiId());
         assertEquals(path, pageCommand.getPath());
         assertEquals("Hello", pageCommand.getMessage().getValue());
+    }
+
+    @Test
+    public void restore() throws Exception {
+        WikiId wikiId = new WikiId("4xQfahsId3", "master");
+        Path path = Path.valueOf("docs/Home");
+
+        String content = "{\"restore\": \"42\", \"message\": \"Hello\"}";
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/repositories/4xQfahsId3/branches/master/pages/docs/Home")
+                .content(content)
+                .contentType("application/json"))
+                .andExpect(status().isNoContent());
+
+        verify(commandBus).execute(restoreCommandCaptor.capture());
+
+        RestorePageCommand pageCommand = restoreCommandCaptor.getValue();
+        assertEquals(wikiId, pageCommand.getWikiId());
+        assertEquals(path, pageCommand.getPath());
+        assertEquals("Hello", pageCommand.getMessage().getValue());
+        assertEquals("42", pageCommand.getCommitId().getValue());
     }
 }
