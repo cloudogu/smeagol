@@ -1,13 +1,11 @@
 //@flow
 import React from 'react';
 import {connect} from 'react-redux';
-import FileBrowser from '../components/FileBrowser';
-import Breadcrumb from '../components/Breadcrumb';
-import {createDirectoryUrl, fetchDirectoryIfNeeded} from '../modules/directory';
 import I18nAlert from '../../I18nAlert';
 import Loading from '../../Loading';
 import {translate} from 'react-i18next';
 import {createId, fetchWikiIfNeeded} from "../modules/wiki";
+import {createHistoryUrl, fetchHistoryIfNeeded} from "../modules/pagehistory"
 
 type Props = {
     loading: boolean,
@@ -19,26 +17,27 @@ type Props = {
     page: string,
     url: string,
     t: any,
+    history: any,
     fetchWikiIfNeeded: (repository: string, branch: string) => void,
-    fetchDirectoryIfNeeded: (url: string) => void
+    fetchHistoryIfNeeded: (url: string) => void
 }
 
 class History extends React.Component<Props> {
 
     componentDidMount() {
-        const { url, repository, branch, fetchDirectoryIfNeeded, fetchWikiIfNeeded, page } = this.props;
+        const { url, repository, branch, fetchHistoryIfNeeded, fetchWikiIfNeeded } = this.props;
 
-        fetchDirectoryIfNeeded(url);
+        fetchHistoryIfNeeded(url);
         fetchWikiIfNeeded(repository, branch);
     }
 
     componentDidUpdate() {
-        this.props.fetchDirectoryIfNeeded(this.props.url);
+        this.props.fetchHistoryIfNeeded(this.props.url);
     }
 
 
     render() {
-        const { error, loading, directory, t, page } = this.props;
+        const { error, loading, t, page, history } = this.props;
         if (error) {
             return (
                 <div>
@@ -53,7 +52,7 @@ class History extends React.Component<Props> {
                     <Loading/>
                 </div>
             );
-        } else if (!directory) {
+        } else if (!history) {
             return (
                 <div>
                     <h1>Smeagol</h1>
@@ -85,20 +84,19 @@ function findPage(props) {
 
 const mapStateToProps = (state, ownProps) => {
     const { repository, branch } = ownProps.match.params;
-
+console.log(state);
     const path = findDirectoryPath(ownProps);
     const page = findPage(ownProps);
-    const url = createDirectoryUrl(repository, branch, path);
+    const url = createHistoryUrl(repository, branch, page);
     const wikiId = createId(repository, branch);
     const stateWiki = state.wiki[wikiId] ||{};
 
     let baseDirectory = '';
-    if (stateWiki.wiki && stateWiki.wiki.directory) {
+    /*if (stateWiki.wiki && stateWiki.wiki.directory) {
         baseDirectory = stateWiki.wiki.directory;
-    }
-
+    }*/
     return {
-        ...state.directory[url],
+       ...state.pagehistory[url],
         baseDirectory,
         repository,
         branch,
@@ -110,8 +108,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchDirectoryIfNeeded: (url: string) => {
-            dispatch(fetchDirectoryIfNeeded(url))
+        fetchHistoryIfNeeded: (url: string) => {
+            dispatch(fetchHistoryIfNeeded(url))
         },
         fetchWikiIfNeeded: (repository: string, branch: string) => {
             dispatch(fetchWikiIfNeeded(repository, branch))
