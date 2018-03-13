@@ -1,5 +1,6 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
+import com.cloudogu.smeagol.wiki.domain.ChangeType;
 import com.cloudogu.smeagol.wiki.domain.WikiId;
 
 import java.util.ArrayList;

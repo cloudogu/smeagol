@@ -1,4 +1,4 @@
-package com.cloudogu.smeagol.wiki.infrastructure;
+package com.cloudogu.smeagol.wiki.domain;
 
 /**
  * Type of a change.

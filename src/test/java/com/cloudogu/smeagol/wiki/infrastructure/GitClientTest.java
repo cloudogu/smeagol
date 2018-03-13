@@ -1,6 +1,7 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.AccountTestData;
+import com.cloudogu.smeagol.wiki.domain.ChangeType;
 import com.cloudogu.smeagol.wiki.domain.WikiId;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;

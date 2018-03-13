@@ -1,8 +1,4 @@
-package com.cloudogu.smeagol.wiki.infrastructure;
-
-import com.cloudogu.smeagol.wiki.domain.Page;
-import com.cloudogu.smeagol.wiki.domain.Path;
-import com.cloudogu.smeagol.wiki.domain.WikiId;
+package com.cloudogu.smeagol.wiki.domain;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +13,7 @@ public class PageBatchEvent implements Iterable<PageBatchEvent.Change> {
     private final WikiId wikiId;
     private List<Change> changes = new ArrayList<>();
 
-    PageBatchEvent(WikiId wikiId) {
+    public PageBatchEvent(WikiId wikiId) {
         this.wikiId = wikiId;
     }
 
