@@ -1,6 +1,7 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.Path;
+import com.google.common.base.Strings;
 
 import java.io.File;
 
@@ -11,6 +12,10 @@ public class Pages {
     private Pages() {
     }
 
+    public static Path pagepath(String path) {
+        return Path.valueOf(name(path));
+    }
+
     public static String filepath(Path path) {
         return path.getValue().concat(EXTENSION);
     }
@@ -19,8 +24,8 @@ public class Pages {
         return file.isFile() && isPageFilename(file.getName());
     }
 
-    private static boolean isPageFilename(String filename) {
-        return filename.endsWith(EXTENSION);
+    public static boolean isPageFilename(String filename) {
+        return Strings.nullToEmpty(filename).endsWith(EXTENSION);
     }
 
     public static Path path(Path parent, File file) {

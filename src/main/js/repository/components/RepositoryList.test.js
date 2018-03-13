@@ -1,7 +1,7 @@
 import {createRepositoryGroups} from './RepositoryList';
 
 test('createRepositoryGroups ordering and creation of repository groups', () => {
-    let repositories = [{
+    const repositories = [{
         "name": "training/k8s-foundations-presentation",
     }, {
         "name": "training/test",

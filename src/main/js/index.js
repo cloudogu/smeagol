@@ -8,7 +8,7 @@ import i18n from './i18n';
 
 import { Provider } from 'react-redux';
 import createHistory from 'history/createBrowserHistory';
-import createReduxStore from './store';
+import createReduxStore from './createReduxStore';
 import { ConnectedRouter } from 'react-router-redux';
 
 // Create a history of your choosing (we're using a browser history in this case)

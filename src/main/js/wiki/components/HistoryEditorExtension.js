@@ -16,14 +16,17 @@ Viewer.defineExtension('history', function(editor) {
         return result;
     });
 
-    function applyHistoryLinks() {
-        for ( let link of document.querySelectorAll('[data-history]')) {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const href = link.getAttribute('href');
-                window.appHistory.push(href, { 'some': 'thing' });
-            }, false);
+    const applyHistoryLinks = () => {
+        for ( const link of document.querySelectorAll('[data-history]')) {
+            link.addEventListener('click', handleDataHistoryLinkClick, false);
         }
-    }
+    };
+
+    const handleDataHistoryLinkClick = (e: Event) => {
+        e.preventDefault();
+
+        const href = e.target.getAttribute('href');
+        window.appHistory.push(href, { 'some': 'thing' });
+    };
 
 });

@@ -1,7 +1,7 @@
 import {orderRepositoriesByName} from './RepositoryGroup';
 
 test('orderRepositoriesByName', () => {
-    let repositories = [{
+    const repositories = [{
         "name": "different/two"
     }, {
         "name": "different/one"

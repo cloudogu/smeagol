@@ -8,7 +8,6 @@ import * as queryString from 'query-string';
 import PageEditor from '../components/PageEditor';
 import Loading from '../../Loading';
 import I18nAlert from '../../I18nAlert';
-import {createDirectoryUrl} from '../modules/directory';
 
 type Props = {
     pagesLink: string,
@@ -82,6 +81,11 @@ class Page extends React.Component<Props> {
         this.pushLandingPageState();
     };
 
+    search = (query: string) => {
+        const { history, repository, branch } = this.props;
+        history.push(`/${repository}/${branch}/search?query=${query}`);
+    };
+
     render() {
         const { error, loading, page, wiki, repository, branch, path, notFound, editMode, pagesLink } = this.props;
         wiki.repository = repository;
@@ -117,7 +121,7 @@ class Page extends React.Component<Props> {
             return <PageEditor path={page.path} content={page.content} onSave={this.edit} onAbort={this.onAbortEdit} />;
         }
 
-        return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState } onMove={ this.onMove } pagesLink={pagesLink} />;
+        return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState } onMove={ this.onMove } pagesLink={pagesLink} search={this.search} />;
     }
 }
 
@@ -137,7 +141,7 @@ const mapStateToProps = (state, ownProps) => {
     const path = findPagePath(ownProps);
     const url = createPageUrl(repository, branch, path);
     const wikiId = createId(repository, branch);
-    const stateWiki = state.wiki[wikiId] ||{};
+    const stateWiki = state.wiki[wikiId] || {};
 
     let pagesLink = '#';
     if (stateWiki.wiki && stateWiki.wiki.directory) {
