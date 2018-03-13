@@ -79,7 +79,8 @@ function findDirectoryPath(props) {
 function findPage(props) {
     const { pathname } = props.location;
     const parts = pathname.split('/');
-    return parts.slice(5).join('/'); //TODO: Remove last /
+    const pageName = parts.slice(5).join('/');
+    return pageName.substr(0, pageName.indexOf('/'));
 }
 
 const mapStateToProps = (state, ownProps) => {
