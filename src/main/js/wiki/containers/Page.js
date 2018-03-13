@@ -144,7 +144,7 @@ const mapStateToProps = (state, ownProps) => {
     let historyLink = '#';
     if (stateWiki.wiki && stateWiki.wiki.directory) {
         pagesLink = `/${repository}/${branch}/pages/${stateWiki.wiki.directory}`;
-        historyLink = `/${repository}/${branch}/history/${stateWiki.wiki.landingPage}`; //TODO: find out which page is shown! landingPage does always show home!
+        historyLink = `/${repository}/${branch}/history/${path}`;
         // TODO check for polyfil
         if (!pagesLink.endsWith('/')) {
             pagesLink += '/';
