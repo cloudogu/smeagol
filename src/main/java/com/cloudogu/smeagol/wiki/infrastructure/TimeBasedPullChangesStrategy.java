@@ -22,10 +22,10 @@ public class TimeBasedPullChangesStrategy implements PullChangesStrategy {
 
     @Override
     public boolean shouldPull(WikiId wikiId) {
-        long timestamp = timestamps.getOrDefault(wikiId, ZERO) + duration;
+        long expirationTime = timestamps.getOrDefault(wikiId, ZERO) + duration;
 
         long now = System.currentTimeMillis();
-        boolean shouldPull = timestamp < now;
+        boolean shouldPull = expirationTime < now;
         if (shouldPull) {
             timestamps.put(wikiId, now);
         }
