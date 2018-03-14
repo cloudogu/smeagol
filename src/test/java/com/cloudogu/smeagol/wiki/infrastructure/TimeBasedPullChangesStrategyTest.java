@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TimeBasedPullChangesStrategyTest {
 
     @Test
+    @SuppressWarnings("squid:S2925") // ignore thread sleep warning
     public void shouldPull() throws InterruptedException {
         TimeBasedPullChangesStrategy strategy = new TimeBasedPullChangesStrategy(100L);
         assertThat(strategy.shouldPull(WIKI_ID_42)).isTrue();
