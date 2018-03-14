@@ -7,18 +7,12 @@ import java.util.List;
 
 public class HistoryResource extends ResourceSupport {
 
-    private final String wikiId;
     private final String path;
     private final List<CommitResource> commits;
 
-    public HistoryResource(String wikiId, String path, List<CommitResource> commits) {
-        this.wikiId = wikiId;
+    public HistoryResource(String path, List<CommitResource> commits) {
         this.path = path;
         this.commits = commits;
-    }
-
-    public String getWikiId() {
-        return wikiId;
     }
 
     public String getPath() {

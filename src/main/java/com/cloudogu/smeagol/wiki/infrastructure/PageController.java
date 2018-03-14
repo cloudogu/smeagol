@@ -38,15 +38,15 @@ public class PageController {
             HttpServletRequest request,
             @PathVariable("repositoryId") String repositoryId,
             @PathVariable("branch") String branch,
-            @RequestParam("commit") Optional<String> commitId
+            @RequestParam(value = "commit", required = false) String commitId
     ) {
         WikiId id = new WikiId(repositoryId, branch);
         Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
         Optional<Page> byWikiIdAndPath;
-        if (commitId.isPresent()) {
-            byWikiIdAndPath = repository.findByWikiIdAndPathAndCommit(id, path, CommitId.valueOf(commitId.get()));
-        } else {
+        if (Strings.isNullOrEmpty(commitId)) {
             byWikiIdAndPath = repository.findByWikiIdAndPath(id, path);
+        } else {
+            byWikiIdAndPath = repository.findByWikiIdAndPathAndCommit(id, path, CommitId.valueOf(commitId));
         }
         if (byWikiIdAndPath.isPresent()) {
             return ResponseEntity.ok(assembler.toResource(byWikiIdAndPath.get()));

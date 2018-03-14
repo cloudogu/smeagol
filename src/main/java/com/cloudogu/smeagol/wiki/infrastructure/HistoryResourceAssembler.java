@@ -26,11 +26,14 @@ public class HistoryResourceAssembler extends ResourceAssemblerSupport<History, 
     public HistoryResource toResource(History history) {
         List<CommitResource> commitsAsResources = new ArrayList<CommitResource>(history.getCommits().size());
         for (Commit commit : history.getCommits()) {
-            commitsAsResources.add(assembler.toResource(commit));
+            CommitResource commitResource = assembler.toResource(commit);
+            commitResource.add(linkToPageAtCommit(history, commit));
+            commitResource.add(linkToRestorePage(history));
+
+            commitsAsResources.add(commitResource);
         }
-        String id = history.getWikiId().toString();
         String path = history.getPath().toString();
-        HistoryResource resource = new HistoryResource(id, path, commitsAsResources);
+        HistoryResource resource = new HistoryResource(path, commitsAsResources);
         resource.add(selfLink(history));
         return resource;
     }
@@ -39,9 +42,25 @@ public class HistoryResourceAssembler extends ResourceAssemblerSupport<History, 
         return baseLink(history).withSelfRel();
     }
 
+    private Link linkToRestorePage(History history) {
+        return pageLink(history).withRel("restore");
+    }
+
+    private Link linkToPageAtCommit(History history, Commit commit) {
+        Link pageLink = pageLink(history).withRel("page");
+        String href = pageLink.getHref() + "?commit=" + commit.getId().get().getValue();
+        return new Link(href, pageLink.getRel());
+    }
+
     private ControllerLinkBuilder baseLink(History history) {
         WikiId id = history.getWikiId();
         return linkTo(HistoryController.class, id.getRepositoryID(), id.getBranch())
+                .slash(history.getPath().toString());
+    }
+
+    private ControllerLinkBuilder pageLink(History history) {
+        WikiId id = history.getWikiId();
+        return linkTo(PageController.class, id.getRepositoryID(), id.getBranch())
                 .slash(history.getPath().toString());
     }
 }

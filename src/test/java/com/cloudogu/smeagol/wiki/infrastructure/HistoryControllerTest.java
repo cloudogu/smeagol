@@ -62,16 +62,19 @@ public class HistoryControllerTest {
 
         when(commitRepository.findHistoryByWikiIdAndPath(wikiId, PATH_HOME)).thenReturn(new History(wikiId, PATH_HOME, Arrays.asList(COMMIT)));
 
-        String apiPath = "/api/v1/repositories/4xQfahsId3/branches/master/history/docs/Home";
-        String self = "http://localhost" + apiPath;
+        String host = "http://localhost";
+        String repositoryPath = "/api/v1/repositories/4xQfahsId3/branches/master";
+        String self =  host + repositoryPath + "/history/docs/Home";
+        String pagePath = host + repositoryPath + "/pages/docs/Home";
 
-        mockMvc.perform(MockMvcRequestBuilders.get(apiPath)
+        mockMvc.perform(MockMvcRequestBuilders.get(repositoryPath + "/history/docs/Home")
                 .contentType("application/json"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.wikiId", is("master@4xQfahsId3")))
                 .andExpect(jsonPath("$.path", is("docs/Home")))
                 .andExpect(jsonPath("$._links.self.href", is(self)))
                 .andExpect(jsonPath("$.commits[0].commitId", is(COMMIT.getId().get().getValue())))
+                .andExpect(jsonPath("$.commits[0]._links.page.href", is(pagePath + "?commit=" + COMMIT.getId().get().getValue())))
+                .andExpect(jsonPath("$.commits[0]._links.restore.href", is(pagePath)))
                 .andExpect(jsonPath("$.commits[0].message", is(COMMIT.getMessage().getValue())));
     }
 
