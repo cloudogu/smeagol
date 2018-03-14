@@ -84,7 +84,7 @@ class Page extends React.Component<Props> {
     };
 
     render() {
-        const { error, loading, page, wiki, repository, branch, path, notFound, editMode, pagesLink, historyLink } = this.props;
+        const { error, loading, page, wiki, repository, branch, path, notFound, editMode, pagesLink, historyLink, commitPage } = this.props;
         wiki.repository = repository;
         wiki.branch = branch;
 
@@ -117,6 +117,9 @@ class Page extends React.Component<Props> {
         if (editMode) {
             return <PageEditor path={page.path} content={page.content} onSave={this.edit} onAbort={this.onAbortEdit} />;
         }
+        /*if(commitPage){ //possiblities to create a modified page view for old commit pages
+            return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState } onMove={ this.onMove } pagesLink={pagesLink} historyLink={historyLink} />;
+        }*/
 
         return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState } onMove={ this.onMove } pagesLink={pagesLink} historyLink={historyLink} />;
     }
@@ -179,6 +182,7 @@ const mapStateToProps = (state, ownProps) => {
         repository,
         branch,
         editMode: isEditMode(ownProps),
+        commitPage: isCommitPage(ownProps),
         wiki: stateWiki.wiki || {}
     };
 
