@@ -8,8 +8,7 @@ const styles = {
         backgroundColor: '#e7eff3'
     },
     commitTableTd: {
-        borderTop: '1px solid #b9d1dc',
-        borderBottom: '1px solid #b9d1dc',
+        border: '1px solid #b9d1dc',
         fontSize: '1em',
         lineHeight: '1.6em',
         margin: '0',
@@ -38,7 +37,7 @@ class CommitsTableEntry extends React.Component<Props> {
                     </td>
                     <td className={classes.commitTableTd}>
                        <DateFromNow date={commit.date}/>
-                        : <ActionLink to={ commit._links.page.href} type="link" i18nKey={commit.message}></ActionLink>
+                        : <ActionLink to= {updatePageUrl(commit._links.page.href)} type="link" i18nKey={commit.message}></ActionLink>
 
                     </td>
                 </tr>
@@ -46,6 +45,13 @@ class CommitsTableEntry extends React.Component<Props> {
         );
     }
 
+}
+
+function updatePageUrl(pageUrl) { //TODO: find better place for function instead this simple component
+    let parts = pageUrl.split('/');
+    const test = '/'+parts[6]+'/'+parts[8]+'/'+parts.slice(10).join('/');
+    console.log(test);
+    return test;
 }
 
 export default injectSheet(styles)(CommitsTableEntry);

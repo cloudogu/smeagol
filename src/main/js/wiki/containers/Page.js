@@ -127,16 +127,32 @@ function isEditMode(props): boolean {
     return queryParams.edit === 'true';
 }
 
+function isCommitPage(props): boolean {
+    const queryParams = queryString.parse(props.location.search);
+    return queryParams.commit !== undefined;
+}
+
+function getCommitParameter(props): boolean {
+    const queryParams = queryString.parse(props.location.search);
+    return queryParams.commit;
+}
+
 function findPagePath(props) {
     const { pathname } = props.location;
     const parts = pathname.split('/');
     return parts.slice(3).join('/');
 }
 
+
 const mapStateToProps = (state, ownProps) => {
     const { repository, branch } = ownProps.match.params;
     const path = findPagePath(ownProps);
-    const url = createPageUrl(repository, branch, path);
+
+    let url = createPageUrl(repository, branch, path);
+    if(isCommitPage(ownProps)){
+        url += '?commit=' + getCommitParameter(ownProps);
+    }
+
     const wikiId = createId(repository, branch);
     const stateWiki = state.wiki[wikiId] ||{};
 
