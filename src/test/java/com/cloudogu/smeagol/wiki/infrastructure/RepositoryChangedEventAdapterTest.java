@@ -1,5 +1,7 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
+import com.cloudogu.smeagol.wiki.domain.ChangeType;
+import com.cloudogu.smeagol.wiki.domain.PageBatchEvent;
 import com.cloudogu.smeagol.wiki.domain.PageRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PageBatchEventAdapterTest {
+public class RepositoryChangedEventAdapterTest {
 
     @Mock
     private ApplicationEventPublisher publisher;
@@ -28,7 +30,7 @@ public class PageBatchEventAdapterTest {
     private PageRepository pageRepository;
 
     @InjectMocks
-    private PageBatchEventAdapter adapter;
+    private RepositoryChangedEventAdapter adapter;
 
     @Captor
     private ArgumentCaptor<PageBatchEvent> eventCaptor;

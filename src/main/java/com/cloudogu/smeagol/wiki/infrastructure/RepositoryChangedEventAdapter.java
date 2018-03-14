@@ -1,8 +1,6 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import com.cloudogu.smeagol.wiki.domain.Page;
-import com.cloudogu.smeagol.wiki.domain.PageRepository;
-import com.cloudogu.smeagol.wiki.domain.Path;
+import com.cloudogu.smeagol.wiki.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,18 +11,18 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 /**
- * The PageBatchEventAdapter is an adapter between {@link RepositoryChangedEvent} and {@link PageBatchEvent}.
+ * The RepositoryChangedEventAdapter is an adapter between {@link RepositoryChangedEvent} and {@link PageBatchEvent}.
  */
 @Component
-public class PageBatchEventAdapter {
+public class RepositoryChangedEventAdapter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PageBatchEventAdapter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RepositoryChangedEventAdapter.class);
 
     private final ApplicationEventPublisher publisher;
     private final PageRepository pageRepository;
 
     @Autowired
-    public PageBatchEventAdapter(ApplicationEventPublisher publisher, PageRepository pageRepository) {
+    public RepositoryChangedEventAdapter(ApplicationEventPublisher publisher, PageRepository pageRepository) {
         this.publisher = publisher;
         this.pageRepository = pageRepository;
     }
