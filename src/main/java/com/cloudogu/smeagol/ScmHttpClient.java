@@ -74,10 +74,10 @@ public class ScmHttpClient {
     }
 
     public <T> Optional<T> get(String url, Class<T> type, Object... urlVariables) {
-        return getEntity(url, type, urlVariables).map(HttpEntity::getBody);
+        return getEntity(url, type, urlVariables).getBody();
     }
 
-    public <T> Optional<ResponseEntity<T>> getEntity(String url, Class<T> type, Object... urlVariables) {
+    public <T> ScmHttpClientResponse<T> getEntity(String url, Class<T> type, Object... urlVariables) {
         LOG.trace("fetch {} from {} with {}", type, url, urlVariables);
         Stopwatch sw = Stopwatch.createStarted();
 
@@ -91,15 +91,16 @@ public class ScmHttpClient {
                     type,
                     urlVariables
             );
-            return Optional.of(response);
+
+            return ScmHttpClientResponse.of(response.getStatusCode(), response.getBody());
         } catch (HttpClientErrorException ex) {
-            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
-                throw ex;
+            if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
+                return ScmHttpClientResponse.of(ex.getStatusCode());
             }
+            throw ex;
         } finally {
             LOG.trace("scm request {} finished in {}", url, sw.stop());
         }
-        return Optional.empty();
     }
 
     private HttpHeaders createHeaders(){

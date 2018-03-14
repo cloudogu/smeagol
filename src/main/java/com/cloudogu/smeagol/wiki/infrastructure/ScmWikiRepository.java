@@ -68,15 +68,14 @@ public class ScmWikiRepository implements WikiRepository {
     }
 
     private Optional<WikiSettings> getSettings(WikiId id) {
-        return scmHttpClient.getEntity(
+        return scmHttpClient.get(
                 "/api/rest/repositories/{id}/content?path={conf}&revision={branch}",
                 String.class,
                 id.getRepositoryID(),
                 SETTINGS_FILE,
                 id.getBranch()
             )
-            .filter(e -> e.getStatusCode().is2xxSuccessful())
-            .map(e -> Strings.nullToEmpty(e.getBody()))
+            .map(content -> Strings.nullToEmpty(content))
             .map(this::readSettings);
     }
 

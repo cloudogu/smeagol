@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 
@@ -18,7 +17,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @RunWith(SpringRunner.class)
 @RestClientTest(ScmHttpClient.class)
@@ -79,8 +79,8 @@ public class ScmHttpClientTest {
         this.server.expect(requestTo("/hitchhiker/trillian"))
                 .andRespond(withStatus(HttpStatus.NO_CONTENT));
 
-        Optional<ResponseEntity<String>> result = httpClient.getEntity("/hitchhiker/trillian", String.class);
-        assertTrue(result.get().getStatusCode().is2xxSuccessful());
+        ScmHttpClientResponse<String> result = httpClient.getEntity("/hitchhiker/trillian", String.class);
+        assertTrue(result.isSuccessful());
     }
 
 }

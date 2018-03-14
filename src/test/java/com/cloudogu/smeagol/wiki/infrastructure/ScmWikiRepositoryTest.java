@@ -56,7 +56,7 @@ public class ScmWikiRepositoryTest {
         ).thenReturn(Optional.of(dto));
 
         when(
-            httpClient.getEntity(
+            httpClient.get(
                 "/api/rest/repositories/{id}/content?path={conf}&revision={branch}",
                     String.class,
                 "123", ScmWikiRepository.SETTINGS_FILE, "master"
@@ -80,16 +80,15 @@ public class ScmWikiRepositoryTest {
             )
         ).thenReturn(Optional.of(dto));
 
-        when(entity.getStatusCode()).thenReturn(HttpStatus.OK);
         when(
-            httpClient.getEntity(
+            httpClient.get(
                 "/api/rest/repositories/{id}/content?path={conf}&revision={branch}",
                 String.class,
                 id.getRepositoryID(),
                 ScmWikiRepository.SETTINGS_FILE,
                 id.getBranch()
             )
-        ).thenReturn(Optional.of(entity));
+        ).thenReturn(Optional.of(""));
 
         Wiki wiki = repository.findById(id).get();
         assertEquals("heartOfGold", wiki.getDisplayName().getValue());
@@ -110,17 +109,15 @@ public class ScmWikiRepositoryTest {
                 )
         ).thenReturn(Optional.of(dto));
 
-        when(entity.getStatusCode()).thenReturn(HttpStatus.OK);
-        when(entity.getBody()).thenReturn("displayName: Heart of Gold\ndirectory: pages\nlandingPage: Index");
         when(
-                httpClient.getEntity(
+                httpClient.get(
                         "/api/rest/repositories/{id}/content?path={conf}&revision={branch}",
                         String.class,
                         id.getRepositoryID(),
                         ScmWikiRepository.SETTINGS_FILE,
                         id.getBranch()
                 )
-        ).thenReturn(Optional.of(entity));
+        ).thenReturn(Optional.of("displayName: Heart of Gold\ndirectory: pages\nlandingPage: Index"));
 
         Wiki wiki = repository.findById(id).get();
         assertEquals("Heart of Gold", wiki.getDisplayName().getValue());
