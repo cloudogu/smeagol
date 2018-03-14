@@ -1,7 +1,8 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.Account;
-import com.cloudogu.smeagol.wiki.domain.WikiId;
+import com.cloudogu.smeagol.wiki.domain.Wiki;
+import com.google.common.base.Stopwatch;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -16,9 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,34 +42,53 @@ public class GitClient implements AutoCloseable {
 
     private final Account account;
     private final DirectoryResolver directoryResolver;
-    private final URL remoteUrl;
-    private final WikiId wikiId;
+    private final Wiki wiki;
 
     private final File repository;
 
     private Git gitRepository;
 
-    public GitClient(ApplicationEventPublisher publisher, DirectoryResolver directoryResolver, Account account, URL remoteUrl, WikiId wikiId) {
+    private PullChangesStrategy strategy;
+
+    public GitClient(ApplicationEventPublisher publisher, DirectoryResolver directoryResolver, PullChangesStrategy strategy, Account account, Wiki wiki) {
         this.publisher = publisher;
         this.directoryResolver = directoryResolver;
-        this.account = account;
-        this.remoteUrl = remoteUrl;
-        this.wikiId = wikiId;
+        this.strategy = strategy;
 
-        this.repository = directoryResolver.resolve(wikiId);
+        this.account = account;
+        this.wiki = wiki;
+
+        this.repository = directoryResolver.resolve(wiki.getId());
     }
 
     public void refresh() throws GitAPIException, IOException {
-        if ( repository.exists() ) {
+        if (repository.exists()) {
             checkSearchIndex();
-            pullChanges();
+            pullChangesIfNeeded();
         } else {
             createClone();
         }
     }
 
+    private void pullChangesIfNeeded() throws GitAPIException, IOException {
+        if (strategy.shouldPull(wiki.getId())) {
+            pullChangesAndLogTime();
+        } else {
+            LOG.debug("skip pulling changes, because pull strategy {}" , strategy.getClass());
+        }
+    }
+
+    private void pullChangesAndLogTime() throws GitAPIException, IOException {
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
+            pullChanges();
+        } finally {
+            LOG.trace("pull changes of {} finished in {}", wiki.getId(), sw);
+        }
+    }
+
     private void checkSearchIndex() throws IOException {
-        File searchIndex = directoryResolver.resolveSearchIndex(wikiId);
+        File searchIndex = directoryResolver.resolveSearchIndex(wiki.getId());
         if (!searchIndex.exists()) {
             if (!searchIndex.mkdirs()){
                 throw new IOException("failed to create directory for search index: " + searchIndex);
@@ -110,7 +132,7 @@ public class GitClient implements AutoCloseable {
 
         git.pull()
                 .setRemote("origin")
-                .setRemoteBranchName(wikiId.getBranch())
+                .setRemoteBranchName(wiki.getId().getBranch())
                 .setCredentialsProvider(credentialsProvider(account))
                 .call();
 
@@ -137,7 +159,7 @@ public class GitClient implements AutoCloseable {
                 .setOldTree(oldTree)
                 .call();
 
-        RepositoryChangedEvent event = new RepositoryChangedEvent(wikiId);
+        RepositoryChangedEvent event = new RepositoryChangedEvent(wiki.getId());
         for (DiffEntry entry : diffs) {
             if (isPageDiff(entry)) {
                 addChangeToEvent(entry, event);
@@ -173,10 +195,10 @@ public class GitClient implements AutoCloseable {
     }
 
     private void createClone()  throws GitAPIException, IOException {
-        String branch = wikiId.getBranch();
-        LOG.info("clone repository {} to {}", remoteUrl, repository);
+        String branch = wiki.getId().getBranch();
+        LOG.info("clone repository {} to {}", wiki.getRepositoryUrl(), repository);
         gitRepository = Git.cloneRepository()
-                .setURI(remoteUrl.toExternalForm())
+                .setURI(wiki.getRepositoryUrl().toExternalForm())
                 .setDirectory(repository)
                 .setBranchesToClone(singleton("refs/head" + branch))
                 .setBranch(branch)
@@ -203,7 +225,7 @@ public class GitClient implements AutoCloseable {
     private void createRepositoryChangedEvent() throws IOException {
         URI repositoryUri = repository.toURI();
 
-        RepositoryChangedEvent repositoryChangedEvent = new RepositoryChangedEvent(wikiId);
+        RepositoryChangedEvent repositoryChangedEvent = new RepositoryChangedEvent(wiki.getId());
         Files.walkFileTree(repository.toPath(), new SimpleFileVisitor<java.nio.file.Path>() {
 
             @Override
@@ -259,12 +281,12 @@ public class GitClient implements AutoCloseable {
     }
 
     private void pushChanges() throws GitAPIException, IOException {
-        String branch = wikiId.getBranch();
+        String branch = wiki.getId().getBranch();
         CredentialsProvider credentials = credentialsProvider(account);
 
         Git git = open();
 
-        LOG.info("push changes to remote {} on branch {}", remoteUrl, branch);
+        LOG.info("push changes to remote {} on branch {}", wiki.getRepositoryUrl(), branch);
         git.push()
                 .setRemote("origin")
                 .setRefSpecs(new RefSpec(branch+":"+branch))

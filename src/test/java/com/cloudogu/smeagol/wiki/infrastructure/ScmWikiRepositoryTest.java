@@ -1,6 +1,7 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.ScmHttpClient;
+import com.cloudogu.smeagol.ScmHttpClientResponse;
 import com.cloudogu.smeagol.wiki.domain.Wiki;
 import com.cloudogu.smeagol.wiki.domain.WikiId;
 import org.junit.Test;
@@ -23,9 +24,6 @@ public class ScmWikiRepositoryTest {
 
     @Mock
     private ScmHttpClient httpClient;
-
-    @Mock
-    private ResponseEntity<String> entity;
 
     @InjectMocks
     private ScmWikiRepository repository;
@@ -61,7 +59,7 @@ public class ScmWikiRepositoryTest {
                     String.class,
                 "123", ScmWikiRepository.SETTINGS_FILE, "master"
             )
-        ).thenReturn(Optional.empty());
+        ).thenReturn(ScmHttpClientResponse.of(HttpStatus.NOT_FOUND));
 
         Optional<Wiki> wiki = repository.findById(new WikiId("123", "master"));
         assertFalse(wiki.isPresent());
@@ -80,7 +78,6 @@ public class ScmWikiRepositoryTest {
             )
         ).thenReturn(Optional.of(dto));
 
-        when(entity.getStatusCode()).thenReturn(HttpStatus.OK);
         when(
             httpClient.getEntity(
                 "/api/rest/repositories/{id}/content?path={conf}&revision={branch}",
@@ -89,7 +86,7 @@ public class ScmWikiRepositoryTest {
                 ScmWikiRepository.SETTINGS_FILE,
                 id.getBranch()
             )
-        ).thenReturn(Optional.of(entity));
+        ).thenReturn(ScmHttpClientResponse.of(HttpStatus.OK, ""));
 
         Wiki wiki = repository.findById(id).get();
         assertEquals("heartOfGold", wiki.getDisplayName().getValue());
@@ -110,8 +107,6 @@ public class ScmWikiRepositoryTest {
                 )
         ).thenReturn(Optional.of(dto));
 
-        when(entity.getStatusCode()).thenReturn(HttpStatus.OK);
-        when(entity.getBody()).thenReturn("displayName: Heart of Gold\ndirectory: pages\nlandingPage: Index");
         when(
                 httpClient.getEntity(
                         "/api/rest/repositories/{id}/content?path={conf}&revision={branch}",
@@ -120,7 +115,7 @@ public class ScmWikiRepositoryTest {
                         ScmWikiRepository.SETTINGS_FILE,
                         id.getBranch()
                 )
-        ).thenReturn(Optional.of(entity));
+        ).thenReturn(ScmHttpClientResponse.of(HttpStatus.OK, "displayName: Heart of Gold\ndirectory: pages\nlandingPage: Index"));
 
         Wiki wiki = repository.findById(id).get();
         assertEquals("Heart of Gold", wiki.getDisplayName().getValue());

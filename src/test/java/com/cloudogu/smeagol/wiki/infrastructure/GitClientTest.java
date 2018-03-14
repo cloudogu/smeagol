@@ -1,8 +1,7 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.AccountTestData;
-import com.cloudogu.smeagol.wiki.domain.ChangeType;
-import com.cloudogu.smeagol.wiki.domain.WikiId;
+import com.cloudogu.smeagol.wiki.domain.*;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.eclipse.jgit.api.Git;
@@ -66,12 +65,20 @@ public class GitClientTest {
 
         when(directoryResolver.resolve(wikiId)).thenReturn(targetDirectory);
 
+        Wiki wiki = new Wiki(
+                wikiId,
+                remoteDirectory.toURI().toURL(),
+                DisplayName.valueOf("42"),
+                Path.valueOf("docs"),
+                Path.valueOf("docs/Home")
+        );
+
         target = new GitClient(
                 publisher,
                 directoryResolver,
+                new AlwaysPullChangesStrategy(),
                 AccountTestData.TRILLIAN,
-                remoteDirectory.toURI().toURL(),
-                wikiId
+                wiki
         );
     }
 
@@ -267,5 +274,43 @@ public class GitClientTest {
         assertTrue(change.getPath().matches("(a|b).md"));
 
         assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testRefreshWithPullStrategy() throws IOException, GitAPIException {
+        RevCommit commit = commit(remote, "a.md", "# My Headline");
+
+        Git.cloneRepository()
+                .setDirectory(targetDirectory)
+                .setURI(remoteDirectory.toURI().toURL().toExternalForm())
+                .call()
+                .close();
+
+        Wiki wiki = new Wiki(
+                wikiId,
+                remoteDirectory.toURI().toURL(),
+                DisplayName.valueOf("42"),
+                Path.valueOf("docs"),
+                Path.valueOf("docs/Home")
+        );
+
+        target = new GitClient(
+                publisher,
+                directoryResolver,
+                new TimeBasedPullChangesStrategy(2000L),
+                AccountTestData.TRILLIAN,
+                wiki
+        );
+
+        target.refresh();
+
+        commit(remote, "b.md", "File b");
+
+        target.refresh();
+
+        try (Git git = Git.open(targetDirectory)) {
+            RevCommit c = git.log().call().iterator().next();
+            assertEquals(commit, c);
+        }
     }
 }

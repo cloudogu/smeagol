@@ -44,8 +44,13 @@ public class ScmRepositoryRepositoryTest {
     @MockBean
     private AccountService accountService;
 
+    @Autowired
+    private ScmHttpClient httpClient;
+
     @Before
     public void setUp() {
+        // clear cache to avoid side effects
+        httpClient.invalidateCache();
         when(accountService.get()).thenReturn(AccountTestData.TRILLIAN);
     }
 
