@@ -21,4 +21,9 @@ public class PullChangesInjectionFactory {
         return new TimeBasedPullChangesStrategy(TimeUnit.MINUTES.toMillis(1L));
     }
 
+    @Bean
+    @ConditionalOnProperty(name = "git.pull-strategy", havingValue = "every-ten-seconds", matchIfMissing = true)
+    public PullChangesStrategy createEveryTenSecondsPullStrategy() {
+        return new TimeBasedPullChangesStrategy(TimeUnit.SECONDS.toMillis(10L));
+    }
 }
