@@ -5,6 +5,7 @@ import com.cloudogu.smeagol.wiki.domain.WikiId;
 /**
  * A {@link PullChangesStrategy} decides, if changes should be pulled from the remote repository of the wiki.
  */
+@SuppressWarnings("squid:S1609") // ignore functional interface warning
 public interface PullChangesStrategy {
 
     /**
