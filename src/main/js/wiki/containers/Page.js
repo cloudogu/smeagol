@@ -148,6 +148,8 @@ const mapStateToProps = (state, ownProps) => {
         // TODO check for polyfil
         if (!pagesLink.endsWith('/')) {
             pagesLink += '/';
+        }
+        if(!historyLink.endsWith('/')){
             historyLink += '/';
         }
     }
