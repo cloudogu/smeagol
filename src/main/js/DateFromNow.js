@@ -1,6 +1,7 @@
 //@flow
 import React from 'react';
 import moment from 'moment';
+import {translate} from "react-i18next";
 
 type Props = {
     date?: string
@@ -8,16 +9,18 @@ type Props = {
 
 class DateFromNow extends React.Component<Props> {
 
-    static format(date?: string) {
+    static format(locale: string, date?: string) {
         let fromNow = '';
         if (date) {
-            fromNow = moment(date).fromNow();
+            fromNow = moment(date).locale(locale).fromNow();
         }
         return fromNow;
     }
 
     render() {
-        const fromNow = DateFromNow.format(this.props.date);
+        const { i18n } = this.props;
+
+        const fromNow = DateFromNow.format(i18n.language, this.props.date);
         return (
             <span>{ fromNow }</span>
         );
@@ -25,4 +28,4 @@ class DateFromNow extends React.Component<Props> {
 
 }
 
-export default DateFromNow;
+export default translate()(DateFromNow);
