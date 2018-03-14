@@ -17,7 +17,7 @@ type Props = {
     page: string,
     url: string,
     t: any,
-    history: any,
+    pagehistory: any,
     fetchWikiIfNeeded: (repository: string, branch: string) => void,
     fetchHistoryIfNeeded: (url: string) => void
 }
@@ -37,7 +37,7 @@ class History extends React.Component<Props> {
 
 
     render() {
-        const { error, loading, t, page, history } = this.props;
+        const { error, loading, t, page, pagehistory } = this.props;
         if (error) {
             return (
                 <div>
@@ -52,7 +52,7 @@ class History extends React.Component<Props> {
                     <Loading/>
                 </div>
             );
-        } else if (!history) {
+        } else if (!pagehistory) {
             return (
                 <div>
                     <h1>Smeagol</h1>
@@ -62,7 +62,31 @@ class History extends React.Component<Props> {
 
         return (
             <div>
-                <h1>{  t('history_heading') + page }</h1>
+                 <div className="page-header">
+                    <h1>{  t('history_heading') + page }</h1>
+                 </div>
+
+                <table className="table table-striped">
+                    <tbody>
+
+                { pagehistory.commits.map((commit) => {
+                    return (
+                            <tr key={commit.commitId}>
+                                <td>
+                                    {commit.message}
+                                </td>
+                                <td>
+                                    {commit.author.displayName}
+                                </td>
+                                <td>
+                                    {commit.date}
+                                </td>
+                            </tr>
+                    );
+                }) }
+                    </tbody>
+                </table>
+
             </div>
         );
     }
@@ -72,32 +96,25 @@ class History extends React.Component<Props> {
 function findDirectoryPath(props) {
     const { pathname } = props.location;
     const parts = pathname.split('/');
-    return parts[4];
+    return parts.slice(4).join('/');
 }
 
-function findPage(props) {
-    const { pathname } = props.location;
-    const parts = pathname.split('/');
-    const pageName = parts.slice(5).join('/');
-    return pageName.substr(0, pageName.indexOf('/'));
+function findPage(path) {
+    return path.substr(0, path.length-1);
 }
 
 const mapStateToProps = (state, ownProps) => {
     const { repository, branch } = ownProps.match.params;
-console.log(state);
     const path = findDirectoryPath(ownProps);
-    const page = findPage(ownProps);
+    const page = findPage(path);
     const url = createHistoryUrl(repository, branch, page);
     const wikiId = createId(repository, branch);
     const stateWiki = state.wiki[wikiId] ||{};
-
-    let baseDirectory = '';
-    /*if (stateWiki.wiki && stateWiki.wiki.directory) {
-        baseDirectory = stateWiki.wiki.directory;
-    }*/
+    let pagehistory;
+    if(state.pagehistory[url])
+        pagehistory = state.pagehistory[url].pagehistory;
     return {
-       ...state.pagehistory[url],
-        baseDirectory,
+        pagehistory,
         repository,
         branch,
         url,
