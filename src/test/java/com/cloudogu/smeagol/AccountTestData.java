@@ -11,4 +11,11 @@ public final class AccountTestData {
             "Tricia McMillan",
             "trillian@hitchhiker.com"
     );
+
+    public static final Account SLARTI = new Account(
+            "slarti",
+            "AwesomeFjorde".toCharArray(),
+            "Slartibartfaß",
+            "slarti@hitchhiker.com"
+    );
 }
