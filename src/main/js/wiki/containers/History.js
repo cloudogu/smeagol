@@ -5,7 +5,8 @@ import I18nAlert from '../../I18nAlert';
 import Loading from '../../Loading';
 import {translate} from 'react-i18next';
 import {createId, fetchWikiIfNeeded} from "../modules/wiki";
-import {createHistoryUrl, fetchHistoryIfNeeded} from "../modules/pagehistory"
+import {createHistoryUrl, fetchHistoryIfNeeded} from "../modules/pagehistory";
+import CommitsTable from '../components/CommitsTable';
 
 type Props = {
     loading: boolean,
@@ -65,28 +66,7 @@ class History extends React.Component<Props> {
                  <div className="page-header">
                     <h1>{  t('history_heading') + page }</h1>
                  </div>
-
-                <table className="table table-striped">
-                    <tbody>
-
-                { pagehistory.commits.map((commit) => {
-                    return (
-                            <tr key={commit.commitId}>
-                                <td>
-                                    {commit.message}
-                                </td>
-                                <td>
-                                    {commit.author.displayName}
-                                </td>
-                                <td>
-                                    {commit.date}
-                                </td>
-                            </tr>
-                    );
-                }) }
-                    </tbody>
-                </table>
-
+                <CommitsTable commits={ pagehistory.commits }/>
             </div>
         );
     }
