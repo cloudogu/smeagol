@@ -16,7 +16,7 @@ public class PullChangesInjectionFactory {
     }
 
     @Bean
-    @ConditionalOnProperty(name = "git.pull-strategy", havingValue = "once-a-minute", matchIfMissing = true)
+    @ConditionalOnProperty(name = "git.pull-strategy", havingValue = "once-a-minute")
     public PullChangesStrategy createOnceAMinutePullStrategy() {
         return new TimeBasedPullChangesStrategy(TimeUnit.MINUTES.toMillis(1L));
     }
