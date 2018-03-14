@@ -3,11 +3,9 @@ package com.cloudogu.smeagol;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -97,6 +95,34 @@ public class ScmHttpClientTest {
         // MockRestServiceServer fails if it gets a second unexpected request
         Optional<Notification> cachedNotification = httpClient.get("/hitchhiker/trillian/notifications", Notification.class);
         assertSame(notification.get(), cachedNotification.get());
+    }
+
+    @Test
+    public void testGetCacheWithDifferentParameters() {
+        this.server.expect(requestTo("/hitchhiker/trillian/notifications"))
+                .andRespond(withSuccess("{ \"message\": \"Don't Panic\" }", MediaType.APPLICATION_JSON));
+        this.server.expect(requestTo("/hitchhiker/slarti/notifications"))
+                .andRespond(withSuccess("{ \"message\": \"Not your messages\" }", MediaType.APPLICATION_JSON));
+
+        Optional<Notification> notification = httpClient.get("/hitchhiker/{user}/notifications", Notification.class, "trillian");
+        assertEquals("Don't Panic", notification.get().getMessage());
+
+        Optional<Notification> otherNotification = httpClient.get("/hitchhiker/{user}/notifications", Notification.class, "slarti");
+        assertEquals("Not your messages", otherNotification.get().getMessage());
+    }
+
+    @Test
+    public void testGetCacheWithDifferentTypes() {
+        this.server.expect(requestTo("/hitchhiker/notifications"))
+                .andRespond(withSuccess("{ \"message\": \"Don't Panic\" }", MediaType.APPLICATION_JSON));
+        this.server.expect(requestTo("/hitchhiker/notifications"))
+                .andRespond(withSuccess("Not your messages", MediaType.TEXT_PLAIN));
+
+        Optional<Notification> notification = httpClient.get("/hitchhiker/notifications", Notification.class);
+        assertEquals("Don't Panic", notification.get().getMessage());
+
+        Optional<String> otherNotification = httpClient.get("/hitchhiker/notifications", String.class);
+        assertEquals("Not your messages", otherNotification.get());
     }
 
     @Test
