@@ -45,11 +45,14 @@ public class PageController {
         Optional<Page> byWikiIdAndPath;
         if (Strings.isNullOrEmpty(commitId)) {
             byWikiIdAndPath = repository.findByWikiIdAndPath(id, path);
+            if (byWikiIdAndPath.isPresent()) {
+                return ResponseEntity.ok(assembler.toResource(byWikiIdAndPath.get()));
+            }
         } else {
             byWikiIdAndPath = repository.findByWikiIdAndPathAndCommit(id, path, CommitId.valueOf(commitId));
-        }
-        if (byWikiIdAndPath.isPresent()) {
-            return ResponseEntity.ok(assembler.toResource(byWikiIdAndPath.get()));
+            if (byWikiIdAndPath.isPresent()) {
+                return ResponseEntity.ok(assembler.toCommitFixedResource(byWikiIdAndPath.get()));
+            }
         }
         return ResponseEntity.notFound().build();
     }

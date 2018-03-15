@@ -113,12 +113,18 @@ public class PageControllerTest {
     public void findByWikiIdAndPathAndCommit() throws Exception {
         WikiId wikiId = new WikiId("4xQfahsId3", "master");
         Path path = Path.valueOf("docs/Home");
-        String commitId = "42";
+        Page page = createTestPage(wikiId, path);
+        String commitId = page.getCommit().get().getId().get().getValue();
 
-        // to prevent NullPointerException
-        when(pageRepository.findByWikiIdAndPathAndCommit(any(), any(), any())).thenReturn(Optional.empty());
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/repositories/4xQfahsId3/branches/master/pages/docs/Home?commit="+commitId)
-                .contentType("application/json"));
+        String requestPath = "/api/v1/repositories/4xQfahsId3/branches/master/pages/docs/Home?commit=" + commitId;
+        String self = "http://localhost" + requestPath;
+
+
+        when(pageRepository.findByWikiIdAndPathAndCommit(wikiId, path, CommitId.valueOf(commitId))).thenReturn(Optional.of(page));
+        mockMvc.perform(MockMvcRequestBuilders.get(requestPath)
+                .contentType("application/json"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._links.self.href", is(self)));
 
         verify(pageRepository).findByWikiIdAndPathAndCommit(wikiId, path, CommitId.valueOf(commitId));
     }

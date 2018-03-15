@@ -33,6 +33,20 @@ public class PageResourceAssembler extends ResourceAssemblerSupport<Page, PageRe
         return resource;
     }
 
+    public PageResource toCommitFixedResource(Page page) {
+        PageResource resource = new PageResource(
+                page.getPath().getValue(),
+                page.getContent().getValue(),
+                createCommitResource(page.getCommit())
+        );
+        Link linkToPage = selfLink(page);
+        String href = linkToPage.getHref() + "?commit=" + page.getCommit().get().getId().get().getValue();
+        Link linkToPageCommitFixed = new Link(href, linkToPage.getRel());
+        resource.add(linkToPageCommitFixed);
+
+        return resource;
+    }
+
     private CommitResource createCommitResource(Optional<Commit> optionalCommit) {
         if (!optionalCommit.isPresent()) {
             return null;
