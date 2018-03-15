@@ -1,4 +1,4 @@
-import apiClient from "../../apiclient";
+import {apiClient} from "../../apiclient";
 
 const FETCH_SEARCH = 'smeagol/search/FETCH';
 const FETCH_SEARCH_SUCCESS = 'smeagol/search/FETCH_SUCCESS';
