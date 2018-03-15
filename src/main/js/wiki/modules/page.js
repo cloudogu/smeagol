@@ -1,5 +1,5 @@
 //@flow
-import apiClient from '../../apiclient';
+import {apiClient, PAGE_NOT_FOUND_ERROR} from '../../apiclient';
 
 const FETCH_PAGE = 'smeagol/page/FETCH';
 const FETCH_PAGE_SUCCESS = 'smeagol/page/FETCH_SUCCESS';
@@ -53,25 +53,17 @@ function pageNotFound(url: string) {
     };
 }
 
-const PAGE_NOTFOUND_ERROR = new Error('page not found');
-
 function fetchPage(url: string) {
     return function(dispatch) {
         dispatch(requestPage(url));
         return apiClient.get(url)
             .then(response => {
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        throw PAGE_NOTFOUND_ERROR;
-                    }
-                    throw new Error('server returned status code' + response.status);
-                }
                 return response;
             })
             .then(response => response.json())
             .then(json => dispatch(receivePage(url, json)))
             .catch((err) => {
-                if (err === PAGE_NOTFOUND_ERROR) {
+                if (err === PAGE_NOT_FOUND_ERROR) {
                     dispatch(pageNotFound(url));
                 } else {
                     dispatch(failedToFetchPage(url, err));

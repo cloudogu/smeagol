@@ -1,5 +1,5 @@
 // @flow
-import apiClient from '../../apiclient';
+import {apiClient} from '../../apiclient';
 
 const FETCH_REPOSITORY = 'smeagol/repository/FETCH';
 const FETCH_REPOSITORY_SUCCESS = 'smeagol/repository/FETCH_SUCCESS';

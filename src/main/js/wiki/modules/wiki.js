@@ -1,5 +1,5 @@
 //@flow
-import apiClient from '../../apiclient';
+import {apiClient} from '../../apiclient';
 
 const FETCH_WIKI = 'smeagol/wiki/FETCH';
 const FETCH_WIKI_SUCCESS = 'smeagol/wiki/FETCH_SUCCESS';

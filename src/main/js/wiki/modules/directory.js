@@ -1,5 +1,5 @@
 // @flow
-import apiClient from '../../apiclient';
+import {apiClient} from '../../apiclient';
 
 const FETCH_DIRECTORY = 'smeagol/directory/FETCH';
 const FETCH_DIRECTORY_SUCCESS = 'smeagol/directory/FETCH_SUCCESS';
@@ -92,7 +92,7 @@ export default function reducer(state = {}, action = {}) {
                     loading: false,
                     error: action.payload
                 }
-            }
+            };
         default:
             return state
     }

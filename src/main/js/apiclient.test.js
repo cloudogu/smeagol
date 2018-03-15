@@ -1,4 +1,4 @@
-import apiClient from './apiclient';
+import {apiClient} from './apiclient';
 
 const DEFAULT_LOCATION = 'http://localhost';
 
@@ -7,6 +7,7 @@ function mockFetchAndWindow(status, location) {
         var p = new Promise((resolve) => {
             resolve({
                 status: status,
+                ok: status < 300,
                 headers: {
                     get: function(key) {
                         if (key === 'location') {
