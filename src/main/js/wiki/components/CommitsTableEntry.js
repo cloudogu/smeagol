@@ -2,7 +2,7 @@
 import React from 'react';
 import injectSheet from 'react-jss';
 import DateFromNow from '../../DateFromNow';
-import ActionLink from './ActionLink';
+import {Link} from 'react-router-dom';
 const styles = {
     commitTableTr: {
         backgroundColor: '#e7eff3'
@@ -37,7 +37,9 @@ class CommitsTableEntry extends React.Component<Props> {
                     </td>
                     <td className={classes.commitTableTd}>
                        <DateFromNow date={commit.date}/>
-                        : <ActionLink to= {updatePageUrl(commit._links.page.href)} type="link" i18nKey={commit.message}/>
+                        : <Link className="btn-link" to={updatePageUrl(commit._links.page.href)} type="link">
+                            { commit.message }
+                        </Link>
 
                     </td>
                 </tr>
@@ -49,7 +51,7 @@ class CommitsTableEntry extends React.Component<Props> {
 
 function updatePageUrl(pageUrl) { //TODO: find better place for function instead this simple component
     let parts = pageUrl.split('/');
-    return '/'+parts[6]+'/'+parts[8]+'/'+parts.slice(10).join('/');;
+    return '/'+parts[6]+'/'+parts[8]+'/'+parts.slice(10).join('/');
 }
 
 export default injectSheet(styles)(CommitsTableEntry);
