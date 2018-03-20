@@ -40,6 +40,7 @@ class History extends React.Component<Props> {
 
     render() {
         const { error, loading, t, page, pagehistory, repository, branch } = this.props;
+        const pagePath = `/${repository}/${branch}/${page}`;
         if (error) {
             return (
                 <div>
@@ -66,9 +67,9 @@ class History extends React.Component<Props> {
             <div>
                  <div className="page-header">
                     <h1>{  t('history_heading') + page }</h1>
-                     <ActionLink to={ `/${repository}/${branch}/${page}` }  i18nKey="history-header_show_page" type="primary" />
+                     <ActionLink to={ pagePath }  i18nKey="history-header_show_page" type="primary" />
                  </div>
-                <CommitsTable commits={ pagehistory.commits }/>
+                <CommitsTable commits={ pagehistory.commits } pagePath={ pagePath }/>
             </div>
         );
     }

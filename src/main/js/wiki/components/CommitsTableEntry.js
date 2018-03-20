@@ -20,13 +20,14 @@ const styles = {
 type Props = {
     commit: any,
     classes: any,
-    key: any
+    key: any,
+    pagePath: string
 }
 
 class CommitsTableEntry extends React.Component<Props> {
 
     render() {
-        const { commit, key, classes } = this.props;
+        const { commit, key, classes, pagePath } = this.props;
         return (
                 <tr className={classes.commitTableTr} key={key}>
                    <td className={classes.commitTableTd}>
@@ -37,7 +38,7 @@ class CommitsTableEntry extends React.Component<Props> {
                     </td>
                     <td className={classes.commitTableTd}>
                        <DateFromNow date={commit.date}/>
-                        : <Link className="btn-link" to={updatePageUrl(commit._links.page.href)} type="link">
+                        : <Link className="btn-link" to={ `${pagePath}?commit=${commit.commitId}` } type="link">
                             { commit.message }
                         </Link>
 
@@ -47,11 +48,6 @@ class CommitsTableEntry extends React.Component<Props> {
         );
     }
 
-}
-
-function updatePageUrl(pageUrl) { //TODO: find better place for function instead this simple component
-    let parts = pageUrl.split('/');
-    return '/'+parts[6]+'/'+parts[8]+'/'+parts.slice(10).join('/');
 }
 
 export default injectSheet(styles)(CommitsTableEntry);

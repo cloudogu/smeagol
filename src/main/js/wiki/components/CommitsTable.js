@@ -7,20 +7,21 @@ const styles = {};
 
 type Props = {
     commits: any,
-    classes: any
+    classes: any,
+    pagePath: string
 }
 
 class CommitsTable extends React.Component<Props> {
 
     render() {
-        const { commits } = this.props;
+        const { commits, pagePath } = this.props;
         return (
             <table className="table">
                 <tbody>
 
                 { commits.map((commit) => {
                     return (
-                        <CommitsTableEntry commit={commit} key={commit.commitId}/>
+                        <CommitsTableEntry commit={commit} key={commit.commitId} pagePath={ pagePath }/>
                     );
                 }) }
                 </tbody>
