@@ -4,9 +4,10 @@ import {connect} from 'react-redux';
 import I18nAlert from '../../I18nAlert';
 import Loading from '../../Loading';
 import {translate} from 'react-i18next';
-import {createId, fetchWikiIfNeeded} from "../modules/wiki";
+import { fetchWikiIfNeeded} from "../modules/wiki";
 import {createHistoryUrl, fetchHistoryIfNeeded} from "../modules/pagehistory";
 import CommitsTable from '../components/CommitsTable';
+import ActionLink from '../components/ActionLink';
 
 type Props = {
     loading: boolean,
@@ -38,7 +39,7 @@ class History extends React.Component<Props> {
 
 
     render() {
-        const { error, loading, t, page, pagehistory } = this.props;
+        const { error, loading, t, page, pagehistory, repository, branch } = this.props;
         if (error) {
             return (
                 <div>
@@ -65,6 +66,7 @@ class History extends React.Component<Props> {
             <div>
                  <div className="page-header">
                     <h1>{  t('history_heading') + page }</h1>
+                     <ActionLink to={ `/${repository}/${branch}/${page}` }  i18nKey="history-header_show_page" type="primary" />
                  </div>
                 <CommitsTable commits={ pagehistory.commits }/>
             </div>
@@ -88,8 +90,6 @@ const mapStateToProps = (state, ownProps) => {
     const path = findDirectoryPath(ownProps);
     const page = findPage(path);
     const url = createHistoryUrl(repository, branch, page);
-    const wikiId = createId(repository, branch);
-    const stateWiki = state.wiki[wikiId] ||{};
     let pagehistory;
     if(state.pagehistory[url])
         pagehistory = state.pagehistory[url].pagehistory;

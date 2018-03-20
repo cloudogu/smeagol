@@ -23,6 +23,10 @@ const MOVE_PAGE = 'smeagol/page/MOVE';
 const MOVE_PAGE_SUCCESS = 'smeagol/page/MOVE_SUCCESS';
 const MOVE_PAGE_FAILURE = 'smeagol/page/MOVE_FAILURE';
 
+const RESTORE_PAGE = 'smeagol/page/RESTORE';
+const RESTORE_PAGE_SUCCESS = 'smeagol/page/RESTORE_SUCCESS';
+const RESTORE_PAGE_FAILURE = 'smeagol/page/RESTORE_FAILURE';
+
 function requestPage(url: string) {
     return {
         type: FETCH_PAGE,
@@ -218,16 +222,50 @@ function movePageFailure(url: string, err: Error) {
     };
 }
 
-export function movePage(url: string, message: string, target: string, callback: (target) => void) {
+export function movePage(url: string, message: string, target: string, callback: () => void) {
     return function(dispatch) {
         dispatch(requestMovePage(url));
         return apiClient.post(url, { message , "moveTo": target })
             .then(() => {
                 dispatch(movePageSuccess(url));
-                callback(target);
+                callback();
             })
             .catch((err) => dispatch(movePageFailure(url, err)));
     }
+}
+
+export function restorePage(url: string, message: string, commit: string, callback: () => void) {
+    return function(dispatch) {
+        dispatch(requestRestorePage(url));
+        return apiClient.post(url, { message: message , restore: commit })
+            .then(() => {
+                dispatch(restorePageSuccess(url));
+                callback();
+            })
+            .catch((err) => dispatch(restorePageFailure(url, err)));
+    }
+}
+
+function requestRestorePage(url: string) {
+    return {
+        type: RESTORE_PAGE,
+        url
+    };
+}
+
+function restorePageSuccess(url: string) {
+    return {
+        type: RESTORE_PAGE_SUCCESS,
+        url
+    };
+}
+
+function restorePageFailure(url: string, err: Error) {
+    return {
+        type: RESTORE_PAGE_FAILURE,
+        payload: err,
+        url
+    };
 }
 
 export default function reducer(state = {}, action = {}) {
@@ -237,6 +275,7 @@ export default function reducer(state = {}, action = {}) {
         case MOVE_PAGE:
         case CREATE_PAGE:
         case DELETE_PAGE:
+        case RESTORE_PAGE:
             return {
                 ...state,
                 [action.url] : {
@@ -258,6 +297,7 @@ export default function reducer(state = {}, action = {}) {
         case MOVE_PAGE_FAILURE:
         case CREATE_PAGE_FAILURE:
         case DELETE_PAGE_FAILURE:
+        case RESTORE_PAGE_FAILURE:
             return {
                 ...state,
                 [action.url] : {
@@ -277,6 +317,7 @@ export default function reducer(state = {}, action = {}) {
         case EDIT_PAGE_SUCCESS:
         case MOVE_PAGE_SUCCESS:
         case DELETE_PAGE_SUCCESS:
+        case RESTORE_PAGE_SUCCESS:
             return {
                 ...state,
                 [action.url] : {

@@ -23,6 +23,7 @@ type Props = {
     onDeleteClick: () => void,
     onHomeClick: () => void,
     onOkMoveClick: () => void,
+    onRestoreClick: () => void,
     history: any,
     classes: any
 }
@@ -86,6 +87,12 @@ class PageHeader extends React.Component<Props,State> {
         });
     };
 
+    onRestoreClick = () => {
+        const pagePath = this.props.page.path;
+        const commit = this.props.page.commit.commitId;
+        this.props.onRestoreClick(pagePath, commit);
+    };
+
 
     render() {
         const { page, pagesLink, classes, onDeleteClick, onHomeClick, historyLink } = this.props;
@@ -97,6 +104,7 @@ class PageHeader extends React.Component<Props,State> {
         const edit = page._links.edit ? <ActionLink to="?edit=true" i18nKey="page-header_edit" type="primary" /> : '';
         const moveButton = page._links.move ? <ActionButton onClick={this.onMoveClick} i18nKey="page-header_move" type="primary" /> : '';
         const deleteButton = page._links.delete ? <ActionButton onClick={onDeleteClick} i18nKey="page-header_delete" type="primary" /> : '';
+        const restoreButton = page._links.restore ? <ActionButton onClick={this.onRestoreClick} i18nKey="page-header_restore" type="primary" /> : '';
         const createForm = <PageNameForm show={ this.state.showCreateForm } onOk={ this.onOkCreate } onAbortClick={ this.onAbortCreateClick } labelPrefix="create" />
         const moveForm = <PageNameForm show={ this.state.showMoveForm } onOk={ this.onOkMoveClick } onAbortClick={ this.onAbortMoveClick } labelPrefix="move" />
 
@@ -111,6 +119,7 @@ class PageHeader extends React.Component<Props,State> {
                     {historyButton}
                     {edit}
                     {deleteButton}
+                    {restoreButton}
                 </div>
                 {createForm}
                 {moveForm}

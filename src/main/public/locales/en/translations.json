@@ -11,6 +11,8 @@
   "page-header_delete": "Delete",
   "page-header_create": "New",
   "page-header_move": "Rename",
+  "page-header_restore": "Restore",
+  "history-header_show_page": "View Page",
   "create-form_title": "Create New Page",
   "create-form_name_label": "Page Name",
   "create-form_info": "Page will be created under /docs unless an absolute path is given. The page name must not contain '..' or be empty.",

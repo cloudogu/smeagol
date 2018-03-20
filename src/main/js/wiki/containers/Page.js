@@ -1,6 +1,6 @@
 //@flow
 import React from 'react';
-import {editPage, createPage, createPageUrl, fetchPageIfNeeded, deletePage, movePage} from '../modules/page';
+import {editPage, createPage, createPageUrl, fetchPageIfNeeded, deletePage, movePage, restorePage} from '../modules/page';
 import {createId, fetchWikiIfNeeded} from '../modules/wiki';
 import {connect} from 'react-redux';
 import PageViewer from '../components/PageViewer';
@@ -8,7 +8,6 @@ import * as queryString from 'query-string';
 import PageEditor from '../components/PageEditor';
 import Loading from '../../Loading';
 import I18nAlert from '../../I18nAlert';
-import {createDirectoryUrl} from '../modules/directory';
 
 type Props = {
     historyLink: string,
@@ -28,7 +27,8 @@ type Props = {
     fetchWikiIfNeeded: (repository: string, branch: string) => void,
     editPage: (url: string, message: string, content: string) => void,
     createPage: (url: string, message: string, content: string) => void,
-    onDelete: (url: string, message: string, callback: () => void) => void
+    onDelete: (url: string, message: string, callback: () => void) => void,
+    restorePage: (url: string, message: string, commit: string) => void
 };
 
 class Page extends React.Component<Props> {
@@ -52,7 +52,7 @@ class Page extends React.Component<Props> {
     };
 
     pushLandingPageState = () => {
-        this.pushPageState(this.props.wiki.landingPage);
+        this.pushPageStateClosure(this.props.wiki.landingPage)();
     };
 
     delete = () => {
@@ -66,12 +66,22 @@ class Page extends React.Component<Props> {
         const { path, url, movePage } = this.props;
         // TODO i18n
         const message = 'Move page ' + path + ' to ' + target + ' (smeagol)';
-        movePage(url, message, target, this.pushPageState);
+        movePage(url, message, target, this.pushPageStateClosure(target));
     };
 
-    pushPageState = (pagePath: string) => {
+    onRestore = (pagePath: string, commit: string) => {
+        const { restorePage, repository, branch } = this.props;
+        // TODO i18n
+        const message = 'Restore commit ' + commit + ' from page '+ pagePath + ' (smeagol)';
+        const apiPath = createPageUrl(repository, branch, pagePath);
+        restorePage(apiPath, message, commit, this.pushPageStateClosure(pagePath));
+    };
+
+    pushPageStateClosure = (pagePath: string) => {
         const { history, repository, branch } = this.props;
-        history.push(`/${repository}/${branch}/${pagePath}`);
+        return function() {
+            history.push(`/${repository}/${branch}/${pagePath}`);
+        }
     };
 
     onAbortEdit= () => {
@@ -84,7 +94,7 @@ class Page extends React.Component<Props> {
     };
 
     render() {
-        const { error, loading, page, wiki, repository, branch, path, notFound, editMode, pagesLink, historyLink, commitPage } = this.props;
+        const { error, loading, page, wiki, repository, branch, path, notFound, editMode, pagesLink, historyLink } = this.props;
         wiki.repository = repository;
         wiki.branch = branch;
 
@@ -117,11 +127,9 @@ class Page extends React.Component<Props> {
         if (editMode) {
             return <PageEditor path={page.path} content={page.content} onSave={this.edit} onAbort={this.onAbortEdit} />;
         }
-        /*if(commitPage){ //possiblities to create a modified page view for old commit pages
-            return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState } onMove={ this.onMove } pagesLink={pagesLink} historyLink={historyLink} />;
-        }*/
 
-        return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState } onMove={ this.onMove } pagesLink={pagesLink} historyLink={historyLink} />;
+        return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState }
+                           onMove={ this.onMove } pagesLink={pagesLink} historyLink={historyLink} onRestore={this.onRestore}/>;
     }
 }
 
@@ -208,6 +216,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         movePage: (url: string, message: string, target: string, callback: (target) => void) => {
             dispatch(movePage(url, message, target, callback))
+        },
+        restorePage: (url: string, message: string, commit: string, callback: () => void) => {
+            dispatch(restorePage(url, message, commit, callback))
         }
     }
 };
