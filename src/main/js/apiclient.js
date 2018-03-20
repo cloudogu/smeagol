@@ -3,6 +3,8 @@
 // get api base url from environment
 const apiUrl = process.env.API_URL || process.env.PUBLIC_URL || '';
 
+export const PAGE_NOT_FOUND_ERROR = Error('page not found');
+
 // fetch does not send the X-Requested-With header (https://github.com/github/fetch/issues/17),
 // but we need the header to detect ajax request (AjaxAwareAuthenticationRedirectStrategy).
 const fetchOptions = {
@@ -22,6 +24,19 @@ function isAuthenticationRedirect(response) {
     return false;
 }
 
+function handleStatusCode(response) {
+    if ( !response.ok ) {
+        if (response.status === 401 ) {
+            return response;
+        }
+        if (response.status === 404 ) {
+            throw PAGE_NOT_FOUND_ERROR;
+        }
+        throw new Error(response.body.message || 'server returned status code ' + response.status);
+    }
+    return response;
+}
+
 function createRedirectUrl() {
     return createUrl('authc?location=' + encodeURIComponent(window.location));
 }
@@ -38,18 +53,19 @@ class ApiClient {
 
     get(url: string) {
         return fetch(createUrl(url), fetchOptions)
-            .then(this.handleCasAuthentication);
+            .then(this.handleCasAuthentication)
+            .then(handleStatusCode);
     }
 
     post(url: string, payload: any) {
-        return this.jsonHttpRequest(url, payload, 'POST');
+        return this.httpRequestWithJSONBody(url, payload, 'POST');
     }
 
     delete(url: string, payload: any) {
-        return this.jsonHttpRequest(url, payload, 'DELETE');
+        return this.httpRequestWithJSONBody(url, payload, 'DELETE');
     }
 
-    jsonHttpRequest(url:string, payload:any, method:string) {
+    httpRequestWithJSONBody(url:string, payload:any, method:string) {
         let options = {
             method: method,
             body: JSON.stringify(payload),
@@ -58,7 +74,8 @@ class ApiClient {
         options.headers['Content-Type'] = 'application/json';
 
         return fetch(createUrl(url), options)
-            .then(this.handleCasAuthentication);
+            .then(this.handleCasAuthentication)
+            .then(handleStatusCode);
     }
 
     handleCasAuthentication(response: any) {
@@ -71,4 +88,4 @@ class ApiClient {
 
 }
 
-export default new ApiClient();
+export let apiClient = new ApiClient();

@@ -19,3 +19,7 @@ scm:
 cas:
   url: https://192.168.56.2/cas
   serviceUrl: http://192.168.56.1:8080/
+
+git:
+  # available pull strategies can be found at com.cloudogu.smeagol.wiki.infrastructure.PullChangesInjectionFactory
+  pull-strategy: every-ten-seconds

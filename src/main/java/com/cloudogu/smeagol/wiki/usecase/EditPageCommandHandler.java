@@ -7,6 +7,7 @@ import com.cloudogu.smeagol.wiki.domain.PageRepository;
 import com.cloudogu.smeagol.wiki.domain.Path;
 import de.triology.cb.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import static com.cloudogu.smeagol.wiki.usecase.Commits.createNewCommit;
@@ -17,11 +18,13 @@ import static com.cloudogu.smeagol.wiki.usecase.Commits.createNewCommit;
 @Component
 public class EditPageCommandHandler implements CommandHandler<Page, EditPageCommand> {
 
+    private final ApplicationEventPublisher publisher;
     private final PageRepository repository;
     private final AccountService accountService;
 
     @Autowired
-    public EditPageCommandHandler(PageRepository repository, AccountService accountService) {
+    public EditPageCommandHandler(ApplicationEventPublisher publisher, PageRepository repository, AccountService accountService) {
+        this.publisher = publisher;
         this.repository = repository;
         this.accountService = accountService;
     }
@@ -35,6 +38,10 @@ public class EditPageCommandHandler implements CommandHandler<Page, EditPageComm
         Commit commit = createNewCommit(accountService, command.getMessage());
         page.edit(commit, command.getContent());
 
-        return repository.save(page);
+        Page modifiedPage = repository.save(page);
+
+        publisher.publishEvent(new PageModifiedEvent(modifiedPage));
+
+        return modifiedPage;
     }
 }

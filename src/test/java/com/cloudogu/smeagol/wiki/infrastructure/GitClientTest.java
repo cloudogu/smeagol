@@ -1,6 +1,7 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.AccountTestData;
+import com.cloudogu.smeagol.wiki.domain.*;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.eclipse.jgit.api.Git;
@@ -11,24 +12,46 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Iterator;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class GitClientTest {
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
+    @Mock
+    private ApplicationEventPublisher publisher;
+
+    @Mock
+    private DirectoryResolver directoryResolver;
+
     private GitClient target;
     private File targetDirectory;
+    private File targetSearchIndexDirectory;
 
     private Git remote;
     private File remoteDirectory;
+
+    @Captor
+    private ArgumentCaptor<RepositoryChangedEvent> eventCaptor;
+
+    private final WikiId wikiId = new WikiId("42", "master");
 
     @Before
     public void setUp() throws IOException, GitAPIException {
@@ -38,11 +61,25 @@ public class GitClientTest {
         targetDirectory = temporaryFolder.newFolder();
         targetDirectory.delete();
 
-        target = new GitClient(
-                AccountTestData.TRILLIAN,
-                targetDirectory,
+        targetSearchIndexDirectory = temporaryFolder.newFolder();
+        when(directoryResolver.resolveSearchIndex(wikiId)).thenReturn(targetSearchIndexDirectory);
+
+        when(directoryResolver.resolve(wikiId)).thenReturn(targetDirectory);
+
+        Wiki wiki = new Wiki(
+                wikiId,
                 remoteDirectory.toURI().toURL(),
-                "master"
+                DisplayName.valueOf("42"),
+                Path.valueOf("docs"),
+                Path.valueOf("docs/Home")
+        );
+
+        target = new GitClient(
+                publisher,
+                directoryResolver,
+                new AlwaysPullChangesStrategy(),
+                AccountTestData.TRILLIAN,
+                wiki
         );
     }
 
@@ -81,7 +118,6 @@ public class GitClientTest {
     }
 
     private RevCommit commit( Git git, String fileName, String content ) throws IOException, GitAPIException {
-        System.out.println( git.getRepository().getWorkTree() );
         File file = new File(git.getRepository().getWorkTree(), fileName);
         Files.write(content, file, Charsets.UTF_8);
 
@@ -183,4 +219,140 @@ public class GitClientTest {
         assertEquals("trillian@hitchhiker.com", lastRemoteCommit.getAuthorIdent().getEmailAddress());
     }
 
+    @Test
+    public void testRepositoryChangedEventOnClone() throws IOException, GitAPIException {
+        commit(remote, "a.md", "# My Headline");
+        commit(remote, "b.md", "# My Second Headline");
+
+        target.refresh();
+
+        verify(publisher).publishEvent(eventCaptor.capture());
+
+        RepositoryChangedEvent event = eventCaptor.getValue();
+        assertSame(wikiId, event.getWikiId());
+
+        Iterator<RepositoryChangedEvent.Change> iterator = event.iterator();
+        RepositoryChangedEvent.Change change = iterator.next();
+        assertEquals(ChangeType.ADDED, change.getType());
+        assertTrue(change.getPath().matches("(a|b).md"));
+
+        change = iterator.next();
+        assertEquals(ChangeType.ADDED, change.getType());
+        assertTrue(change.getPath().matches("(a|b).md"));
+
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testRepositoryChangedEventOnPull() throws IOException, GitAPIException {
+        commit(remote, "a.md", "# My Headline");
+        commit(remote, "b.md", "# My Second Headline");
+
+        Git.cloneRepository()
+                .setDirectory(targetDirectory)
+                .setURI(remoteDirectory.toURI().toURL().toExternalForm())
+                .call()
+                .close();
+
+        new File(new File(targetDirectory, ".git"), "search-index").mkdirs();
+
+        commit(remote, "a.md", "# My Changed Headline");
+        remote.rm().addFilepattern("b.md").call();
+        remote.commit()
+                .setMessage("removed b.md")
+                .setAuthor("Tricia McMillian", "trillian@hitchhiker.com")
+                .call();
+        commit(remote, "c.md", "# My Third Headline");
+
+        target.refresh();
+
+        verify(publisher).publishEvent(eventCaptor.capture());
+
+        RepositoryChangedEvent event = eventCaptor.getValue();
+        assertSame(wikiId, event.getWikiId());
+
+        Iterator<RepositoryChangedEvent.Change> iterator = event.iterator();
+
+        RepositoryChangedEvent.Change change = iterator.next();
+        assertEquals(ChangeType.MODIFIED, change.getType());
+        assertEquals("a.md", change.getPath());
+
+        change = iterator.next();
+        assertEquals(ChangeType.DELETED, change.getType());
+        assertEquals("b.md", change.getPath());
+
+        change = iterator.next();
+        assertEquals(ChangeType.ADDED, change.getType());
+        assertEquals("c.md", change.getPath());
+
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testRepositoryChangedEventOnPullWithoutSearchIndex() throws IOException, GitAPIException {
+        commit(remote, "a.md", "# My Headline");
+        commit(remote, "b.md", "# My Second Headline");
+
+        Git.cloneRepository()
+                .setDirectory(targetDirectory)
+                .setURI(remoteDirectory.toURI().toURL().toExternalForm())
+                .call()
+                .close();
+
+        targetSearchIndexDirectory.delete();
+
+        target.refresh();
+
+        verify(publisher).publishEvent(eventCaptor.capture());
+        RepositoryChangedEvent event = eventCaptor.getValue();
+
+        Iterator<RepositoryChangedEvent.Change> iterator = event.iterator();
+        RepositoryChangedEvent.Change change = iterator.next();
+        assertEquals(ChangeType.ADDED, change.getType());
+        assertTrue(change.getPath().matches("(a|b).md"));
+
+        change = iterator.next();
+        assertEquals(ChangeType.ADDED, change.getType());
+        assertTrue(change.getPath().matches("(a|b).md"));
+
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testRefreshWithPullStrategy() throws IOException, GitAPIException {
+        RevCommit commit = commit(remote, "a.md", "# My Headline");
+
+        Git.cloneRepository()
+                .setDirectory(targetDirectory)
+                .setURI(remoteDirectory.toURI().toURL().toExternalForm())
+                .call()
+                .close();
+
+        Wiki wiki = new Wiki(
+                wikiId,
+                remoteDirectory.toURI().toURL(),
+                DisplayName.valueOf("42"),
+                Path.valueOf("docs"),
+                Path.valueOf("docs/Home")
+        );
+
+        target = new GitClient(
+                publisher,
+                directoryResolver,
+                new TimeBasedPullChangesStrategy(2000L),
+                AccountTestData.TRILLIAN,
+                wiki
+        );
+
+        target.refresh();
+
+        commit(remote, "b.md", "File b");
+
+        target.refresh();
+
+        try (Git git = Git.open(targetDirectory)) {
+            RevCommit c = git.log().call().iterator().next();
+            assertEquals(commit, c);
+        }
+    }
 }

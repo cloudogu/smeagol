@@ -12,7 +12,7 @@ import Page from './wiki/containers/Page';
 import {Switch} from 'react-router-dom';
 import Directory from './wiki/containers/Directory';
 import History from './wiki/containers/History';
-
+import Search from "./wiki/containers/Search";
 
 const styles = {
     content: {
@@ -36,6 +36,7 @@ class Main extends React.Component<Props> {
                 <Route exact path="/:repository/:branch" component={WikiRoot} />
                 <Route path="/:repository/:branch/pages" component={Directory} />
                 <Route path="/:repository/:branch/history" component={History}/>
+                <Route path="/:repository/:branch/search" component={Search} />
                 <Route path="/:repository/:branch" component={Page} />
                 </Switch>
             </div>

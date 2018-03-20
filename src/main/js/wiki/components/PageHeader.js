@@ -5,6 +5,8 @@ import ActionLink from './ActionLink';
 import ActionButton from './ActionButton';
 import PageNameForm from './PageNameForm';
 import { withRouter } from 'react-router-dom';
+import classNames from 'classnames';
+import SearchBar from "./SearchBar";
 
 const styles = {
     header: {
@@ -24,6 +26,7 @@ type Props = {
     onHomeClick: () => void,
     onOkMoveClick: () => void,
     onRestoreClick: () => void,
+    search: (string) => void,
     history: any,
     classes: any
 }
@@ -111,15 +114,20 @@ class PageHeader extends React.Component<Props,State> {
         return (
             <div className={classes.header}>
                 <h1>{ page.path }</h1>
-                <div className={classes.actions}>
-                    {homeButton}
-                    {createButton}
-                    {moveButton}
-                    {pagesButton}
-                    {historyButton}
-                    {edit}
-                    {deleteButton}
-                    {restoreButton}
+                <div className={classNames(classes.actions, "row")}>
+                    <div className="col-xs-9">
+                        {homeButton}
+                        {createButton}
+                        {moveButton}
+                        {pagesButton}
+                        {historyButton}
+                        {edit}
+                        {deleteButton}
+                        {restoreButton}
+                    </div>
+                    <div className="col-xs-3">
+                        <SearchBar search={search}/>
+                    </div>
                 </div>
                 {createForm}
                 {moveForm}

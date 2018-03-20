@@ -93,6 +93,11 @@ class Page extends React.Component<Props> {
         this.pushLandingPageState();
     };
 
+    search = (query: string) => {
+        const { history, repository, branch } = this.props;
+        history.push(`/${repository}/${branch}/search?query=${query}`);
+    };
+
     render() {
         const { error, loading, page, wiki, repository, branch, path, notFound, editMode, pagesLink, historyLink } = this.props;
         wiki.repository = repository;
@@ -129,7 +134,9 @@ class Page extends React.Component<Props> {
         }
 
         return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState }
-                           onMove={ this.onMove } pagesLink={pagesLink} historyLink={historyLink} onRestore={this.onRestore}/>;
+                           onMove={ this.onMove } pagesLink={pagesLink} historyLink={historyLink}
+                           onRestore={this.onRestore} search={this.search}/>;
+
     }
 }
 
@@ -165,7 +172,7 @@ const mapStateToProps = (state, ownProps) => {
     }
 
     const wikiId = createId(repository, branch);
-    const stateWiki = state.wiki[wikiId] ||{};
+    const stateWiki = state.wiki[wikiId] || {};
 
     let pagesLink = '#';
     let historyLink = '#';

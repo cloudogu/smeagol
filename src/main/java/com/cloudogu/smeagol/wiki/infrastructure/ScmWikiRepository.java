@@ -1,11 +1,11 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.ScmHttpClient;
+import com.cloudogu.smeagol.ScmHttpClientResponse;
 import com.cloudogu.smeagol.wiki.domain.*;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
@@ -68,22 +68,24 @@ public class ScmWikiRepository implements WikiRepository {
     }
 
     private Optional<WikiSettings> getSettings(WikiId id) {
-        return scmHttpClient.getEntity(
+        ScmHttpClientResponse<String> response = scmHttpClient.getEntity(
                 "/api/rest/repositories/{id}/content?path={conf}&revision={branch}",
                 String.class,
                 id.getRepositoryID(),
                 SETTINGS_FILE,
                 id.getBranch()
-            )
-            .filter(e -> e.getStatusCode().is2xxSuccessful())
-            .map(e -> Strings.nullToEmpty(e.getBody()))
-            .map(this::readSettings);
+        );
+
+        WikiSettings settings = null;
+        if (response.isSuccessful()) {
+             settings = response.getBody()
+                    .map(this::readSettings)
+                    .orElse(new WikiSettings());
+        }
+        return Optional.ofNullable(settings);
     }
 
     private WikiSettings readSettings(String content) {
-        if (Strings.isNullOrEmpty(content)) {
-            return new WikiSettings();
-        }
         return yaml.loadAs(content, WikiSettings.class);
     }
 
