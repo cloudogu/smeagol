@@ -1,12 +1,10 @@
 package com.cloudogu.smeagol.wiki.usecase;
 
 import com.cloudogu.smeagol.AccountService;
-import com.cloudogu.smeagol.wiki.domain.Commit;
-import com.cloudogu.smeagol.wiki.domain.Page;
-import com.cloudogu.smeagol.wiki.domain.PageRepository;
-import com.cloudogu.smeagol.wiki.domain.Path;
+import com.cloudogu.smeagol.wiki.domain.*;
 import de.triology.cb.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import static com.cloudogu.smeagol.wiki.usecase.Commits.createNewCommit;
@@ -19,9 +17,11 @@ public class RestorePageCommandHandler implements CommandHandler<Page, RestorePa
 
     private final PageRepository repository;
     private final AccountService accountService;
+    private final ApplicationEventPublisher publisher;
 
     @Autowired
-    public RestorePageCommandHandler(PageRepository repository, AccountService accountService) {
+    public RestorePageCommandHandler(ApplicationEventPublisher publisher, PageRepository repository, AccountService accountService) {
+        this.publisher = publisher;
         this.repository = repository;
         this.accountService = accountService;
     }
@@ -35,6 +35,10 @@ public class RestorePageCommandHandler implements CommandHandler<Page, RestorePa
         Commit commit = createNewCommit(accountService, command.getMessage());
         page.setCommit(commit);
 
-        return repository.save(page);
+        Page restoredPage = repository.save(page);
+
+        publisher.publishEvent(new PageModifiedEvent(restoredPage));
+
+        return restoredPage;
     }
 }
