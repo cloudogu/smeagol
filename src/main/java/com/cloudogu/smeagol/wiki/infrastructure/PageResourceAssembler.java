@@ -43,6 +43,7 @@ public class PageResourceAssembler extends ResourceAssemblerSupport<Page, PageRe
         String href = linkToPage.getHref() + "?commit=" + page.getCommit().get().getId().get().getValue();
         Link linkToPageCommitFixed = new Link(href, linkToPage.getRel());
         resource.add(linkToPageCommitFixed);
+        resource.add(restoreLink(page));
 
         return resource;
     }
@@ -85,6 +86,8 @@ public class PageResourceAssembler extends ResourceAssemblerSupport<Page, PageRe
     private Link deleteLink(Page page) {
         return baseLink(page).withRel("delete");
     }
+
+    private Link restoreLink(Page page) { return baseLink(page).withRel("restore"); }
 
     private ControllerLinkBuilder baseLink(Page page) {
         WikiId id = page.getWikiId();

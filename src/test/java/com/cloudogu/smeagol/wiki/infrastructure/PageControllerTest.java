@@ -116,7 +116,8 @@ public class PageControllerTest {
         Page page = createTestPage(wikiId, path);
         String commitId = page.getCommit().get().getId().get().getValue();
 
-        String requestPath = "/api/v1/repositories/4xQfahsId3/branches/master/pages/docs/Home?commit=" + commitId;
+        String pagePath = "/api/v1/repositories/4xQfahsId3/branches/master/pages/docs/Home";
+        String requestPath = pagePath + "?commit=" + commitId;
         String self = "http://localhost" + requestPath;
 
 
@@ -124,7 +125,8 @@ public class PageControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(requestPath)
                 .contentType("application/json"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$._links.self.href", is(self)));
+                .andExpect(jsonPath("$._links.self.href", is(self)))
+                .andExpect(jsonPath("$._links.restore.href", is("http://localhost" + pagePath)));
 
         verify(pageRepository).findByWikiIdAndPathAndCommit(wikiId, path, CommitId.valueOf(commitId));
     }
