@@ -1,10 +1,7 @@
 package com.cloudogu.smeagol.wiki.usecase;
 
 import com.cloudogu.smeagol.AccountService;
-import com.cloudogu.smeagol.wiki.domain.Commit;
-import com.cloudogu.smeagol.wiki.domain.Page;
-import com.cloudogu.smeagol.wiki.domain.PageRepository;
-import com.cloudogu.smeagol.wiki.domain.Path;
+import com.cloudogu.smeagol.wiki.domain.*;
 import de.triology.cb.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;

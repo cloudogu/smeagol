@@ -1,5 +1,5 @@
 // @flow
-import apiClient from '../../apiclient';
+import { apiClient } from '../../apiclient';
 
 const FETCH_HISTORY = 'smeagol/history/FETCH';
 const FETCH_HISTORY_SUCCESS = 'smeagol/history/FETCH_SUCCESS';

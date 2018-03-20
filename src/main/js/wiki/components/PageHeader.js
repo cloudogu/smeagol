@@ -98,7 +98,7 @@ class PageHeader extends React.Component<Props,State> {
 
 
     render() {
-        const { page, pagesLink, classes, onDeleteClick, onHomeClick, historyLink } = this.props;
+        const { page, pagesLink, classes, onDeleteClick, onHomeClick, historyLink, search } = this.props;
 
         const homeButton = <ActionButton onClick={onHomeClick}  i18nKey="page-header_home" type="primary" />;
         const createButton = <ActionButton onClick={this.onCreateClick} i18nKey="page-header_create" type="primary" />;
