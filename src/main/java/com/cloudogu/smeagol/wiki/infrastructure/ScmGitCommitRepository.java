@@ -14,6 +14,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.cloudogu.smeagol.wiki.infrastructure.ScmGit.createCommit;
+
 @Service
 public class ScmGitCommitRepository implements CommitRepository {
 
@@ -37,19 +39,5 @@ public class ScmGitCommitRepository implements CommitRepository {
         } catch (IOException | GitAPIException ex) {
             throw Throwables.propagate(ex);
         }
-    }
-
-    // TODO: Export to util
-    private Commit createCommit(RevCommit revCommit) {
-        CommitId id = CommitId.valueOf(revCommit.getId().getName());
-        Author author = createAuthor(revCommit.getAuthorIdent());
-        Instant lastModified = Instant.ofEpochSecond(revCommit.getCommitTime());
-        Message message = Message.valueOf(revCommit.getFullMessage());
-        return new Commit(id, lastModified, author, message);
-    }
-
-    // TODO: Export to util
-    private Author createAuthor(PersonIdent ident) {
-        return new Author(DisplayName.valueOf(ident.getName()), Email.valueOf(ident.getEmailAddress()));
     }
 }

@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Optional;
 
+import static com.cloudogu.smeagol.wiki.infrastructure.ScmGit.createCommit;
+
 @Service
 public class ScmGitPageRepository implements PageRepository {
 
@@ -103,18 +105,6 @@ public class ScmGitPageRepository implements PageRepository {
 
     private Content createContent(File file) throws IOException {
         return Content.valueOf(Files.toString(file, Charsets.UTF_8));
-    }
-
-    private Commit createCommit(RevCommit revCommit) {
-        CommitId id = CommitId.valueOf(revCommit.getId().getName());
-        Author author = createAuthor(revCommit.getAuthorIdent());
-        Instant lastModified = Instant.ofEpochSecond(revCommit.getCommitTime());
-        Message message = Message.valueOf(revCommit.getFullMessage());
-        return new Commit(id, lastModified, author, message);
-    }
-
-    private Author createAuthor(PersonIdent ident) {
-        return new Author(DisplayName.valueOf(ident.getName()), Email.valueOf(ident.getEmailAddress()));
     }
 
     @Override
