@@ -1,6 +1,7 @@
 //@flow
 import React from 'react';
 import injectSheet from 'react-jss';
+import {translate} from 'react-i18next';
 import DateFromNow from '../../DateFromNow';
 
 const styles = {
@@ -19,15 +20,15 @@ type Props = {
 class PageFooter extends React.Component<Props> {
 
     render() {
-        const { page, classes } = this.props;
+        const { page, classes, t } = this.props;
         const commit = page.commit;
         return (
             <div className={classes.footer}>
-                Last edited by { commit.author.displayName }, <DateFromNow date={ commit.date } />
+                {t('page-footer_edited_by')} { commit.author.displayName }, <DateFromNow date={ commit.date } />
             </div>
         );
     }
 
 }
 
-export default injectSheet(styles)(PageFooter);
+export default injectSheet(styles)(translate()(PageFooter));

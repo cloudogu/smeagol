@@ -12,6 +12,7 @@
   "page-header_create": "New",
   "page-header_move": "Rename",
   "page-header_restore": "Restore",
+  "page-footer_edited_by": "Last edited by",
   "history-header_show_page": "View Page",
   "create-form_title": "Create New Page",
   "create-form_name_label": "Page Name",
