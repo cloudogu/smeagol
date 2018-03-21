@@ -29,12 +29,6 @@ function fetchHistory(url) {
     return function(dispatch) {
         dispatch(requestHistory(url));
         return apiClient.get(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('server returned status code' + response.status);
-                }
-                return response;
-            })
             .then(response => response.json())
             .then(json => dispatch(receiveHistory(url, json)))
             .catch((err) => {
