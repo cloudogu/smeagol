@@ -15,16 +15,15 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 public class HistoryResourceAssembler extends ResourceAssemblerSupport<History, HistoryResource> {
 
+    private final CommitResourceAssembler assembler = new CommitResourceAssembler();
+
     public HistoryResourceAssembler() {
         super(HistoryController.class, HistoryResource.class);
     }
 
-
-    private final CommitResourceAssembler assembler = new CommitResourceAssembler();
-
     @Override
     public HistoryResource toResource(History history) {
-        List<CommitResource> commitsAsResources = new ArrayList<CommitResource>(history.getCommits().size());
+        List<CommitResource> commitsAsResources = new ArrayList<>(history.getCommits().size());
         for (Commit commit : history.getCommits()) {
             CommitResource commitResource = assembler.toResource(commit);
             commitResource.add(linkToPageAtCommit(history, commit));

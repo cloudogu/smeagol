@@ -142,7 +142,9 @@ public class PageController {
             return Path.valueOf(moveTo);
         }
         private CommitId getRestore() {
-            if (Strings.isNullOrEmpty(restore)) return null;
+            if (Strings.isNullOrEmpty(restore)) {
+                return null;
+            }
             return CommitId.valueOf(restore);
         }
     }

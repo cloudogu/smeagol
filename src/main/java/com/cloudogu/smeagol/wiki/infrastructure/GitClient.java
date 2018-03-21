@@ -135,7 +135,7 @@ public class GitClient implements AutoCloseable {
                 .iterator();
 
         if (iterator.hasNext()) {
-            iterator.forEachRemaining(revCommit -> commits.add(revCommit));
+            iterator.forEachRemaining(commits::add);
         }
 
         return commits;

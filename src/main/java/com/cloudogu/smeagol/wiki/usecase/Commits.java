@@ -6,7 +6,10 @@ import com.cloudogu.smeagol.wiki.domain.*;
 
 import java.time.Instant;
 
-public class Commits {
+public final class Commits {
+
+    private Commits() {}
+
     public static Commit createNewCommit(AccountService accountService, Message message) {
         Account account = accountService.get();
 

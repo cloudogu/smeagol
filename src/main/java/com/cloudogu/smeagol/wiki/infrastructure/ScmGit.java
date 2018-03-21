@@ -11,6 +11,8 @@ import java.time.Instant;
  */
 public final class ScmGit {
 
+    private ScmGit() {}
+
     public static Commit createCommit(RevCommit revCommit) {
         CommitId id = CommitId.valueOf(revCommit.getId().getName());
         Author author = createAuthor(revCommit.getAuthorIdent());

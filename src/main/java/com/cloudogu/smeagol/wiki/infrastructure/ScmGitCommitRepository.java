@@ -3,14 +3,11 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 import com.cloudogu.smeagol.wiki.domain.*;
 import com.google.common.base.Throwables;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
