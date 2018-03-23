@@ -19,24 +19,10 @@
 
         <!-- project serkis -->
 
-        <!--
-        TODO replace with release, after https://github.com/triologygmbh/command-bus/pull/9 is merged
-        -->
         <dependency>
-            <groupId>com.github.triologygmbh</groupId>
-            <artifactId>command-bus</artifactId>
-            <!-- snapshot version of PR #9 -->
-            <version>20ad1da</version>
-        </dependency>
-
-        <!--
-        required by the cdi part of the command-bus
-        TODO split command-bus into core, cdi and spring modules
-        -->
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
+            <groupId>de.triology.cb</groupId>
+            <artifactId>command-bus-spring</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
         <dependency>
