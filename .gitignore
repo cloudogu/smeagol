@@ -94,7 +94,9 @@ Temporary Items
 
 # End of https://www.gitignore.io/api/osx
 .workspace
-!.mvn/wrapper/maven-wrapper.jar# See https://help.github.com/ignore-files/ for more about ignoring files.
+!.mvn/wrapper/maven-wrapper.jar
+
+# See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
 /node_modules
