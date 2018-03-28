@@ -39,17 +39,22 @@ public class ScmGitPageRepository implements PageRepository {
         String pagePath = Pages.filepath(path);
         File file = client.file(pagePath);
 
+        Optional<Page> page = Optional.empty();
         if (file.exists()) {
-            Optional<RevCommit> optCommit = client.lastCommit(pagePath);
-            if (optCommit.isPresent()) {
-                Content content = createContent(file);
-                Commit commit = createCommit(optCommit.get());
-
-                Page page = new Page(id, path, content, commit);
-                return Optional.of(page);
-            }
+            page = createPageFromFile(client, id, path, pagePath, file);
         }
 
+        return page;
+    }
+
+    private Optional<Page> createPageFromFile(GitClient client, WikiId id, Path path, String pagePath, File file) throws IOException, GitAPIException {
+        Optional<RevCommit> optCommit = client.lastCommit(pagePath);
+        if (optCommit.isPresent()) {
+            Content content = createContent(file);
+            Commit commit = createCommit(optCommit.get());
+
+            return Optional.of(new Page(id, path, content, commit));
+        }
         return Optional.empty();
     }
 

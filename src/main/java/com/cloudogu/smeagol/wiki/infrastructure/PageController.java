@@ -1,13 +1,28 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import com.cloudogu.smeagol.wiki.domain.*;
-import com.cloudogu.smeagol.wiki.usecase.*;
+import com.cloudogu.smeagol.wiki.domain.CommitId;
+import com.cloudogu.smeagol.wiki.domain.Content;
+import com.cloudogu.smeagol.wiki.domain.Message;
+import com.cloudogu.smeagol.wiki.domain.Page;
+import com.cloudogu.smeagol.wiki.domain.PageRepository;
+import com.cloudogu.smeagol.wiki.domain.Path;
+import com.cloudogu.smeagol.wiki.domain.WikiId;
+import com.cloudogu.smeagol.wiki.usecase.CreatePageCommand;
+import com.cloudogu.smeagol.wiki.usecase.DeletePageCommand;
+import com.cloudogu.smeagol.wiki.usecase.EditPageCommand;
+import com.cloudogu.smeagol.wiki.usecase.MovePageCommand;
+import com.cloudogu.smeagol.wiki.usecase.RestorePageCommand;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.google.common.base.Strings;
 import de.triology.cb.CommandBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -42,20 +57,27 @@ public class PageController {
     ) {
         WikiId id = new WikiId(repositoryId, branch);
         Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
-        Optional<Page> byWikiIdAndPath;
+        Optional<ResponseEntity<PageResource>> responseFound;
+
         if (Strings.isNullOrEmpty(commitId)) {
-            byWikiIdAndPath = repository.findByWikiIdAndPath(id, path);
-            if (byWikiIdAndPath.isPresent()) {
-                return ResponseEntity.ok(assembler.toResource(byWikiIdAndPath.get()));
-            }
+            responseFound = createResponse(id, path);
         } else {
-            byWikiIdAndPath = repository.findByWikiIdAndPathAndCommit(id, path, CommitId.valueOf(commitId));
-            if (byWikiIdAndPath.isPresent()) {
-                return ResponseEntity.ok(assembler.toCommitFixedResource(byWikiIdAndPath.get()));
-            }
+            responseFound = createResponse(id, path, CommitId.valueOf(commitId));
         }
-        return ResponseEntity.notFound().build();
+
+        return responseFound.orElse(ResponseEntity.notFound().build());
     }
+
+    private Optional<ResponseEntity<PageResource>> createResponse(WikiId id, Path path, CommitId commitId) {
+        Optional<Page> byWikiIdAndPath = repository.findByWikiIdAndPathAndCommit(id, path, commitId);
+        return byWikiIdAndPath.map(page -> ResponseEntity.ok(assembler.toCommitFixedResource(byWikiIdAndPath.get())));
+    }
+
+    private Optional<ResponseEntity<PageResource>> createResponse(WikiId id, Path path) {
+        Optional<Page> byWikiIdAndPath = repository.findByWikiIdAndPath(id, path);
+        return byWikiIdAndPath.map(page -> ResponseEntity.ok(assembler.toResource(page)));
+    }
+
 
     @RequestMapping(method = RequestMethod.POST, value = "**")
     public ResponseEntity<Void> createOrEdit(
