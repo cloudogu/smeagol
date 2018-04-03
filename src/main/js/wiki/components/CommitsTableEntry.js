@@ -8,7 +8,7 @@ const styles = {
         backgroundColor: '#e7eff3'
     },
     commitTableTd: {
-        border: '1px solid #b9d1dc',
+        border: '1px solid #b9d1dc !important',
         fontSize: '1em',
         lineHeight: '1.6em',
         margin: '0',
