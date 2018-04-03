@@ -5,6 +5,10 @@ const FETCH_HISTORY = 'smeagol/history/FETCH';
 const FETCH_HISTORY_SUCCESS = 'smeagol/history/FETCH_SUCCESS';
 const FETCH_HISTORY_FAILURE = 'smeagol/history/FETCH_FAILURE';
 
+const RESTORE_PAGE_SUCCESS = 'smeagol/page/RESTORE_SUCCESS';
+const EDIT_PAGE_SUCCESS = 'smeagol/page/EDIT_SUCCESS';
+
+
 export function createHistoryUrl(repositoryId: string, branch: string, path: string) {
     return `/repositories/${repositoryId}/branches/${branch}/history/${path}`;
 }
@@ -87,6 +91,22 @@ export default function reducer(state = {}, action = {}) {
                     error: action.payload
                 }
             };
+        case RESTORE_PAGE_SUCCESS:
+            return {
+                ...state,
+                [action.history_url] : {
+                    loading: false,
+                    pagehistory: null
+                }
+            };
+        case EDIT_PAGE_SUCCESS:
+            return{
+                ...state,
+                [action.history_url] : {
+                    loading: false,
+                    pagehistory: null
+                }
+            }
         default:
             return state
     }

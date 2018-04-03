@@ -106,7 +106,8 @@ function requestEditPage(url: string) {
 function editPageSuccess(url: string) {
     return {
         type: EDIT_PAGE_SUCCESS,
-        url
+        url,
+        history_url: getHistoryUrlFromUrl(url)
     };
 }
 
@@ -248,8 +249,13 @@ function requestRestorePage(url: string) {
 function restorePageSuccess(url: string) {
     return {
         type: RESTORE_PAGE_SUCCESS,
-        url
+        url,
+        history_url: getHistoryUrlFromUrl(url)
     };
+}
+
+function getHistoryUrlFromUrl(url: string){
+    return url.replace("pages", "history");
 }
 
 function restorePageFailure(url: string, err: Error) {
