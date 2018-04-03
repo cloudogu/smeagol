@@ -2,7 +2,8 @@
 import React from 'react';
 import injectSheet from 'react-jss';
 import DateFromNow from '../../DateFromNow';
-import {Link} from 'react-router-dom';
+import ShortCommitHash from './ShortCommitHash';
+
 const styles = {
     commitTableTr: {
         backgroundColor: '#e7eff3'
@@ -14,6 +15,9 @@ const styles = {
         margin: '0',
         padding: '0.3em 0.7em',
         verticalAlign: 'middle !important'
+    },
+    dateColor: {
+        color: '#999'
     }
 };
 
@@ -37,14 +41,10 @@ class CommitsTableEntry extends React.Component<Props> {
                         <b>{commit.author.displayName}</b>
                     </td>
                     <td className={classes.commitTableTd}>
-                       <DateFromNow date={commit.date}/>
-                        : <Link className="btn-link" to={ `${pagePath}?commit=${commit.commitId}` } type="link">
-                            { commit.message }
-                        </Link>
-
+                        <h className={classes.dateColor}><DateFromNow date={commit.date}/></h>
+                        : {commit.message} [<ShortCommitHash commit={commit} pagePath={ pagePath }/>]
                     </td>
                 </tr>
-
         );
     }
 
