@@ -37,7 +37,7 @@ class ShortCommitHash extends React.Component<Props> {
 }
 
 function getShortCommitHash(commitId){
-    return commitId.substring(0,6);
+    return commitId.substring(0,7);
 }
 
 export default injectSheet(styles)(ShortCommitHash);
