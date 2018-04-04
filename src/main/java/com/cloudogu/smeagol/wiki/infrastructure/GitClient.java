@@ -219,7 +219,15 @@ public class GitClient implements AutoCloseable {
             }
         }
 
+        createSearchIndexDirectory();
         createRepositoryChangedEvent();
+    }
+
+    private void createSearchIndexDirectory() {
+        File directory = directoryResolver.resolveSearchIndex(wiki.getId());
+        if (!directory.exists() && !directory.mkdirs()) {
+            throw new IllegalStateException("failed to create search index directory at " + directory);
+        }
     }
 
     private void createRepositoryChangedEvent() throws IOException {
