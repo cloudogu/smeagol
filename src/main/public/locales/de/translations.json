@@ -32,5 +32,6 @@
   "back-to-repositories-button_text": "Zurück zur Repository-Übersicht",
   "search-bar_placeholder": "Suchen nach ...",
   "search-result-header_title": "Suchergebnisse für",
-  "search_failed_to_fetch": "Die Suchergebnisse konnten nicht geladen werden"
+  "search_failed_to_fetch": "Die Suchergebnisse konnten nicht geladen werden",
+  "search-scoring_tooltip": "Relevanz für Deine Anfrage"
 }
