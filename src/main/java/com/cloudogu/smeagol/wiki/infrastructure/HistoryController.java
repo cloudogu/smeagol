@@ -40,10 +40,9 @@ public class HistoryController {
 
         HistoryResource resource = assembler.toResource(history);
 
-        // TODO: should we return ResponseEntity.notFound(), if no commits were found?
+        // Even for a path without commits we return a History object instead of a "not found",
+        // since even an empty history is a history.
         return ResponseEntity.ok(resource);
     }
-
-
 
 }
