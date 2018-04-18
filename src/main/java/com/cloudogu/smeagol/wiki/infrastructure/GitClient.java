@@ -2,6 +2,7 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.Account;
 import com.cloudogu.smeagol.wiki.domain.Wiki;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Stopwatch;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -100,7 +101,8 @@ public class GitClient implements AutoCloseable {
         }
     }
 
-    private Git open() throws IOException {
+    @VisibleForTesting
+    protected Git open() throws IOException {
         if (gitRepository == null) {
             gitRepository = Git.open(repository);
         }

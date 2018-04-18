@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.Optional;
 
+import static com.cloudogu.smeagol.wiki.DomainTestData.COMMIT_ID;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -184,6 +185,15 @@ public class GitClientTest {
         assertEquals(rc, receivedRc);
     }
 
+    @Test(expected = IOException.class)
+    public void testGetCommitFromIdNotFound() throws IOException, GitAPIException {
+        RevCommit rc;
+        try (Git git = Git.init().setDirectory(targetDirectory).call()) {
+            rc = commit(git, "b.md", "# My Headline");
+        }
+        RevCommit receivedRc = target.getCommitFromId(COMMIT_ID.getValue());
+    }
+
     @Test
     public void testPathContentAtCommit() throws GitAPIException, IOException {
         RevCommit rc, rc1;
@@ -199,6 +209,19 @@ public class GitClientTest {
 
         assertEquals("Content 0", content.get());
         assertEquals("Content 1", content1.get());
+    }
+
+    @Test
+    public void testPathContentAtCommitNotFound() throws GitAPIException, IOException {
+        RevCommit rc;
+        try (Git git = Git.init().setDirectory(targetDirectory).call()) {
+            rc = commit(git, "b.md", "Content 0");;
+        }
+        RevCommit receivedRc = target.getCommitFromId(rc.getId().getName());
+
+        Optional<String> content = target.pathContentAtCommit("a.md", receivedRc);
+
+        assertFalse(content.isPresent());
     }
 
     @Test

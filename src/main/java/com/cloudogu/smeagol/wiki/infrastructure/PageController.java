@@ -49,7 +49,7 @@ public class PageController {
     }
 
     @RequestMapping("**")
-    public ResponseEntity<PageResource> findByWikiIdAndPath(
+    public ResponseEntity findByWikiIdAndPath(
             HttpServletRequest request,
             @PathVariable("repositoryId") String repositoryId,
             @PathVariable("branch") String branch,
@@ -59,10 +59,14 @@ public class PageController {
         Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
         Optional<ResponseEntity<PageResource>> responseFound;
 
-        if (Strings.isNullOrEmpty(commitId)) {
-            responseFound = createResponse(id, path);
-        } else {
-            responseFound = createResponse(id, path, CommitId.valueOf(commitId));
+        try {
+            if (Strings.isNullOrEmpty(commitId)) {
+                responseFound = createResponse(id, path);
+            } else {
+                responseFound = createResponse(id, path, CommitId.valueOf(commitId));
+            }
+        } catch (MalformedCommitIdException ex) {
+            return ResponseEntity.badRequest().body("The passed commit is malformed.");
         }
 
         return responseFound.orElse(ResponseEntity.notFound().build());

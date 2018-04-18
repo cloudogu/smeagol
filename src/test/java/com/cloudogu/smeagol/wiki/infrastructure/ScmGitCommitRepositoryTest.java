@@ -22,6 +22,7 @@ import java.util.Arrays;
 
 import static com.cloudogu.smeagol.wiki.DomainTestData.WIKI_ID_42;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -67,6 +68,26 @@ public class ScmGitCommitRepositoryTest {
 
             Commit commitFromHistory = history.getCommits().get(0);
             assertEquals("trillian@hitchhiker.com", commitFromHistory.getAuthor().getEmail().getValue());
+        }
+    }
+
+    @Test
+    public void testFindHistoryByWikiIdAndPathWithoutCommits() throws Exception {
+        File repository = temporaryFolder.newFolder();
+        try (Git git = Git.init().setDirectory(repository).call()) {
+            File file = new File(repository, "Home");
+            Files.write("my content", file, Charsets.UTF_8);
+
+            when(gitClient.findCommits("Home.md")).thenReturn(Arrays.asList());
+
+            WikiId id = WIKI_ID_42;
+            Path path = Path.valueOf("Home");
+
+            History history = commitRepository.findHistoryByWikiIdAndPath(id, path);
+            assertEquals(id, history.getWikiId());
+            assertEquals(path, history.getPath());
+
+            assertTrue(history.getCommits().isEmpty());
         }
     }
 

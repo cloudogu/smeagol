@@ -5,7 +5,11 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.Files;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.errors.InvalidObjectIdException;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,8 @@ import static com.cloudogu.smeagol.wiki.infrastructure.ScmGit.createCommit;
 
 @Service
 public class ScmGitPageRepository implements PageRepository {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ScmGitPageRepository.class);
 
     private final GitClientProvider gitClientProvider;
 
@@ -63,6 +69,12 @@ public class ScmGitPageRepository implements PageRepository {
         try (GitClient client = gitClientProvider.createGitClient(wikiId)) {
             client.refresh();
             return createPageFromFileAtCommit(client, wikiId, path, commitId);
+        } catch (InvalidObjectIdException ex) {
+            LOG.debug("Catch InvalidObjectIdException and return MalformedCommitIdException", ex);
+            throw new MalformedCommitIdException(commitId);
+        } catch (MissingObjectException ex) {
+            LOG.debug("Catch MissingObjectException and return empty page", ex);
+            return Optional.empty();
         } catch (IOException | GitAPIException ex) {
             throw Throwables.propagate(ex);
         }

@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static com.cloudogu.smeagol.wiki.DomainTestData.*;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -101,6 +102,27 @@ public class ScmGitPageRepositoryTest {
         when(gitClient.pathContentAtCommit(Pages.filepath(Path.valueOf("Home")), rc)).thenReturn(Optional.of("Content 0"));
         Optional<Page> optionalPage = pageRepository.findByWikiIdAndPathAndCommit(wikiId, Path.valueOf("Home"), commitId);
         assertEquals("Content 0", optionalPage.get().getContent().getValue());
+    }
+
+    @Test(expected = MalformedCommitIdException.class)
+    public void testFindByWikiIdAndPathAndCommitWithIncorrectCommit() throws Exception {
+        File repository = temporaryFolder.newFolder();
+        try (Git git = Git.init().setDirectory(repository).call()) {
+            when(gitClient.getCommitFromId(anyString())).thenCallRealMethod();
+            when(gitClient.open()).thenReturn(git);
+            Optional<Page> optionalPage = pageRepository.findByWikiIdAndPathAndCommit(wikiId, Path.valueOf("Home"), CommitId.valueOf("123"));
+        }
+    }
+
+    @Test
+    public void testFindByWikiIdAndPathAndCommitWithNonExistingCommit() throws Exception {
+        File repository = temporaryFolder.newFolder();
+        try (Git git = Git.init().setDirectory(repository).call()) {
+            when(gitClient.getCommitFromId(anyString())).thenCallRealMethod();
+            when(gitClient.open()).thenReturn(git);
+            Optional<Page> optionalPage = pageRepository.findByWikiIdAndPathAndCommit(wikiId, Path.valueOf("Home"), COMMIT_ID);
+            assertFalse(optionalPage.isPresent());
+        }
     }
     
     @Test
