@@ -3,12 +3,15 @@ package com.cloudogu.smeagol.wiki.domain;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * The id of a commit in a source code management system.
  */
-public final class CommitId {
+public final class CommitId implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String value;
 

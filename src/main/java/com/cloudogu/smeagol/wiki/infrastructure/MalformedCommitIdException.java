@@ -7,9 +7,13 @@ import com.cloudogu.smeagol.wiki.domain.CommitId;
 */
 public class MalformedCommitIdException extends RuntimeException {
 
-    CommitId commitId;
+    private final CommitId commitId;
 
     public MalformedCommitIdException(CommitId commitId) {
         this.commitId = commitId;
+    }
+
+    public CommitId getCommitId() {
+        return commitId;
     }
 }
