@@ -26,7 +26,7 @@ type Props = {
 class ShortCommitHash extends React.Component<Props> {
 
     render() {
-        const { commit, key, classes, pagePath } = this.props;
+        const { commit, pagePath } = this.props;
         return (
         <Link className="btn-link" to={ `${pagePath}?commit=${commit.commitId}` } type="link">
             { getShortCommitHash(commit.commitId) }
