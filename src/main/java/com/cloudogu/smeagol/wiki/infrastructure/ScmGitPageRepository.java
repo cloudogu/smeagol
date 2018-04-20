@@ -70,8 +70,7 @@ public class ScmGitPageRepository implements PageRepository {
             client.refresh();
             return createPageFromFileAtCommit(client, wikiId, path, commitId);
         } catch (InvalidObjectIdException ex) {
-            LOG.debug("Catch InvalidObjectIdException and return MalformedCommitIdException", ex);
-            throw new MalformedCommitIdException(commitId);
+            throw new MalformedCommitIdException(commitId, "Malformed commitId: " + commitId.getValue(), ex);
         } catch (MissingObjectException ex) {
             LOG.debug("Catch MissingObjectException and return empty page", ex);
             return Optional.empty();

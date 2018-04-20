@@ -9,7 +9,13 @@ public class MalformedCommitIdException extends RuntimeException {
 
     private final CommitId commitId;
 
-    public MalformedCommitIdException(CommitId commitId) {
+    public MalformedCommitIdException(CommitId commitId, String message) {
+        super(message);
+        this.commitId = commitId;
+    }
+
+    public MalformedCommitIdException(CommitId commitId, String message, Throwable cause) {
+        super(message, cause);
         this.commitId = commitId;
     }
 

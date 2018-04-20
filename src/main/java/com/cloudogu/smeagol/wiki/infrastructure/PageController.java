@@ -15,6 +15,8 @@ import com.cloudogu.smeagol.wiki.usecase.RestorePageCommand;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.google.common.base.Strings;
 import de.triology.cb.CommandBus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +34,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping(PageController.MAPPING)
 public class PageController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PageController.class);
 
     static final String MAPPING = "/api/v1/repositories/{repositoryId}/branches/{branch}/pages";
 
@@ -66,6 +70,7 @@ public class PageController {
                 responseFound = createResponse(id, path, CommitId.valueOf(commitId));
             }
         } catch (MalformedCommitIdException ex) {
+            LOG.debug("MalformedCommitIdException: respond with 400 Bad Request", ex);
             return ResponseEntity.badRequest().body("The passed commit is malformed.");
         }
 
