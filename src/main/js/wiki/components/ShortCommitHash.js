@@ -2,24 +2,12 @@
 import React from 'react';
 import injectSheet from 'react-jss';
 import {Link} from 'react-router-dom';
-const styles = {
-    commitTableTr: {
-        backgroundColor: '#e7eff3'
-    },
-    commitTableTd: {
-        border: '1px solid #b9d1dc !important',
-        fontSize: '1em',
-        lineHeight: '1.6em',
-        margin: '0',
-        padding: '0.3em 0.7em',
-        verticalAlign: 'middle !important'
-    }
-};
+
+// REVIEW copy/paste styles?
+const styles = {};
 
 type Props = {
     commit: any,
-    classes: any,
-    key: any,
     pagePath: string
 }
 

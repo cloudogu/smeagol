@@ -30,7 +30,7 @@ public class RestorePageCommandHandler implements CommandHandler<Page, RestorePa
     public Page handle(RestorePageCommand command) {
         Path path = command.getPath();
         Page page = repository.findByWikiIdAndPathAndCommit(command.getWikiId(), path, command.getCommitId())
-                .orElseThrow(() -> new PageNotFoundException(path, "page not found"));
+                .orElseThrow(() -> new PageNotFoundException(path));
 
         Commit commit = createNewCommit(accountService, command.getMessage());
         page.setCommit(commit);

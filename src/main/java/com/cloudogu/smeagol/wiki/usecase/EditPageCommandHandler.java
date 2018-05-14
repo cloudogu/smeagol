@@ -30,7 +30,7 @@ public class EditPageCommandHandler implements CommandHandler<Page, EditPageComm
     public Page handle(EditPageCommand command) {
         Path path = command.getPath();
         Page page = repository.findByWikiIdAndPath(command.getWikiId(), path)
-                .orElseThrow(() -> new PageNotFoundException(path, "page not found"));
+                .orElseThrow(() -> new PageNotFoundException(path));
 
         Commit commit = createNewCommit(accountService, command.getMessage());
         page.edit(commit, command.getContent());
