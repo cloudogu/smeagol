@@ -17,8 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.cloudogu.smeagol.wiki.infrastructure.ScmGit.createCommit;
-
 @Service
 public class ScmGitPageRepository implements PageRepository {
 
@@ -57,7 +55,7 @@ public class ScmGitPageRepository implements PageRepository {
         Optional<RevCommit> optCommit = client.lastCommit(pagePath);
         if (optCommit.isPresent()) {
             Content content = createContent(file);
-            Commit commit = createCommit(optCommit.get());
+            Commit commit = ScmGit.createCommit(optCommit.get());
 
             return Optional.of(new Page(id, path, content, commit));
         }
@@ -70,7 +68,7 @@ public class ScmGitPageRepository implements PageRepository {
             client.refresh();
             return createPageFromFileAtCommit(client, wikiId, path, commitId);
         } catch (InvalidObjectIdException ex) {
-            throw new MalformedCommitIdException(commitId, "Malformed commitId: " + commitId.getValue(), ex);
+            throw new MalformedCommitIdException(commitId, ex);
         } catch (MissingObjectException ex) {
             LOG.debug("Catch MissingObjectException and return empty page", ex);
             return Optional.empty();
@@ -82,13 +80,9 @@ public class ScmGitPageRepository implements PageRepository {
     private Optional<Page> createPageFromFileAtCommit(GitClient client, WikiId wikiId, Path path, CommitId commitId) throws IOException {
         RevCommit revCommit = client.getCommitFromId(commitId.getValue());
         Optional<String> optFileContent = client.pathContentAtCommit(Pages.filepath(path), revCommit);
-        if (optFileContent.isPresent()) {
-            Content content = Content.valueOf(optFileContent.get());
-            Commit commit = createCommit(revCommit);
-            Page page = new Page(wikiId, path, content, commit);
-            return Optional.of(page);
-        }
-        return Optional.empty();
+        return optFileContent
+                .map(Content::valueOf)
+                .map(c -> createPage(wikiId, path, revCommit, c));
     }
 
     public void delete(Page page, Commit commit) {
@@ -151,10 +145,14 @@ public class ScmGitPageRepository implements PageRepository {
                     commit.getMessage().getValue()
             );
 
-            return new Page(page.getWikiId(), path, content, createCommit(revCommit));
+            return createPage(page.getWikiId(), path, revCommit, content);
         } catch (IOException | GitAPIException ex) {
             throw Throwables.propagate(ex);
         }
+    }
+
+    private Page createPage(WikiId wikiId, Path path, RevCommit revCommit, Content content) {
+        return new Page(wikiId, path, content, ScmGit.createCommit(revCommit));
     }
 
     private Page move(Page page) {
@@ -182,7 +180,7 @@ public class ScmGitPageRepository implements PageRepository {
                     commit.getMessage().getValue()
             );
 
-            return new Page(id, Path.valueOf(targetPath), Path.valueOf(sourcePath), page.getContent(), createCommit(revCommit));
+            return new Page(id, Path.valueOf(targetPath), Path.valueOf(sourcePath), page.getContent(), ScmGit.createCommit(revCommit));
         } catch (IOException | GitAPIException ex) {
             throw Throwables.propagate(ex);
         }

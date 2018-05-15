@@ -11,7 +11,7 @@ public class HistoryResource extends ResourceSupport {
     private final String path;
     private final List<CommitResource> commits;
 
-    public HistoryResource(String path, List<CommitResource> commits) {
+    HistoryResource(String path, List<CommitResource> commits) {
         this.path = path;
         this.commits = commits;
     }

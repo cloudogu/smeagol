@@ -87,7 +87,9 @@ public class PageResourceAssembler extends ResourceAssemblerSupport<Page, PageRe
         return baseLink(page).withRel("delete");
     }
 
-    private Link restoreLink(Page page) { return baseLink(page).withRel("restore"); }
+    private Link restoreLink(Page page) {
+        return baseLink(page).withRel("restore");
+    }
 
     private ControllerLinkBuilder baseLink(Page page) {
         WikiId id = page.getWikiId();

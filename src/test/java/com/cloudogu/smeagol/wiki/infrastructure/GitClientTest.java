@@ -21,8 +21,8 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 import static com.cloudogu.smeagol.wiki.DomainTestData.COMMIT_ID;
@@ -59,8 +59,7 @@ public class GitClientTest {
         remoteDirectory = temporaryFolder.newFolder();
         remote = createGitRepo(remoteDirectory);
 
-        targetDirectory = temporaryFolder.newFolder();
-        targetDirectory.delete();
+        targetDirectory = new File(temporaryFolder.getRoot(), "target");
 
         targetSearchIndexDirectory = temporaryFolder.newFolder();
         when(directoryResolver.resolveSearchIndex(wikiId)).thenReturn(targetSearchIndexDirectory);

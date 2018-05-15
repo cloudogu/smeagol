@@ -30,7 +30,7 @@ public class DeletePageCommandHandler implements CommandHandler<Void, DeletePage
     public Void handle(DeletePageCommand command) {
         Path path = command.getPath();
         Page page = repository.findByWikiIdAndPath(command.getWikiId(), path)
-                .orElseThrow(() -> new PageNotFoundException(path, "page not found"));
+                .orElseThrow(() -> new PageNotFoundException(path));
 
         Commit commit = createNewCommit(accountService, command.getMessage());
 

@@ -17,8 +17,8 @@ public class HistoryController {
 
     private final HistoryResourceAssembler assembler = new HistoryResourceAssembler();
 
-    private CommitRepository repository;
-    private WildcardPathExtractor pathExtractor;
+    private final CommitRepository repository;
+    private final WildcardPathExtractor pathExtractor;
 
     @Autowired
     public HistoryController(CommitRepository repository, WildcardPathExtractor pathExtractor) {

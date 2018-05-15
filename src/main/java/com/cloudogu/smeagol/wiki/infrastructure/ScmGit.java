@@ -9,11 +9,12 @@ import java.time.Instant;
 /**
  * Util class for the ScmGit repositories.
  */
-public final class ScmGit {
+final class ScmGit {
 
-    private ScmGit() {}
+    private ScmGit() {
+    }
 
-    public static Commit createCommit(RevCommit revCommit) {
+    static Commit createCommit(RevCommit revCommit) {
         CommitId id = CommitId.valueOf(revCommit.getId().getName());
         Author author = createAuthor(revCommit.getAuthorIdent());
         Instant lastModified = Instant.ofEpochSecond(revCommit.getCommitTime());
@@ -21,7 +22,7 @@ public final class ScmGit {
         return new Commit(id, lastModified, author, message);
     }
 
-    public static Author createAuthor(PersonIdent ident) {
+    static Author createAuthor(PersonIdent ident) {
         return new Author(DisplayName.valueOf(ident.getName()), Email.valueOf(ident.getEmailAddress()));
     }
 }

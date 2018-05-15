@@ -4,6 +4,7 @@ import com.cloudogu.smeagol.Account;
 import com.cloudogu.smeagol.wiki.domain.Wiki;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableList;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -30,7 +31,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +54,7 @@ public class GitClient implements AutoCloseable {
 
     private PullChangesStrategy strategy;
 
-    public GitClient(ApplicationEventPublisher publisher, DirectoryResolver directoryResolver, PullChangesStrategy strategy, Account account, Wiki wiki) {
+    GitClient(ApplicationEventPublisher publisher, DirectoryResolver directoryResolver, PullChangesStrategy strategy, Account account, Wiki wiki) {
         this.publisher = publisher;
         this.directoryResolver = directoryResolver;
         this.strategy = strategy;
@@ -78,7 +78,7 @@ public class GitClient implements AutoCloseable {
         if (strategy.shouldPull(wiki.getId())) {
             pullChangesAndLogTime();
         } else {
-            LOG.debug("skip pulling changes, because pull strategy {}" , strategy.getClass());
+            LOG.debug("skip pulling changes, because pull strategy {}", strategy.getClass());
         }
     }
 
@@ -94,7 +94,7 @@ public class GitClient implements AutoCloseable {
     private void checkSearchIndex() throws IOException {
         File searchIndex = directoryResolver.resolveSearchIndex(wiki.getId());
         if (!searchIndex.exists()) {
-            if (!searchIndex.mkdirs()){
+            if (!searchIndex.mkdirs()) {
                 throw new IOException("failed to create directory for search index: " + searchIndex);
             }
             createRepositoryChangedEvent();
@@ -102,7 +102,7 @@ public class GitClient implements AutoCloseable {
     }
 
     @VisibleForTesting
-    protected Git open() throws IOException {
+    Git open() throws IOException {
         if (gitRepository == null) {
             gitRepository = Git.open(repository);
         }
@@ -130,20 +130,16 @@ public class GitClient implements AutoCloseable {
 
     public List<RevCommit> findCommits(String path) throws IOException, GitAPIException {
         Git git = open();
-        List<RevCommit> commits = new ArrayList<>();
-        Iterator<RevCommit> iterator = git.log()
-                .addPath(path)
-                .call()
-                .iterator();
 
-        if (iterator.hasNext()) {
-            iterator.forEachRemaining(commits::add);
-        }
-
-        return commits;
+        return ImmutableList.copyOf(
+                git
+                        .log()
+                        .addPath(path)
+                        .call()
+                        .iterator());
     }
 
-    private void pullChanges()  throws GitAPIException, IOException {
+    private void pullChanges() throws GitAPIException, IOException {
         LOG.trace("open repository {}", repository);
         Git git = open();
 
@@ -211,10 +207,10 @@ public class GitClient implements AutoCloseable {
     }
 
     private boolean hasRepositoryChanged(ObjectId oldHead, ObjectId head) {
-        return ! head.equals(oldHead);
+        return !head.equals(oldHead);
     }
 
-    private void createClone()  throws GitAPIException, IOException {
+    private void createClone() throws GitAPIException, IOException {
         String branch = wiki.getId().getBranch();
         LOG.info("clone repository {} to {}", wiki.getRepositoryUrl(), repository);
         gitRepository = Git.cloneRepository()
@@ -284,7 +280,7 @@ public class GitClient implements AutoCloseable {
     public RevCommit commit(String[] paths, String displayName, String email, String message) throws GitAPIException, IOException {
         Git git = open();
 
-        for(String path : paths ) {
+        for (String path : paths) {
             git.add()
                     .addFilepattern(path)
                     .call();
@@ -313,7 +309,6 @@ public class GitClient implements AutoCloseable {
         Git git = open();
         RevTree tree = commit.getTree();
         try (TreeWalk treeWalk = new TreeWalk(git.getRepository())) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
             treeWalk.addTree(tree);
             treeWalk.setRecursive(true);
             treeWalk.setFilter(PathFilter.create(path));
@@ -321,10 +316,15 @@ public class GitClient implements AutoCloseable {
                 return Optional.empty();
             }
             ObjectId objectId = treeWalk.getObjectId(0);
-            ObjectLoader loader = git.getRepository().open(objectId);
-            loader.copyTo(baos);
-            return Optional.of(new String(baos.toByteArray()));
+            return Optional.of(readContent(objectId));
         }
+    }
+
+    private String readContent(ObjectId objectId) throws IOException {
+        ObjectLoader loader = open().getRepository().open(objectId);
+        ByteArrayOutputStream resultBytes = new ByteArrayOutputStream();
+        loader.copyTo(resultBytes);
+        return new String(resultBytes.toByteArray());
     }
 
     private void pushChanges() throws GitAPIException, IOException {
@@ -336,13 +336,13 @@ public class GitClient implements AutoCloseable {
         LOG.info("push changes to remote {} on branch {}", wiki.getRepositoryUrl(), branch);
         git.push()
                 .setRemote("origin")
-                .setRefSpecs(new RefSpec(branch+":"+branch))
+                .setRefSpecs(new RefSpec(branch + ":" + branch))
                 .setCredentialsProvider(credentials)
                 .call();
     }
 
     @Override
-    public void close()  {
+    public void close() {
         if (gitRepository != null) {
             gitRepository.close();
         }

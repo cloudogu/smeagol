@@ -30,7 +30,7 @@ public class MovePageCommandHandler implements CommandHandler<Page, MovePageComm
     public Page handle(MovePageCommand command) {
         Path source = command.getSource();
         Page page = repository.findByWikiIdAndPath(command.getWikiId(), source)
-                .orElseThrow(() -> new PageNotFoundException(source, "page not found"));
+                .orElseThrow(() -> new PageNotFoundException(source));
 
         Path target = command.getTarget();
         if (repository.exists(command.getWikiId(), target)) {
