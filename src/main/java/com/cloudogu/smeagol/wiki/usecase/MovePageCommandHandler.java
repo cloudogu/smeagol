@@ -1,6 +1,5 @@
 package com.cloudogu.smeagol.wiki.usecase;
 
-import com.cloudogu.smeagol.Account;
 import com.cloudogu.smeagol.AccountService;
 import com.cloudogu.smeagol.wiki.domain.*;
 import de.triology.cb.CommandHandler;
@@ -8,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
+import static com.cloudogu.smeagol.wiki.usecase.Commits.createNewCommit;
 
 /**
  * Handler for {@link MovePageCommand}.
@@ -31,14 +30,14 @@ public class MovePageCommandHandler implements CommandHandler<Page, MovePageComm
     public Page handle(MovePageCommand command) {
         Path source = command.getSource();
         Page page = repository.findByWikiIdAndPath(command.getWikiId(), source)
-                .orElseThrow(() -> new PageNotFoundException(source, "page not found"));
+                .orElseThrow(() -> new PageNotFoundException(source));
 
         Path target = command.getTarget();
         if (repository.exists(command.getWikiId(), target)) {
             throw new PageAlreadyExistsException(target, "the page already exists");
         }
 
-        Commit commit = createNewCommit(command.getMessage());
+        Commit commit = createNewCommit(accountService, command.getMessage());
 
         page.move(commit, target);
 
@@ -48,16 +47,5 @@ public class MovePageCommandHandler implements CommandHandler<Page, MovePageComm
         publisher.publishEvent(new PageCreatedEvent(movedPage));
 
         return movedPage;
-    }
-
-    private Commit createNewCommit(Message message) {
-        Account account = accountService.get();
-
-        Author author = new Author(
-                DisplayName.valueOf(account.getDisplayName()),
-                Email.valueOf(account.getMail())
-        );
-
-        return new Commit(Instant.now(), author, message);
     }
 }

@@ -21,9 +21,11 @@ type Props = {
     page: any,
     wiki: any,
     pagesLink: string,
+    historyLink: string,
     onDeleteClick: () => void,
     onHomeClick: () => void,
     onOkMoveClick: () => void,
+    onRestoreClick: () => void,
     search: (string) => void,
     history: any,
     classes: any
@@ -88,16 +90,24 @@ class PageHeader extends React.Component<Props,State> {
         });
     };
 
+    onRestoreClick = () => {
+        const pagePath = this.props.page.path;
+        const commit = this.props.page.commit.commitId;
+        this.props.onRestoreClick(pagePath, commit);
+    };
+
 
     render() {
-        const { page, pagesLink, classes, onDeleteClick, onHomeClick, search } = this.props;
+        const { page, pagesLink, classes, onDeleteClick, onHomeClick, historyLink, search } = this.props;
 
         const homeButton = <ActionButton onClick={onHomeClick}  i18nKey="page-header_home" type="primary" />;
         const createButton = <ActionButton onClick={this.onCreateClick} i18nKey="page-header_create" type="primary" />;
         const pagesButton = <ActionLink to={ pagesLink }  i18nKey="page-header_pages" type="primary" />;
+        const historyButton = <ActionLink to={ historyLink }  i18nKey="page-header_history" type="primary" />;
         const edit = page._links.edit ? <ActionLink to="?edit=true" i18nKey="page-header_edit" type="primary" /> : '';
         const moveButton = page._links.move ? <ActionButton onClick={this.onMoveClick} i18nKey="page-header_move" type="primary" /> : '';
         const deleteButton = page._links.delete ? <ActionButton onClick={onDeleteClick} i18nKey="page-header_delete" type="primary" /> : '';
+        const restoreButton = page._links.restore ? <ActionButton onClick={this.onRestoreClick} i18nKey="page-header_restore" type="primary" /> : '';
         const createForm = <PageNameForm show={ this.state.showCreateForm } onOk={ this.onOkCreate } onAbortClick={ this.onAbortCreateClick } labelPrefix="create" />
         const moveForm = <PageNameForm show={ this.state.showMoveForm } onOk={ this.onOkMoveClick } onAbortClick={ this.onAbortMoveClick } labelPrefix="move" />
 
@@ -110,8 +120,10 @@ class PageHeader extends React.Component<Props,State> {
                         {createButton}
                         {moveButton}
                         {pagesButton}
+                        {historyButton}
                         {edit}
                         {deleteButton}
+                        {restoreButton}
                     </div>
                     <div className="col-xs-3">
                         <SearchBar search={search}/>

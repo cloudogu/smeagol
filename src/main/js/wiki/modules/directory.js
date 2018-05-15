@@ -29,12 +29,6 @@ function fetchDirectory(url) {
     return function(dispatch) {
         dispatch(requestDirectory(url));
         return apiClient.get(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('server returned status code' + response.status);
-                }
-                return response;
-            })
             .then(response => response.json())
             .then(json => dispatch(receiveDirectory(url, json)))
             .catch((err) => {

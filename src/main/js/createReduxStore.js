@@ -8,6 +8,7 @@ import repository from './repository/modules/repository';
 import wiki from './wiki/modules/wiki';
 import page from './wiki/modules/page';
 import directory from './wiki/modules/directory';
+import pagehistory from './wiki/modules/pagehistory';
 import search from "./wiki/modules/search";
 
 function createReduxStore(history) {
@@ -20,6 +21,7 @@ function createReduxStore(history) {
         wiki,
         page,
         directory,
+        pagehistory,
         search
     });
 

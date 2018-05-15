@@ -3,6 +3,8 @@ import Backend from 'i18next-fetch-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { reactI18nextModule } from 'react-i18next';
 
+import 'moment/locale/de';
+
 const loadPath = process.env.PUBLIC_URL + '/locales/{{lng}}/{{ns}}.json';
 
 i18n

@@ -1,6 +1,6 @@
 //@flow
 import React from 'react';
-import {editPage, createPage, createPageUrl, fetchPageIfNeeded, deletePage, movePage} from '../modules/page';
+import {editPage, createPage, createPageUrl, fetchPageIfNeeded, deletePage, movePage, restorePage} from '../modules/page';
 import {createId, fetchWikiIfNeeded} from '../modules/wiki';
 import {connect} from 'react-redux';
 import PageViewer from '../components/PageViewer';
@@ -10,6 +10,7 @@ import Loading from '../../Loading';
 import I18nAlert from '../../I18nAlert';
 
 type Props = {
+    historyLink: string,
     pagesLink: string,
     url: string,
     path: string,
@@ -26,7 +27,8 @@ type Props = {
     fetchWikiIfNeeded: (repository: string, branch: string) => void,
     editPage: (url: string, message: string, content: string) => void,
     createPage: (url: string, message: string, content: string) => void,
-    onDelete: (url: string, message: string, callback: () => void) => void
+    onDelete: (url: string, message: string, callback: () => void) => void,
+    restorePage: (url: string, message: string, commit: string) => void
 };
 
 class Page extends React.Component<Props> {
@@ -50,7 +52,7 @@ class Page extends React.Component<Props> {
     };
 
     pushLandingPageState = () => {
-        this.pushPageState(this.props.wiki.landingPage);
+        this.pushPageStateClosure(this.props.wiki.landingPage)();
     };
 
     delete = () => {
@@ -64,12 +66,22 @@ class Page extends React.Component<Props> {
         const { path, url, movePage } = this.props;
         // TODO i18n
         const message = 'Move page ' + path + ' to ' + target + ' (smeagol)';
-        movePage(url, message, target, this.pushPageState);
+        movePage(url, message, target, this.pushPageStateClosure(target));
     };
 
-    pushPageState = (pagePath: string) => {
+    onRestore = (pagePath: string, commit: string) => {
+        const { restorePage, repository, branch } = this.props;
+        // TODO i18n
+        const message = 'Restore commit ' + commit + ' from page '+ pagePath + ' (smeagol)';
+        const apiPath = createPageUrl(repository, branch, pagePath);
+        restorePage(apiPath, message, commit, this.pushPageStateClosure(pagePath));
+    };
+
+    pushPageStateClosure = (pagePath: string) => {
         const { history, repository, branch } = this.props;
-        history.push(`/${repository}/${branch}/${pagePath}`);
+        return function() {
+            history.push(`/${repository}/${branch}/${pagePath}`);
+        }
     };
 
     onAbortEdit= () => {
@@ -87,7 +99,7 @@ class Page extends React.Component<Props> {
     };
 
     render() {
-        const { error, loading, page, wiki, repository, branch, path, notFound, editMode, pagesLink } = this.props;
+        const { error, loading, page, wiki, repository, branch, path, notFound, editMode, pagesLink, historyLink } = this.props;
         wiki.repository = repository;
         wiki.branch = branch;
 
@@ -121,7 +133,10 @@ class Page extends React.Component<Props> {
             return <PageEditor path={page.path} content={page.content} onSave={this.edit} onAbort={this.onAbortEdit} />;
         }
 
-        return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState } onMove={ this.onMove } pagesLink={pagesLink} search={this.search} />;
+        return <PageViewer page={page} wiki={wiki} onDelete={ this.delete } onHome={ this.pushLandingPageState }
+                           onMove={ this.onMove } pagesLink={pagesLink} historyLink={historyLink}
+                           onRestore={this.onRestore} search={this.search}/>;
+
     }
 }
 
@@ -130,23 +145,41 @@ function isEditMode(props): boolean {
     return queryParams.edit === 'true';
 }
 
+function isCommitPage(props): boolean {
+    const queryParams = queryString.parse(props.location.search);
+    return queryParams.commit !== undefined;
+}
+
+function getCommitParameter(props): boolean {
+    const queryParams = queryString.parse(props.location.search);
+    return queryParams.commit;
+}
+
 function findPagePath(props) {
     const { pathname } = props.location;
     const parts = pathname.split('/');
     return parts.slice(3).join('/');
 }
 
+
 const mapStateToProps = (state, ownProps) => {
     const { repository, branch } = ownProps.match.params;
     const path = findPagePath(ownProps);
-    const url = createPageUrl(repository, branch, path);
+
+    let url = createPageUrl(repository, branch, path);
+    if(isCommitPage(ownProps)){
+        url += '?commit=' + getCommitParameter(ownProps);
+    }
+
     const wikiId = createId(repository, branch);
     const stateWiki = state.wiki[wikiId] || {};
 
     let pagesLink = '#';
+    let historyLink = '#';
     if (stateWiki.wiki && stateWiki.wiki.directory) {
         pagesLink = `/${repository}/${branch}/pages/${stateWiki.wiki.directory}`;
-        // TODO check for polyfil
+        historyLink = `/${repository}/${branch}/history/${path}`;
+        // TODO check for polyfill
         if (!pagesLink.endsWith('/')) {
             pagesLink += '/';
         }
@@ -155,11 +188,13 @@ const mapStateToProps = (state, ownProps) => {
     const props = {
         ...state.page[url],
         pagesLink,
+        historyLink,
         path,
         url,
         repository,
         branch,
         editMode: isEditMode(ownProps),
+        commitPage: isCommitPage(ownProps),
         wiki: stateWiki.wiki || {}
     };
 
@@ -185,6 +220,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         movePage: (url: string, message: string, target: string, callback: (target) => void) => {
             dispatch(movePage(url, message, target, callback))
+        },
+        restorePage: (url: string, message: string, commit: string, callback: () => void) => {
+            dispatch(restorePage(url, message, commit, callback))
         }
     }
 };

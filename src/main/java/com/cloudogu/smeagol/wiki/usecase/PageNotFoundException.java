@@ -8,8 +8,8 @@ import com.cloudogu.smeagol.wiki.domain.Path;
 public class PageNotFoundException extends RuntimeException {
     private final Path path;
 
-    public PageNotFoundException(Path path, String message) {
-        super(message);
+    public PageNotFoundException(Path path) {
+        super("page not found");
         this.path = path;
     }
 

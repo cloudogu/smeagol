@@ -22,8 +22,10 @@ import org.springframework.context.ApplicationEventPublisher;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
+import static com.cloudogu.smeagol.wiki.DomainTestData.COMMIT_ID;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,8 +59,7 @@ public class GitClientTest {
         remoteDirectory = temporaryFolder.newFolder();
         remote = createGitRepo(remoteDirectory);
 
-        targetDirectory = temporaryFolder.newFolder();
-        targetDirectory.delete();
+        targetDirectory = new File(temporaryFolder.getRoot(), "target");
 
         targetSearchIndexDirectory = temporaryFolder.newFolder();
         when(directoryResolver.resolveSearchIndex(wikiId)).thenReturn(targetSearchIndexDirectory);
@@ -157,6 +158,69 @@ public class GitClientTest {
 
         Optional<RevCommit> commit = target.lastCommit("b.md");
         assertEquals("added b.md", commit.get().getFullMessage());
+    }
+
+    @Test
+    public void testCommits() throws IOException, GitAPIException {
+        try (Git git = Git.init().setDirectory(targetDirectory).call()) {
+            commit(git, "b.md", "# My Headline");
+            commit(git, "b.md", "# My Headline2");
+        }
+
+        List<RevCommit> commits = target.findCommits("b.md");
+        assertEquals("added b.md", commits.get(0).getFullMessage());
+        assertEquals("added b.md", commits.get(1).getFullMessage());
+    }
+
+    @Test
+    public void testGetCommitFromId() throws IOException, GitAPIException {
+        RevCommit rc;
+        try (Git git = Git.init().setDirectory(targetDirectory).call()) {
+            rc = commit(git, "b.md", "# My Headline");
+            commit(git, "b.md", "# My Headline2");
+        }
+        RevCommit receivedRc = target.getCommitFromId(rc.getId().getName());
+
+        assertEquals(rc, receivedRc);
+    }
+
+    @Test(expected = IOException.class)
+    public void testGetCommitFromIdNotFound() throws IOException, GitAPIException {
+        RevCommit rc;
+        try (Git git = Git.init().setDirectory(targetDirectory).call()) {
+            rc = commit(git, "b.md", "# My Headline");
+        }
+        RevCommit receivedRc = target.getCommitFromId(COMMIT_ID.getValue());
+    }
+
+    @Test
+    public void testPathContentAtCommit() throws GitAPIException, IOException {
+        RevCommit rc, rc1;
+        try (Git git = Git.init().setDirectory(targetDirectory).call()) {
+            rc = commit(git, "b.md", "Content 0");
+            rc1 = commit(git, "b.md", "Content 1");
+        }
+        RevCommit receivedRc = target.getCommitFromId(rc.getId().getName());
+        RevCommit receivedRc1 = target.getCommitFromId(rc1.getId().getName());
+
+        Optional<String> content = target.pathContentAtCommit("b.md", receivedRc);
+        Optional<String> content1 = target.pathContentAtCommit("b.md", receivedRc1);
+
+        assertEquals("Content 0", content.get());
+        assertEquals("Content 1", content1.get());
+    }
+
+    @Test
+    public void testPathContentAtCommitNotFound() throws GitAPIException, IOException {
+        RevCommit rc;
+        try (Git git = Git.init().setDirectory(targetDirectory).call()) {
+            rc = commit(git, "b.md", "Content 0");;
+        }
+        RevCommit receivedRc = target.getCommitFromId(rc.getId().getName());
+
+        Optional<String> content = target.pathContentAtCommit("a.md", receivedRc);
+
+        assertFalse(content.isPresent());
     }
 
     @Test

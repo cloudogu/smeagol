@@ -10,33 +10,35 @@ import org.springframework.stereotype.Component;
 import static com.cloudogu.smeagol.wiki.usecase.Commits.createNewCommit;
 
 /**
- * Handler for {@link DeletePageCommand}.
+ * Handler for {@link RestorePageCommand}.
  */
 @Component
-public class DeletePageCommandHandler implements CommandHandler<Void, DeletePageCommand> {
+public class RestorePageCommandHandler implements CommandHandler<Page, RestorePageCommand> {
 
-    private final ApplicationEventPublisher publisher;
     private final PageRepository repository;
     private final AccountService accountService;
+    private final ApplicationEventPublisher publisher;
 
     @Autowired
-    public DeletePageCommandHandler(ApplicationEventPublisher publisher, PageRepository repository, AccountService accountService) {
+    public RestorePageCommandHandler(ApplicationEventPublisher publisher, PageRepository repository, AccountService accountService) {
         this.publisher = publisher;
         this.repository = repository;
         this.accountService = accountService;
     }
 
     @Override
-    public Void handle(DeletePageCommand command) {
+    public Page handle(RestorePageCommand command) {
         Path path = command.getPath();
-        Page page = repository.findByWikiIdAndPath(command.getWikiId(), path)
+        Page page = repository.findByWikiIdAndPathAndCommit(command.getWikiId(), path, command.getCommitId())
                 .orElseThrow(() -> new PageNotFoundException(path));
 
         Commit commit = createNewCommit(accountService, command.getMessage());
+        page.setCommit(commit);
 
-        repository.delete(page, commit);
+        Page restoredPage = repository.save(page);
 
-        publisher.publishEvent(new PageDeletedEvent(page));
-        return null;
+        publisher.publishEvent(new PageModifiedEvent(restoredPage));
+
+        return restoredPage;
     }
 }

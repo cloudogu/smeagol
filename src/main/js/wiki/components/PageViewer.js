@@ -8,20 +8,24 @@ type Props = {
     page: any,
     wiki: any,
     pagesLink: string,
+    historyLink: string,
     onDelete: () => void,
     onHome: () => void,
     onMove: () => void,
+    onRestore: () => void,
     search: (string) => void
 };
 
 class PageViewer extends React.Component<Props> {
 
     render() {
-        const { page, wiki, onDelete, onHome, onMove, pagesLink, search } = this.props;
+        const { page, wiki, onDelete, onHome, onMove, pagesLink, search, historyLink, onRestore } = this.props;
 
         return (
             <div>
-                <PageHeader page={page} wiki={wiki} pagesLink={pagesLink} onDeleteClick={onDelete} onHomeClick={onHome} onOkMoveClick={onMove} search={search} />
+                <PageHeader page={page} wiki={wiki} pagesLink={pagesLink} historyLink={historyLink}
+                            onDeleteClick={onDelete} onHomeClick={onHome} onOkMoveClick={onMove}
+                            onRestoreClick={onRestore} search={search}/>
                 <PageContent page={page} />
                 <PageFooter page={page} />
             </div>

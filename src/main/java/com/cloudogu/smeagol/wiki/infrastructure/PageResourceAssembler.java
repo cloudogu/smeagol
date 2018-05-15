@@ -1,9 +1,6 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import com.cloudogu.smeagol.wiki.domain.Author;
-import com.cloudogu.smeagol.wiki.domain.Commit;
-import com.cloudogu.smeagol.wiki.domain.Page;
-import com.cloudogu.smeagol.wiki.domain.WikiId;
+import com.cloudogu.smeagol.wiki.domain.*;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
@@ -36,15 +33,31 @@ public class PageResourceAssembler extends ResourceAssemblerSupport<Page, PageRe
         return resource;
     }
 
+    public PageResource toCommitFixedResource(Page page) {
+        PageResource resource = new PageResource(
+                page.getPath().getValue(),
+                page.getContent().getValue(),
+                createCommitResource(page.getCommit())
+        );
+        Link linkToPage = selfLink(page);
+        String href = linkToPage.getHref() + "?commit=" + page.getCommit().get().getId().get().getValue();
+        Link linkToPageCommitFixed = new Link(href, linkToPage.getRel());
+        resource.add(linkToPageCommitFixed);
+        resource.add(restoreLink(page));
+
+        return resource;
+    }
+
     private CommitResource createCommitResource(Optional<Commit> optionalCommit) {
         if (!optionalCommit.isPresent()) {
             return null;
         }
 
         Commit commit = optionalCommit.get();
+        String id = commit.getId().get().getValue();
         AuthorResource author = createAuthor(commit.getAuthor());
         String date = createDate(commit.getDate());
-        return new CommitResource(author, date, commit.getMessage().getValue());
+        return new CommitResource(id, author, date, commit.getMessage().getValue());
     }
 
     private String createDate(Instant date) {
@@ -72,6 +85,10 @@ public class PageResourceAssembler extends ResourceAssemblerSupport<Page, PageRe
 
     private Link deleteLink(Page page) {
         return baseLink(page).withRel("delete");
+    }
+
+    private Link restoreLink(Page page) {
+        return baseLink(page).withRel("restore");
     }
 
     private ControllerLinkBuilder baseLink(Page page) {

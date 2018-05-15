@@ -4,6 +4,7 @@ import com.cloudogu.smeagol.wiki.domain.*;
 import com.cloudogu.smeagol.wiki.usecase.CreatePageCommand;
 import com.cloudogu.smeagol.wiki.usecase.DeletePageCommand;
 import com.cloudogu.smeagol.wiki.usecase.EditPageCommand;
+import com.cloudogu.smeagol.wiki.usecase.RestorePageCommand;
 import de.triology.cb.CommandBus;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +25,7 @@ import java.time.Instant;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -56,6 +57,9 @@ public class PageControllerTest {
 
     @Captor
     private ArgumentCaptor<DeletePageCommand> deleteCommandCaptor;
+
+    @Captor
+    private ArgumentCaptor<RestorePageCommand> restoreCommandCaptor;
 
     private MockMvc mockMvc;
 
@@ -103,6 +107,28 @@ public class PageControllerTest {
                 .andExpect(jsonPath("$._links.delete.href", is(self)))
                 .andExpect(jsonPath("$._links.edit.href", is(self)))
                 .andExpect(jsonPath("$._links.move.href", is(self)));
+    }
+
+    @Test
+    public void findByWikiIdAndPathAndCommit() throws Exception {
+        WikiId wikiId = new WikiId("4xQfahsId3", "master");
+        Path path = Path.valueOf("docs/Home");
+        Page page = createTestPage(wikiId, path);
+        String commitId = page.getCommit().get().getId().get().getValue();
+
+        String pagePath = "/api/v1/repositories/4xQfahsId3/branches/master/pages/docs/Home";
+        String requestPath = pagePath + "?commit=" + commitId;
+        String self = "http://localhost" + requestPath;
+
+
+        when(pageRepository.findByWikiIdAndPathAndCommit(wikiId, path, CommitId.valueOf(commitId))).thenReturn(Optional.of(page));
+        mockMvc.perform(MockMvcRequestBuilders.get(requestPath)
+                .contentType("application/json"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._links.self.href", is(self)))
+                .andExpect(jsonPath("$._links.restore.href", is("http://localhost" + pagePath)));
+
+        verify(pageRepository).findByWikiIdAndPathAndCommit(wikiId, path, CommitId.valueOf(commitId));
     }
 
     @Test
@@ -175,5 +201,25 @@ public class PageControllerTest {
         assertEquals(wikiId, pageCommand.getWikiId());
         assertEquals(path, pageCommand.getPath());
         assertEquals("Hello", pageCommand.getMessage().getValue());
+    }
+
+    @Test
+    public void restore() throws Exception {
+        WikiId wikiId = new WikiId("4xQfahsId3", "master");
+        Path path = Path.valueOf("docs/Home");
+
+        String content = "{\"restore\": \"42\", \"message\": \"Hello\"}";
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/repositories/4xQfahsId3/branches/master/pages/docs/Home")
+                .content(content)
+                .contentType("application/json"))
+                .andExpect(status().isNoContent());
+
+        verify(commandBus).execute(restoreCommandCaptor.capture());
+
+        RestorePageCommand pageCommand = restoreCommandCaptor.getValue();
+        assertEquals(wikiId, pageCommand.getWikiId());
+        assertEquals(path, pageCommand.getPath());
+        assertEquals("Hello", pageCommand.getMessage().getValue());
+        assertEquals("42", pageCommand.getCommitId().getValue());
     }
 }

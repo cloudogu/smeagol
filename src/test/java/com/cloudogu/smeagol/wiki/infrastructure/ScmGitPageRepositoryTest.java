@@ -1,9 +1,6 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import com.cloudogu.smeagol.wiki.domain.Author;
-import com.cloudogu.smeagol.wiki.domain.Page;
-import com.cloudogu.smeagol.wiki.domain.Path;
-import com.cloudogu.smeagol.wiki.domain.WikiId;
+import com.cloudogu.smeagol.wiki.domain.*;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.eclipse.jgit.api.Git;
@@ -24,6 +21,7 @@ import java.util.Optional;
 
 import static com.cloudogu.smeagol.wiki.DomainTestData.*;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -96,6 +94,37 @@ public class ScmGitPageRepositoryTest {
         }
     }
 
+    @Test
+    public void testFindByWikiIdAndPathAndCommit() throws Exception {
+        CommitId commitId = COMMIT_ID;
+        RevCommit rc = createRevCommit();
+        when(gitClient.getCommitFromId(commitId.getValue())).thenReturn(rc);
+        when(gitClient.pathContentAtCommit(Pages.filepath(Path.valueOf("Home")), rc)).thenReturn(Optional.of("Content 0"));
+        Optional<Page> optionalPage = pageRepository.findByWikiIdAndPathAndCommit(wikiId, Path.valueOf("Home"), commitId);
+        assertEquals("Content 0", optionalPage.get().getContent().getValue());
+    }
+
+    @Test(expected = MalformedCommitIdException.class)
+    public void testFindByWikiIdAndPathAndCommitWithIncorrectCommit() throws Exception {
+        File repository = temporaryFolder.newFolder();
+        try (Git git = Git.init().setDirectory(repository).call()) {
+            when(gitClient.getCommitFromId(anyString())).thenCallRealMethod();
+            when(gitClient.open()).thenReturn(git);
+            Optional<Page> optionalPage = pageRepository.findByWikiIdAndPathAndCommit(wikiId, Path.valueOf("Home"), CommitId.valueOf("123"));
+        }
+    }
+
+    @Test
+    public void testFindByWikiIdAndPathAndCommitWithNonExistingCommit() throws Exception {
+        File repository = temporaryFolder.newFolder();
+        try (Git git = Git.init().setDirectory(repository).call()) {
+            when(gitClient.getCommitFromId(anyString())).thenCallRealMethod();
+            when(gitClient.open()).thenReturn(git);
+            Optional<Page> optionalPage = pageRepository.findByWikiIdAndPathAndCommit(wikiId, Path.valueOf("Home"), COMMIT_ID);
+            assertFalse(optionalPage.isPresent());
+        }
+    }
+    
     @Test
     public void testDelete() throws IOException, GitAPIException {
         File file = temporaryFolder.newFile();

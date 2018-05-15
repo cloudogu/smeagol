@@ -5,18 +5,22 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.Files;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.errors.InvalidObjectIdException;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Optional;
 
 @Service
 public class ScmGitPageRepository implements PageRepository {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ScmGitPageRepository.class);
 
     private final GitClientProvider gitClientProvider;
 
@@ -39,18 +43,46 @@ public class ScmGitPageRepository implements PageRepository {
         String pagePath = Pages.filepath(path);
         File file = client.file(pagePath);
 
+        Optional<Page> page = Optional.empty();
         if (file.exists()) {
-            Optional<RevCommit> optCommit = client.lastCommit(pagePath);
-            if (optCommit.isPresent()) {
-                Content content = createContent(file);
-                Commit commit = createCommit(optCommit.get());
-
-                Page page = new Page(id, path, content, commit);
-                return Optional.of(page);
-            }
+            page = createPageFromFile(client, id, path, pagePath, file);
         }
 
+        return page;
+    }
+
+    private Optional<Page> createPageFromFile(GitClient client, WikiId id, Path path, String pagePath, File file) throws IOException, GitAPIException {
+        Optional<RevCommit> optCommit = client.lastCommit(pagePath);
+        if (optCommit.isPresent()) {
+            Content content = createContent(file);
+            Commit commit = ScmGit.createCommit(optCommit.get());
+
+            return Optional.of(new Page(id, path, content, commit));
+        }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<Page> findByWikiIdAndPathAndCommit(WikiId wikiId, Path path, CommitId commitId) {
+        try (GitClient client = gitClientProvider.createGitClient(wikiId)) {
+            client.refresh();
+            return createPageFromFileAtCommit(client, wikiId, path, commitId);
+        } catch (InvalidObjectIdException ex) {
+            throw new MalformedCommitIdException(commitId, ex);
+        } catch (MissingObjectException ex) {
+            LOG.debug("Catch MissingObjectException and return empty page", ex);
+            return Optional.empty();
+        } catch (IOException | GitAPIException ex) {
+            throw Throwables.propagate(ex);
+        }
+    }
+
+    private Optional<Page> createPageFromFileAtCommit(GitClient client, WikiId wikiId, Path path, CommitId commitId) throws IOException {
+        RevCommit revCommit = client.getCommitFromId(commitId.getValue());
+        Optional<String> optFileContent = client.pathContentAtCommit(Pages.filepath(path), revCommit);
+        return optFileContent
+                .map(Content::valueOf)
+                .map(c -> createPage(wikiId, path, revCommit, c));
     }
 
     public void delete(Page page, Commit commit) {
@@ -83,18 +115,6 @@ public class ScmGitPageRepository implements PageRepository {
         return Content.valueOf(Files.toString(file, Charsets.UTF_8));
     }
 
-    private Commit createCommit(RevCommit revCommit) {
-        CommitId id = CommitId.valueOf(revCommit.getId().getName());
-        Author author = createAuthor(revCommit.getAuthorIdent());
-        Instant lastModified = Instant.ofEpochSecond(revCommit.getCommitTime());
-        Message message = Message.valueOf(revCommit.getFullMessage());
-        return new Commit(id, lastModified, author, message);
-    }
-
-    private Author createAuthor(PersonIdent ident) {
-        return new Author(DisplayName.valueOf(ident.getName()), Email.valueOf(ident.getEmailAddress()));
-    }
-
     @Override
     public Page save(Page page) {
         if (page.getOldPath().isPresent()) {
@@ -125,10 +145,14 @@ public class ScmGitPageRepository implements PageRepository {
                     commit.getMessage().getValue()
             );
 
-            return new Page(page.getWikiId(), path, content, createCommit(revCommit));
+            return createPage(page.getWikiId(), path, revCommit, content);
         } catch (IOException | GitAPIException ex) {
             throw Throwables.propagate(ex);
         }
+    }
+
+    private Page createPage(WikiId wikiId, Path path, RevCommit revCommit, Content content) {
+        return new Page(wikiId, path, content, ScmGit.createCommit(revCommit));
     }
 
     private Page move(Page page) {
@@ -156,7 +180,7 @@ public class ScmGitPageRepository implements PageRepository {
                     commit.getMessage().getValue()
             );
 
-            return new Page(id, Path.valueOf(targetPath), Path.valueOf(sourcePath), page.getContent(), createCommit(revCommit));
+            return new Page(id, Path.valueOf(targetPath), Path.valueOf(sourcePath), page.getContent(), ScmGit.createCommit(revCommit));
         } catch (IOException | GitAPIException ex) {
             throw Throwables.propagate(ex);
         }
