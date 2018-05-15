@@ -130,7 +130,7 @@ public class GitClient implements AutoCloseable {
 
     public List<RevCommit> findCommits(String path) throws IOException, GitAPIException {
         Git git = open();
-        // REVIEW no need for manual copy
+
         return ImmutableList.copyOf(
                 git
                         .log()
@@ -309,7 +309,6 @@ public class GitClient implements AutoCloseable {
         Git git = open();
         RevTree tree = commit.getTree();
         try (TreeWalk treeWalk = new TreeWalk(git.getRepository())) {
-            // REVIEW split up long method
             treeWalk.addTree(tree);
             treeWalk.setRecursive(true);
             treeWalk.setFilter(PathFilter.create(path));

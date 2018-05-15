@@ -6,7 +6,6 @@ import java.util.Objects;
 
 public class CommitResource extends ResourceSupport {
 
-    // REVIEW immutability :-)
     private final String commitId;
     private final AuthorResource author;
     private final String date;

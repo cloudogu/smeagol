@@ -9,8 +9,6 @@ public class MalformedCommitIdException extends RuntimeException {
 
     private final CommitId commitId;
 
-    // REVIEW DRY (individual messages were not used)
-
     public MalformedCommitIdException(CommitId commitId, Throwable cause) {
         super("Malformed commitId: " + commitId.getValue(), cause);
         this.commitId = commitId;

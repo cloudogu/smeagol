@@ -15,23 +15,20 @@ import static java.util.stream.Collectors.toList;
 public class ScmGitCommitRepository implements CommitRepository {
 
     private final GitClientProvider gitClientProvider;
-    private final ScmGit scmGit;
 
     @Autowired
-    public ScmGitCommitRepository(GitClientProvider gitClientProvider, ScmGit scmGit) {
+    public ScmGitCommitRepository(GitClientProvider gitClientProvider) {
         this.gitClientProvider = gitClientProvider;
-        this.scmGit = scmGit;
     }
 
     @Override
     public History findHistoryByWikiIdAndPath(WikiId id, Path path) {
         try (GitClient client = gitClientProvider.createGitClient(id)) {
             client.refresh();
-            // REVIEW more readable?
             List<Commit> commits = client
                     .findCommits(Pages.filepath(path))
                     .stream()
-                    .map(scmGit::createCommit)
+                    .map(ScmGit::createCommit)
                     .collect(toList());
             return new History(id, path, commits);
         } catch (IOException | GitAPIException ex) {

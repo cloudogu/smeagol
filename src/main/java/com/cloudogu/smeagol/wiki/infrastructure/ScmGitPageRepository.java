@@ -55,7 +55,7 @@ public class ScmGitPageRepository implements PageRepository {
         Optional<RevCommit> optCommit = client.lastCommit(pagePath);
         if (optCommit.isPresent()) {
             Content content = createContent(file);
-            Commit commit = new ScmGit().createCommit(optCommit.get());
+            Commit commit = ScmGit.createCommit(optCommit.get());
 
             return Optional.of(new Page(id, path, content, commit));
         }
@@ -80,7 +80,6 @@ public class ScmGitPageRepository implements PageRepository {
     private Optional<Page> createPageFromFileAtCommit(GitClient client, WikiId wikiId, Path path, CommitId commitId) throws IOException {
         RevCommit revCommit = client.getCommitFromId(commitId.getValue());
         Optional<String> optFileContent = client.pathContentAtCommit(Pages.filepath(path), revCommit);
-        // REVIEW simplification
         return optFileContent
                 .map(Content::valueOf)
                 .map(c -> createPage(wikiId, path, revCommit, c));
@@ -152,9 +151,8 @@ public class ScmGitPageRepository implements PageRepository {
         }
     }
 
-    // REVIEW used more than once...
-    private Page createPage(WikiId wikiId, Path path, RevCommit revCommit, Content c) {
-        return new Page(wikiId, path, c, new ScmGit().createCommit(revCommit));
+    private Page createPage(WikiId wikiId, Path path, RevCommit revCommit, Content content) {
+        return new Page(wikiId, path, content, ScmGit.createCommit(revCommit));
     }
 
     private Page move(Page page) {
@@ -182,7 +180,7 @@ public class ScmGitPageRepository implements PageRepository {
                     commit.getMessage().getValue()
             );
 
-            return new Page(id, Path.valueOf(targetPath), Path.valueOf(sourcePath), page.getContent(), new ScmGit().createCommit(revCommit));
+            return new Page(id, Path.valueOf(targetPath), Path.valueOf(sourcePath), page.getContent(), ScmGit.createCommit(revCommit));
         } catch (IOException | GitAPIException ex) {
             throw Throwables.propagate(ex);
         }

@@ -11,7 +11,6 @@ public class HistoryResource extends ResourceSupport {
     private final String path;
     private final List<CommitResource> commits;
 
-    // REVIEW should not be created manually
     HistoryResource(String path, List<CommitResource> commits) {
         this.path = path;
         this.commits = commits;

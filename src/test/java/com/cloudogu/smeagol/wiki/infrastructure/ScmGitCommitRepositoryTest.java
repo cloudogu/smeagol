@@ -8,9 +8,9 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Arrays;
 
@@ -20,34 +20,29 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(ScmGit.class)
 public class ScmGitCommitRepositoryTest {
 
-    @Mock
-    private GitClientProvider gitClientProvider;
+    private GitClientProvider gitClientProvider = mock(GitClientProvider.class);
 
-    @Mock
-    private GitClient gitClient;
+    private GitClient gitClient = mock(GitClient.class);
 
-    @Mock
-    private ScmGit scmGit;
-
-    @InjectMocks
-    private ScmGitCommitRepository commitRepository;
+    private ScmGitCommitRepository commitRepository = new ScmGitCommitRepository(gitClientProvider);
 
     @Before
     public void setUp() {
         when(gitClientProvider.createGitClient(WIKI_ID_42)).thenReturn(gitClient);
     }
 
-    // REVIEW a bit complicated and confusing due to commit creation
-
     @Test
     public void testFindHistoryByWikiIdAndPath() throws Exception {
         RevCommit revCommit = mock(RevCommit.class);
         Commit commit = mock(Commit.class);
-        when(scmGit.createCommit(revCommit)).thenReturn(commit);
+
         when(gitClient.findCommits("Home.md")).thenReturn(Arrays.asList(revCommit));
+        PowerMockito.mockStatic(ScmGit.class);
+        when(ScmGit.createCommit(revCommit)).thenReturn(commit);
 
         WikiId id = WIKI_ID_42;
         Path path = Path.valueOf("Home");
