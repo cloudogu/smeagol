@@ -179,12 +179,9 @@ const mapStateToProps = (state, ownProps) => {
     if (stateWiki.wiki && stateWiki.wiki.directory) {
         pagesLink = `/${repository}/${branch}/pages/${stateWiki.wiki.directory}`;
         historyLink = `/${repository}/${branch}/history/${path}`;
-        // TODO check for polyfil
+        // TODO check for polyfill
         if (!pagesLink.endsWith('/')) {
             pagesLink += '/';
-        }
-        if(!historyLink.endsWith('/')){
-            historyLink += '/';
         }
     }
 

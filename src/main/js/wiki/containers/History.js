@@ -15,7 +15,6 @@ type Props = {
     directory: any,
     repository: string,
     branch: string,
-    path: string,
     page: string,
     url: string,
     t: any,
@@ -81,21 +80,15 @@ function findDirectoryPath(props) {
     return parts.slice(4).join('/');
 }
 
-function findPage(path) {
-    return path.substr(0, path.length-1);
-}
-
 const mapStateToProps = (state, ownProps) => {
     const { repository, branch } = ownProps.match.params;
-    const path = findDirectoryPath(ownProps);
-    const page = findPage(path);
+    const page = findDirectoryPath(ownProps);
     const url = createHistoryUrl(repository, branch, page);
     return {
         ...state.pagehistory[url],
         repository,
         branch,
         url,
-        path,
         page
     }
 };
