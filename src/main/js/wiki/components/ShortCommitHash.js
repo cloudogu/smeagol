@@ -3,7 +3,6 @@ import React from 'react';
 import injectSheet from 'react-jss';
 import {Link} from 'react-router-dom';
 
-// REVIEW copy/paste styles?
 const styles = {};
 
 type Props = {
