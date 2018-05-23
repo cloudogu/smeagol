@@ -16,7 +16,8 @@ export function createHistoryUrl(repositoryId: string, branch: string, path: str
 
 export function fetchHistoryIfNeeded(url: string) {
     return function(dispatch, getState) {
-        if (shouldFetchHistory(getState(), url)) {
+        console.log(getState().timestamp.time + "..." + Date.now());
+        if (shouldFetchHistory(getState(), url) || (getState().timestamp.time + 10000 < Date.now())) {
             dispatch(fetchHistory(url));
         }
     }

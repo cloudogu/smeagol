@@ -12,7 +12,7 @@ export function createSearchUrl(repositoryId: string, branch: string, query: str
 
 export function fetchSearchResultsIfNeeded(url: string) {
     return function(dispatch, getState) {
-        if (shouldFetchSearchResults(getState(), url)) {
+        if (shouldFetchSearchResults(getState(), url)|| (getState().timestamp.time + 10000 < Date.now())) {
             dispatch(fetchSearchResults(url));
         }
     }

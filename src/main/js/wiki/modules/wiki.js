@@ -58,7 +58,7 @@ export function shouldFetchWiki(state: any, repositoryId: string, branch: string
 
 export function fetchWikiIfNeeded(repositoryId: string, branch: string) {
     return function(dispatch, getState) {
-        if (shouldFetchWiki(getState(), repositoryId, branch)) {
+        if (shouldFetchWiki(getState(), repositoryId, branch)|| (getState().timestamp.time + 10000 < Date.now())) {
             dispatch(fetchWiki(repositoryId, branch));
         }
     };

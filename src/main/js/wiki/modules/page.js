@@ -93,7 +93,7 @@ export function shouldFetchPage(state: any, url: string): boolean {
 
 export function fetchPageIfNeeded(url: string) {
     return function(dispatch, getState) {
-        if (shouldFetchPage(getState(), url)) {
+        if (shouldFetchPage(getState(), url)|| (getState().timestamp.time + 10000 < Date.now())) {
             dispatch(fetchPage(url));
         }
     }

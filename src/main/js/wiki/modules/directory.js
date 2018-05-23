@@ -12,7 +12,7 @@ export function createDirectoryUrl(repositoryId: string, branch: string, path: s
 
 export function fetchDirectoryIfNeeded(url: string) {
     return function(dispatch, getState) {
-        if (shouldFetchDirectory(getState(), url)) {
+        if (shouldFetchDirectory(getState(), url)|| (getState().timestamp.time + 10000 < Date.now())) {
             dispatch(fetchDirectory(url));
         }
     }

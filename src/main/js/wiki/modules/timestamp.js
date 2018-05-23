@@ -2,7 +2,6 @@
 const FETCH_TIMESTAMP = 'smeagol/timestamp/FETCH';
 
 export function requestTimestamp() {
-    console.log("test");
     return {
         type: FETCH_TIMESTAMP
     };
