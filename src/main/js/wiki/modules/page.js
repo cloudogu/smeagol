@@ -1,5 +1,7 @@
 //@flow
 import {apiClient, PAGE_NOT_FOUND_ERROR} from '../../apiclient';
+import {requestTimestamp} from './timestamp';
+
 
 const FETCH_PAGE = 'smeagol/page/FETCH';
 const FETCH_PAGE_SUCCESS = 'smeagol/page/FETCH_SUCCESS';
@@ -59,6 +61,7 @@ function pageNotFound(url: string) {
 
 function fetchPage(url: string) {
     return function(dispatch) {
+        dispatch(requestTimestamp());
         dispatch(requestPage(url));
         return apiClient.get(url)
             .then(response => {

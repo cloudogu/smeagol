@@ -1,5 +1,6 @@
 // @flow
 import { apiClient } from '../../apiclient';
+import {requestTimestamp} from './timestamp';
 
 const FETCH_HISTORY = 'smeagol/history/FETCH';
 const FETCH_HISTORY_SUCCESS = 'smeagol/history/FETCH_SUCCESS';
@@ -31,6 +32,7 @@ function shouldFetchHistory(state, url) {
 
 function fetchHistory(url) {
     return function(dispatch) {
+        dispatch(requestTimestamp());
         dispatch(requestHistory(url));
         return apiClient.get(url)
             .then(response => response.json())

@@ -1,4 +1,6 @@
 import {apiClient} from "../../apiclient";
+import {requestTimestamp} from './timestamp';
+
 
 const FETCH_SEARCH = 'smeagol/search/FETCH';
 const FETCH_SEARCH_SUCCESS = 'smeagol/search/FETCH_SUCCESS';
@@ -26,6 +28,7 @@ export function shouldFetchSearchResults(state: any, url: string): boolean {
 
 function fetchSearchResults(url: string) {
     return function(dispatch) {
+        dispatch(requestTimestamp());
         dispatch(requestSearchResults(url));
         return apiClient.get(url)
             .then(response => response.json())

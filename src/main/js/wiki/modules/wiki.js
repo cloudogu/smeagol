@@ -1,5 +1,7 @@
 //@flow
 import {apiClient} from '../../apiclient';
+import {requestTimestamp} from './timestamp';
+
 
 const FETCH_WIKI = 'smeagol/wiki/FETCH';
 const FETCH_WIKI_SUCCESS = 'smeagol/wiki/FETCH_SUCCESS';
@@ -31,6 +33,7 @@ function failedToFetchWiki(id: string, err: Error) {
 function fetchWiki(repositoryId: string, branch: string) {
     const id = createId(repositoryId, branch);
     return function(dispatch) {
+        dispatch(requestTimestamp());
         dispatch(requestWiki(id));
         // TODO context path
         return apiClient.get(`/repositories/${repositoryId}/branches/${branch}.json`)
