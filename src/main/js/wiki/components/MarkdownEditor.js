@@ -53,7 +53,7 @@ class MarkdownEditor extends Component<Props,State> {
             previewStyle: 'vertical',
             initialEditType: 'markdown',
             initialValue: this.props.content,
-            exts: ['scrollSync', 'colorSyntax', 'uml', 'chart', 'mark', 'table', 'taskCounter']
+            exts: ['scrollSync', 'colorSyntax', {name: 'uml', rendererURL: '/plantuml/png/'}, 'chart', 'mark', 'table', 'taskCounter']
         });
     }
     
