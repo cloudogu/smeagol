@@ -1,8 +1,0 @@
-FROM maven:3.3-jdk-8
-
-COPY . /usr/src/smeagol
-RUN cd /usr/src/smeagol \
- && mvn package
-
-VOLUME "/dist"
-CMD ["cp", "/usr/src/smeagol/target/smeagol.jar", "/dist/"]
