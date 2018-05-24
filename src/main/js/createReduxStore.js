@@ -10,6 +10,7 @@ import page from './wiki/modules/page';
 import directory from './wiki/modules/directory';
 import pagehistory from './wiki/modules/pagehistory';
 import search from "./wiki/modules/search";
+import timestamp from "./wiki/modules/timestamp";
 
 function createReduxStore(history) {
     const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -22,7 +23,8 @@ function createReduxStore(history) {
         page,
         directory,
         pagehistory,
-        search
+        search,
+        timestamp
     });
 
     return createStore(

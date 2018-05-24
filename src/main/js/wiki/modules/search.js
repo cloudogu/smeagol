@@ -1,4 +1,6 @@
 import {apiClient} from "../../apiclient";
+import {requestTimestamp} from './timestamp';
+
 
 const FETCH_SEARCH = 'smeagol/search/FETCH';
 const FETCH_SEARCH_SUCCESS = 'smeagol/search/FETCH_SUCCESS';
@@ -10,7 +12,7 @@ export function createSearchUrl(repositoryId: string, branch: string, query: str
 
 export function fetchSearchResultsIfNeeded(url: string) {
     return function(dispatch, getState) {
-        if (shouldFetchSearchResults(getState(), url)) {
+        if (shouldFetchSearchResults(getState(), url)|| (getState().timestamp.time + 10000 < Date.now())) {
             dispatch(fetchSearchResults(url));
         }
     }
@@ -26,6 +28,7 @@ export function shouldFetchSearchResults(state: any, url: string): boolean {
 
 function fetchSearchResults(url: string) {
     return function(dispatch) {
+        dispatch(requestTimestamp());
         dispatch(requestSearchResults(url));
         return apiClient.get(url)
             .then(response => response.json())

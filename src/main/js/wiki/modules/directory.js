@@ -1,5 +1,6 @@
 // @flow
 import {apiClient} from '../../apiclient';
+import {requestTimestamp} from './timestamp';
 
 const FETCH_DIRECTORY = 'smeagol/directory/FETCH';
 const FETCH_DIRECTORY_SUCCESS = 'smeagol/directory/FETCH_SUCCESS';
@@ -11,7 +12,7 @@ export function createDirectoryUrl(repositoryId: string, branch: string, path: s
 
 export function fetchDirectoryIfNeeded(url: string) {
     return function(dispatch, getState) {
-        if (shouldFetchDirectory(getState(), url)) {
+        if (shouldFetchDirectory(getState(), url)|| (getState().timestamp.time + 10000 < Date.now())) {
             dispatch(fetchDirectory(url));
         }
     }
@@ -27,6 +28,7 @@ function shouldFetchDirectory(state, url) {
 
 function fetchDirectory(url) {
     return function(dispatch) {
+        dispatch(requestTimestamp());
         dispatch(requestDirectory(url));
         return apiClient.get(url)
             .then(response => response.json())
