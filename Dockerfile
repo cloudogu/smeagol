@@ -4,11 +4,11 @@ COPY mvnw pom.xml package.json package-lock.json ${SMEAGOL_DIR}/
 COPY .mvn ${SMEAGOL_DIR}/.mvn
 # We resolve dependencies before copying src so we profit from dockers caching behavior
 RUN set -x \
- && cd /usr/src/smeagol \
+ && cd ${SMEAGOL_DIR} \
  && ./mvnw dependency:resolve
 COPY src ${SMEAGOL_DIR}/src
 RUN set -x \
- && cd /usr/src/smeagol \
+ && cd ${SMEAGOL_DIR} \
  && ./mvnw package
 
 FROM registry.cloudogu.com/official/java:8u151-3
@@ -19,7 +19,7 @@ ENV SERVICE_TAGS=webapp \
 COPY --from=builder /usr/src/smeagol/target/smeagol.jar /app/smeagol.jar
 COPY ces-startup.sh /app/startup.sh
 
-VOLUME /var/lib/smeagol
+VOLUME ${SMEAGOL_HOME}
 EXPOSE 8080
 
 WORKDIR /app
