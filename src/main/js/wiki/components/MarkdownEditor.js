@@ -47,7 +47,7 @@ class MarkdownEditor extends Component<Props,State> {
     }
 
     componentDidMount() {
-        this.editor = new Editor({
+        this.editor = new Editor.factory({
             el: this.editorNode,
             height: '640px',
             previewStyle: 'vertical',
