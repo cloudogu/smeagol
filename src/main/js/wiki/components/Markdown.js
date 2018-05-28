@@ -3,6 +3,7 @@ import React from 'react';
 import injectSheet from 'react-jss';
 
 import Viewer from 'tui-editor/dist/tui-editor-Viewer';
+import Editor from 'tui-editor/dist/tui-editor-Editor';
 import 'tui-editor/dist/tui-editor-extTable';
 import 'tui-editor/dist/tui-editor-extScrollSync';
 import 'tui-editor/dist/tui-editor-extUML';
@@ -23,8 +24,9 @@ type Props = {
 class Markdown extends React.Component<Props> {
 
     componentDidMount() {
-        this.editor = new Viewer({
+        this.editor = new Editor.factory({
             el: this.viewerNode,
+            viewer: true,
             initialEditType: 'markdown',
             initialValue: this.props.content,
             exts: ['colorSyntax', 'uml', 'chart', 'mark', 'table', 'taskCounter', 'history'],
