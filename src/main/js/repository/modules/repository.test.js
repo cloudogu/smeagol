@@ -15,7 +15,7 @@ it('shouldFetchRepository with already loaded', () => {
     expect(shouldFetchRepository(state, 42)).toBeFalsy();
 });
 
-it('shouldFetchRepository is already loaded but timestamp consideres to load again', () => {
+it('shouldFetchRepository with expired timestamp', () => {
     const state = { repository: { 42: { loading: false, timestamp: (Date.now()-10005), repository: {} } }};
     expect(shouldFetchRepository(state)).toBeTruthy();
 });

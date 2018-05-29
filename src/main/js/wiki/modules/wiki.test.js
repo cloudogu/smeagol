@@ -19,7 +19,7 @@ it('shouldFetchWiki with wiki entry', () => {
     expect(shouldFetchWiki(state, '42', 'master')).toBeFalsy();
 });
 
-it('shouldFetchWiki is already loaded but timestamp consideres to load again', () => {
+it('shouldFetchWiki with expired timestamp', () => {
     const state = { wiki: { '42@master': { loading: true, timestamp: (Date.now()-10005) } } };
     expect(shouldFetchWiki(state, '42', 'master')).toBeTruthy();
 });
