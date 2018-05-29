@@ -28,6 +28,8 @@ const RESTORE_PAGE = 'smeagol/page/RESTORE';
 const RESTORE_PAGE_SUCCESS = 'smeagol/page/RESTORE_SUCCESS';
 const RESTORE_PAGE_FAILURE = 'smeagol/page/RESTORE_FAILURE';
 
+const THRESHOLD_TIMESTAMP = 10000;
+
 function requestPage(url: string) {
     return {
         type: FETCH_PAGE,
@@ -35,10 +37,11 @@ function requestPage(url: string) {
     };
 }
 
-function receivePage(url: string, page: any) {
+function receivePage(url: string, page: any, timestamp: number) {
     return {
         type: FETCH_PAGE_SUCCESS,
         payload: page,
+        timestamp,
         url
     };
 }
@@ -66,7 +69,7 @@ function fetchPage(url: string) {
                 return response;
             })
             .then(response => response.json())
-            .then(json => dispatch(receivePage(url, json)))
+            .then(json => dispatch(receivePage(url, json, Date.now())))
             .catch((err) => {
                 if (err === PAGE_NOT_FOUND_ERROR) {
                     dispatch(pageNotFound(url));
@@ -84,7 +87,7 @@ export function createPageUrl(repositoryId: string, branch: string, path: string
 export function shouldFetchPage(state: any, url: string): boolean {
     const byUrl = state.page[url];
     if (byUrl) {
-        return ! (byUrl.error || byUrl.loading || byUrl.notFound || byUrl.page);
+        return (! (byUrl.error || byUrl.loading || byUrl.notFound || byUrl.page)) || ((byUrl.timestamp + THRESHOLD_TIMESTAMP) < Date.now());
     }
     return true;
 }
@@ -288,6 +291,7 @@ export default function reducer(state = {}, action = {}) {
                 ...state,
                 [action.url] : {
                     loading: false,
+                    timestamp: action.timestamp,
                     page: action.payload
                 }
             };

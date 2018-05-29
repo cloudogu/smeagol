@@ -5,16 +5,19 @@ const FETCH_REPOSITORIES = 'smeagol/repositories/FETCH';
 const FETCH_REPOSITORIES_SUCCESS = 'smeagol/repositories/FETCH_SUCCESS';
 const FETCH_REPOSITORIES_FAILURE = 'smeagol/repositories/FETCH_FAILURE';
 
+const THRESHOLD_TIMESTAMP = 10000;
+
 function requestRepositories() {
     return {
         type: FETCH_REPOSITORIES
     };
 }
 
-function receiveRepositories(repositories) {
+function receiveRepositories(repositories, timestamp: number) {
     return {
         type: FETCH_REPOSITORIES_SUCCESS,
-        payload: repositories
+        payload: repositories,
+        timestamp
     };
 }
 
@@ -30,14 +33,14 @@ function fetchRepositories() {
         dispatch(requestRepositories());
         return apiClient.get('/repositories')
         .then(response => response.json())
-        .then(json => dispatch(receiveRepositories(json)))
+        .then(json => dispatch(receiveRepositories(json, Date.now())))
         .catch((err) => dispatch(failedToFetchRepositories(err)));
     }
 }
 
 export function shouldFetchRepositories(state: any): boolean {
     const repositories = state.repositories;
-    return ! (repositories.repositories || repositories.loading);
+    return (! (repositories.loading || repositories.repositories)) || ((repositories.timestamp + THRESHOLD_TIMESTAMP) < Date.now());
 }
 
 export function fetchRepositoriesIfNeeded() {
@@ -60,6 +63,7 @@ export default function reducer(state = {}, action = {}) {
             return {
                 ...state,
                 loading: false,
+                timestamp: action.timestamp,
                 error: null,
                 repositories: action.payload
             };

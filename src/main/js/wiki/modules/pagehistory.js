@@ -51,7 +51,7 @@ function requestHistory(url: string) {
     };
 }
 
-function receiveHistory(url: string, pagehistory: any, timestamp) {
+function receiveHistory(url: string, pagehistory: any, timestamp: number) {
     return {
         type: FETCH_HISTORY_SUCCESS,
         payload: pagehistory,
