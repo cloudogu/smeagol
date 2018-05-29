@@ -23,7 +23,7 @@ export function fetchHistoryIfNeeded(url: string) {
     }
 }
 
-function shouldFetchHistory(state, url) {
+export function shouldFetchHistory(state, url) {
     const byUrl = state.pagehistory[url];
 
     if (byUrl) {

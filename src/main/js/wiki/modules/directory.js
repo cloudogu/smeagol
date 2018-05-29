@@ -19,7 +19,7 @@ export function fetchDirectoryIfNeeded(url: string) {
     }
 }
 
-function shouldFetchDirectory(state, url) {
+export function shouldFetchDirectory(state, url) {
     const byUrl = state.directory[url];
     if (byUrl) {
         return (! (byUrl.error || byUrl.loading || byUrl.notFound || byUrl.directory)) || ((byUrl.timestamp + THRESHOLD_TIMESTAMP) < Date.now());
