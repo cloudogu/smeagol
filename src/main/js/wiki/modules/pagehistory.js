@@ -1,6 +1,5 @@
 // @flow
 import { apiClient } from '../../apiclient';
-import {requestTimestamp} from './timestamp';
 
 const FETCH_HISTORY = 'smeagol/history/FETCH';
 const FETCH_HISTORY_SUCCESS = 'smeagol/history/FETCH_SUCCESS';
@@ -9,6 +8,8 @@ const FETCH_HISTORY_FAILURE = 'smeagol/history/FETCH_FAILURE';
 const RESTORE_PAGE_SUCCESS = 'smeagol/page/RESTORE_SUCCESS';
 const EDIT_PAGE_SUCCESS = 'smeagol/page/EDIT_SUCCESS';
 
+const THRESHOLD_TIMESTAMP = 10000;
+
 
 export function createHistoryUrl(repositoryId: string, branch: string, path: string) {
     return `/repositories/${repositoryId}/branches/${branch}/history/${path}`;
@@ -16,8 +17,7 @@ export function createHistoryUrl(repositoryId: string, branch: string, path: str
 
 export function fetchHistoryIfNeeded(url: string) {
     return function(dispatch, getState) {
-        console.log(getState().timestamp.time + "..." + Date.now());
-        if (shouldFetchHistory(getState(), url) || (getState().timestamp.time + 10000 < Date.now())) {
+        if (shouldFetchHistory(getState(), url)) {
             dispatch(fetchHistory(url));
         }
     }
@@ -25,19 +25,19 @@ export function fetchHistoryIfNeeded(url: string) {
 
 function shouldFetchHistory(state, url) {
     const byUrl = state.pagehistory[url];
+
     if (byUrl) {
-        return ! (byUrl.error || byUrl.loading || byUrl.notFound || byUrl.pagehistory);
+        return (! (byUrl.error || byUrl.loading || byUrl.notFound || byUrl.pagehistory)) || ((byUrl.timestamp + THRESHOLD_TIMESTAMP) < Date.now());
     }
     return true;
 }
 
 function fetchHistory(url) {
     return function(dispatch) {
-        dispatch(requestTimestamp());
         dispatch(requestHistory(url));
         return apiClient.get(url)
             .then(response => response.json())
-            .then(json => dispatch(receiveHistory(url, json)))
+            .then(json => dispatch(receiveHistory(url, json, Date.now())))
             .catch((err) => {
                 dispatch(failedToFetchHistory(url, err));
             });
@@ -51,10 +51,11 @@ function requestHistory(url: string) {
     };
 }
 
-function receiveHistory(url: string, pagehistory: any) {
+function receiveHistory(url: string, pagehistory: any, timestamp) {
     return {
         type: FETCH_HISTORY_SUCCESS,
         payload: pagehistory,
+        timestamp,
         url
     };
 }
@@ -83,6 +84,7 @@ export default function reducer(state = {}, action = {}) {
                 ...state,
                 [action.url] : {
                     loading: false,
+                    timestamp: action.timestamp,
                     pagehistory: action.payload
                 }
             };
