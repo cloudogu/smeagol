@@ -2,7 +2,6 @@
 import React from 'react';
 import injectSheet from 'react-jss';
 
-import Viewer from 'tui-editor/dist/tui-editor-Viewer';
 import Editor from 'tui-editor/dist/tui-editor-Editor';
 import 'tui-editor/dist/tui-editor-extTable';
 import 'tui-editor/dist/tui-editor-extScrollSync';
@@ -29,7 +28,7 @@ class Markdown extends React.Component<Props> {
             viewer: true,
             initialEditType: 'markdown',
             initialValue: this.props.content,
-            exts: ['colorSyntax', 'uml', 'chart', 'mark', 'table', 'taskCounter', 'history'],
+            exts: ['colorSyntax', {name: 'uml', rendererURL: '/plantuml/png/'}, 'chart', 'mark', 'table', 'taskCounter', 'history'],
         });
     }
 
