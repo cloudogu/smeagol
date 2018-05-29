@@ -20,12 +20,6 @@ it('shouldFetchHistory with error entry', () => {
     expect(shouldFetchHistory(state, 'docs/Home')).toBeFalsy();
 });
 
-it('shouldFetchHistory with wiki entry', () => {
-    const state = { pagehistory: { 'docs/Home': { loading: false } } };
-    expect(shouldFetchHistory(state, 'docs/Home')).toBeTruthy();
-});
-
-
 it('shouldFetchHistory with expired timestamp', () => {
     const state = { pagehistory: { 'docs/Home': { loading: true, timestamp: (Date.now()-10005) } } };
     expect(shouldFetchHistory(state, 'docs/Home')).toBeTruthy();

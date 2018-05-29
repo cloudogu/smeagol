@@ -20,12 +20,6 @@ it('shouldFetchSearchResults with error entry', () => {
     expect(shouldFetchSearchResults(state, 'docs/Home')).toBeFalsy();
 });
 
-it('shouldFetchSearchResults with wiki entry', () => {
-    const state = { search: { 'docs/Home': { loading: false } } };
-    expect(shouldFetchSearchResults(state, 'docs/Home')).toBeTruthy();
-});
-
-
 it('shouldFetchSearchResults with expired timestamp', () => {
     const state = { search: { 'docs/Home': { loading: true, timestamp: (Date.now()-10005) } } };
     expect(shouldFetchSearchResults(state, 'docs/Home')).toBeTruthy();
