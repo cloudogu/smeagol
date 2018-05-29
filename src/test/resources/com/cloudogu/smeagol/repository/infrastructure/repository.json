@@ -1,0 +1,35 @@
+{
+  "id": "4xQfahsId3",
+  "type": "git",
+  "archived": false,
+  "public": false,
+  "name": "hitchhiker/heartOfGold",
+  "contact": "douglas.adams@hitchhiker.com",
+  "description": "Heart Of Gold",
+  "url": "https://ecosystem.hitchhiker.com/scm/git/hitchhiker/heartOfGold",
+  "creationDate": 1514909976227,
+  "lastModified": 1515090438010,
+  "permissions": [
+    {
+      "groupPermission": false,
+      "name": "tricia",
+      "type": "READ"
+    },
+    {
+      "groupPermission": false,
+      "name": "prefect",
+      "type": "WRITE"
+    },
+    {
+      "groupPermission": false,
+      "name": "adams",
+      "type": "OWNER"
+    }
+  ],
+  "properties": [
+    {
+      "key": "git.default-branch",
+      "value": "master"
+    }
+  ]
+}

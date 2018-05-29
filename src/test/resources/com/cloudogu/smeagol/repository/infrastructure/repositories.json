@@ -1,0 +1,55 @@
+[
+  {
+    "id": "30QQIOlg42",
+    "type": "git",
+    "name": "hitchhiker/restaurantAtTheEndOfTheUniverse",
+    "contact": "douglas.adams@hitchhiker.com",
+    "creationDate": 1500897456009,
+    "lastModified": 1513941908585,
+    "url": "https://ecosystem.hitchhiker.com/scm/git/hitchhiker/restaurantAtTheEndOfTheUniverse"
+  },
+  {
+    "id": "CcQfrcbqeF",
+    "type": "svn",
+    "name": "hitchhiker/marvin",
+    "contact": "douglas.adams@hitchhiker.com",
+    "creationDate": 1515159915217,
+    "lastModified": 1515160372232,
+    "url": "https://ecosystem.hitchhiker.com/scm/git/hitchhiker/marvin"
+  },
+  {
+    "id": "4xQfahsId3",
+    "type": "git",
+    "archived": false,
+    "public": false,
+    "name": "hitchhiker/heartOfGold",
+    "contact": "douglas.adams@hitchhiker.com",
+    "description": "Heart Of Gold",
+    "url": "https://ecosystem.hitchhiker.com/scm/git/hitchhiker/heartOfGold",
+    "creationDate": 1514909976227,
+    "lastModified": 1515090438010,
+    "permissions": [
+      {
+        "groupPermission": false,
+        "name": "tricia",
+        "type": "READ"
+      },
+      {
+        "groupPermission": false,
+        "name": "prefect",
+        "type": "WRITE"
+      },
+      {
+        "groupPermission": false,
+        "name": "adams",
+        "type": "OWNER"
+      }
+    ],
+    "properties": [
+      {
+        "key": "git.default-branch",
+        "value": "master"
+      }
+    ]
+  }
+]
