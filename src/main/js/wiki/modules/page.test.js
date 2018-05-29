@@ -1,26 +1,32 @@
 import {shouldFetchPage} from './page';
 
-it('shouldFetchWiki without wiki entry', () => {
+it('shouldFetchPage without wiki entry', () => {
     const state = { page: { } };
     expect(shouldFetchPage(state, 'docs/Home')).toBeTruthy();
 });
 
-it('shouldFetchWiki with loading entry', () => {
-    const state = { page: { 'docs/Home': { loading: true } } };
+it('shouldFetchPage with loading entry', () => {
+    const state = { page: { 'docs/Home': { loading: true, timestamp: Date.now() } } };
     expect(shouldFetchPage(state, 'docs/Home')).toBeFalsy();
 });
 
-it('shouldFetchWiki with notFound entry', () => {
+it('shouldFetchPage with notFound entry', () => {
     const state = { page: { 'docs/Home': { notFound: true } } };
     expect(shouldFetchPage(state, 'docs/Home')).toBeFalsy();
 });
 
-it('shouldFetchWiki with error entry', () => {
+it('shouldFetchPage with error entry', () => {
     const state = { page: { 'docs/Home': { error: new Error('something went wrong') } } };
     expect(shouldFetchPage(state, 'docs/Home')).toBeFalsy();
 });
 
-it('shouldFetchWiki with wiki entry', () => {
+it('shouldFetchPage with wiki entry', () => {
     const state = { page: { 'docs/Home': { loading: false, page: {} } } };
     expect(shouldFetchPage(state, 'docs/Home')).toBeFalsy();
+});
+
+
+it('shouldFetchPage with expired timestamp', () => {
+    const state = { page: { 'docs/Home': { loading: true, timestamp: (Date.now()-10005) } } };
+    expect(shouldFetchPage(state, 'docs/Home')).toBeTruthy();
 });
