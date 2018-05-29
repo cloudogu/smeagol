@@ -1,6 +1,5 @@
 //@flow
 import {apiClient, PAGE_NOT_FOUND_ERROR} from '../../apiclient';
-import {requestTimestamp} from './timestamp';
 
 
 const FETCH_PAGE = 'smeagol/page/FETCH';
@@ -61,7 +60,6 @@ function pageNotFound(url: string) {
 
 function fetchPage(url: string) {
     return function(dispatch) {
-        dispatch(requestTimestamp());
         dispatch(requestPage(url));
         return apiClient.get(url)
             .then(response => {
@@ -93,7 +91,7 @@ export function shouldFetchPage(state: any, url: string): boolean {
 
 export function fetchPageIfNeeded(url: string) {
     return function(dispatch, getState) {
-        if (shouldFetchPage(getState(), url)|| (getState().timestamp.time + 10000 < Date.now())) {
+        if (shouldFetchPage(getState(), url)) {
             dispatch(fetchPage(url));
         }
     }
