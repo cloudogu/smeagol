@@ -11,6 +11,11 @@ it('shouldFetchRepository with loading entry', () => {
 });
 
 it('shouldFetchRepository with already loaded', () => {
-    const state = { repository: { 42: { loading: false, repository: {} } }};
+    const state = { repository: { 42: { loading: false, timestamp: Date.now(), repository: {} } }};
     expect(shouldFetchRepository(state, 42)).toBeFalsy();
+});
+
+it('shouldFetchRepository is already loaded but timestamp consideres to load again', () => {
+    const state = { repository: { 42: { loading: false, timestamp: (Date.now()-10005), repository: {} } }};
+    expect(shouldFetchRepository(state)).toBeTruthy();
 });

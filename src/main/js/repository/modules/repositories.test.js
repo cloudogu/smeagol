@@ -6,8 +6,13 @@ it('shouldFetchRepositories is currently loading', () => {
 });
 
 it('shouldFetchRepositories is already loaded', () => {
-    const state = { repositories: { repositories: [] } };
+    const state = { repositories: { repositories: [], timestamp: (Date.now()) } };
     expect(shouldFetchRepositories(state)).toBeFalsy();
+});
+
+it('shouldFetchRepositories is already loaded but timestamp consideres to load again', () => {
+    const state = { repositories: { repositories: [], timestamp: (Date.now()-10005)}};
+    expect(shouldFetchRepositories(state)).toBeTruthy();
 });
 
 it('shouldFetchRepositories', () => {
