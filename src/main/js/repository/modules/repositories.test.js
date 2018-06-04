@@ -15,6 +15,11 @@ it('shouldFetchRepositories with expired timestamp', () => {
     expect(shouldFetchRepositories(state)).toBeTruthy();
 });
 
+it('should not fetch repositories if timestamp is not expired', () => {
+    const state = { repositories: { repositories: [], timestamp: (Date.now()-9995)}};
+    expect(shouldFetchRepositories(state)).toBeFalsy();
+});
+
 it('shouldFetchRepositories', () => {
     const state = { repositories: { } };
     expect(shouldFetchRepositories(state)).toBeTruthy();

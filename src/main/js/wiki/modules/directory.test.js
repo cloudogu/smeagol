@@ -24,3 +24,8 @@ it('shouldFetchDirectory with expired timestamp', () => {
     const state = { directory: { 'docs/Home': { loading: true, timestamp: (Date.now()-10005) } } };
     expect(shouldFetchDirectory(state, 'docs/Home')).toBeTruthy();
 });
+
+it('should not fetch directory if timestamp is not expired', () => {
+    const state = { directory: { 'docs/Home': { loading: true, timestamp: (Date.now()-9995) } } };
+    expect(shouldFetchDirectory(state, 'docs/Home')).toBeFalsy();
+});

@@ -24,3 +24,8 @@ it('shouldFetchSearchResults with expired timestamp', () => {
     const state = { search: { 'docs/Home': { loading: true, timestamp: (Date.now()-10005) } } };
     expect(shouldFetchSearchResults(state, 'docs/Home')).toBeTruthy();
 });
+
+it('should not fetch search results if timestamp is not expired', () => {
+    const state = { search: { 'docs/Home': { loading: true, timestamp: (Date.now()-9995) } } };
+    expect(shouldFetchSearchResults(state, 'docs/Home')).toBeFalsy();
+});

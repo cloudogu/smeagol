@@ -25,8 +25,12 @@ it('shouldFetchPage with wiki entry', () => {
     expect(shouldFetchPage(state, 'docs/Home')).toBeFalsy();
 });
 
-
 it('shouldFetchPage with expired timestamp', () => {
     const state = { page: { 'docs/Home': { loading: true, timestamp: (Date.now()-10005) } } };
     expect(shouldFetchPage(state, 'docs/Home')).toBeTruthy();
+});
+
+it('should not fetch page if timestamp is not expired', () => {
+    const state = { page: { 'docs/Home': { loading: true, timestamp: (Date.now()-9995) } } };
+    expect(shouldFetchPage(state, 'docs/Home')).toBeFalsy();
 });

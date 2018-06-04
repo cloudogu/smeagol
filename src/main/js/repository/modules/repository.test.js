@@ -16,6 +16,11 @@ it('shouldFetchRepository with already loaded', () => {
 });
 
 it('shouldFetchRepository with expired timestamp', () => {
-    const state = { repository: { 42: { loading: false, timestamp: (Date.now()-10005), repository: {} } }};
-    expect(shouldFetchRepository(state)).toBeTruthy();
+    const state = { repository: { 42: { loading: true, timestamp: (Date.now()-10005), repository: {} } }};
+    expect(shouldFetchRepository(state, 42)).toBeTruthy();
+});
+
+it('should not fetch repository if timestamp is not expired', () => {
+    const state = { repository: { 42: { loading: true, timestamp: (Date.now()-9995), repository: {} } }};
+    expect(shouldFetchRepository(state, 42)).toBeFalsy();
 });

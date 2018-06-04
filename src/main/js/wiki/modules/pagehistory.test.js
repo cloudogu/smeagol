@@ -24,3 +24,8 @@ it('shouldFetchHistory with expired timestamp', () => {
     const state = { pagehistory: { 'docs/Home': { loading: true, timestamp: (Date.now()-10005) } } };
     expect(shouldFetchHistory(state, 'docs/Home')).toBeTruthy();
 });
+
+it('should not fetch history if timestamp is not expired', () => {
+    const state = { pagehistory: { 'docs/Home': { loading: true, timestamp: (Date.now()-9995) } } };
+    expect(shouldFetchHistory(state, 'docs/Home')).toBeFalsy();
+});
