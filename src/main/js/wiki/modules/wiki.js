@@ -1,9 +1,12 @@
 //@flow
 import {apiClient} from '../../apiclient';
 
+
 const FETCH_WIKI = 'smeagol/wiki/FETCH';
 const FETCH_WIKI_SUCCESS = 'smeagol/wiki/FETCH_SUCCESS';
 const FETCH_WIKI_FAILURE = 'smeagol/wiki/FETCH_FAILURE';
+
+const THRESHOLD_TIMESTAMP = 10000;
 
 function requestWiki(id: string) {
     return {
@@ -12,10 +15,11 @@ function requestWiki(id: string) {
     };
 }
 
-function receiveWiki(id: string, wiki: any) {
+function receiveWiki(id: string, wiki: any, timestamp: number) {
     return {
         type: FETCH_WIKI_SUCCESS,
         payload: wiki,
+        timestamp,
         id
     };
 }
@@ -35,7 +39,7 @@ function fetchWiki(repositoryId: string, branch: string) {
         // TODO context path
         return apiClient.get(`/repositories/${repositoryId}/branches/${branch}.json`)
             .then(response => response.json())
-            .then(json => dispatch(receiveWiki(id, json)))
+            .then(json => dispatch(receiveWiki(id, json, Date.now())))
             .catch((err) => dispatch(failedToFetchWiki(id, err)));
     }
 }
@@ -48,7 +52,7 @@ export function shouldFetchWiki(state: any, repositoryId: string, branch: string
     const id = createId(repositoryId, branch);
     const byId = state.wiki[id];
     if (byId) {
-        return ! (byId.loading || byId.wiki);
+        return (! (byId.loading|| byId.wiki)) || ((byId.timestamp + THRESHOLD_TIMESTAMP) < Date.now());
     }
     return true;
 }
@@ -82,6 +86,7 @@ export default function reducer(state = {}, action = {}) {
                 ...state,
                 [action.id]: {
                     loading: false,
+                    timestamp: action.timestamp,
                     wiki: action.payload
                 }
             };
