@@ -41,13 +41,29 @@ public class UiFilter implements Filter {
 
         String uri = getPathWithinApplication(request);
         Matcher matcher = STATIC_WIKI_IMAGE.matcher(uri);
-        if (matcher.matches()) {
+        if (isStaticWikiImage(matcher)) {
             handleStaticWikiFile(request, response, matcher);
         } else if (dispatcher.needsToBeDispatched(uri)) {
             dispatcher.dispatch(request, response, uri);
         } else {
             chain.doFilter(request, response);
         }
+    }
+
+    private boolean isStaticWikiImage(Matcher matcher) {
+        if (matcher.matches()) {
+            String repository = matcher.group(1);
+            String branch = matcher.group(2);
+            String path = matcher.group(3);
+
+            // the static folder from the ui build, contains a media folder which conflicts with the repository image
+            // matcher. So we have to ignore matches to the repository "static" with the branch "media".
+            // We will also forward the request, if the matching path contains a folder, because webpack generates
+            // the media folder always with a flat structure.
+
+            return (!("static".equals(repository) && "media".equals(branch))) || path.contains("/");
+        }
+        return false;
     }
 
     private String getPathWithinApplication(HttpServletRequest request) {
