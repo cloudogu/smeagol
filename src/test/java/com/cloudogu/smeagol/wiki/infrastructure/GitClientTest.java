@@ -5,6 +5,7 @@ import com.cloudogu.smeagol.wiki.domain.*;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.After;
@@ -239,6 +240,34 @@ public class GitClientTest {
         assertEquals("added myfile", lastRemoteCommit.getFullMessage());
         assertEquals("Tricia McMillian", lastRemoteCommit.getAuthorIdent().getName());
         assertEquals("trillian@hitchhiker.com", lastRemoteCommit.getAuthorIdent().getEmailAddress());
+    }
+
+    @Test
+    public void testCommitWithRemovedFile() throws IOException, GitAPIException {
+        target.refresh();
+
+        File file = new File(targetDirectory, "myfile.md");
+        Files.write("# My Files Headline", file, Charsets.UTF_8);
+        target.commit("myfile.md", "Tricia McMillian", "trillian@hitchhiker.com", "added myfile");
+
+        File secfile = new File(targetDirectory, "secfile.md");
+        Files.write("# My Second File Headline", secfile, Charsets.UTF_8);
+        target.commit("secfile.md", "Tricia McMillian", "trillian@hitchhiker.com", "added secfile");
+
+        remote.checkout().setName("master").call();
+        assertTrue( new File(remoteDirectory, "myfile.md").exists() );
+
+        assertTrue(file.delete());
+        target.commit("myfile.md", "Tricia McMillian", "trillian@hitchhiker.com", "remove myfile");
+
+        // we have to use a hard reset, because of jgit does not delete removed files on push+checkout
+        remote.reset().setMode(ResetCommand.ResetType.HARD).call();
+
+        RevCommit lastRemoteCommit = remote.log().addPath("myfile.md").setMaxCount(1).call().iterator().next();
+        assertEquals("remove myfile", lastRemoteCommit.getFullMessage());
+
+        assertFalse( new File(remoteDirectory, "myfile.md").exists() );
+        assertTrue( new File(remoteDirectory, "secfile.md").exists() );
     }
 
     @Test
