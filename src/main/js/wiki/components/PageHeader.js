@@ -120,7 +120,7 @@ class PageHeader extends React.Component<Props,State> {
         const historyButton = <ActionLink to={ historyLink }  i18nKey="page-header_history" type="primary" />;
         const edit = page._links.edit ? <ActionLink to="?edit=true" i18nKey="page-header_edit" type="primary" /> : '';
         const moveButton = page._links.move ? <ActionButton onClick={this.onMoveClick} i18nKey="page-header_move" type="primary" /> : '';
-        const deleteButton = page._links.delete ? <ActionButton onClick={() => {this.setState({showDeleteConfirm: true})}} i18nKey="page-header_delete" type="primary" /> : '';
+        const deleteButton = page._links.delete ? <ActionButton onClick={ this.onDeleteClick } i18nKey="page-header_delete" type="primary" /> : '';
         const restoreButton = page._links.restore ? <ActionButton onClick={this.onRestoreClick} i18nKey="page-header_restore" type="primary" /> : '';
         const createForm = <PageNameForm show={ this.state.showCreateForm } onOk={ this.onOkCreate } onAbortClick={ this.onAbortCreateClick } labelPrefix="create" />
         const moveForm = <PageNameForm show={ this.state.showMoveForm } onOk={ this.onOkMoveClick } onAbortClick={ this.onAbortMoveClick } labelPrefix="move" />
