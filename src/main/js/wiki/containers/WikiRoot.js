@@ -5,7 +5,6 @@ import {fetchWikiIfNeeded, selectByRepositoryAndBranch} from '../modules/wiki';
 import {Redirect} from 'react-router-dom';
 import Loading from '../../Loading';
 import I18nAlert from '../../I18nAlert';
-import Alert from "../../Alert";
 import WikiNotFoundError from "../components/WikiNotFoundError";
 import BackToRepositoriesButton from "../../BackToRepositoriesButton";
 
