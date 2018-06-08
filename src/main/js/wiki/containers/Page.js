@@ -58,7 +58,7 @@ class Page extends React.Component<Props> {
     delete = () => {
         const { path, url, deletePage } = this.props;
         // TODO i18n
-        const message = 'delete page ' + path + ' (smeagol)';
+        const message = 'Delete page ' + path + ' (smeagol)';
         deletePage(url, message, this.pushLandingPageState);
     };
 

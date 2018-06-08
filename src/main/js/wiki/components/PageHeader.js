@@ -7,6 +7,7 @@ import PageNameForm from './PageNameForm';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import SearchBar from "./SearchBar";
+import ConfirmModal from "./ConfirmModal";
 
 const styles = {
     header: {
@@ -22,7 +23,7 @@ type Props = {
     wiki: any,
     pagesLink: string,
     historyLink: string,
-    onDeleteClick: () => void,
+    onDelete: () => void,
     onHomeClick: () => void,
     onOkMoveClick: () => void,
     onRestoreClick: () => void,
@@ -33,7 +34,8 @@ type Props = {
 
 type State = {
     showCreateForm: boolean,
-    showMoveForm: boolean
+    showMoveForm: boolean,
+    showDeleteConfirm: boolean
 };
 
 class PageHeader extends React.Component<Props,State> {
@@ -60,6 +62,18 @@ class PageHeader extends React.Component<Props,State> {
     onOkMoveClick = (name) => {
         const path = this.getPathFromPagename(name);
         this.props.onOkMoveClick(path);
+    };
+
+    onDeleteClick = () => {
+        this.setState({
+            showDeleteConfirm: true
+        });
+    };
+
+    onAbortDeleteClick = () => {
+        this.setState({
+            showDeleteConfirm: false
+        });
     };
 
     onOkCreate = (name) => {
@@ -98,7 +112,7 @@ class PageHeader extends React.Component<Props,State> {
 
 
     render() {
-        const { page, pagesLink, classes, onDeleteClick, onHomeClick, historyLink, search } = this.props;
+        const { page, pagesLink, classes, onDelete, onHomeClick, historyLink, search } = this.props;
 
         const homeButton = <ActionButton onClick={onHomeClick}  i18nKey="page-header_home" type="primary" />;
         const createButton = <ActionButton onClick={this.onCreateClick} i18nKey="page-header_create" type="primary" />;
@@ -106,10 +120,11 @@ class PageHeader extends React.Component<Props,State> {
         const historyButton = <ActionLink to={ historyLink }  i18nKey="page-header_history" type="primary" />;
         const edit = page._links.edit ? <ActionLink to="?edit=true" i18nKey="page-header_edit" type="primary" /> : '';
         const moveButton = page._links.move ? <ActionButton onClick={this.onMoveClick} i18nKey="page-header_move" type="primary" /> : '';
-        const deleteButton = page._links.delete ? <ActionButton onClick={onDeleteClick} i18nKey="page-header_delete" type="primary" /> : '';
+        const deleteButton = page._links.delete ? <ActionButton onClick={ this.onDeleteClick } i18nKey="page-header_delete" type="primary" /> : '';
         const restoreButton = page._links.restore ? <ActionButton onClick={this.onRestoreClick} i18nKey="page-header_restore" type="primary" /> : '';
         const createForm = <PageNameForm show={ this.state.showCreateForm } onOk={ this.onOkCreate } onAbortClick={ this.onAbortCreateClick } labelPrefix="create" />
         const moveForm = <PageNameForm show={ this.state.showMoveForm } onOk={ this.onOkMoveClick } onAbortClick={ this.onAbortMoveClick } labelPrefix="move" />
+        const deleteConfirmModal = <ConfirmModal show={ this.state.showDeleteConfirm } onOk={ onDelete } onAbortClick={ this.onAbortDeleteClick } labelPrefix="delete" />
 
         return (
             <div className={classes.header}>
@@ -131,6 +146,7 @@ class PageHeader extends React.Component<Props,State> {
                 </div>
                 {createForm}
                 {moveForm}
+                {deleteConfirmModal}
             </div>
         );
     }
