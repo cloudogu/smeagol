@@ -35,9 +35,22 @@ class PageNameForm extends React.Component<Props, State> {
 
     validPage = () => {
         const pageName = this.state.name;
-        const containsIllegalSequence = decodeURI(pageName).includes('..');
-        return pageName.length > 0 && !containsIllegalSequence;
+        return this.isPageNameValid(pageName);
     };
+
+    isPageNameValid(pageName: string) {
+        const decoded = decodeURI(pageName);
+        if (decoded.includes('..') || decoded.startsWith('/') || decoded.includes('//')){
+            return false;
+        }
+        if (!decoded.match(/^[a-zA-Z.\-_/]+$/)) {
+            return false;
+        }
+        if (decoded.includes('?') || decoded.includes('!')){
+            return false;
+        }
+        return true;
+    }
 
     render() {
         const { show, onAbortClick, t, labelPrefix } = this.props;
