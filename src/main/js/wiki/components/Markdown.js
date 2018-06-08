@@ -18,8 +18,12 @@ import 'highlight.js/styles/default.css';
 
 const styles = {
     markdown: {
-        // limits the width of child elements
-        '& *': {'max-width': '100%'}
+        // makes img elements responsive
+        '& img': {
+            'max-width': '100%',
+            'height': 'auto',
+            'display': 'block'
+        }
     }
 };
 
