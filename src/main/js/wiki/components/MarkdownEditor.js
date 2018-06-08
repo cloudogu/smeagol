@@ -7,6 +7,9 @@ import 'tui-editor/dist/tui-editor-extTable';
 import 'tui-editor/dist/tui-editor-extScrollSync';
 import 'tui-editor/dist/tui-editor-extUML';
 
+import './HistoryEditorExtension';
+import './ShortLinkEditorExtension';
+
 import 'tui-editor/dist/tui-editor.css';
 // import 'tui-editor/dist/tui-editor-contents.css';
 
@@ -53,7 +56,7 @@ class MarkdownEditor extends Component<Props,State> {
             previewStyle: 'vertical',
             initialEditType: 'markdown',
             initialValue: this.props.content,
-            exts: ['scrollSync', 'colorSyntax', {name: 'uml', rendererURL: '/plantuml/png/'}, 'chart', 'mark', 'table', 'taskCounter']
+            exts: ['scrollSync', 'colorSyntax', {name: 'uml', rendererURL: '/plantuml/png/'}, 'chart', 'mark', 'table', 'taskCounter', 'shortlinks', 'history']
         });
     }
     
