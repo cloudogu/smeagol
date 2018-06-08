@@ -5,10 +5,14 @@ import {fetchWikiIfNeeded, selectByRepositoryAndBranch} from '../modules/wiki';
 import {Redirect} from 'react-router-dom';
 import Loading from '../../Loading';
 import I18nAlert from '../../I18nAlert';
+import Alert from "../../Alert";
+import WikiNotFoundError from "../components/WikiNotFoundError";
+import BackToRepositoriesButton from "../../BackToRepositoriesButton";
 
 type Props = {
     loading: boolean,
     error: Error,
+    notFound: boolean,
     wiki: any,
     repository: string,
     branch: string,
@@ -23,13 +27,15 @@ class WikiRoot extends React.Component<Props> {
     }
 
     render() {
-        const { error, loading, wiki } = this.props;
+        const { error, loading, wiki, notFound } = this.props;
 
         let child = <div />;
         if (error) {
             child = <I18nAlert i18nKey="wikiroot_failed_to_fetch" />;
         } else if (loading) {
-            child = <Loading />;
+            child = <Loading/>;
+        } else if (notFound) {
+            child = <WikiNotFoundError />
         } else if (wiki) {
             child = <Redirect to={wiki.landingPage} />
         }
@@ -38,6 +44,7 @@ class WikiRoot extends React.Component<Props> {
             <div>
                 <h1>Smeagol</h1>
                 { child }
+                <BackToRepositoriesButton />
             </div>
         );
     }
