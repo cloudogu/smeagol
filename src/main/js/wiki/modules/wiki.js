@@ -50,7 +50,7 @@ function fetchWiki(repositoryId: string, branch: string) {
             .then(response => response.json())
             .then(json => dispatch(receiveWiki(id, json, Date.now())))
             .catch((err) => {
-                if (err == PAGE_NOT_FOUND_ERROR) {
+                if (err === PAGE_NOT_FOUND_ERROR) {
                     dispatch(wikiNotFound(id))
                 } else {
                     dispatch(failedToFetchWiki(id, err))
