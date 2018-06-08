@@ -16,7 +16,12 @@ import 'codemirror/lib/codemirror.css';
 import 'highlight.js/lib';
 import 'highlight.js/styles/default.css';
 
-const styles = {};
+const styles = {
+    markdown: {
+        // limits the width of child elements
+        '& *': {'max-width': '100%'}
+    }
+};
 
 type Props = {
     content: string,
@@ -43,7 +48,7 @@ class Markdown extends React.Component<Props> {
 
     render() {
         return (
-            <div ref={ref => this.viewerNode = ref}>
+            <div class={this.props.classes.markdown} ref={ref => this.viewerNode = ref}>
             </div>
         );
     }
