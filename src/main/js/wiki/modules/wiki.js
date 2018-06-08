@@ -1,10 +1,11 @@
 //@flow
-import {apiClient} from '../../apiclient';
+import {apiClient, PAGE_NOT_FOUND_ERROR} from '../../apiclient';
 
 
 const FETCH_WIKI = 'smeagol/wiki/FETCH';
 const FETCH_WIKI_SUCCESS = 'smeagol/wiki/FETCH_SUCCESS';
 const FETCH_WIKI_FAILURE = 'smeagol/wiki/FETCH_FAILURE';
+const FETCH_WIKI_NOTFOUND = 'smeagol/wiki/FETCH_NOTFOUND';
 
 const THRESHOLD_TIMESTAMP = 10000;
 
@@ -32,6 +33,14 @@ function failedToFetchWiki(id: string, err: Error) {
     };
 }
 
+function wikiNotFound(id: string) {
+    return {
+        type: FETCH_WIKI_NOTFOUND,
+        id
+    };
+}
+
+
 function fetchWiki(repositoryId: string, branch: string) {
     const id = createId(repositoryId, branch);
     return function(dispatch) {
@@ -40,7 +49,13 @@ function fetchWiki(repositoryId: string, branch: string) {
         return apiClient.get(`/repositories/${repositoryId}/branches/${branch}.json`)
             .then(response => response.json())
             .then(json => dispatch(receiveWiki(id, json, Date.now())))
-            .catch((err) => dispatch(failedToFetchWiki(id, err)));
+            .catch((err) => {
+                if (err === PAGE_NOT_FOUND_ERROR) {
+                    dispatch(wikiNotFound(id))
+                } else {
+                    dispatch(failedToFetchWiki(id, err))
+                }
+            });
     }
 }
 
@@ -96,6 +111,14 @@ export default function reducer(state = {}, action = {}) {
                 [action.id]: {
                     loading: false,
                     error: action.payload
+                }
+            };
+        case FETCH_WIKI_NOTFOUND:
+            return {
+                ...state,
+                [action.id]: {
+                    loading: false,
+                    notFound: true
                 }
             };
         default:
