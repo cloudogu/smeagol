@@ -88,7 +88,7 @@ class PageHeader extends React.Component<Props,State> {
         if (name.startsWith('/')) {
             return name.substr(1);
         } else {
-            return `docs/${name}`;
+            return `${this.props.wiki.directory}/${name}`;
         }
     };
 
@@ -110,9 +110,18 @@ class PageHeader extends React.Component<Props,State> {
         this.props.onRestoreClick(pagePath, commit);
     };
 
+    getPagePathWithoutRootDirectory(page, wiki) {
+        if ( page.path.indexOf(wiki.directory) === 0 ) {
+            return page.path.substring(wiki.directory.length + 1);
+        }
+
+        return page.path;
+    }
 
     render() {
-        const { page, pagesLink, classes, onDelete, onHomeClick, historyLink, search } = this.props;
+        const { page, wiki, pagesLink, classes, onDelete, onHomeClick, historyLink, search } = this.props;
+
+        const pathWithoutRoot = this.getPagePathWithoutRootDirectory(page, wiki);
 
         const homeButton = <ActionButton onClick={onHomeClick}  i18nKey="page-header_home" type="primary" />;
         const createButton = <ActionButton onClick={this.onCreateClick} i18nKey="page-header_create" type="primary" />;
@@ -122,8 +131,8 @@ class PageHeader extends React.Component<Props,State> {
         const moveButton = page._links.move ? <ActionButton onClick={this.onMoveClick} i18nKey="page-header_move" type="primary" /> : '';
         const deleteButton = page._links.delete ? <ActionButton onClick={ this.onDeleteClick } i18nKey="page-header_delete" type="primary" /> : '';
         const restoreButton = page._links.restore ? <ActionButton onClick={this.onRestoreClick} i18nKey="page-header_restore" type="primary" /> : '';
-        const createForm = <PageNameForm show={ this.state.showCreateForm } onOk={ this.onOkCreate } onAbortClick={ this.onAbortCreateClick } labelPrefix="create" />
-        const moveForm = <PageNameForm show={ this.state.showMoveForm } onOk={ this.onOkMoveClick } onAbortClick={ this.onAbortMoveClick } labelPrefix="move" />
+        const createForm = <PageNameForm show={ this.state.showCreateForm } onOk={ this.onOkCreate } onAbortClick={ this.onAbortCreateClick } labelPrefix="create" directory={ wiki.directory } />
+        const moveForm = <PageNameForm show={ this.state.showMoveForm } onOk={ this.onOkMoveClick } onAbortClick={ this.onAbortMoveClick } labelPrefix="move" directory={ wiki.directory } initialValue={ pathWithoutRoot } />
         const deleteConfirmModal = <ConfirmModal show={ this.state.showDeleteConfirm } onOk={ onDelete } onAbortClick={ this.onAbortDeleteClick } labelPrefix="delete" />
 
         return (

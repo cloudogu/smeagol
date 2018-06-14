@@ -3,13 +3,32 @@ import React from 'react';
 import {Modal} from 'react-bootstrap';
 import {translate} from 'react-i18next';
 import ActionButton from './ActionButton';
+import injectSheet from 'react-jss';
+import classNames from 'classnames';
+import PathValidationNote from "./PathValidationNote";
+
+const styles = {
+    directoryLabel: {
+        paddingRight: 0
+    },
+    nameInput: {
+        paddingRight: '15px'
+    },
+    noHorizontalPadding: {
+        paddingLeft: 0,
+        paddingRight: 0
+    }
+};
 
 type Props = {
     t: any,
+    initialValue: string,
+    directory: string,
     labelPrefix: string,
     show: boolean,
     onOk: Function,
     onAbortClick: Function,
+    classes: any
 };
 
 type State = {
@@ -20,8 +39,9 @@ class PageNameForm extends React.Component<Props, State> {
 
     constructor(props) {
         super(props);
+
         this.state = {
-            name: ''
+            name: props.initialValue ? props.initialValue : ''
         };
     }
 
@@ -39,6 +59,9 @@ class PageNameForm extends React.Component<Props, State> {
     };
 
     isPageNameValid(pageName: string) {
+        if (pageName === this.props.initialValue) {
+            return false;
+        }
         const decoded = decodeURI(pageName);
         if (decoded.includes('..') || decoded.startsWith('/') || decoded.includes('//')){
             return false;
@@ -46,14 +69,13 @@ class PageNameForm extends React.Component<Props, State> {
         if (!decoded.match(/^[a-zA-Z.\-_/]+$/)) {
             return false;
         }
-        if (decoded.includes('?') || decoded.includes('!')){
-            return false;
-        }
-        return true;
+        return !(decoded.includes('?') || decoded.includes('!'));
+
     }
 
     render() {
-        const { show, onAbortClick, t, labelPrefix } = this.props;
+        const { classes, directory, show, onAbortClick, t, labelPrefix } = this.props;
+
         const isButtonEnabled = this.validPage();
         return (
             <Modal show={ show } onHide={onAbortClick}>
@@ -61,10 +83,17 @@ class PageNameForm extends React.Component<Props, State> {
                     <Modal.Title>{ t(`${labelPrefix}-form_title`) }</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h2>{ t(`${labelPrefix}-form_name_label`)} </h2>
-                    <input type="text" className="form-control" value={this.state.name} onChange={ this.handleChange } />
-                    <br />
-                    <p>{ t(`${labelPrefix}-form_info`)} </p>
+                    <form className="form-horizontal">
+                        <div className="form-group">
+                            <label className={classNames("col-xs-2", "control-label", classes.directoryLabel)}>{directory}/</label>
+                            <div className="col-xs-9">
+                                <input type="text" className={classNames("form-control", classes.nameInput)} value={this.state.name} onChange={ this.handleChange } />
+                            </div>
+                            <div className={classNames("col-xs-1", classes.noHorizontalPadding)}>
+                                <PathValidationNote />
+                            </div>
+                        </div>
+                    </form>
                 </Modal.Body>
                 <Modal.Footer>
                     <ActionButton disabled={!isButtonEnabled} type="primary" onClick={this.onOkClick} i18nKey={labelPrefix+"-form_ok"} />
@@ -76,4 +105,4 @@ class PageNameForm extends React.Component<Props, State> {
 
 }
 
-export default translate()(PageNameForm);
+export default injectSheet(styles)(translate()(PageNameForm));
