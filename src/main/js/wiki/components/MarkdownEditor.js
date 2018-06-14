@@ -24,6 +24,14 @@ import { withRouter } from 'react-router-dom';
 const styles = {
     action: {
         paddingTop: '1em'
+    },
+    markdownEditor: {
+        // makes img elements responsive
+        '& img': {
+            'max-width': '100%',
+            'height': 'auto',
+            'display': 'block'
+        }
     }
 };
 
@@ -92,7 +100,7 @@ class MarkdownEditor extends Component<Props,State> {
 
         return (
             <div>
-                <div ref={ref => this.editorNode = ref} />
+                <div class={this.props.classes.markdownEditor} ref={ref => this.editorNode = ref} />
                 <div className={classes.action}>
                     <ActionButton i18nKey="markdown-editor_save" type="primary" onClick={this.commit} />
                     <ActionButton i18nKey="markdown-editor_abort" onClick={onAbortClick} />
