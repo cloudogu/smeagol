@@ -66,6 +66,11 @@ public class PathTest {
         Path.valueOf("some!path");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testValueOfWithEndingDot() {
+        Path.valueOf("some/path.");
+    }
+
     @Test
     public void testValueOfWithEndingSlash() {
         Path path = Path.valueOf("some/cool/path/");
