@@ -6,6 +6,7 @@ import ActionButton from './ActionButton';
 import injectSheet from 'react-jss';
 import classNames from 'classnames';
 import PathValidationNote from "./PathValidationNote";
+import isPageNameValid from './PageNameValidator';
 
 const styles = {
     directoryLabel: {
@@ -54,24 +55,10 @@ class PageNameForm extends React.Component<Props, State> {
     };
 
     validPage = () => {
-        const pageName = this.state.name;
-        return this.isPageNameValid(pageName);
+        const { name } = this.state;
+        const { initialValue } = this.props;
+        return isPageNameValid(initialValue, name);
     };
-
-    isPageNameValid(pageName: string) {
-        if (pageName === this.props.initialValue) {
-            return false;
-        }
-        const decoded = decodeURI(pageName);
-        if (decoded.includes('..') || decoded.startsWith('/') || decoded.includes('//')){
-            return false;
-        }
-        if (!decoded.match(/^[a-zA-Z.\-_/]+$/)) {
-            return false;
-        }
-        return !(decoded.includes('?') || decoded.includes('!'));
-
-    }
 
     render() {
         const { classes, directory, show, onAbortClick, t, labelPrefix } = this.props;
