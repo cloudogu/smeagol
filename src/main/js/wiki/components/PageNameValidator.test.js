@@ -9,6 +9,7 @@ it('should return true for the paths', () => {
     expect(isPageNameValid('', 'Home_page')).toBeTruthy();
     expect(isPageNameValid('', 'Home-page')).toBeTruthy();
     expect(isPageNameValid('', './Home')).toBeTruthy();
+    expect(isPageNameValid('', 'with0123456789')).toBeTruthy();
 });
 
 it('should not contain ..', () => {

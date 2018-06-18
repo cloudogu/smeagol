@@ -19,7 +19,7 @@ const isPageNameValid = (initialPageName: string, pageName: string) => {
         return false;
     }
 
-    return decoded.match(/^[a-zA-Z.\-_/]+$/);
+    return decoded.match(/^[0-9a-zA-Z.\-_/]+$/);
 };
 
 export default isPageNameValid;
