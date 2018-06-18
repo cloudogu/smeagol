@@ -69,8 +69,8 @@ class PageNameForm extends React.Component<Props, State> {
                 <Modal.Header closeButton>
                     <Modal.Title>{ t(`${labelPrefix}-form_title`) }</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    <form className="form-horizontal">
+                <form className="form-horizontal">
+                    <Modal.Body>
                         <div className="form-group">
                             <label className={classNames("col-xs-2", "control-label", classes.directoryLabel)}>{directory}/</label>
                             <div className="col-xs-9">
@@ -80,12 +80,12 @@ class PageNameForm extends React.Component<Props, State> {
                                 <PathValidationNote />
                             </div>
                         </div>
-                    </form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <ActionButton disabled={!isButtonEnabled} type="primary" onClick={this.onOkClick} i18nKey={labelPrefix+"-form_ok"} />
-                    <ActionButton onClick={onAbortClick} i18nKey={labelPrefix+"-form_abort"} />
-                </Modal.Footer>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <ActionButton disabled={!isButtonEnabled} type="primary" onClick={this.onOkClick} i18nKey={labelPrefix+"-form_ok"} />
+                        <ActionButton onClick={onAbortClick} i18nKey={labelPrefix+"-form_abort"} />
+                    </Modal.Footer>
+                </form>
             </Modal>
         );
     }
