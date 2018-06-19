@@ -12,8 +12,6 @@ const styles = {
         border: '1px solid #b9d1dc !important',
         fontSize: '1em',
         lineHeight: '1.6em',
-        margin: '0',
-        padding: '0.3em 0.7em',
         verticalAlign: 'middle !important'
     },
     dateColor: {
@@ -34,15 +32,12 @@ class CommitsTableEntry extends React.Component<Props> {
         const { commit, key, classes, pagePath } = this.props;
         return (
                 <tr className={classes.commitTableTr} key={key}>
-                   <td className={classes.commitTableTd}>
-                      <input type="checkbox"></input>
-                   </td>
                     <td className={classes.commitTableTd}>
                         <b>{commit.author.displayName}</b>
                     </td>
                     <td className={classes.commitTableTd}>
-                        <h className={classes.dateColor}><DateFromNow date={commit.date}/></h>
-                        : {commit.message} [<ShortCommitHash commit={commit} pagePath={ pagePath }/>]
+                        <span className={classes.dateColor}><DateFromNow date={commit.date}/>: </span>
+                        {commit.message} [<ShortCommitHash commit={commit} pagePath={ pagePath }/>]
                     </td>
                 </tr>
         );

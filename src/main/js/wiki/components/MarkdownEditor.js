@@ -7,6 +7,9 @@ import 'tui-editor/dist/tui-editor-extTable';
 import 'tui-editor/dist/tui-editor-extScrollSync';
 import 'tui-editor/dist/tui-editor-extUML';
 
+import './HistoryEditorExtension';
+import './ShortLinkEditorExtension';
+
 import 'tui-editor/dist/tui-editor.css';
 // import 'tui-editor/dist/tui-editor-contents.css';
 
@@ -21,6 +24,14 @@ import { withRouter } from 'react-router-dom';
 const styles = {
     action: {
         paddingTop: '1em'
+    },
+    markdownEditor: {
+        // makes img elements responsive
+        '& img': {
+            'max-width': '100%',
+            'height': 'auto',
+            'display': 'block'
+        }
     }
 };
 
@@ -53,7 +64,7 @@ class MarkdownEditor extends Component<Props,State> {
             previewStyle: 'vertical',
             initialEditType: 'markdown',
             initialValue: this.props.content,
-            exts: ['scrollSync', 'colorSyntax', {name: 'uml', rendererURL: '/plantuml/png/'}, 'chart', 'mark', 'table', 'taskCounter']
+            exts: ['scrollSync', 'colorSyntax', {name: 'uml', rendererURL: '/plantuml/png/'}, 'chart', 'mark', 'table', 'taskCounter', 'shortlinks', 'history']
         });
     }
     
@@ -89,7 +100,7 @@ class MarkdownEditor extends Component<Props,State> {
 
         return (
             <div>
-                <div ref={ref => this.editorNode = ref} />
+                <div class={this.props.classes.markdownEditor} ref={ref => this.editorNode = ref} />
                 <div className={classes.action}>
                     <ActionButton i18nKey="markdown-editor_save" type="primary" onClick={this.commit} />
                     <ActionButton i18nKey="markdown-editor_abort" onClick={onAbortClick} />

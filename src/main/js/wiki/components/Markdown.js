@@ -6,14 +6,26 @@ import Editor from 'tui-editor/dist/tui-editor-Editor';
 import 'tui-editor/dist/tui-editor-extTable';
 import 'tui-editor/dist/tui-editor-extScrollSync';
 import 'tui-editor/dist/tui-editor-extUML';
+
 import './HistoryEditorExtension';
+import './LegacyPlantumlEditorExtension';
+import './ShortLinkEditorExtension';
 
 import 'codemirror/lib/codemirror.css';
 
 import 'highlight.js/lib';
 import 'highlight.js/styles/default.css';
 
-const styles = {};
+const styles = {
+    markdown: {
+        // makes img elements responsive
+        '& img': {
+            'max-width': '100%',
+            'height': 'auto',
+            'display': 'block'
+        }
+    }
+};
 
 type Props = {
     content: string,
@@ -28,7 +40,7 @@ class Markdown extends React.Component<Props> {
             viewer: true,
             initialEditType: 'markdown',
             initialValue: this.props.content,
-            exts: ['colorSyntax', {name: 'uml', rendererURL: '/plantuml/png/'}, 'chart', 'mark', 'table', 'taskCounter', 'history'],
+            exts: ['colorSyntax', {name: 'uml', rendererURL: '/plantuml/png/'}, 'chart', 'mark', 'table', 'taskCounter', 'shortlinks', 'history', 'legacyplantuml'],
         });
     }
 
@@ -40,7 +52,7 @@ class Markdown extends React.Component<Props> {
 
     render() {
         return (
-            <div ref={ref => this.viewerNode = ref}>
+            <div class={this.props.classes.markdown} ref={ref => this.viewerNode = ref}>
             </div>
         );
     }

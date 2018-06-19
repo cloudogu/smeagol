@@ -7,6 +7,7 @@ import com.google.common.collect.Iterables;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
@@ -15,6 +16,8 @@ import static com.google.common.base.Preconditions.checkState;
  * Path represents the path of a page within the wiki.
  */
 public final class Path implements Serializable {
+
+    private static final Pattern CHARACTER_WHITELIST = Pattern.compile("^[\\w\\.\\-_/]+$");
 
     private static final long serialVersionUID = 1L;
 
@@ -59,6 +62,7 @@ public final class Path implements Serializable {
     public boolean isFile() {
         return !isDirectory();
     }
+
     /**
      * Creates a new path from its string representation.
      *
@@ -68,8 +72,11 @@ public final class Path implements Serializable {
      */
     public static Path valueOf(String path) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(path), "path can not be null or empty");
-        Preconditions.checkArgument(!path.contains(".."), "path contains .., which is not allowed");
+        Preconditions.checkArgument(!path.contains(".."), "path contains '..', which is not allowed");
+        Preconditions.checkArgument(!path.contains("//"), "path contains '//', which is not allowed");
         Preconditions.checkArgument(!path.startsWith("/"), "path starts with a '/', which is not allowed");
+        Preconditions.checkArgument(!path.endsWith("."), "path ends with a '.', which is not allowed");
+        Preconditions.checkArgument(CHARACTER_WHITELIST.matcher(path).matches(), "path contains illegal characters");
         return new Path(path);
     }
 

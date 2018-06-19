@@ -9,7 +9,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.slf4j.Logger;
@@ -47,11 +47,7 @@ public class ScmHttpClient {
     public ScmHttpClient(AccountService accountService, RestTemplateBuilder restTemplateBuilder, @Value("${scm.url}") String scmUrl, Stage stage) {
         this.accountService = accountService;
 
-        RestTemplateBuilder builder = restTemplateBuilder;
-        if (stage == Stage.DEVELOPMENT) {
-            builder = disableSSLVerification(restTemplateBuilder);
-        }
-        RestTemplate restTemplate = builder.rootUri(scmUrl).build();
+        RestTemplate restTemplate = createRestTemplate(restTemplateBuilder, stage, scmUrl);
         // cache request for 10 seconds,
         // because some operations requesting the same resource multiple times (e.g. creating the initial search index)
         this.cache = CacheBuilder.newBuilder()
@@ -59,21 +55,29 @@ public class ScmHttpClient {
                 .build(new ScmRequestCacheLoader(restTemplate));
     }
 
-    private RestTemplateBuilder disableSSLVerification(RestTemplateBuilder restTemplateBuilder) {
+    private RestTemplate createRestTemplate(RestTemplateBuilder restTemplateBuilder, Stage stage, String scmUrl) {
+        HttpClientBuilder httpClientBuilder = HttpClients.custom()
+                // disable cookie management to avoid scm-manager sessions
+                .disableCookieManagement();
+
+        if (stage == Stage.DEVELOPMENT) {
+            httpClientBuilder = disableSSLVerification(httpClientBuilder);
+        }
+
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setHttpClient(httpClientBuilder.build());
+        return restTemplateBuilder.requestFactory(requestFactory)
+                .rootUri(scmUrl)
+                .build();
+    }
+
+    private HttpClientBuilder disableSSLVerification(HttpClientBuilder httpClientBuilder) {
         LOG.warn("disable ssl verification for scm-manager communication, because we are in development stage");
         TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
         SSLContext sslContext = createSSLContext(acceptingTrustStrategy);
 
         SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-        CloseableHttpClient httpClient = HttpClients.custom()
-                .setSSLSocketFactory(csf)
-                .build();
-
-        HttpComponentsClientHttpRequestFactory requestFactory =
-                new HttpComponentsClientHttpRequestFactory();
-
-        requestFactory.setHttpClient(httpClient);
-        return restTemplateBuilder.requestFactory(requestFactory);
+        return httpClientBuilder.setSSLSocketFactory(csf);
     }
 
     private SSLContext createSSLContext(TrustStrategy acceptingTrustStrategy) {
@@ -105,6 +109,7 @@ public class ScmHttpClient {
 
     private HttpHeaders createHeaders(){
         Account account = accountService.get();
+        LOG.trace("create headers for account {}", account.getUsername());
         HttpHeaders headers = new HttpHeaders();
         String auth = account.getUsername() + ":" + new String(account.getPassword());
         byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(Charsets.US_ASCII));
