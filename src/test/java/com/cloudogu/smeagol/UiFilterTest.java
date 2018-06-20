@@ -51,9 +51,21 @@ public class UiFilterTest {
     }
 
     @Test
-    public void testFilterWithStaticImage() throws ServletException, IOException {
-        String uri = "/smeagol/static/favion.png";
+    public void testFilterWithFavicon() throws ServletException, IOException {
+        assertUriIsNotForwarded("/smeagol/favion.png");
+    }
 
+    @Test
+    public void testFilterWithServiceWorker() throws ServletException, IOException {
+        assertUriIsNotForwarded("/smeagol/service-worker.js");
+    }
+
+    @Test
+    public void testFilterWithStaticImage() throws ServletException, IOException {
+        assertUriIsNotForwarded("/smeagol/static/image.svg");
+    }
+
+    private void assertUriIsNotForwarded(String uri) throws ServletException, IOException {
         when(request.getContextPath()).thenReturn("/smeagol");
         when(request.getRequestURI()).thenReturn(uri);
 
@@ -64,14 +76,7 @@ public class UiFilterTest {
 
     @Test
     public void testFilterWithStaticMediaImage() throws ServletException, IOException {
-        String uri = "/smeagol/static/media/glyphicons-halflings-regular.89889688.svg";
-
-        when(request.getContextPath()).thenReturn("/smeagol");
-        when(request.getRequestURI()).thenReturn(uri);
-
-        filter.doFilter(request, response, chain);
-
-        verify(chain).doFilter(request, response);
+        assertUriIsNotForwarded("/smeagol/static/media/glyphicons-halflings-regular.89889688.svg");
     }
 
     @Test
