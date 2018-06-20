@@ -52,7 +52,7 @@ class Markdown extends React.Component<Props> {
 
     render() {
         return (
-            <div class={this.props.classes.markdown} ref={ref => this.viewerNode = ref}>
+            <div className={this.props.classes.markdown} ref={ref => this.viewerNode = ref}>
             </div>
         );
     }
