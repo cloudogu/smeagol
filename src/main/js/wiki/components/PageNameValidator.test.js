@@ -7,6 +7,7 @@ it('should return true for the paths', () => {
     expect(isPageNameValid('', 'Home')).toBeTruthy();
     expect(isPageNameValid('', 'Home.page')).toBeTruthy();
     expect(isPageNameValid('', 'Home_page')).toBeTruthy();
+    expect(isPageNameValid('', 'Home page')).toBeTruthy();
     expect(isPageNameValid('', 'Home-page')).toBeTruthy();
     expect(isPageNameValid('', './Home')).toBeTruthy();
     expect(isPageNameValid('', 'with0123456789')).toBeTruthy();
@@ -23,6 +24,14 @@ it('should not contain //', () => {
 
 it('should start with /', () => {
     expect(isPageNameValid('', '/def')).toBeFalsy();
+});
+
+it('should start with " "', () => {
+    expect(isPageNameValid('', ' def')).toBeFalsy();
+});
+
+it('should end with " "', () => {
+    expect(isPageNameValid('', 'def ')).toBeFalsy();
 });
 
 it('should should not end with /', () => {

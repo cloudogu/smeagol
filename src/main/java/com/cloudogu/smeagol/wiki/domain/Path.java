@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public final class Path implements Serializable {
 
-    private static final Pattern CHARACTER_WHITELIST = Pattern.compile("^[\\w\\.\\-_/]+$");
+    private static final Pattern CHARACTER_WHITELIST = Pattern.compile("^[\\w\\.\\-_/ ]+$");
 
     private static final long serialVersionUID = 1L;
 
@@ -76,6 +76,8 @@ public final class Path implements Serializable {
         Preconditions.checkArgument(!path.contains("//"), "path contains '//', which is not allowed");
         Preconditions.checkArgument(!path.startsWith("/"), "path starts with a '/', which is not allowed");
         Preconditions.checkArgument(!path.endsWith("."), "path ends with a '.', which is not allowed");
+        Preconditions.checkArgument(!path.startsWith(" "), "path starts with a ' ', which is not allowed");
+        Preconditions.checkArgument(!path.endsWith(" "), "path ends with a ' ', which is not allowed");
         Preconditions.checkArgument(CHARACTER_WHITELIST.matcher(path).matches(), "path contains illegal characters");
         return new Path(path);
     }

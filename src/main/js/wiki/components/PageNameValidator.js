@@ -7,7 +7,7 @@ const isPageNameValid = (initialPageName: string, pageName: string) => {
 
     const decoded = decodeURI(pageName);
 
-    if (decoded.startsWith('/')) {
+    if (decoded.startsWith('/') || decoded.startsWith(' ')) {
         return false;
     }
 
@@ -15,11 +15,11 @@ const isPageNameValid = (initialPageName: string, pageName: string) => {
         return false;
     }
 
-    if (decoded.endsWith('/') || decoded.endsWith('.')) {
+    if (decoded.endsWith('/') || decoded.endsWith('.') || decoded.endsWith(' ')) {
         return false;
     }
 
-    return decoded.match(/^[0-9a-zA-Z.\-_/]+$/);
+    return decoded.match(/^[0-9a-zA-Z.\-_/ ]+$/);
 };
 
 export default isPageNameValid;

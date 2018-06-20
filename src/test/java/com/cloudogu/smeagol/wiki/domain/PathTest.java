@@ -71,10 +71,26 @@ public class PathTest {
         Path.valueOf("some/path.");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testValueOfWithEndingSpace() {
+        Path.valueOf("some/path ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValueOfWithStartingSpace() {
+        Path.valueOf(" some/path");
+    }
+
     @Test
     public void testValueOfWithEndingSlash() {
         Path path = Path.valueOf("some/cool/path/");
         assertEquals("some/cool/path/", path.getValue());
+    }
+
+    @Test
+    public void testValueOfWithSpace() {
+        Path path = Path.valueOf("some/cool path");
+        assertEquals("some/cool path", path.getValue());
     }
 
     @Test
