@@ -37,6 +37,4 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-// we are deactivating the service-worker for now, because it leads currently to strange errors in production mode
-// TODO figure out waht goes wrong and reactivate it
-// registerServiceWorker();
+registerServiceWorker();
