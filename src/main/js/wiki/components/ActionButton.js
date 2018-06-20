@@ -23,11 +23,17 @@ class ActionButton extends React.Component<Props> {
         type: 'default'
     };
 
+    handleClick = (e: Event) => {
+        // use prevent default to avoid a complete page reload, if the button is used within a form
+        e.preventDefault();
+        this.props.onClick();
+    };
+
     render() {
-        const { onClick, i18nKey, type, classes, t, disabled } = this.props;
+        const { i18nKey, type, classes, t, disabled } = this.props;
         const typeClass = 'btn-' + type;
         return (
-            <button disabled={disabled} className={classNames('btn', typeClass, classes.button)} onClick={onClick}>
+            <button disabled={disabled} className={classNames('btn', typeClass, classes.button)} onClick={this.handleClick}>
                 {t(i18nKey)}
             </button>
         );
