@@ -16,7 +16,7 @@ LABEL maintainer="Sebastian Sdorra <sebastian.sdorra@cloudogu.com>"
 ENV SERVICE_TAGS=webapp \
     SMEAGOL_HOME=/var/lib/smeagol
 
-COPY --from=builder /usr/src/smeagol/target/smeagol.jar /app/smeagol.jar
+COPY --from=builder /usr/src/smeagol/target/smeagol.war /app/smeagol.war
 COPY ces-startup.sh /app/startup.sh
 
 VOLUME ${SMEAGOL_HOME}
