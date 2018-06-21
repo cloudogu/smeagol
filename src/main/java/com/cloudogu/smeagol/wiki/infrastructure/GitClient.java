@@ -289,11 +289,11 @@ public class GitClient implements AutoCloseable {
             // git.add() does not work for removed files
             // so we have to use git.rm(), if commit is used for delete operation
             if (Files.exists(Paths.get(repository.getPath(), path))) {
-                LOG.trace("add file {} to index", path);
+                LOG.trace("add file {} to git index", path);
                 git.add().addFilepattern(path)
                         .call();
             } else {
-                LOG.trace("remove file {} from index", path);
+                LOG.trace("remove file {} from git index", path);
                 git.rm().addFilepattern(path)
                         .call();
             }
