@@ -20,11 +20,10 @@ class PageViewer extends React.Component<Props> {
 
     render() {
         const { page, wiki, onDelete, onHome, onMove, pagesLink, search, historyLink, onRestore } = this.props;
-
         return (
             <div>
                 <PageHeader page={page} wiki={wiki} pagesLink={pagesLink} historyLink={historyLink}
-                            onDeleteClick={onDelete} onHomeClick={onHome} onOkMoveClick={onMove}
+                            onDelete={onDelete} onHomeClick={onHome} onOkMoveClick={onMove}
                             onRestoreClick={onRestore} search={search}/>
                 <PageContent page={page} />
                 <PageFooter page={page} />

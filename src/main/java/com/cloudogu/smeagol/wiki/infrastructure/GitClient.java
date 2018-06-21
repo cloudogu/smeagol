@@ -26,10 +26,7 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.*;
 import java.net.URI;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Iterator;
 import java.util.List;
@@ -289,9 +286,17 @@ public class GitClient implements AutoCloseable {
         Git git = open();
 
         for (String path : paths) {
-            git.add()
-                    .addFilepattern(path)
-                    .call();
+            // git.add() does not work for removed files
+            // so we have to use git.rm(), if commit is used for delete operation
+            if (Files.exists(Paths.get(repository.getPath(), path))) {
+                LOG.trace("add file {} to git index", path);
+                git.add().addFilepattern(path)
+                        .call();
+            } else {
+                LOG.trace("remove file {} from git index", path);
+                git.rm().addFilepattern(path)
+                        .call();
+            }
         }
 
         RevCommit commit = git.commit()

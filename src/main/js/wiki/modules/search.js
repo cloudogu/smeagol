@@ -1,8 +1,11 @@
 import {apiClient} from "../../apiclient";
 
+
 const FETCH_SEARCH = 'smeagol/search/FETCH';
 const FETCH_SEARCH_SUCCESS = 'smeagol/search/FETCH_SUCCESS';
 const FETCH_SEARCH_FAILURE = 'smeagol/search/FETCH_FAILURE';
+
+const THRESHOLD_TIMESTAMP = 10000;
 
 export function createSearchUrl(repositoryId: string, branch: string, query: string) {
     return `/repositories/${repositoryId}/branches/${branch}/search?query=${query}`;
@@ -19,7 +22,7 @@ export function fetchSearchResultsIfNeeded(url: string) {
 export function shouldFetchSearchResults(state: any, url: string): boolean {
     const byUrl = state.search[url];
     if (byUrl) {
-        return ! (byUrl.error || byUrl.loading || byUrl.notFound || byUrl.results);
+        return (! (byUrl.error || byUrl.loading || byUrl.notFound || byUrl.results)) || ((byUrl.timestamp + THRESHOLD_TIMESTAMP) < Date.now());
     }
     return true;
 }
@@ -29,7 +32,7 @@ function fetchSearchResults(url: string) {
         dispatch(requestSearchResults(url));
         return apiClient.get(url)
             .then(response => response.json())
-            .then(json => dispatch(receiveSearchResults(url, json)))
+            .then(json => dispatch(receiveSearchResults(url, json, Date.now())))
             .catch((err) => {
                 dispatch(failedToFetchSearchResults(url, err));
             });
@@ -43,10 +46,11 @@ function requestSearchResults(url: string) {
     };
 }
 
-function receiveSearchResults(url: string, results: any) {
+function receiveSearchResults(url: string, results: any, timestamp: number) {
     return {
         type: FETCH_SEARCH_SUCCESS,
         payload: results,
+        timestamp,
         url
     };
 }
@@ -75,6 +79,7 @@ export default function reducer(state = {}, action = {}) {
                 ...state,
                 [action.url] : {
                     loading: false,
+                    timestamp: action.timestamp,
                     results: action.payload
                 }
             };

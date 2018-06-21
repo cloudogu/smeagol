@@ -1,6 +1,6 @@
 {
   "Name": "official/smeagol",
-  "Version": "0.4.4",
+  "Version": "0.5.0",
   "DisplayName": "Smeagol",
   "Description": "Store your technical documentation with in your git repositories",
   "Category": "Documentation",
@@ -8,7 +8,7 @@
     "warp", "wiki", "docs", "gollum", "git"
   ],
   "Url": "https://cloudogu.com",
-  "Image": "registry.cloudogu.com/official/smeagol",
+  "Image": "registry.cloudogu.com/testing/smeagol",
   "Dependencies": [
     "cas", "nginx", "scm"
   ],
