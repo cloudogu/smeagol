@@ -22,17 +22,14 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 import static com.cloudogu.smeagol.wiki.DomainTestData.COMMIT_ID;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GitClientTest {
@@ -55,6 +52,9 @@ public class GitClientTest {
 
     @Captor
     private ArgumentCaptor<RepositoryChangedEvent> eventCaptor;
+
+    @Captor
+    private ArgumentCaptor<Object> objectCaptor;
 
     private final WikiId wikiId = new WikiId("42", "master");
 
@@ -451,10 +451,7 @@ public class GitClientTest {
         assertTrue(versionFile.exists());
         assertEquals(GitClient.INDEX_VERSION, Files.toString(versionFile, Charsets.UTF_8));
 
-        // we should get a RepositoryChangedEvent for the fresh clone
-        // we should get another RepositoryChangedEvent for the recreation of the search-index
-        // so we need to check for times(2)
-        verify(publisher, times(2)).publishEvent(any(RepositoryChangedEvent.class));
+        assertRepositoryResetEventsAreFired();
     }
 
     @Test
@@ -476,9 +473,33 @@ public class GitClientTest {
 
         assertEquals(GitClient.INDEX_VERSION, Files.toString(versionFile, Charsets.UTF_8));
 
-        // we should get a RepositoryChangedEvent for the fresh clone
-        // we should get another RepositoryChangedEvent for the recreation of the search-index
-        // so we need to check for times(2)
-        verify(publisher, times(2)).publishEvent(any(RepositoryChangedEvent.class));
+        assertRepositoryResetEventsAreFired();
+    }
+
+    private void assertRepositoryResetEventsAreFired() {
+        // we should receive 3 events
+        // 1: changed, this comes from the initial clone
+        // 2: clear, this is because the version is wrong
+        // 3: change, for the recreation of the index
+
+        verify(publisher, times(3)).publishEvent(objectCaptor.capture());
+
+        List<Object> events = objectCaptor.getAllValues();
+
+        assertRepositoryEventFor(wikiId, events.get(0));
+        assertClearIndexEventFor(wikiId, events.get(1));
+        assertRepositoryEventFor(wikiId, events.get(2));
+    }
+
+    private void assertRepositoryEventFor(WikiId expectedWikiId, Object object) {
+        assertThat(object).isInstanceOf(RepositoryChangedEvent.class);
+        RepositoryChangedEvent event = (RepositoryChangedEvent) object;
+        assertThat(event.getWikiId()).isEqualTo(expectedWikiId);
+    }
+
+    private void assertClearIndexEventFor(WikiId expectedWikiId, Object object) {
+        assertThat(object).isInstanceOf(ClearIndexEvent.class);
+        ClearIndexEvent event = (ClearIndexEvent) object;
+        assertThat(event.getWikiId()).isEqualTo(expectedWikiId);
     }
 }

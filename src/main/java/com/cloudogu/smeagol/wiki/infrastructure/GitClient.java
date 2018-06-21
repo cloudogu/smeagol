@@ -29,7 +29,6 @@ import java.io.*;
 import java.net.URI;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -108,23 +107,20 @@ public class GitClient implements AutoCloseable {
         } else {
             String indexVersion = readIndexVersion(searchIndex);
             if (!INDEX_VERSION.equals(indexVersion)) {
-                recreateSearchIndexDirectory(searchIndex, indexVersion);
+                recreateSearchIndexDirectory(indexVersion);
             }
         }
     }
 
-    private void recreateSearchIndexDirectory(File directory, String oldVersion) throws IOException {
+    private void recreateSearchIndexDirectory(String oldVersion) throws IOException {
         LOG.warn("recreate search index, because the index uses format {} and we need version {}", oldVersion, INDEX_VERSION);
-        removeOldSearchIndex(directory);
+        removeOldSearchIndex();
         createSearchIndexDirectory();
         createRepositoryChangedEvent();
     }
 
-    private void removeOldSearchIndex(File directory) throws IOException {
-        Files.walk(directory.toPath())
-                .sorted(Comparator.reverseOrder())
-                .map(Path::toFile)
-                .forEach(File::delete);
+    private void removeOldSearchIndex() {
+        publisher.publishEvent(new ClearIndexEvent(wiki.getId()));
     }
 
     private String readIndexVersion(File directory) throws IOException {
