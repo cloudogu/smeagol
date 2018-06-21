@@ -180,7 +180,7 @@ public class ScmGitPageRepository implements PageRepository {
                     commit.getMessage().getValue()
             );
 
-            return new Page(id, Path.valueOf(targetPath), Path.valueOf(sourcePath), page.getContent(), ScmGit.createCommit(revCommit));
+            return new Page(id, Pages.pagepath(targetPath), Pages.pagepath(sourcePath), page.getContent(), ScmGit.createCommit(revCommit));
         } catch (IOException | GitAPIException ex) {
             throw Throwables.propagate(ex);
         }
