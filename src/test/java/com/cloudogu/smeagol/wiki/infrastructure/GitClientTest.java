@@ -22,12 +22,15 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 import static com.cloudogu.smeagol.wiki.DomainTestData.COMMIT_ID;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -63,6 +66,7 @@ public class GitClientTest {
         targetDirectory = new File(temporaryFolder.getRoot(), "target");
 
         targetSearchIndexDirectory = temporaryFolder.newFolder();
+        targetSearchIndexDirectory.delete();
         when(directoryResolver.resolveSearchIndex(wikiId)).thenReturn(targetSearchIndexDirectory);
 
         when(directoryResolver.resolve(wikiId)).thenReturn(targetDirectory);
@@ -299,6 +303,11 @@ public class GitClientTest {
         commit(remote, "a.md", "# My Headline");
         commit(remote, "b.md", "# My Second Headline");
 
+        // pre create search index, to avoid batch change event
+        targetSearchIndexDirectory.mkdirs();
+        File versionFile = new File(targetSearchIndexDirectory, GitClient.INDEX_VERSION_FILE);
+        Files.write(GitClient.INDEX_VERSION, versionFile, Charsets.UTF_8);
+
         Git.cloneRepository()
                 .setDirectory(targetDirectory)
                 .setURI(remoteDirectory.toURI().toURL().toExternalForm())
@@ -405,5 +414,71 @@ public class GitClientTest {
             RevCommit c = git.log().call().iterator().next();
             assertEquals(commit, c);
         }
+    }
+
+    @Test
+    public void testCreateSearchIndex() throws GitAPIException, IOException {
+        target.refresh();
+        assertTrue(targetSearchIndexDirectory.exists());
+    }
+
+    @Test
+    public void testCreateSearchIndexWithVersion() throws GitAPIException, IOException {
+        target.refresh();
+        assertTrue(targetSearchIndexDirectory.exists());
+        File versionFile = new File(targetSearchIndexDirectory, "index.version");
+        assertTrue(versionFile.exists());
+        assertEquals(GitClient.INDEX_VERSION, Files.toString(versionFile, Charsets.UTF_8));
+    }
+
+    @Test
+    public void testCheckSearchIndexWithoutVersion() throws GitAPIException, IOException {
+        // test data
+        commit(remote, "a.md", "Content 0");
+
+        // clone empty repository
+        target.refresh();
+
+
+        File versionFile = new File(targetSearchIndexDirectory, "index.version");
+
+        // delete created version
+        versionFile.delete();
+
+        // pull and check if search-index was recreated, because of the old version of the repository
+        target.refresh();
+
+        assertTrue(versionFile.exists());
+        assertEquals(GitClient.INDEX_VERSION, Files.toString(versionFile, Charsets.UTF_8));
+
+        // we should get a RepositoryChangedEvent for the fresh clone
+        // we should get another RepositoryChangedEvent for the recreation of the search-index
+        // so we need to check for times(2)
+        verify(publisher, times(2)).publishEvent(any(RepositoryChangedEvent.class));
+    }
+
+    @Test
+    public void testCheckSearchIndexWithOlderVersion() throws GitAPIException, IOException {
+        // test data
+        commit(remote, "a.md", "Content 0");
+
+        // clone empty repository
+        target.refresh();
+
+
+        File versionFile = new File(targetSearchIndexDirectory, "index.version");
+
+        // overwrite created version
+        Files.write(GitClient.FIRST_INDEX_VERSION, versionFile, Charsets.UTF_8);
+
+        // pull and check if search-index was recreated, because of the old version of the repository
+        target.refresh();
+
+        assertEquals(GitClient.INDEX_VERSION, Files.toString(versionFile, Charsets.UTF_8));
+
+        // we should get a RepositoryChangedEvent for the fresh clone
+        // we should get another RepositoryChangedEvent for the recreation of the search-index
+        // so we need to check for times(2)
+        verify(publisher, times(2)).publishEvent(any(RepositoryChangedEvent.class));
     }
 }
