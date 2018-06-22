@@ -117,4 +117,17 @@ public class LuceneIndexer {
         }
     }
 
+    @EventListener
+    public void handle(ClearIndexEvent event) {
+        LOG.debug("received clear index event {}, removing all documents from search index", event.getWikiId());
+        IndexWriter writer = context.openWriter(event.getWikiId());
+        try {
+            long documents = writer.deleteAll();
+            writer.commit();
+            LOG.debug("removed {} documents, from search index", documents);
+        } catch (IOException e) {
+            throw Throwables.propagate(e);
+        }
+    }
+
 }

@@ -3,6 +3,7 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 import com.cloudogu.smeagol.Account;
 import com.cloudogu.smeagol.wiki.domain.Wiki;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import org.eclipse.jgit.api.Git;
@@ -36,6 +37,16 @@ import static java.util.Collections.singleton;
 
 @SuppressWarnings("squid:S1160") // ignore multiple exception rule
 public class GitClient implements AutoCloseable {
+
+
+    @VisibleForTesting
+    static final String FIRST_INDEX_VERSION = "1";
+
+    @VisibleForTesting
+    static final String INDEX_VERSION = "2";
+
+    @VisibleForTesting
+    static final String INDEX_VERSION_FILE = "index.version";
 
     private static final Logger LOG = LoggerFactory.getLogger(GitClient.class);
 
@@ -91,11 +102,34 @@ public class GitClient implements AutoCloseable {
     private void checkSearchIndex() throws IOException {
         File searchIndex = directoryResolver.resolveSearchIndex(wiki.getId());
         if (!searchIndex.exists()) {
-            if (!searchIndex.mkdirs()) {
-                throw new IOException("failed to create directory for search index: " + searchIndex);
-            }
+            createSearchIndexDirectory();
             createRepositoryChangedEvent();
+        } else {
+            String indexVersion = readIndexVersion(searchIndex);
+            if (!INDEX_VERSION.equals(indexVersion)) {
+                recreateSearchIndexDirectory(indexVersion);
+            }
         }
+    }
+
+    private void recreateSearchIndexDirectory(String oldVersion) throws IOException {
+        LOG.warn("recreate search index, because the index uses format {} and we need version {}", oldVersion, INDEX_VERSION);
+        removeOldSearchIndex();
+        createSearchIndexDirectory();
+        createRepositoryChangedEvent();
+    }
+
+    private void removeOldSearchIndex() {
+        publisher.publishEvent(new ClearIndexEvent(wiki.getId()));
+    }
+
+    private String readIndexVersion(File directory) throws IOException {
+        Path versionFilePath = Paths.get(directory.getPath(), INDEX_VERSION_FILE);
+        if (Files.exists(versionFilePath)) {
+            byte[] data = Files.readAllBytes(versionFilePath);
+            return new String(data, Charsets.UTF_8);
+        }
+        return FIRST_INDEX_VERSION;
     }
 
     @VisibleForTesting
@@ -236,11 +270,18 @@ public class GitClient implements AutoCloseable {
         createRepositoryChangedEvent();
     }
 
-    private void createSearchIndexDirectory() {
+    private void createSearchIndexDirectory() throws IOException {
         File directory = directoryResolver.resolveSearchIndex(wiki.getId());
         if (!directory.exists() && !directory.mkdirs()) {
             throw new IllegalStateException("failed to create search index directory at " + directory);
         }
+
+        writeIndexVersion(directory);
+    }
+
+    private void writeIndexVersion(File directory) throws IOException {
+        Path versionFilePath = Paths.get(directory.getPath(), INDEX_VERSION_FILE);
+        Files.write(versionFilePath, INDEX_VERSION.getBytes(Charsets.UTF_8));
     }
 
     private void createRepositoryChangedEvent() throws IOException {

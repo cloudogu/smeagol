@@ -225,7 +225,10 @@ public class ScmGitPageRepositoryTest {
         Page page = new Page(WIKI_ID_42, PATH_HOME, CONTENT_GUIDE, COMMIT);
         page.move(COMMIT, targetPath);
 
-        pageRepository.save(page);
+        Page movedPage = pageRepository.save(page);
+        assertEquals(targetPath, movedPage.getPath());
+        assertEquals(PATH_HOME, movedPage.getOldPath().get());
+
         assertTrue(targetFile.exists());
         assertFalse(sourceFile.exists());
 
