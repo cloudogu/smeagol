@@ -8,7 +8,7 @@
     "warp", "wiki", "docs", "gollum", "git"
   ],
   "Url": "https://cloudogu.com",
-  "Image": "registry.cloudogu.com/testing/smeagol",
+  "Image": "registry.cloudogu.com/official/smeagol",
   "Dependencies": [
     "cas", "nginx", "scm"
   ],
