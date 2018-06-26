@@ -7,6 +7,7 @@ import 'tui-editor/dist/tui-editor-extTable';
 import 'tui-editor/dist/tui-editor-extScrollSync';
 import 'tui-editor/dist/tui-editor-extUML';
 
+import './TableClassEditorExtension';
 import './HistoryEditorExtension';
 import './LegacyPlantumlEditorExtension';
 import './ShortLinkEditorExtension';
@@ -40,7 +41,8 @@ class Markdown extends React.Component<Props> {
             viewer: true,
             initialEditType: 'markdown',
             initialValue: this.props.content,
-            exts: ['colorSyntax', {name: 'uml', rendererURL: '/plantuml/png/'}, 'chart', 'mark', 'table', 'taskCounter', 'shortlinks', 'history', 'legacyplantuml'],
+            exts: ['colorSyntax', {name: 'uml', rendererURL: '/plantuml/png/'}, 'chart', 'mark', 'table', 'tableClass',
+                'taskCounter', 'shortlinks', 'history', 'legacyplantuml'],
         });
     }
 
