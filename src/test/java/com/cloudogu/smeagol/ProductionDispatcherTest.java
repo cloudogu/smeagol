@@ -33,6 +33,7 @@ public class ProductionDispatcherTest {
     @Test
     public void testNeedsToBeDispatched() {
         assertFalse(dispatcher.needsToBeDispatched("/api/v1/authc"));
+        assertFalse(dispatcher.needsToBeDispatched("/api/v1/logout"));
         assertFalse(dispatcher.needsToBeDispatched("/locales/de/translations.json"));
         assertFalse(dispatcher.needsToBeDispatched("/static/bundle.js"));
         assertFalse(dispatcher.needsToBeDispatched("/favicon.ico"));

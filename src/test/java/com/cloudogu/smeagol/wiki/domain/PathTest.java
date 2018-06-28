@@ -31,10 +31,66 @@ public class PathTest {
         Path.valueOf("/some/cool/path");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testValueOfWithDoubleSlash() {
+        Path.valueOf("some//path");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValueOfWithPercent() {
+        Path.valueOf("some%path");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValueOfWithAmpersand() {
+        Path.valueOf("some&path");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValueOfWithSemicolon() {
+        Path.valueOf("some;path");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValueOfWithAsterisk() {
+        Path.valueOf("some*path");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValueOfWithQuestionMark() {
+        Path.valueOf("some?path");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValueOfWithExclamationMark() {
+        Path.valueOf("some!path");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValueOfWithEndingDot() {
+        Path.valueOf("some/path.");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValueOfWithEndingSpace() {
+        Path.valueOf("some/path ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValueOfWithStartingSpace() {
+        Path.valueOf(" some/path");
+    }
+
     @Test
     public void testValueOfWithEndingSlash() {
         Path path = Path.valueOf("some/cool/path/");
         assertEquals("some/cool/path/", path.getValue());
+    }
+
+    @Test
+    public void testValueOfWithSpace() {
+        Path path = Path.valueOf("some/cool path");
+        assertEquals("some/cool path", path.getValue());
     }
 
     @Test

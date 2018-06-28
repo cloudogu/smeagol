@@ -31,4 +31,4 @@ java -Djava.awt.headless=true \
   -Djava.net.preferIPv4Stack=true \
   -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
   -Djavax.net.ssl.trustStorePassword=changeit \
-  -jar /app/smeagol.jar
+  -jar /app/smeagol.war

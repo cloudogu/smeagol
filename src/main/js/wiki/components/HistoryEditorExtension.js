@@ -1,6 +1,6 @@
-import Viewer from 'tui-editor/dist/tui-editor-Viewer';
+import Editor from 'tui-editor/dist/tui-editor-Editor';
 
-Viewer.defineExtension('history', function(editor) {
+Editor.defineExtension('history', function(editor) {
 
     const linkHtmlRx = /<a .*(href="([^"]+)").*>/g;
 

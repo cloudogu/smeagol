@@ -2,7 +2,7 @@
 import React from 'react';
 import injectSheet from 'react-jss';
 import Branch from './Branch';
-import BackToRepositoriesButton from './BackToRepositoriesButton';
+import BackToRepositoriesButton from '../../BackToRepositoriesButton';
 
 const styles = {};
 

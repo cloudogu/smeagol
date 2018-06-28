@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import java.util.NoSuchElementException;
+
 @Component
 public class GitClientProvider {
 
@@ -28,7 +30,9 @@ public class GitClientProvider {
 
     public GitClient createGitClient(WikiId wikiId) {
         Account account = accountService.get();
-        Wiki wiki = wikiRepository.findById(wikiId).get();
+        Wiki wiki = wikiRepository
+                .findById(wikiId)
+                .orElseThrow(() -> new NoSuchElementException("no wiki found with id " + wikiId));
 
         return new GitClient(
                 publisher,
