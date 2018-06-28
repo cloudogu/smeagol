@@ -15,7 +15,7 @@ public interface PageRepository {
     Page save(Page page);
 
     /**
-     * Returns {@core true} if the path exists.
+     * Returns {@code true} if the path exists.
      *
      * @return {@code true} if path exists
      */
