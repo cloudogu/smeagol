@@ -16,7 +16,8 @@
     "Name": "data",
     "Path": "/var/lib/smeagol",
     "Owner": "1000",
-    "Group": "1000"
+    "Group": "1000",
+    "NeedsBackup": false
   }],
   "HealthCheck": {
     "Type": "tcp",
