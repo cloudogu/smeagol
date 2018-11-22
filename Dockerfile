@@ -1,4 +1,4 @@
-FROM openjdk:8u151-jdk as builder
+FROM openjdk:8u171-jdk as builder
 ENV SMEAGOL_DIR=/usr/src/smeagol
 COPY mvnw pom.xml package.json package-lock.json ${SMEAGOL_DIR}/
 COPY .mvn ${SMEAGOL_DIR}/.mvn
@@ -11,7 +11,7 @@ RUN set -x \
  && cd ${SMEAGOL_DIR} \
  && ./mvnw package
 
-FROM registry.cloudogu.com/official/java:8u151-3
+FROM registry.cloudogu.com/official/java:8u171-1
 LABEL maintainer="Sebastian Sdorra <sebastian.sdorra@cloudogu.com>"
 ENV SERVICE_TAGS=webapp \
     SMEAGOL_HOME=/var/lib/smeagol
