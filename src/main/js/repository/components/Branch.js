@@ -1,6 +1,8 @@
 //@flow
 import React from 'react';
 import {Link} from 'react-router-dom';
+import { withRouter } from "react-router";
+import {pathWithTrailingSlash} from "../../Navigation";
 
 type Props = {
   branch: any
@@ -9,9 +11,9 @@ type Props = {
 class Branch extends React.Component<Props> {
 
     render() {
-        const { branch } = this.props;
+        const { match, branch } = this.props;
 
-        const link = encodeURIComponent(branch.name) + '/';
+        const link = pathWithTrailingSlash(match.url) + encodeURIComponent(branch.name) + '/';
 
         return (
             <Link className="list-group-item" to={ link }>
@@ -22,4 +24,4 @@ class Branch extends React.Component<Props> {
 
 }
 
-export default Branch;
+export default withRouter(Branch);

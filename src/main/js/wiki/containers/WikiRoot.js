@@ -7,6 +7,8 @@ import Loading from '../../Loading';
 import I18nAlert from '../../I18nAlert';
 import WikiNotFoundError from "../components/WikiNotFoundError";
 import BackToRepositoriesButton from "../../BackToRepositoriesButton";
+import { withRouter } from "react-router";
+import {pathWithTrailingSlash} from "../../Navigation";
 
 type Props = {
     loading: boolean,
@@ -26,7 +28,7 @@ class WikiRoot extends React.Component<Props> {
     }
 
     render() {
-        const { error, loading, wiki, notFound } = this.props;
+        const { error, loading, wiki, notFound, match } = this.props;
 
         let child = <div />;
         if (error) {
@@ -36,7 +38,7 @@ class WikiRoot extends React.Component<Props> {
         } else if (notFound) {
             child = <WikiNotFoundError />
         } else if (wiki) {
-            child = <Redirect to={wiki.landingPage} />
+            child = <Redirect to={ pathWithTrailingSlash(match.url) + wiki.landingPage} />
         }
 
         return (
@@ -67,4 +69,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(WikiRoot);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(WikiRoot));
