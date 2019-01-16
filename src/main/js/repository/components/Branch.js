@@ -5,7 +5,8 @@ import { withRouter } from "react-router";
 import {pathWithTrailingSlash} from "../../util";
 
 type Props = {
-  branch: any
+    branch: any,
+    match: any
 };
 
 class Branch extends React.Component<Props> {

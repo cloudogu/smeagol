@@ -17,7 +17,8 @@ type Props = {
     wiki: any,
     repository: string,
     branch: string,
-    fetchWikiIfNeeded: (repository: string, branch: string) => void
+    fetchWikiIfNeeded: (repository: string, branch: string) => void,
+    match: any
 };
 
 class WikiRoot extends React.Component<Props> {
