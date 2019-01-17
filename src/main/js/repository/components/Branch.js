@@ -2,7 +2,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import { withRouter } from "react-router";
-import {pathWithTrailingSlash} from "../../util";
+import {pathWithTrailingSlash} from "../../pathUtil";
 
 type Props = {
     branch: any,

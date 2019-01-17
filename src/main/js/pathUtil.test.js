@@ -1,4 +1,4 @@
-import {pathWithTrailingSlash} from './util';
+import {pathWithTrailingSlash} from './pathUtil';
 
 test('test pathWithTrailingSlash for path with slash', () => {
     let path = "foo/";

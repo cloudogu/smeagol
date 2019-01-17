@@ -8,7 +8,7 @@ import I18nAlert from '../../I18nAlert';
 import WikiNotFoundError from "../components/WikiNotFoundError";
 import BackToRepositoriesButton from "../../BackToRepositoriesButton";
 import { withRouter } from "react-router";
-import {pathWithTrailingSlash} from "../../util";
+import {pathWithTrailingSlash} from "../../pathUtil";
 
 type Props = {
     loading: boolean,
