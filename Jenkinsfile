@@ -1,5 +1,5 @@
 #!groovy
-@Library('github.com/cloudogu/ces-build-lib@ac17d45')
+@Library('github.com/cloudogu/ces-build-lib@9fa7ac4f')
 import com.cloudogu.ces.cesbuildlib.*
 
 node() { // No specific label
@@ -15,7 +15,8 @@ node() { // No specific label
 
     catchError {
 
-        Maven mvn = new MavenWrapper(this)
+        def javaHome = tool 'JDK8'
+        Maven mvn = new MavenWrapper(this, javaHome)
         Git git = new Git(this)
 
         stage('Checkout') {

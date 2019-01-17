@@ -25,7 +25,7 @@ class Repository extends React.Component<Props> {
         const { repository } = this.props;
         let name = nameWithoutNamespace(repository.name);
         return (
-            <Link className="list-group-item" to={ repository.id + '/' }>
+            <Link className="list-group-item" to={ '/' + repository.id + '/'}>
                 <h4>{ name }</h4>
                 <p className="list-group-item-text">
                     { repository.description }
