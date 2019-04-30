@@ -1,0 +1,86 @@
+body, html {
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(top, #27a4de, #26a3dd 50%, #229dd8 75%, #1072b4);
+    background: -moz-linear-gradient(top, #27a4de 0, #26a3dd 50%, #229dd8 75%, #1072b4 100%);
+    background: -webkit-linear-gradient(top, #27a4de, #26a3dd 50%, #229dd8 75%, #1072b4);
+    background: -ms-linear-gradient(top, #27a4de 0, #26a3dd 50%, #229dd8 75%, #1072b4 100%);
+    background: -o-linear-gradient(top, #27a4de 0, #26a3dd 50%, #229dd8 75%, #1072b4 100%);
+    background-color: #1072b4
+}
+
+.logo {
+    z-index: 2;
+    position: absolute;
+    right: 1.5vw;
+    top: 1.5vw
+}
+
+.logo img {
+    width: 6.5vw
+}
+
+.message {
+    z-index: 2;
+    color: #e43b53;
+    font-weight: 700;
+    font-family: Droid Sans, sans-serif;
+    text-align: center;
+    position: absolute;
+    right: 8vw;
+    top: 15vw;
+}
+
+.message .code {
+    font-size: 20vw
+}
+
+.message .description {
+    margin-top: -3vw;
+    font-size: 4vw;
+}
+.message .error{
+    color: #00426B;
+    font-size: 2vw;
+    max-width: 1000px;
+}
+
+.informationbox {
+    z-index: 2;
+    color: #e43b53;
+    text-align: center;
+    display: block;
+    overflow: auto;
+    position: relative;
+    padding-left: 50vw;
+    padding-top: 13vw
+}
+
+.sizing {
+    display: inline-block;
+    padding-left: 3vw;
+    padding-right: 3vw;
+    padding-top: 0 !important;
+    padding-bottom: 3vw !important;
+    border-radius: .5vw
+}
+
+.sizing h1 {
+    color: #e43b53 !important;
+    padding-top: 2vw !important;
+    padding-bottom: 1vw !important
+}
+
+.background {
+    position: absolute;
+    z-index: 1;
+    bottom: 1vw;
+    left: 1vw;
+    width: 80%
+}
+
+.background img {
+    width: 70%
+}
+
+
