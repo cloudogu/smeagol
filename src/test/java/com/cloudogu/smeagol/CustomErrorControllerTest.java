@@ -23,6 +23,8 @@ public class CustomErrorControllerTest {
     @Mock
     HttpServletRequest requestMock;
 
+    private static final String mockedContextPath = "sample/contextPath/smeagol";
+
     @Before
     public void init(){
         MockitoAnnotations.initMocks(this);
@@ -39,13 +41,18 @@ public class CustomErrorControllerTest {
         doReturn(errorMessage).when(requestMock)
                 .getAttribute(RequestDispatcher.ERROR_MESSAGE);
 
+        doReturn(mockedContextPath).when(requestMock)
+                .getContextPath();
+
         String responseTemplate = customErrorController.handleError(requestMock);
 
         //check for HTTP status code (400), reasonPhrase(Bad Gateway) and error message (errorMessage)
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(expectedError.toString()));
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(expectedError.getReasonPhrase()));
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(errorMessage.toString()));
-
+        //check for correct resource path
+        Assert.assertThat(responseTemplate, CoreMatchers.containsString(mockedContextPath+"/clockwork.png"));
+        Assert.assertThat(responseTemplate, CoreMatchers.containsString(mockedContextPath+"/logo-white.png"));
     }
 
     @Test
@@ -59,12 +66,18 @@ public class CustomErrorControllerTest {
         doReturn(errorMessage).when(requestMock)
                 .getAttribute(RequestDispatcher.ERROR_MESSAGE);
 
+        doReturn(mockedContextPath).when(requestMock)
+                .getContextPath();
+
         String responseTemplate = customErrorController.handleError(requestMock);
 
         //check for HTTP status code (500), reasonPhrase(Internal Server Error) and error message (errorMessage)
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(expectedError.toString()));
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(expectedError.getReasonPhrase()));
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(errorMessage.toString()));
+        //check for correct resource path
+        Assert.assertThat(responseTemplate, CoreMatchers.containsString(mockedContextPath+"/clockwork.png"));
+        Assert.assertThat(responseTemplate, CoreMatchers.containsString(mockedContextPath+"/logo-white.png"));
     }
     @Test
 
