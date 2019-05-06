@@ -26,7 +26,7 @@ public class CustomErrorControllerTest {
     private static final String mockedContextPath = "sample/contextPath/smeagol";
 
     @Before
-    public void init(){
+    public void init() {
         MockitoAnnotations.initMocks(this);
     }
 
@@ -50,9 +50,9 @@ public class CustomErrorControllerTest {
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(expectedError.toString()));
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(expectedError.getReasonPhrase()));
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(errorMessage.toString()));
-        //check for correct resource path
-        Assert.assertThat(responseTemplate, CoreMatchers.containsString(mockedContextPath+"/clockwork.png"));
-        Assert.assertThat(responseTemplate, CoreMatchers.containsString(mockedContextPath+"/logo-white.png"));
+        //check for correct resource path (should be /static see ProductionDispatcher)
+        Assert.assertThat(responseTemplate, CoreMatchers.containsString(mockedContextPath + "/static/clockwork.png"));
+        Assert.assertThat(responseTemplate, CoreMatchers.containsString(mockedContextPath + "/static/logo-white.png"));
     }
 
     @Test
@@ -75,10 +75,11 @@ public class CustomErrorControllerTest {
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(expectedError.toString()));
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(expectedError.getReasonPhrase()));
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(errorMessage.toString()));
-        //check for correct resource path
-        Assert.assertThat(responseTemplate, CoreMatchers.containsString(mockedContextPath+"/clockwork.png"));
-        Assert.assertThat(responseTemplate, CoreMatchers.containsString(mockedContextPath+"/logo-white.png"));
+        //check for correct resource path (should be /static see ProductionDispatcher)
+        Assert.assertThat(responseTemplate, CoreMatchers.containsString(mockedContextPath + "/static/clockwork.png"));
+        Assert.assertThat(responseTemplate, CoreMatchers.containsString(mockedContextPath + "/static/logo-white.png"));
     }
+
     @Test
 
     public void testErrorPageHandling_Status_Undefined() {

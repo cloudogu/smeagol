@@ -48,7 +48,7 @@ public class CustomErrorController implements ErrorController {
                 "    <title>Error</title>\n" +
                 "    <meta name='viewport' content='width=device-width, initial-scale=1'>\n" +
                 "    <meta http-equiv='X-UA-Compatible' content='IE=edge' />\n" +
-                "    <link rel='stylesheet' href='%4$s/errors/css/errors.css'>\n" +
+                "    <link rel='stylesheet' href='%4$s/static/error/errors.css'>\n" +
                 "    <!-- favicons -->\n" +
                 "    <link rel='icon' type='image/png' href='%4$s/favicon-64px.png' sizes='64x64' />\n" +
                 "    <link rel='icon' type='image/png' href='%4$s/favicon-32px.png' sizes='32x32' />\n" +
@@ -56,7 +56,7 @@ public class CustomErrorController implements ErrorController {
                 "</head>\n" +
                 "<body>\n" +
                 "    <div class='logo'>\n" +
-                "        <img src='%4$s/logo-white.png'>\n" +
+                "        <img src='%4$s/static/logo-white.png'>\n" +
                 "    </div>\n" +
                 "    <div class='message'>\n" +
                 "        <div class='code'>\n" +
@@ -70,7 +70,7 @@ public class CustomErrorController implements ErrorController {
                 "        </div>\n" +
                 "    </div>\n" +
                 "    <div class='background'>\n" +
-                "        <img src='%4$s/clockwork.png'>\n" +
+                "        <img src='%4$s/static/clockwork.png'>\n" +
                 "    </div>\n" +
                 "</body>\n" +
                 "</html>", statusCode, reasonPhrase, message, contextPath);
