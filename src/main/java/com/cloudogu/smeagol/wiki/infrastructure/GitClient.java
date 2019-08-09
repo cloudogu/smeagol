@@ -12,6 +12,7 @@ import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -25,9 +26,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URI;
-import java.nio.file.*;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Iterator;
 import java.util.List;
@@ -177,6 +186,11 @@ public class GitClient implements AutoCloseable {
         LOG.debug("pull changes from remote for repository {}", repository);
         ObjectId oldHead = git.getRepository().resolve("HEAD^{tree}");
 
+        // We have to be sure that the origin url points to the actual wiki repository url.
+        // This can be differ if the fqdn of the ecosystem has changed or after a migration
+        // from scm-manager v1 to v2.
+        GitConfig.from(git).ensureOriginMatchesUrl(getRemoteRepositoryUrl());
+
         git.pull()
                 .setRemote("origin")
                 .setRemoteBranchName(wiki.getId().getBranch())
@@ -190,6 +204,10 @@ public class GitClient implements AutoCloseable {
                 publisher.publishEvent(repositoryChangedEvent);
             }
         }
+    }
+
+    private String getRemoteRepositoryUrl() {
+        return wiki.getRepositoryUrl().toExternalForm();
     }
 
     private RepositoryChangedEvent createRepositoryChangedEvent(Git git, ObjectId oldHead, ObjectId head) throws IOException, GitAPIException {
@@ -245,7 +263,7 @@ public class GitClient implements AutoCloseable {
         String branch = wiki.getId().getBranch();
         LOG.info("clone repository {} to {}", wiki.getRepositoryUrl(), repository);
         gitRepository = Git.cloneRepository()
-                .setURI(wiki.getRepositoryUrl().toExternalForm())
+                .setURI(getRemoteRepositoryUrl())
                 .setDirectory(repository)
                 .setBranchesToClone(singleton("refs/head" + branch))
                 .setBranch(branch)
@@ -389,7 +407,7 @@ public class GitClient implements AutoCloseable {
 
         LOG.info("push changes to remote {} on branch {}", wiki.getRepositoryUrl(), branch);
         git.push()
-                .setRemote("origin")
+                .setRemote(getRemoteRepositoryUrl())
                 .setRefSpecs(new RefSpec(branch + ":" + branch))
                 .setCredentialsProvider(credentials)
                 .call();
