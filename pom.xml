@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -14,7 +15,7 @@
     <version>0.5.5</version>
     <name>smeagol</name>
     <packaging>war</packaging>
-    
+
     <dependencies>
 
         <!-- project serkis -->
@@ -91,7 +92,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <!-- git client -->
 
         <dependency>
@@ -99,9 +100,9 @@
             <artifactId>org.eclipse.jgit</artifactId>
             <version>4.5.0.201609210915-r</version>
         </dependency>
-        
+
         <!-- cas authentication -->
-        
+
         <dependency>
             <groupId>org.jasig.cas.client</groupId>
             <artifactId>cas-client-core</artifactId>
@@ -115,15 +116,15 @@
             <artifactId>guava</artifactId>
             <version>19.0</version>
         </dependency>
-        
+
         <!-- logging -->
-        
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.20</version>
         </dependency>
-        
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -154,8 +155,8 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
-    
+
+
     <build>
         <plugins>
 
@@ -263,10 +264,60 @@
             </plugin>
 
         </plugins>
-        
+
+        <pluginManagement>
+            <plugins>
+
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.8.4</version>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+
         <finalName>smeagol</finalName>
     </build>
-    
+
+    <profiles>
+        <profile>
+            <!-- profile is active on every jenkins build -->
+            <id>jenkins</id>
+
+            <activation>
+                <property>
+                    <name>env.BUILD_URL</name>
+                </property>
+            </activation>
+
+            <build>
+                <plugins>
+
+                    <!-- prepare jacoco agent for code coverage in sonar -->
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>agent-for-it</id>
+                                <goals>
+                                    <goal>prepare-agent-integration</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <repositories>
         <repository>
             <!-- Necessary for ces-build-lib -->
@@ -274,7 +325,7 @@
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
