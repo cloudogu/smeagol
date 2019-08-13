@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import static com.cloudogu.smeagol.wiki.infrastructure.GitConfig.DEFAULT_REMOTE;
 import static java.util.Collections.singleton;
 
 @SuppressWarnings("squid:S1160") // ignore multiple exception rule
@@ -177,8 +178,13 @@ public class GitClient implements AutoCloseable {
         LOG.debug("pull changes from remote for repository {}", repository);
         ObjectId oldHead = git.getRepository().resolve("HEAD^{tree}");
 
+        // We have to be sure that the origin url points to the actual wiki repository url.
+        // This can be differ if the fqdn of the ecosystem has changed or after a migration
+        // from scm-manager v1 to v2.
+        GitConfig.from(git).ensureOriginMatchesUrl(getRemoteRepositoryUrl());
+
         git.pull()
-                .setRemote("origin")
+                .setRemote(DEFAULT_REMOTE)
                 .setRemoteBranchName(wiki.getId().getBranch())
                 .setCredentialsProvider(credentialsProvider(account))
                 .call();
@@ -190,6 +196,10 @@ public class GitClient implements AutoCloseable {
                 publisher.publishEvent(repositoryChangedEvent);
             }
         }
+    }
+
+    private String getRemoteRepositoryUrl() {
+        return wiki.getRepositoryUrl().toExternalForm();
     }
 
     private RepositoryChangedEvent createRepositoryChangedEvent(Git git, ObjectId oldHead, ObjectId head) throws IOException, GitAPIException {
@@ -245,7 +255,7 @@ public class GitClient implements AutoCloseable {
         String branch = wiki.getId().getBranch();
         LOG.info("clone repository {} to {}", wiki.getRepositoryUrl(), repository);
         gitRepository = Git.cloneRepository()
-                .setURI(wiki.getRepositoryUrl().toExternalForm())
+                .setURI(getRemoteRepositoryUrl())
                 .setDirectory(repository)
                 .setBranchesToClone(singleton("refs/head" + branch))
                 .setBranch(branch)
@@ -389,7 +399,7 @@ public class GitClient implements AutoCloseable {
 
         LOG.info("push changes to remote {} on branch {}", wiki.getRepositoryUrl(), branch);
         git.push()
-                .setRemote("origin")
+                .setRemote(getRemoteRepositoryUrl())
                 .setRefSpecs(new RefSpec(branch + ":" + branch))
                 .setCredentialsProvider(credentials)
                 .call();

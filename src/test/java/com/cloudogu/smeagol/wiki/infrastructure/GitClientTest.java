@@ -5,9 +5,11 @@ import com.cloudogu.smeagol.wiki.domain.*;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.RemoteSetUrlCommand;
 import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.URIish;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,11 +24,13 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 import static com.cloudogu.smeagol.wiki.DomainTestData.COMMIT_ID;
+import static com.cloudogu.smeagol.wiki.infrastructure.GitConfig.DEFAULT_REMOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -67,8 +71,8 @@ public class GitClientTest {
 
         targetSearchIndexDirectory = temporaryFolder.newFolder();
         targetSearchIndexDirectory.delete();
-        when(directoryResolver.resolveSearchIndex(wikiId)).thenReturn(targetSearchIndexDirectory);
 
+        when(directoryResolver.resolveSearchIndex(wikiId)).thenReturn(targetSearchIndexDirectory);
         when(directoryResolver.resolve(wikiId)).thenReturn(targetDirectory);
 
         Wiki wiki = new Wiki(
@@ -474,6 +478,30 @@ public class GitClientTest {
         assertEquals(GitClient.INDEX_VERSION, Files.toString(versionFile, Charsets.UTF_8));
 
         assertRepositoryResetEventsAreFired();
+    }
+
+    @Test
+    public void testPullWithChangingUrl() throws IOException, GitAPIException, URISyntaxException {
+        commit(remote, "a.md", "# My Headline");
+
+        Git temporary = Git.cloneRepository()
+                .setDirectory(targetDirectory)
+                .setURI(remoteDirectory.toURI().toURL().toExternalForm())
+                .call();
+
+        RemoteSetUrlCommand setUrlCommand = temporary.remoteSetUrl();
+        setUrlCommand.setName(DEFAULT_REMOTE);
+        setUrlCommand.setUri(new URIish("http://cloudogu.com"));
+        setUrlCommand.call();
+
+        RevCommit commit = commit(remote, "b.md", "File b");
+
+        target.refresh();
+
+        try (Git git = Git.open(targetDirectory)) {
+            RevCommit c = git.log().call().iterator().next();
+            assertEquals(commit, c);
+        }
     }
 
     private void assertRepositoryResetEventsAreFired() {
