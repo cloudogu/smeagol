@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import static com.cloudogu.smeagol.wiki.infrastructure.GitConfig.DEFAULT_REMOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class GitConfigTest {
@@ -28,7 +29,7 @@ public class GitConfigTest {
 
         config.ensureOriginMatchesUrl("https://scm.scm-manager.org");
 
-        String url = repository.getRepository().getConfig().getString("remote", "origin", "url");
+        String url = repository.getRepository().getConfig().getString("remote", DEFAULT_REMOTE, "url");
         assertThat(url).isEqualTo("https://scm.scm-manager.org");
     }
 
@@ -38,7 +39,7 @@ public class GitConfigTest {
                 .call();
 
         RemoteAddCommand command = git.remoteAdd();
-        command.setName("origin");
+        command.setName(DEFAULT_REMOTE);
         command.setUri(new URIish(remoteUrl));
         command.call();
 

@@ -1,11 +1,7 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.AccountTestData;
-import com.cloudogu.smeagol.wiki.domain.ChangeType;
-import com.cloudogu.smeagol.wiki.domain.DisplayName;
-import com.cloudogu.smeagol.wiki.domain.Path;
-import com.cloudogu.smeagol.wiki.domain.Wiki;
-import com.cloudogu.smeagol.wiki.domain.WikiId;
+import com.cloudogu.smeagol.wiki.domain.*;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.eclipse.jgit.api.Git;
@@ -34,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.cloudogu.smeagol.wiki.DomainTestData.COMMIT_ID;
+import static com.cloudogu.smeagol.wiki.infrastructure.GitConfig.DEFAULT_REMOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -493,7 +490,7 @@ public class GitClientTest {
                 .call();
 
         RemoteSetUrlCommand setUrlCommand = temporary.remoteSetUrl();
-        setUrlCommand.setName("origin");
+        setUrlCommand.setName(DEFAULT_REMOTE);
         setUrlCommand.setUri(new URIish("http://cloudogu.com"));
         setUrlCommand.call();
 

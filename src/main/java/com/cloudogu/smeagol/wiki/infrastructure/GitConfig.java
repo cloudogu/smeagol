@@ -10,8 +10,9 @@ import java.io.IOException;
 
 final class GitConfig {
 
+    static final String DEFAULT_REMOTE = "origin";
     private static final String SECTION = "remote";
-    private static final String SUBSECTION = "origin";
+    private static final String SUBSECTION = DEFAULT_REMOTE;
     private static final String NAME = "url";
 
     private static final Logger LOG = LoggerFactory.getLogger(GitConfig.class);

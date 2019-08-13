@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import static com.cloudogu.smeagol.wiki.infrastructure.GitConfig.DEFAULT_REMOTE;
 import static java.util.Collections.singleton;
 
 @SuppressWarnings("squid:S1160") // ignore multiple exception rule
@@ -183,7 +184,7 @@ public class GitClient implements AutoCloseable {
         GitConfig.from(git).ensureOriginMatchesUrl(getRemoteRepositoryUrl());
 
         git.pull()
-                .setRemote("origin")
+                .setRemote(DEFAULT_REMOTE)
                 .setRemoteBranchName(wiki.getId().getBranch())
                 .setCredentialsProvider(credentialsProvider(account))
                 .call();
