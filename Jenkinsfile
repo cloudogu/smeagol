@@ -15,7 +15,7 @@ node() { // No specific label
 
     catchError {
 
-        def javaHome = tool 'JDK8'
+        def javaHome = tool 'OpenJDK-8'
         Maven mvn = new MavenWrapper(this, javaHome)
         Git git = new Git(this)
 
