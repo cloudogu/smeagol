@@ -1,9 +1,3 @@
-/**
- * Copyright (c) 2016 Cloudogu GmbH. All Rights Reserved.
- * 
- * Copyright notice
- */
-
 package com.cloudogu.smeagol;
 
 import com.google.common.annotations.VisibleForTesting;
