@@ -81,3 +81,12 @@ def setupMaven(mvn) {
         currentBuild.description = mvn.getVersion()
     }
 }
+
+void gitWithCredentials(String command){
+    withCredentials([usernamePassword(credentialsId: 'cesmarvin', usernameVariable: 'GIT_AUTH_USR', passwordVariable: 'GIT_AUTH_PSW')]) {
+        sh (
+                script: "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" " + command,
+                returnStdout: true
+        )
+    }
+}
