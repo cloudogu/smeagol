@@ -27,8 +27,21 @@ cas:
   serviceUrl: https://${FQDN}/smeagol
 EOF
 
-java -Djava.awt.headless=true \
-  -Djava.net.preferIPv4Stack=true \
-  -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
-  -Djavax.net.ssl.trustStorePassword=changeit \
-  -jar /app/smeagol.war
+if [[ "$(doguctl config "container_config/memory_limit" -d "empty")" == "empty" ]];  then
+  echo "Starting Smeagol without memory limits..."
+  java -Djava.awt.headless=true \
+       -Djava.net.preferIPv4Stack=true \
+       -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
+       -Djavax.net.ssl.trustStorePassword=changeit \
+       -jar /app/smeagol.war
+else
+  echo "Starting Smeagol with memory limits..."
+  java -Djava.awt.headless=true \
+       -Djava.net.preferIPv4Stack=true \
+       -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
+       -Djavax.net.ssl.trustStorePassword=changeit \
+       -XX:MaxRAMPercentage=85.0 \
+       -XX:MinRAMPercentage=50.0 \
+       -jar /app/smeagol.war
+fi
+
