@@ -15,7 +15,7 @@
   "Configuration": [
     {
       "Name": "container_config/memory_limit",
-      "Description":"Limits the container's memory usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte).",
+      "Description":"Limits the container's memory usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). We recommend a minimum of 500m for Smeagol.",
       "Optional": true,
       "Validation": {
         "Type": "BINARY_MEASUREMENT"
