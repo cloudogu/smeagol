@@ -15,7 +15,7 @@
   "Configuration": [
     {
       "Name": "container_config/memory_limit",
-      "Description":"Limits the container's memory usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). We recommend a minimum of 500m for Smeagol.",
+      "Description":"Limits the container's memory usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte).",
       "Optional": true,
       "Validation": {
         "Type": "BINARY_MEASUREMENT"
@@ -27,6 +27,24 @@
       "Optional": true,
       "Validation": {
         "Type": "BINARY_MEASUREMENT"
+      }
+    },
+    {
+      "Name": "container_config/java_max_ram_percentage",
+      "Description":"Limits the heap stack size of the Smeagol process to the configured percentage of the available physical memory when the container has more than approx. 250 MB of memory available. Is only considered when a memory_limit is set. Use a valid float value with decimals between 0 and 100 (f. ex. 55.0 for 55%). Default value for Smeagol: 25%",
+      "Optional": true,
+      "Default": "25.0",
+      "Validation": {
+        "Type": "FLOAT_PERCENTAGE_HUNDRED"
+      }
+    },
+    {
+      "Name": "container_config/java_min_ram_percentage",
+      "Description":"Limits the heap stack size of the Smeagol process to the configured percentage of the available physical memory when the container has less than approx. 250 MB of memory available. Is only considered when a memory_limit is set. Use a valid float value with decimals between 0 and 100 (f. ex. 55.0 for 55%). Default value for Smeagol: 50%",
+      "Optional": true,
+      "Default": "50.0",
+      "Validation": {
+        "Type": "FLOAT_PERCENTAGE_HUNDRED"
       }
     }
   ],
