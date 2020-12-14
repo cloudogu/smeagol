@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.5.6-1] - 2020-12-14
+
 ### Added
 * the ability to configure the memory limit for the container via `cesapp edit-conf` (#93)
 * the ability to configure the `MaxRamPercentage` and `MinRamPercentage` for the Smeagol process inside the container via `cesapp edit-conf`  (#93)

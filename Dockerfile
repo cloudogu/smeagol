@@ -12,7 +12,10 @@ RUN set -x \
  && ./mvnw package
 
 FROM registry.cloudogu.com/official/java:8u191-1
-LABEL maintainer="Sebastian Sdorra <sebastian.sdorra@cloudogu.com>"
+LABEL NAME="" \
+      VERSION="0.5.6-1" \
+      maintainer="Sebastian Sdorra <sebastian.sdorra@cloudogu.com>"
+
 ENV SERVICE_TAGS=webapp \
     SMEAGOL_HOME=/var/lib/smeagol
 
