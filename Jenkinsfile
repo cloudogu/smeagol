@@ -1,5 +1,5 @@
 #!groovy
-@Library('github.com/cloudogu/ces-build-lib@1.44.2')
+@Library('github.com/cloudogu/ces-build-lib@1.44.3')
 import com.cloudogu.ces.cesbuildlib.*
 
 node() { // No specific label
@@ -20,8 +20,8 @@ node() { // No specific label
 
     catchError {
 
-        def javaHome = tool 'OpenJDK-8'
-        Maven mvn = new MavenWrapper(this, javaHome)
+        def mvnDockerName = '3.6-openjdk-8'
+        Maven mvn = new MavenInDocker(this, mvnDockerName)
 
         stage('Checkout') {
             checkout scm
