@@ -12,7 +12,7 @@ RUN set -x \
  && ./mvnw package
 
 FROM registry.cloudogu.com/official/java:8u191-1
-LABEL NAME="" \
+LABEL NAME="official/smeagol" \
       VERSION="0.5.6-1" \
       maintainer="Sebastian Sdorra <sebastian.sdorra@cloudogu.com>"
 
