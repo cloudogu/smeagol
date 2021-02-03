@@ -6,10 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+* Update version of the Java base image to version 8u212-1.
+* Update version of the OpenJDK image for building Smeagol to version 8u212-jdk
 
 ## [v0.5.6-1] - 2020-12-14
-
 ### Added
-* the ability to configure the memory limit for the container via `cesapp edit-conf` (#93)
-* the ability to configure the `MaxRamPercentage` and `MinRamPercentage` for the Smeagol process inside the container via `cesapp edit-conf`  (#93)
+* The ability to configure the memory limit for the container via `cesapp edit-conf` (#93)
+* The ability to configure the `MaxRamPercentage` and `MinRamPercentage` for the Smeagol process inside the container via `cesapp edit-conf`  (#93)
 * NAME and current VERSION to Dockerfile
