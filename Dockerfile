@@ -26,5 +26,7 @@ COPY ces-startup.sh /app/startup.sh
 VOLUME ${SMEAGOL_HOME}
 EXPOSE 8080
 
+HEALTHCHECK CMD doguctl healthy cockpit || exit 1
+
 WORKDIR /app
 CMD /app/startup.sh

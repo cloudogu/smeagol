@@ -228,6 +228,7 @@
                     <allowRoot>true</allowRoot>
                     <nodeVersion>v8.9.4</nodeVersion>
                     <npmVersion>v5.6.0</npmVersion>
+                    <karmaConfig/>
                 </configuration>
                 <executions>
                     <execution>

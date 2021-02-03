@@ -1,6 +1,7 @@
 #!groovy
-@Library('github.com/cloudogu/ces-build-lib@1.44.3')
+@Library(['github.com/cloudogu/ces-build-lib@1.44.3', 'github.com/cloudogu/dogu-build-lib@v1.2.0'])
 import com.cloudogu.ces.cesbuildlib.*
+import com.cloudogu.ces.dogubuildlib.*
 
 node() { // No specific label
 
@@ -26,6 +27,10 @@ node() { // No specific label
         stage('Checkout') {
             checkout scm
             git.clean("")
+        }
+
+        stage('Lint') {
+            lintDockerfile()
         }
 
         stage('Build') {
