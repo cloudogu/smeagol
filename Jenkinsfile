@@ -18,7 +18,7 @@ node() { // No specific label
 
     String defaultEmailRecipients = env.EMAIL_RECIPIENTS
     Git git = new Git(this, "cesmarvin")
-    EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer", "smeagol-gcloud-ces-operations-internal")
+    EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer", "jenkins-gcloud-ces-operations-internal")
 
     catchError {
 
