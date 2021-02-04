@@ -18,6 +18,7 @@ node() { // No specific label
 
     String defaultEmailRecipients = env.EMAIL_RECIPIENTS
     Git git = new Git(this, "cesmarvin")
+    EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer", "smeagol-gcloud-ces-operations-internal")
 
     catchError {
 
@@ -33,7 +34,7 @@ node() { // No specific label
             lintDockerfile()
         }
 
-        stage('Build') {
+        stage('Build Smeagol') {
             setupMaven(mvn)
             mvn 'clean install -DskipTests'
             archive '**/target/*.*ar,**/target/*.zip'
@@ -43,35 +44,60 @@ node() { // No specific label
             mvn 'test'
         }
 
-        stage('SonarQube') {
-            def scannerHome = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-            withSonarQubeEnv {
+        try {
+            stage('Provision') {
+                ecoSystem.provision("/dogu")
+            }
 
+            stage('Setup') {
+                ecoSystem.loginBackend('cesmarvin-setup')
+                ecoSystem.setup([additionalDependencies: ['official/scm']])
+            }
 
-                sh "git config 'remote.origin.fetch' '+refs/heads/*:refs/remotes/origin/*'"
-                gitWithCredentials("fetch --all")
-
-                if (branch == "master") {
-                    echo "This branch has been detected as the master branch."
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName}"
-                } else if (branch == "develop") {
-                    echo "This branch has been detected as the develop branch."
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=master  "
-                } else if (env.CHANGE_TARGET) {
-                    echo "This branch has been detected as a pull request."
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.CHANGE_BRANCH}-PR${env.CHANGE_ID} -Dsonar.branch.target=${env.CHANGE_TARGET} "
-                } else if (branch.startsWith("feature/")) {
-                    echo "This branch has been detected as a feature branch."
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=develop"
+            stage('Wait for dependencies') {
+                timeout(15) {
+                    ecoSystem.waitForDogu("scm")
                 }
             }
-            timeout(time: 2, unit: 'MINUTES') { // Needed when there is no webhook for example
-                def qGate = waitForQualityGate()
-                if (qGate.status != 'OK') {
-                    unstable("Pipeline unstable due to SonarQube quality gate failure")
+
+            stage('Build Dogu') {
+               ecoSystem.build("/dogu")
+            }
+
+            stage('SonarQube') {
+                def scannerHome = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                withSonarQubeEnv {
+
+
+                    sh "git config 'remote.origin.fetch' '+refs/heads/*:refs/remotes/origin/*'"
+                    gitWithCredentials("fetch --all")
+
+                    if (branch == "master") {
+                        echo "This branch has been detected as the master branch."
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName}"
+                    } else if (branch == "develop") {
+                        echo "This branch has been detected as the develop branch."
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=master  "
+                    } else if (env.CHANGE_TARGET) {
+                        echo "This branch has been detected as a pull request."
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.CHANGE_BRANCH}-PR${env.CHANGE_ID} -Dsonar.branch.target=${env.CHANGE_TARGET} "
+                    } else if (branch.startsWith("feature/")) {
+                        echo "This branch has been detected as a feature branch."
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=develop"
+                    }
+                }
+                timeout(time: 2, unit: 'MINUTES') { // Needed when there is no webhook for example
+                    def qGate = waitForQualityGate()
+                    if (qGate.status != 'OK') {
+                        unstable("Pipeline unstable due to SonarQube quality gate failure")
+                    }
                 }
             }
-        }
+        } finally {
+          stage('Clean') {
+            ecoSystem.destroy()
+          }
+       }
     }
 
     // Archive Unit and integration test results, if any
