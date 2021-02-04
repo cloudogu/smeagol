@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-* Health checker in Dockerfile (#96)
-* Timestamp in the log of Jenkins job (#96)
+* Health check in Dockerfile (#96)
+* Timestamps in the log of Jenkins job (#96)
 * Goss Spec to validate server configuration (#96)
+* Lint of the dockerfile and checking of shell scripts (#96)
 
 ### Changed
 * Update version of the Java base image to version 8u252-1 (#96)

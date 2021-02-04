@@ -34,6 +34,10 @@ node() { // No specific label
                 lintDockerfile()
             }
 
+            stage('Shellcheck'){
+                shellCheck()
+            }
+
             stage('Unit Test') {
                 mvn 'test'
             }
