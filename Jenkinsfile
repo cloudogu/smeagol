@@ -34,12 +34,6 @@ node() { // No specific label
             lintDockerfile()
         }
 
-        stage('Build Smeagol') {
-            setupMaven(mvn)
-            mvn 'clean install -DskipTests'
-            archive '**/target/*.*ar,**/target/*.zip'
-        }
-
         stage('Unit Test') {
             mvn 'test'
         }
@@ -104,13 +98,6 @@ node() { // No specific label
     junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
 
     mailIfStatusChanged(findEmailRecipients(defaultEmailRecipients))
-}
-
-def setupMaven(mvn) {
-    if ("master".equals(env.BRANCH_NAME)) {
-        mvn.additionalArgs = "-DperformRelease"
-        currentBuild.description = mvn.getVersion()
-    }
 }
 
 void gitWithCredentials(String command){
