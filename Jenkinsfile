@@ -5,99 +5,100 @@ import com.cloudogu.ces.dogubuildlib.*
 
 node() { // No specific label
 
-    project = 'github.com/cloudogu/smeagol'
     projectName = 'smeagol'
     branch = "${env.BRANCH_NAME}"
-
-    properties([
-            // Keep only the last 10 build to preserve space
-            buildDiscarder(logRotator(numToKeepStr: '10')),
-            // Don't run concurrent builds for a branch, because they use the same workspace directory
-            disableConcurrentBuilds()
-    ])
-
     String defaultEmailRecipients = env.EMAIL_RECIPIENTS
+
     Git git = new Git(this, "cesmarvin")
     EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer", "jenkins-gcloud-ces-operations-internal")
 
-    catchError {
+    timestamps {
+        properties([
+                // Keep only the last 10 build to preserve space
+                buildDiscarder(logRotator(numToKeepStr: '10')),
+                // Don't run concurrent builds for a branch, because they use the same workspace directory
+                disableConcurrentBuilds()
+        ])
 
-        def mvnDockerName = '3.6-openjdk-8'
-        Maven mvn = new MavenInDocker(this, mvnDockerName)
+        catchError {
 
-        stage('Checkout') {
-            checkout scm
-            git.clean("")
-        }
+            def mvnDockerName = '3.6-openjdk-8'
+            Maven mvn = new MavenInDocker(this, mvnDockerName)
 
-        stage('Lint') {
-            lintDockerfile()
-        }
-
-        stage('Unit Test') {
-            mvn 'test'
-        }
-
-        try {
-            stage('Provision') {
-                ecoSystem.provision("/dogu")
+            stage('Checkout') {
+                checkout scm
+                git.clean("")
             }
 
-            stage('Setup') {
-                ecoSystem.loginBackend('cesmarvin-setup')
-                ecoSystem.setup([additionalDependencies: ['official/scm']])
+            stage('Lint') {
+                lintDockerfile()
             }
 
-            stage('Wait for dependencies') {
-                timeout(15) {
-                    ecoSystem.waitForDogu("scm")
+            stage('Unit Test') {
+                mvn 'test'
+            }
+
+            try {
+                stage('Provision') {
+                    ecoSystem.provision("/dogu")
                 }
-            }
 
-            stage('Build Dogu') {
-               ecoSystem.build("/dogu")
-            }
+                stage('Setup') {
+                    ecoSystem.loginBackend('cesmarvin-setup')
+                    ecoSystem.setup([additionalDependencies: ['official/scm']])
+                }
 
-            stage('SonarQube') {
-                def scannerHome = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                withSonarQubeEnv {
-
-
-                    sh "git config 'remote.origin.fetch' '+refs/heads/*:refs/remotes/origin/*'"
-                    gitWithCredentials("fetch --all")
-
-                    if (branch == "master") {
-                        echo "This branch has been detected as the master branch."
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName}"
-                    } else if (branch == "develop") {
-                        echo "This branch has been detected as the develop branch."
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=master  "
-                    } else if (env.CHANGE_TARGET) {
-                        echo "This branch has been detected as a pull request."
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.CHANGE_BRANCH}-PR${env.CHANGE_ID} -Dsonar.branch.target=${env.CHANGE_TARGET} "
-                    } else if (branch.startsWith("feature/")) {
-                        echo "This branch has been detected as a feature branch."
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=develop"
+                stage('Wait for dependencies') {
+                    timeout(15) {
+                        ecoSystem.waitForDogu("scm")
                     }
                 }
-                timeout(time: 2, unit: 'MINUTES') { // Needed when there is no webhook for example
-                    def qGate = waitForQualityGate()
-                    if (qGate.status != 'OK') {
-                        unstable("Pipeline unstable due to SonarQube quality gate failure")
+
+                stage('Build') {
+                    ecoSystem.build("/dogu")
+                }
+
+                stage('SonarQube') {
+                    def scannerHome = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                    withSonarQubeEnv {
+
+
+                        sh "git config 'remote.origin.fetch' '+refs/heads/*:refs/remotes/origin/*'"
+                        gitWithCredentials("fetch --all")
+
+                        if (branch == "master") {
+                            echo "This branch has been detected as the master branch."
+                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName}"
+                        } else if (branch == "develop") {
+                            echo "This branch has been detected as the develop branch."
+                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=master  "
+                        } else if (env.CHANGE_TARGET) {
+                            echo "This branch has been detected as a pull request."
+                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.CHANGE_BRANCH}-PR${env.CHANGE_ID} -Dsonar.branch.target=${env.CHANGE_TARGET} "
+                        } else if (branch.startsWith("feature/")) {
+                            echo "This branch has been detected as a feature branch."
+                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=develop"
+                        }
+                    }
+                    timeout(time: 2, unit: 'MINUTES') { // Needed when there is no webhook for example
+                        def qGate = waitForQualityGate()
+                        if (qGate.status != 'OK') {
+                            unstable("Pipeline unstable due to SonarQube quality gate failure")
+                        }
                     }
                 }
+            } finally {
+                stage('Clean') {
+                    ecoSystem.destroy()
+                }
             }
-        } finally {
-          stage('Clean') {
-            ecoSystem.destroy()
-          }
-       }
+        }
+
+        // Archive Unit and integration test results, if any
+        junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
+
+        mailIfStatusChanged(findEmailRecipients(defaultEmailRecipients))
     }
-
-    // Archive Unit and integration test results, if any
-    junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
-
-    mailIfStatusChanged(findEmailRecipients(defaultEmailRecipients))
 }
 
 void gitWithCredentials(String command){
