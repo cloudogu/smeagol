@@ -26,7 +26,7 @@ COPY resources/ /app/
 VOLUME ${SMEAGOL_HOME}
 EXPOSE 8080
 
-HEALTHCHECK CMD doguctl healthy cockpit || exit 1
+HEALTHCHECK CMD doguctl healthy smeagol || exit 1
 
 WORKDIR /app
 CMD /app/startup.sh
