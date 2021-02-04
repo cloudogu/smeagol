@@ -21,7 +21,7 @@ ENV SERVICE_TAGS=webapp \
     SMEAGOL_HOME=/var/lib/smeagol
 
 COPY --from=builder /usr/src/smeagol/target/smeagol.war /app/smeagol.war
-COPY resources/ /
+COPY resources/ /app/
 
 VOLUME ${SMEAGOL_HOME}
 EXPOSE 8080
