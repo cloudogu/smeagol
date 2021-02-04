@@ -58,6 +58,10 @@ node() { // No specific label
                     ecoSystem.build("/dogu")
                 }
 
+                stage('Verify') {
+                    ecoSystem.verify("/dogu")
+                }
+
                 stage('SonarQube') {
                     def scannerHome = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                     withSonarQubeEnv {

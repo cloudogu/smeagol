@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 * Health checker in Dockerfile (#96)
+* Timestamp in the log of Jenkins job (#96)
+* Goss Spec to validate server configuration (#96)
 
 ### Changed
 * Update version of the Java base image to version 8u252-1 (#96)
 * Update version of the OpenJDK image for building Smeagol to version 8u252-jdk (#96)
-* Update maven dependencies to fix potential security vulnerabilities. (#96)
-* Jenkins builds the complete Dogu and not only the smeagol.war
+* Update maven dependencies to fix potential security vulnerabilities (#96)
+* Jenkins builds the complete Dogu and not only the smeagol.war (#96)
 
 ## [v0.5.6-1] - 2020-12-14
 ### Added

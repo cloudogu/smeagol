@@ -1,0 +1,5 @@
+file:
+  /app/startup.sh:
+    exists: true
+    filetype: file
+    contains: []
