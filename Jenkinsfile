@@ -35,7 +35,7 @@ node() { // No specific label
             }
 
             stage('Shellcheck'){
-                shellCheck()
+                shellCheck("resources/startup.sh")
             }
 
             stage('Unit Test') {
