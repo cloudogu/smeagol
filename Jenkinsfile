@@ -5,7 +5,7 @@ import com.cloudogu.ces.dogubuildlib.*
 
 node() { // No specific label
 
-    projectName = 'smeagol'
+    doguName = 'smeagol'
     branch = "${env.BRANCH_NAME}"
     String defaultEmailRecipients = env.EMAIL_RECIPIENTS
 
@@ -123,16 +123,16 @@ node() { // No specific label
 
                         if (branch == "master") {
                             echo "This branch has been detected as the master branch."
-                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName}"
+                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${doguName} -Dsonar.doguName=${doguName}"
                         } else if (branch == "develop") {
                             echo "This branch has been detected as the develop branch."
-                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=master  "
+                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${doguName} -Dsonar.doguName=${doguName} -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=master  "
                         } else if (env.CHANGE_TARGET) {
                             echo "This branch has been detected as a pull request."
-                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.CHANGE_BRANCH}-PR${env.CHANGE_ID} -Dsonar.branch.target=${env.CHANGE_TARGET} "
+                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${doguName} -Dsonar.doguName=${doguName} -Dsonar.branch.name=${env.CHANGE_BRANCH}-PR${env.CHANGE_ID} -Dsonar.branch.target=${env.CHANGE_TARGET} "
                         } else if (branch.startsWith("feature/")) {
                             echo "This branch has been detected as a feature branch."
-                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${projectName} -Dsonar.projectName=${projectName} -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=develop"
+                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${doguName} -Dsonar.doguName=${doguName} -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=develop"
                         }
                     }
                     timeout(time: 2, unit: 'MINUTES') { // Needed when there is no webhook for example
