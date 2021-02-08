@@ -223,43 +223,32 @@
             <plugin>
                 <groupId>com.github.sdorra</groupId>
                 <artifactId>buildfrontend-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>2.5.0</version>
                 <configuration>
-                    <allowRoot>true</allowRoot>
-                    <nodeVersion>v8.9.4</nodeVersion>
-                    <npmVersion>v5.6.0</npmVersion>
-                    <karmaConfig/>
+                    <node>
+                        <version>10.15.2</version>
+                    </node>
+                    <pkgManager>
+                        <type>NPM</type>
+                        <version>6.1.0</version>
+                    </pkgManager>
+                    <script>run</script>
+                    <pkg/>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>npm-install</id>
-                        <!-- use prepare-package to avoid installing durring spring-boot:run -->
-                        <phase>process-test-resources</phase>
+                        <id>install</id>
+                        <phase>process-resources</phase>
                         <goals>
-                            <goal>npm-install</goal>
+                            <goal>install</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>npm-run-test</id>
-                        <!-- use prepare-package to avoid installing durring spring-boot:run -->
-                        <phase>test</phase>
+                        <id>run</id>
+                        <phase>process-resources</phase>
                         <goals>
-                            <goal>npm-run</goal>
+                            <goal>run</goal>
                         </goals>
-                        <configuration>
-                            <script>test-mvn</script>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm-run-build</id>
-                        <!-- use prepare-package to avoid installing durring spring-boot:run -->
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>npm-run</goal>
-                        </goals>
-                        <configuration>
-                            <script>build</script>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
