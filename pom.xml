@@ -232,7 +232,7 @@
                         <type>NPM</type>
                         <version>6.1.0</version>
                     </pkgManager>
-                    <script>run</script>
+                    <script>build</script>
                     <pkg/>
                 </configuration>
                 <executions>
