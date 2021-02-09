@@ -74,7 +74,6 @@
   "scripts": {
     "start": "cross-env HOST=192.168.56.1 node src/main/scripts/start.js",
     "build": "cross-env PUBLIC_URL=/smeagol node src/main/scripts/build.js",
-    "run": "npm install",
     "test": "node src/main/scripts/test.js --env=jsdom",
     "test-mvn": "cross-env CI=true node src/main/scripts/test.js --env=jsdom"
   },

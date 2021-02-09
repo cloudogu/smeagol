@@ -226,7 +226,7 @@
                 <version>2.5.0</version>
                 <configuration>
                     <node>
-                        <version>10.15.2</version>
+                        <version>10.23.0</version>
                     </node>
                     <pkgManager>
                         <type>NPM</type>
@@ -238,14 +238,16 @@
                 <executions>
                     <execution>
                         <id>install</id>
-                        <phase>process-resources</phase>
+                        <!-- use prepare-package to avoid installing durring spring-boot:run -->
+                        <phase>process-test-resources</phase>
                         <goals>
                             <goal>install</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>run</id>
-                        <phase>process-resources</phase>
+                        <id>run-build</id>
+                        <!-- use prepare-package to avoid installing durring spring-boot:run -->
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
