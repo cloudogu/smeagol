@@ -233,16 +233,27 @@
                         <version>6.1.0</version>
                     </pkgManager>
                     <script>build</script>
+                    <script>test-mvn</script>
                     <pkg/>
                 </configuration>
                 <executions>
                     <execution>
                         <id>install</id>
-                        <!-- use prepare-package to avoid installing durring spring-boot:run -->
                         <phase>process-test-resources</phase>
                         <goals>
                             <goal>install</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>npm-run-test</id>
+                        <!-- use prepare-package to avoid installing durring spring-boot:run -->
+                        <phase>test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <script>test-mvn</script>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>run-build</id>
