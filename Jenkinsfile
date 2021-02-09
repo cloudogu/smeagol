@@ -18,7 +18,7 @@ EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer
 
 parallel(
         "source code": {
-            node('maven') {
+            node() { // No specific label
                 timestamps {
 
                     def mvnDockerName = '3.6-openjdk-8'
