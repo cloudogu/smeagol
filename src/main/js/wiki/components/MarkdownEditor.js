@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import injectSheet from 'react-jss';
 
 import Editor from 'tui-editor/dist/tui-editor-Editor';
-import 'tui-editor/dist/tui-editor.css';
-// import 'tui-editor/dist/tui-editor-contents.css';
 import 'tui-editor/dist/tui-editor-extTable';
 import 'tui-editor/dist/tui-editor-extScrollSync';
 import 'tui-editor/dist/tui-editor-extUML';
@@ -14,6 +12,9 @@ import './ShortLinkEditorExtension';
 import './TableClassEditorExtension';
 
 import 'codemirror/lib/codemirror.css';
+import 'tui-editor/dist/tui-editor.css';
+import './markdown-editor-bugfix.css';
+// import 'tui-editor/dist/tui-editor-contents.css';
 
 import 'highlight.js/lib';
 import 'highlight.js/styles/default.css';
