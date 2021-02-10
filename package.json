@@ -31,13 +31,13 @@
     "whatwg-fetch": "2.0.3"
   },
   "devDependencies": {
-    "autoprefixer": "7.1.6",
     "@babel/core": "7.12.13",
+    "autoprefixer": "7.1.6",
     "babel-eslint": "7.2.3",
     "babel-jest": "^26.6.3",
-    "babel-loader": "7.1.2",
-    "babel-runtime": "6.26.0",
+    "babel-loader": "^8.0.0",
     "babel-preset-react-app": "^10.0.0",
+    "babel-runtime": "6.26.0",
     "better-react-spinkit": "^2.0.4",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "1.1.3",
