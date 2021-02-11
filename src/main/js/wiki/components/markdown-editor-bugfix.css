@@ -1,3 +1,8 @@
+/* There is a bug in the Markdown editor (tui-editor). The preview window of the Markdown text is only displayed
+   extremely narrowly. The most recent library of the tui-editor (version 1.40.10) does not yet fix this error.
+   The bug can be fixed by overwriting the css settings listed in the file.
+   For further details see: https://github.com/nhn/tui.editor/issues/923
+ */
 .tui-editor .te-md-splitter
 { display: none;
   position: absolute;

@@ -13,8 +13,8 @@ import './TableClassEditorExtension';
 
 import 'codemirror/lib/codemirror.css';
 import 'tui-editor/dist/tui-editor.css';
-import './markdown-editor-bugfix.css';
 // import 'tui-editor/dist/tui-editor-contents.css';
+import './markdown-editor-bugfix.css';
 
 import 'highlight.js/lib';
 import 'highlight.js/styles/default.css';
