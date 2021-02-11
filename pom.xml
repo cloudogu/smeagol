@@ -232,9 +232,8 @@
                         <type>NPM</type>
                         <version>6.1.0</version>
                     </pkgManager>
-                    <script>build</script>
-                    <script>test-mvn</script>
                     <pkg/>
+                    <script/>
                 </configuration>
                 <executions>
                     <execution>
@@ -262,6 +261,9 @@
                         <goals>
                             <goal>run</goal>
                         </goals>
+                        <configuration>
+                            <script>build</script>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
