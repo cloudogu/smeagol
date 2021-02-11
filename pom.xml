@@ -116,7 +116,6 @@
             <version>30.1-jre</version>
         </dependency>
 
-
         <!-- logging -->
 
         <dependency>
@@ -244,7 +243,7 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>npm-run-test</id>
+                        <id>run-test</id>
                         <!-- use prepare-package to avoid installing durring spring-boot:run -->
                         <phase>test</phase>
                         <goals>
