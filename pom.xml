@@ -12,7 +12,7 @@
 
     <groupId>com.cloudogu.wiki</groupId>
     <artifactId>smeagol</artifactId>
-    <version>0.5.6</version>
+    <version>0.5.7</version>
     <name>smeagol</name>
     <packaging>war</packaging>
 
@@ -110,11 +110,10 @@
         </dependency>
 
         <!-- util -->
-
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>19.0</version>
+            <version>30.1-jre</version>
         </dependency>
 
         <!-- logging -->
@@ -223,38 +222,43 @@
             <plugin>
                 <groupId>com.github.sdorra</groupId>
                 <artifactId>buildfrontend-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>2.5.0</version>
                 <configuration>
-                    <allowRoot>true</allowRoot>
-                    <nodeVersion>v8.9.4</nodeVersion>
-                    <npmVersion>v5.6.0</npmVersion>
+                    <node>
+                        <version>10.23.0</version>
+                    </node>
+                    <pkgManager>
+                        <type>NPM</type>
+                        <version>6.1.0</version>
+                    </pkgManager>
+                    <pkg/>
+                    <script/>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>npm-install</id>
-                        <!-- use prepare-package to avoid installing durring spring-boot:run -->
+                        <id>install</id>
                         <phase>process-test-resources</phase>
                         <goals>
-                            <goal>npm-install</goal>
+                            <goal>install</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>npm-run-test</id>
+                        <id>run-test</id>
                         <!-- use prepare-package to avoid installing durring spring-boot:run -->
                         <phase>test</phase>
                         <goals>
-                            <goal>npm-run</goal>
+                            <goal>run</goal>
                         </goals>
                         <configuration>
                             <script>test-mvn</script>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>npm-run-build</id>
+                        <id>run-build</id>
                         <!-- use prepare-package to avoid installing durring spring-boot:run -->
                         <phase>prepare-package</phase>
                         <goals>
-                            <goal>npm-run</goal>
+                            <goal>run</goal>
                         </goals>
                         <configuration>
                             <script>build</script>
