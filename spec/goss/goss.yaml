@@ -1,5 +1,19 @@
 file:
-  /app/startup.sh:
+  /startup.sh:
     exists: true
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+  /app/application.yml:
+    exists: true
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+  /app/smeagol.war:
+    exists: true
+    owner: root
+    group: root
     filetype: file
     contains: []

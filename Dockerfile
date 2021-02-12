@@ -21,7 +21,7 @@ ENV SERVICE_TAGS=webapp \
     SMEAGOL_HOME=/var/lib/smeagol
 
 COPY --from=builder /usr/src/smeagol/target/smeagol.war /app/smeagol.war
-COPY resources/ /app/
+COPY resources/ /
 
 VOLUME ${SMEAGOL_HOME}
 EXPOSE 8080
@@ -29,4 +29,4 @@ EXPOSE 8080
 HEALTHCHECK CMD doguctl healthy smeagol || exit 1
 
 WORKDIR /app
-CMD /app/startup.sh
+CMD /startup.sh
