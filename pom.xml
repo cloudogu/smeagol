@@ -88,6 +88,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.3.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -144,15 +151,30 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
-            <version>1.7.1</version>
+            <version>2.0.9</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>1.7.1</version>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>2.0.9</version>
             <scope>test</scope>
         </dependency>
+
+
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.3.3</version>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 
 
@@ -231,8 +253,9 @@
                         <type>NPM</type>
                         <version>6.1.0</version>
                     </pkgManager>
+                    <script>build</script>
+
                     <pkg/>
-                    <script/>
                 </configuration>
                 <executions>
                     <execution>
@@ -243,7 +266,7 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>run-test</id>
+                        <id>npm-run-test</id>
                         <!-- use prepare-package to avoid installing durring spring-boot:run -->
                         <phase>test</phase>
                         <goals>
@@ -260,9 +283,6 @@
                         <goals>
                             <goal>run</goal>
                         </goals>
-                        <configuration>
-                            <script>build</script>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
