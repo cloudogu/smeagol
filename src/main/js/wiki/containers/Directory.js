@@ -7,7 +7,6 @@ import {createDirectoryUrl, fetchDirectoryIfNeeded} from '../modules/directory';
 import I18nAlert from '../../I18nAlert';
 import Loading from '../../Loading';
 import {translate} from 'react-i18next';
-import {createId, fetchWikiIfNeeded} from "../modules/wiki";
 
 type Props = {
     loading: boolean,
@@ -18,14 +17,13 @@ type Props = {
     path: string,
     url: string,
     t: any,
-    fetchWikiIfNeeded: (repository: string, branch: string) => void,
     fetchDirectoryIfNeeded: (url: string) => void
 }
 
 class Directory extends React.Component<Props> {
 
     componentDidMount() {
-        const { url, repository, branch, fetchDirectoryIfNeeded, fetchWikiIfNeeded } = this.props;
+        const {url, repository, branch, fetchDirectoryIfNeeded, fetchWikiIfNeeded} = this.props;
 
         fetchDirectoryIfNeeded(url);
         fetchWikiIfNeeded(repository, branch);
@@ -36,12 +34,12 @@ class Directory extends React.Component<Props> {
     }
 
     createDirectoryLink = (path: string) => {
-        const { repository, branch } = this.props;
+        const {repository, branch} = this.props;
         return `/${repository}/${branch}/pages/${path}`;
     };
 
     createPageLink = (path: string) => {
-        const { repository, branch } = this.props;
+        const {repository, branch} = this.props;
         return `/${repository}/${branch}/${path}`;
     };
 
@@ -66,13 +64,13 @@ class Directory extends React.Component<Props> {
     };
 
     render() {
-        const { path, error, loading, directory, t } = this.props;
+        const {path, error, loading, directory, t} = this.props;
 
         if (error) {
             return (
                 <div>
                     <h1>Smeagol</h1>
-                    <I18nAlert i18nKey="directory_failed_to_fetch" />
+                    <I18nAlert i18nKey="directory_failed_to_fetch"/>
                 </div>
             );
         } else if (loading) {
@@ -92,9 +90,9 @@ class Directory extends React.Component<Props> {
 
         return (
             <div>
-                <h1>{ t('directory_heading') }</h1>
-                <Breadcrumb path={ path } createLink={this.createDirectoryLink}/>
-                <FileBrowser directory={ directory } createLink={this.createLink} />
+                <h1>{t('directory_heading')}</h1>
+                <Breadcrumb path={path} createLink={this.createDirectoryLink}/>
+                <FileBrowser directory={directory} createLink={this.createLink}/>
             </div>
         );
     }
@@ -102,18 +100,18 @@ class Directory extends React.Component<Props> {
 }
 
 function findDirectoryPath(props) {
-    const { pathname } = props.location;
+    const {pathname} = props.location;
     const parts = pathname.split('/');
     return parts.slice(4).join('/');
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const { repository, branch } = ownProps.match.params;
+    const {repository, branch} = ownProps.match.params;
     const path = findDirectoryPath(ownProps);
     const url = createDirectoryUrl(repository, branch, path);
 
-    const wikiId = createId(repository, branch);
-    const stateWiki = state.wiki[wikiId] ||{};
+    const wikiId = repository + '@' + branch;
+    const stateWiki = state.wiki[wikiId] || {};
 
     let baseDirectory = '';
     if (stateWiki.wiki && stateWiki.wiki.directory) {
@@ -134,9 +132,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchDirectoryIfNeeded: (url: string) => {
             dispatch(fetchDirectoryIfNeeded(url))
-        },
-        fetchWikiIfNeeded: (repository: string, branch: string) => {
-            dispatch(fetchWikiIfNeeded(repository, branch))
         },
     }
 };

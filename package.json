@@ -20,6 +20,7 @@
     "react-dom": "^16.14.0",
     "react-i18next": "^7.3.4",
     "react-jss": "^8.2.1",
+    "react-query": "^3.9.6",
     "react-redux": "^5.0.6",
     "react-router": "4.2.0",
     "react-router-dom": "^4.2.2",

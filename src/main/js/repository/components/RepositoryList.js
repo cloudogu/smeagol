@@ -7,7 +7,7 @@ type Props = {
 }
 
 // @VisibleForTesting
-export function createRepositoryGroups(repositories) {
+export function createRepositoryGroups(repositories: any) {
     let groups = {};
     for (let repository of repositories) {
         let name = repository.name;
@@ -30,10 +30,10 @@ export function createRepositoryGroups(repositories) {
     }
 
     let groupArray = [];
-    for(let groupName in groups) {
+    for (let groupName in groups) {
         groupArray.push(groups[groupName]);
     }
-    groupArray.sort(function(a, b){
+    groupArray.sort(function (a, b) {
         if (a.name === 'main' && b.name !== 'main') {
             return 10;
         } else if (a.name !== 'main' && b.name === 'main') {
@@ -53,19 +53,17 @@ export function createRepositoryGroups(repositories) {
 class RepositoryList extends React.Component<Props> {
 
     render() {
-        const { repositories } = this.props;
+        const {repositories} = this.props;
 
         const groups = createRepositoryGroups(repositories);
 
-        console.log(groups);
-
         return (
             <div className="list-group">
-                { groups.map((group) => {
+                {groups.map((group) => {
                     return (
-                        <RepositoryGroup key={ group.name } group={group} />
+                        <RepositoryGroup key={group.name} group={group}/>
                     );
-                }) }
+                })}
             </div>
         );
     }
