@@ -1,11 +1,6 @@
 //@flow
 import React from 'react';
-import {
-    useEditPage,
-    useCreatePage,
-    createPageUrl,
-    usePage, useRenamePage, useDeletePage, useRestorePage
-} from '../modules/page';
+import {useEditPage, useCreatePage, usePage, useRenamePage, useDeletePage, useRestorePage} from '../modules/page';
 import {useWiki} from '../modules/wiki';
 import PageViewer from '../components/PageViewer';
 import * as queryString from 'query-string';
@@ -58,31 +53,21 @@ export default function Page(props: Props) {
     };
 
     const search = (query: string) => {
-        const {history, repository, branch} = props.match.params;
-        history.push(`/${repository}/${branch}/search?query=${query}`);
+        const {repository, branch} = props.match.params;
+        props.history.push(`/${repository}/${branch}/search?query=${query}`);
     };
 
     const {repository, branch} = props.match.params;
     const path = findPagePath(props);
 
-    let pageURL = createPageUrl(repository, branch, path);
-    let currentPageURL
-    if (isCommitPage(props)) {
-        currentPageURL = pageURL + '?commit=' + getCommitParameter(props);
-    } else {
-        currentPageURL = pageURL
-    }
-
-    const pageQuery = usePage(currentPageURL)
+    const pageQuery = usePage(repository, branch, path, getCommitParameter(props))
     const wikiQuery = useWiki(repository, branch)
 
-    const editPageMutation = useEditPage(pageURL)
-    const deletePageMutation = useDeletePage(pageURL, pushLandingPageState)
-    const createPageMutation = useCreatePage(pageURL)
-    const renamePageMutation = useRenamePage(pageURL, path, pushPageStateClosure())
-    const restorePageMutation = useRestorePage(pageURL, () => {
-        pushPageStateClosure()((path))
-    })
+    const editPageMutation = useEditPage(repository, branch, path)
+    const deletePageMutation = useDeletePage(repository, branch, path, pushLandingPageState)
+    const createPageMutation = useCreatePage(repository, branch, path)
+    const renamePageMutation = useRenamePage(repository, branch, path, pushPageStateClosure())
+    const restorePageMutation = useRestorePage(repository, branch, path,  pushPageStateClosure())
 
     const isLoading = pageQuery.isLoading || wikiQuery.isLoading || editPageMutation.isLoading ||
         createPageMutation.isLoading || renamePageMutation.isLoading || deletePageMutation.isLoading ||
@@ -162,8 +147,12 @@ function isCommitPage(props): boolean {
 }
 
 function getCommitParameter(props): string {
-    const queryParams = queryString.parse(props.location.search);
-    return queryParams.commit;
+    if (isCommitPage(props)) {
+        const queryParams = queryString.parse(props.location.search);
+        return queryParams.commit;
+    } else {
+        return ""
+    }
 }
 
 function findPagePath(props) {

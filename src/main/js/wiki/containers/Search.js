@@ -1,118 +1,78 @@
 //@flow
 import React from 'react';
-import {connect} from "react-redux";
 import * as queryString from "query-string";
-import {createSearchUrl, fetchSearchResultsIfNeeded} from "../modules/search";
-import {createId, fetchWikiIfNeeded} from '../modules/wiki';
+import {useSearch} from "../modules/search";
+import {useWiki} from '../modules/wiki';
 import Loading from "../../Loading";
 import I18nAlert from "../../I18nAlert";
 import SearchResults from "../components/SearchResults";
 import SearchResultHeader from "../components/SearchResultHeader";
 
 type Props = {
-    loading: boolean,
-    error: Error,
-    results: any,
-    url: string,
-    fetchSearchResultsIfNeeded: (string) => void,
-    wiki: any
+    match: any,
+    history: any,
+    location: any
 };
 
-class Search extends React.Component<Props> {
+export default function Search(props: Props) {
 
-    componentDidMount() {
-        const { url, repository, branch } = this.props;
-        this.props.fetchSearchResultsIfNeeded(url);
-        this.props.fetchWikiIfNeeded(repository, branch);
-    }
-
-    componentDidUpdate() {
-        const { url } = this.props;
-        this.props.fetchSearchResultsIfNeeded(url);
-    }
-
-    createPageLink = (path: string) => {
-        const { repository, branch } = this.props;
+    let createPageLink = (path: string) => {
+        const {repository, branch} = props.match.params;
         return `/${repository}/${branch}/${path}`;
     };
 
-    search = (query: string) => {
-        const { history } = this.props;
+    let search = (query: string) => {
+        const {history} = props;
         history.push(`?query=${query}`);
     };
 
-    createHomeLink = () => {
-        const { repository, branch, wiki } = this.props;
+    let createHomeLink = (wiki: any) => {
+        const {repository, branch} = props.match.params;
         return `/${repository}/${branch}/${wiki.landingPage}`;
     };
 
-    render() {
-        const { loading, error, query } = this.props;
-        const homeLink = this.createHomeLink();
-        let results = this.props.results;
+    const {repository, branch} = props.match.params;
+    const query = getQuery(props);
 
-        if (!results) {
-            results = [];
-        }
+    const searchQuery = useSearch(repository, branch, query)
+    const wikiQuery = useWiki(repository, branch)
 
-        if (error) {
-            return (
-                <div>
-                    <h1>Smeagol</h1>
-                    <I18nAlert i18nKey="search_failed_to_fetch" />
-                </div>
-            );
-        } else if (loading) {
-            return (
-                <div>
-                    <h1>Smeagol</h1>
-                    <Loading/>
-                </div>
-            );
-        } else {
-            return (
-                <div>
-                    <SearchResultHeader query={query} search={this.search} homeLink={homeLink} />
-                    <hr />
-                    <SearchResults results={results} createPageLink={this.createPageLink}/>
-                </div>
-            );
-        }
+    const isLoading = searchQuery.isLoading || wikiQuery.isLoading
+
+    let results;
+    if (!searchQuery.data) {
+        results = [];
+    } else {
+        results = searchQuery.data
     }
 
+    if (isLoading) {
+        return (
+            <div>
+                <h1>Smeagol</h1>
+                <Loading/>
+            </div>
+        );
+    } else if (searchQuery.error || wikiQuery.error || !wikiQuery.data) {
+        return (
+            <div>
+                <h1>Smeagol</h1>
+                <I18nAlert i18nKey="search_failed_to_fetch"/>
+            </div>
+        );
+    } else {
+        const homeLink = createHomeLink(wikiQuery.data);
+        return (
+            <div>
+                <SearchResultHeader query={query} search={search} homeLink={homeLink}/>
+                <hr/>
+                <SearchResults results={results} createPageLink={createPageLink}/>
+            </div>
+        );
+    }
 }
 
 const getQuery = (props) => {
     const queryParams = queryString.parse(props.location.search);
     return queryParams['query'];
 };
-
-const mapStateToProps = (state, ownProps) => {
-    const { repository, branch } = ownProps.match.params;
-    const query = getQuery(ownProps);
-    const url = createSearchUrl(repository, branch, query);
-    const wikiId = createId(repository, branch);
-    const stateWiki = state.wiki[wikiId] || {};
-
-    return {
-        ...state.search[url],
-        repository,
-        branch,
-        query,
-        url,
-        wiki: stateWiki.wiki || {},
-    }
-};
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchSearchResultsIfNeeded: (url: string) => {
-            dispatch(fetchSearchResultsIfNeeded(url))
-        },
-        fetchWikiIfNeeded: (repository: string, branch: string) => {
-            dispatch(fetchWikiIfNeeded(repository, branch))
-        }
-    }
-};
-
-export default (connect(mapStateToProps, mapDispatchToProps)(Search));

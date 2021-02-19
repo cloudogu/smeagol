@@ -1,61 +1,43 @@
 //@flow
 import React from 'react';
-import {connect} from 'react-redux';
 import FileBrowser from '../components/FileBrowser';
 import Breadcrumb from '../components/Breadcrumb';
-import {createDirectoryUrl, fetchDirectoryIfNeeded} from '../modules/directory';
+import {useDirectory} from '../modules/directory';
 import I18nAlert from '../../I18nAlert';
 import Loading from '../../Loading';
-import {translate} from 'react-i18next';
+import {translate} from "react-i18next";
 
 type Props = {
-    loading: boolean,
-    error: Error,
-    directory: any,
-    repository: string,
-    branch: string,
-    path: string,
-    url: string,
     t: any,
-    fetchDirectoryIfNeeded: (url: string) => void
+    match: any,
+    location: any
 }
 
-class Directory extends React.Component<Props> {
+function Directory(props: Props) {
 
-    componentDidMount() {
-        const {url, repository, branch, fetchDirectoryIfNeeded, fetchWikiIfNeeded} = this.props;
-
-        fetchDirectoryIfNeeded(url);
-        fetchWikiIfNeeded(repository, branch);
-    }
-
-    componentDidUpdate() {
-        this.props.fetchDirectoryIfNeeded(this.props.url);
-    }
-
-    createDirectoryLink = (path: string) => {
-        const {repository, branch} = this.props;
+    const createDirectoryLink = (path: string) => {
+        const {repository, branch} = props.match.params;
         return `/${repository}/${branch}/pages/${path}`;
     };
 
-    createPageLink = (path: string) => {
-        const {repository, branch} = this.props;
+    const createPageLink = (path: string) => {
+        const {repository, branch} = props.match.params;
         return `/${repository}/${branch}/${path}`;
     };
 
-    createLink = (directory: any, file: any) => {
-        let path = this.endingSlash(directory.path) + file.name;
+    const createLink = (directory: any, file: any) => {
+        let path = endingSlash(directory.path) + file.name;
 
         if (file.type === 'directory') {
-            return this.createDirectoryLink(this.endingSlash(path));
+            return createDirectoryLink(endingSlash(path));
         } else if (file.type === 'page') {
-            return this.createPageLink(path);
+            return createPageLink(path);
         } else {
             return '#';
         }
     };
 
-    endingSlash = (value: string) => {
+    const endingSlash = (value: string) => {
         // TODO check polyfil
         if (!value.endsWith('/')) {
             return value + '/';
@@ -63,39 +45,41 @@ class Directory extends React.Component<Props> {
         return value;
     };
 
-    render() {
-        const {path, error, loading, directory, t} = this.props;
 
-        if (error) {
-            return (
-                <div>
-                    <h1>Smeagol</h1>
-                    <I18nAlert i18nKey="directory_failed_to_fetch"/>
-                </div>
-            );
-        } else if (loading) {
-            return (
-                <div>
-                    <h1>Smeagol</h1>
-                    <Loading/>
-                </div>
-            );
-        } else if (!directory) {
-            return (
-                <div>
-                    <h1>Smeagol</h1>
-                </div>
-            );
-        }
+    const {repository, branch} = props.match.params;
 
+    const path = findDirectoryPath(props);
+    const {isLoading, error, data} = useDirectory(repository, branch, path)
+
+    if (error) {
         return (
             <div>
-                <h1>{t('directory_heading')}</h1>
-                <Breadcrumb path={path} createLink={this.createDirectoryLink}/>
-                <FileBrowser directory={directory} createLink={this.createLink}/>
+                <h1>Smeagol</h1>
+                <I18nAlert i18nKey="directory_failed_to_fetch"/>
+            </div>
+        );
+    } else if (isLoading) {
+        return (
+            <div>
+                <h1>Smeagol</h1>
+                <Loading/>
+            </div>
+        );
+    } else if (!data) {
+        return (
+            <div>
+                <h1>Smeagol</h1>
             </div>
         );
     }
+
+    return (
+        <div>
+            <h1>{props.t('directory_heading')}</h1>
+            <Breadcrumb path={path} createLink={createDirectoryLink}/>
+            <FileBrowser directory={data} createLink={createLink}/>
+        </div>
+    );
 
 }
 
@@ -105,35 +89,4 @@ function findDirectoryPath(props) {
     return parts.slice(4).join('/');
 }
 
-const mapStateToProps = (state, ownProps) => {
-    const {repository, branch} = ownProps.match.params;
-    const path = findDirectoryPath(ownProps);
-    const url = createDirectoryUrl(repository, branch, path);
-
-    const wikiId = repository + '@' + branch;
-    const stateWiki = state.wiki[wikiId] || {};
-
-    let baseDirectory = '';
-    if (stateWiki.wiki && stateWiki.wiki.directory) {
-        baseDirectory = stateWiki.wiki.directory;
-    }
-
-    return {
-        ...state.directory[url],
-        baseDirectory,
-        repository,
-        branch,
-        url,
-        path
-    }
-};
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchDirectoryIfNeeded: (url: string) => {
-            dispatch(fetchDirectoryIfNeeded(url))
-        },
-    }
-};
-
-export default translate()(connect(mapStateToProps, mapDispatchToProps)(Directory));
+export default translate()(Directory);

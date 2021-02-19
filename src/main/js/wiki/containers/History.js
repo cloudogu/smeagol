@@ -3,10 +3,9 @@ import React from 'react';
 import I18nAlert from '../../I18nAlert';
 import Loading from '../../Loading';
 import {translate} from 'react-i18next';
-import {createHistoryUrl, usePageHistory} from "../modules/pagehistory";
+import {usePageHistory} from "../modules/pagehistory";
 import CommitsTable from '../components/CommitsTable';
 import ActionLink from '../components/ActionLink';
-import {findPagePath} from "./Page";
 
 type Props = {
     t: any,
