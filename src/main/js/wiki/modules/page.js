@@ -1,5 +1,5 @@
 //@flow
-import {apiClient, PAGE_NOT_FOUND_ERROR} from '../../apiclient';
+import {apiClient} from '../../apiclient';
 import {useMutation, useQuery, useQueryClient} from "react-query";
 
 export function createPageUrl(repositoryId: string, branch: string, path: string) {
@@ -15,32 +15,51 @@ export function usePage(url: string) {
         apiClient.get(url).then(response => response.json()))
 }
 
-export function editPage(url: string) {
+export function useEditPage(url: string) {
     const queryClient = useQueryClient()
     return useMutation(["editpage", url], (data) => {
         return apiClient.post(url, {message: data.message, content: data.content})
     }, {
         onSuccess: () => {
-            return queryClient.invalidateQueries(["page", url])
+            queryClient.invalidateQueries(["page", url])
+            queryClient.invalidateQueries(["pagehistory", url])
         },
     })
 }
 
-export function renamePage(url: string, path: string) {
+export function useDeletePage(url: string, pushPageState: ()=>{}) {
+    const queryClient = useQueryClient()
+    return useMutation(["deletepage", url], (message) => {
+        return apiClient.delete(url, {message}).then(() => {
+            pushPageState()
+        })
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries(["page", url])
+            queryClient.invalidateQueries(["pagehistory", url])
+        },
+    })
+}
+
+export function useRenamePage(url: string, path: string, pushPageState: (path: string)=>{}) {
     const queryClient = useQueryClient()
     return useMutation(["movePage", url], (data) => {
         // TODO i18n
         const message = 'Move page ' + path + ' to ' + data.target + ' (smeagol)';
-        return apiClient.post(url, {message, "moveTo": data.target})
+        return apiClient.post(url, {message, "moveTo": data.target}).then(() => {
+                pushPageState(data.target)
+            }
+        )
     }, {
         onSuccess: () => {
             // TODO: Invalidate pages
-            return queryClient.invalidateQueries(["page", url])
+            queryClient.invalidateQueries(["page", url])
+            queryClient.invalidateQueries(["pagehistory", url])
         },
     })
 }
 
-export function createPage(url: string) {
+export function useCreatePage(url: string) {
     const queryClient = useQueryClient()
     return useMutation(["createPage", url], (data) => {
         return apiClient.post(url, {message: data.message, content: data.content})
@@ -48,6 +67,25 @@ export function createPage(url: string) {
         onSuccess: () => {
             // TODO: Invalidate pages
             return queryClient.invalidateQueries(["page", url])
+        },
+    })
+}
+
+type deleteParams = {
+    message: string,
+    commit: string
+}
+
+export function useRestorePage(url: string, pushPageState: ()=>{}) {
+    const queryClient = useQueryClient()
+    return useMutation(["deletepage", url], (params: deleteParams) => {
+        return apiClient.post(url, {message: params.message, restore: params.commit}).then(() => {
+            pushPageState()
+        })
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries(["page", url])
+            queryClient.invalidateQueries(["pagehistory", url])
         },
     })
 }

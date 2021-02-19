@@ -4,7 +4,6 @@ import {createStore, compose, applyMiddleware, combineReducers} from 'redux';
 import {routerReducer, routerMiddleware} from 'react-router-redux';
 
 import directory from './wiki/modules/directory';
-import pagehistory from './wiki/modules/pagehistory';
 import search from "./wiki/modules/search";
 
 function createReduxStore(history) {
@@ -13,7 +12,6 @@ function createReduxStore(history) {
     const reducer = combineReducers({
         router: routerReducer,
         directory,
-        pagehistory,
         search
     });
 
