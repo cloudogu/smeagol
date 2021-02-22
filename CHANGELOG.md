@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+* Use React Query instead of Redux to manage server-state #100
+
 ## [v0.5.7-1] - 2021-02-12
 ### Added
 * Health check in Dockerfile (#96)
