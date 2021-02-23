@@ -1,7 +1,7 @@
 FROM openjdk:8u252-jdk as builder
 
 ENV SMEAGOL_DIR=/usr/src/smeagol
-COPY mvnw pom.xml package.json package-lock.json ${SMEAGOL_DIR}/
+COPY mvnw pom.xml package.json yarn.lock ${SMEAGOL_DIR}/
 COPY .mvn ${SMEAGOL_DIR}/.mvn
 # We resolve dependencies before copying src so we profit from dockers caching behavior
 RUN set -x \
