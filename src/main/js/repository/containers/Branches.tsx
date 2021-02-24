@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { useRepository } from "../hooks/useRepository";
 import BranchOverview from "../components/BranchOverview";
 import GeneralInformation from "../components/GeneralInformation";
@@ -14,7 +14,7 @@ type Props = {
   match: match<Params>;
 };
 
-export default function Branches(props: Props) {
+const Branches: FC<Props> = (props) => {
   const { isLoading, error, data } = useRepository(props.match.params.repository);
 
   let child = <div />;
@@ -34,4 +34,5 @@ export default function Branches(props: Props) {
       {child}
     </div>
   );
-}
+};
+export default Branches;

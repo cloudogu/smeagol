@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { useEditPage, useCreatePage, usePage, useRenamePage, useDeletePage, useRestorePage } from "../hooks/page";
 import { useWiki } from "../hooks/wiki";
 import PageViewer from "../components/PageViewer";
@@ -20,16 +20,15 @@ type Props = {
   location: Location;
 };
 
-export default function Page(props: Props) {
+const Page: FC<Props> = (props) => {
   const { repository, branch } = props.match.params;
-  const pushLandingPageState = () => {
-    pushPageStateClosure()(wikiQuery.data.landingPage);
+
+  const pushPageState = (pagePath: string) => {
+    props.history.push(`/${repository}/${branch}/${pagePath}`);
   };
 
-  const pushPageStateClosure = () => {
-    return function (pagePath: string) {
-      props.history.push(`/${repository}/${branch}/${pagePath}`);
-    };
+  const pushLandingPageState = () => {
+    pushPageState(wikiQuery.data.landingPage);
   };
 
   const path = findPagePath(props);
@@ -40,8 +39,8 @@ export default function Page(props: Props) {
   const editPageMutation = useEditPage(repository, branch, path);
   const deletePageMutation = useDeletePage(repository, branch, path, pushLandingPageState);
   const createPageMutation = useCreatePage(repository, branch, path);
-  const renamePageMutation = useRenamePage(repository, branch, path, pushPageStateClosure());
-  const restorePageMutation = useRestorePage(repository, branch, path, pushPageStateClosure());
+  const renamePageMutation = useRenamePage(repository, branch, path, pushPageState);
+  const restorePageMutation = useRestorePage(repository, branch, path, pushPageState);
 
   const deletePage = () => {
     // TODO i18n
@@ -56,7 +55,7 @@ export default function Page(props: Props) {
   };
 
   const onMove = (target: string) => {
-    renamePageMutation.mutate({ target: target });
+    renamePageMutation.mutate(target);
   };
 
   const onAbortEdit = () => {
@@ -171,7 +170,8 @@ export default function Page(props: Props) {
       search={search}
     />
   );
-}
+};
+export default Page;
 
 function isEditMode(props): boolean {
   const queryParams = queryString.parse(props.location.search);

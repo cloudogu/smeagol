@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { Redirect } from "react-router-dom";
 import Loading from "../../Loading";
 import I18nAlert from "../../I18nAlert";
@@ -17,7 +17,7 @@ type Params = {
 type Props = {
   match: match<Params>;
 };
-function WikiRoot(props: Props) {
+const WikiRoot: FC<Props> = (props) => {
   const { isLoading, error, data } = useWiki(props.match.params.repository, props.match.params.branch);
 
   let child = <div />;
@@ -38,6 +38,6 @@ function WikiRoot(props: Props) {
       <BackToRepositoriesButton />
     </div>
   );
-}
+};
 
 export default withRouter(WikiRoot);

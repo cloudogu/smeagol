@@ -36,7 +36,7 @@ function handleStatusCode(response) {
 }
 
 function createRedirectUrl() {
-  return createUrl("authc?location=" + encodeURIComponent(window.location));
+  return createUrl("authc?location=" + encodeURIComponent(window.location.href));
 }
 
 function createUrl(url: string) {

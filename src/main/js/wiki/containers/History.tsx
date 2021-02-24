@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import I18nAlert from "../../I18nAlert";
 import Loading from "../../Loading";
 import { translate } from "react-i18next";
@@ -18,7 +18,7 @@ type Props = {
   location: Location;
 };
 
-function History(props: Props) {
+const History: FC<Props> = (props) => {
   const { repository, branch } = props.match.params;
   const page = findDirectoryPath(props);
 
@@ -55,7 +55,7 @@ function History(props: Props) {
       <CommitsTable commits={pageHistoryQuery.data.commits} pagePath={pagePath} />
     </div>
   );
-}
+};
 
 function findDirectoryPath(props) {
   const { pathname } = props.location;

@@ -1,5 +1,5 @@
 import { apiClient } from "../../apiclient";
-import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query";
+import { QueryClient, useMutation, UseMutationResult, useQuery, useQueryClient, UseQueryResult } from "react-query";
 
 function createPageUrl(repositoryId: string, branch: string, path: string, commit: string) {
   let url = `/repositories/${repositoryId}/branches/${branch}/pages/${path}`;
@@ -9,19 +9,24 @@ function createPageUrl(repositoryId: string, branch: string, path: string, commi
   return url;
 }
 
-export function usePage(repository: string, branch: string, path: string, commit: string) {
+export function usePage(repository: string, branch: string, path: string, commit: string): UseQueryResult {
   const url = createPageUrl(repository, branch, path, commit);
   return useQuery(["page", { repository: repository, branch: branch, path: path, commit: commit }], () =>
     apiClient.get(url).then((response) => response.json())
   );
 }
 
-export function useEditPage(repository: string, branch: string, path: string) {
+type editParams = {
+  message: string;
+  content: string;
+};
+
+export function useEditPage(repository: string, branch: string, path: string): UseMutationResult {
   const queryClient = useQueryClient();
   const url = createPageUrl(repository, branch, path, "");
   return useMutation(
     ["editpage", url],
-    (data) => {
+    (data: editParams) => {
       return apiClient.post(url, { message: data.message, content: data.content });
     },
     {
@@ -32,12 +37,17 @@ export function useEditPage(repository: string, branch: string, path: string) {
   );
 }
 
-export function useDeletePage(repository: string, branch: string, path: string, pushPageState: () => void) {
+export function useDeletePage(
+  repository: string,
+  branch: string,
+  path: string,
+  pushPageState: () => void
+): UseMutationResult {
   const queryClient = useQueryClient();
   const url = createPageUrl(repository, branch, path, "");
   return useMutation(
     ["deletepage", url],
-    (message) => {
+    (message: string) => {
       return apiClient.delete(url, { message }).then(() => {
         pushPageState();
       });
@@ -51,17 +61,22 @@ export function useDeletePage(repository: string, branch: string, path: string, 
   );
 }
 
-export function useRenamePage(repository: string, branch: string, path: string, pushPageState: (arg0: string) => void) {
+export function useRenamePage(
+  repository: string,
+  branch: string,
+  path: string,
+  pushPageState: (arg0: string) => void
+): UseMutationResult {
   const queryClient = useQueryClient();
   const url = createPageUrl(repository, branch, path, "");
   return useMutation(
     ["movePage", url],
-    (data) => {
+    (target: string) => {
       // TODO i18n
-      const message = "Move page " + path + " to " + data.target + " (smeagol)";
-      return apiClient.post(url, { message, moveTo: data.target }).then(() => {
-        invalidateQueriesForPageContentChange(queryClient, repository, branch, data.target);
-        pushPageState(data.target);
+      const message = "Move page " + path + " to " + target + " (smeagol)";
+      return apiClient.post(url, { message, moveTo: target }).then(() => {
+        invalidateQueriesForPageContentChange(queryClient, repository, branch, target);
+        pushPageState(target);
       });
     },
     {
@@ -73,12 +88,17 @@ export function useRenamePage(repository: string, branch: string, path: string, 
   );
 }
 
-export function useCreatePage(repository: string, branch: string, path: string) {
+type createParams = {
+  message: string;
+  content: string;
+};
+
+export function useCreatePage(repository: string, branch: string, path: string): UseMutationResult {
   const queryClient = useQueryClient();
   const url = createPageUrl(repository, branch, path, "");
   return useMutation(
     ["createPage", url],
-    (data) => {
+    (data: createParams) => {
       return apiClient.post(url, { message: data.message, content: data.content });
     },
     {
@@ -100,7 +120,7 @@ export function useRestorePage(
   branch: string,
   path: string,
   pushPageState: (arg0: string) => void
-) {
+): UseMutationResult {
   const queryClient = useQueryClient();
   const url = createPageUrl(repository, branch, path, "");
   return useMutation(

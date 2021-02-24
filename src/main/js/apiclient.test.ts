@@ -22,9 +22,9 @@ function mockFetchAndWindow(status, location) {
     return p;
   });
 
-  Object.defineProperty(window.location, "href", {
-    writable: true,
-    value: DEFAULT_LOCATION
+  Object.defineProperty(window, "location", {
+    value: { href: DEFAULT_LOCATION },
+    writable: true
   });
 }
 
@@ -52,5 +52,5 @@ test("test ApiClient.get with status 401 and location header", async () => {
   mockFetchAndWindow(401, "/hitchhikers");
   await apiClient.get("/api/v1/marvinctl");
 
-  expect(window.location.href).toBe("/api/v1/authc?location=http%3A%2F%2Flocalhost%2F");
+  expect(window.location.href).toBe("/api/v1/authc?location=http%3A%2F%2Flocalhost");
 });

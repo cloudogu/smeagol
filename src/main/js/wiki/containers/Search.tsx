@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import * as queryString from "query-string";
 import { useSearch } from "../hooks/useSearch";
 import { useWiki } from "../hooks/wiki";
@@ -19,7 +19,7 @@ type Props = {
   location: Location;
 };
 
-export default function Search(props: Props) {
+const Search: FC<Props> = (props) => {
   const { repository, branch } = props.match.params;
   const query = getQuery(props);
 
@@ -74,7 +74,8 @@ export default function Search(props: Props) {
       </div>
     );
   }
-}
+};
+export default Search;
 
 const getQuery = (props) => {
   const queryParams = queryString.parse(props.location.search);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import GeneralInformation from "../components/GeneralInformation";
 import RepositoryList from "../components/RepositoryList";
 
@@ -6,7 +6,7 @@ import Loading from "../../Loading";
 import I18nAlert from "../../I18nAlert";
 import { useRepositories } from "../hooks/useRepositories";
 
-export default function Repositories() {
+const Repositories: FC = () => {
   const { isLoading, error, data } = useRepositories();
 
   let child = <div />;
@@ -26,4 +26,6 @@ export default function Repositories() {
       {child}
     </div>
   );
-}
+};
+
+export default Repositories;

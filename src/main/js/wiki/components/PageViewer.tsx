@@ -10,8 +10,8 @@ type Props = {
   historyLink: string;
   onDelete: () => void;
   onHome: () => void;
-  onMove: () => void;
-  onRestore: () => void;
+  onMove: (target: string) => void;
+  onRestore: (pagePath: string, commit: string) => void;
   search: (arg0: string) => void;
 };
 
