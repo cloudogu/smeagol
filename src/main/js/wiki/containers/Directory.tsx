@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import FileBrowser from "../components/FileBrowser";
 import Breadcrumb from "../components/Breadcrumb";
 import { useDirectory } from "../hooks/directory";
@@ -18,7 +18,7 @@ type Props = {
   location: Location;
 };
 
-function Directory(props: Props) {
+const Directory: FC<Props> = (props) => {
   const { repository, branch } = props.match.params;
 
   const path = findDirectoryPath(props);
@@ -83,7 +83,7 @@ function Directory(props: Props) {
       <FileBrowser directory={data} createLink={createLink} />
     </div>
   );
-}
+};
 
 function findDirectoryPath(props) {
   const { pathname } = props.location;
