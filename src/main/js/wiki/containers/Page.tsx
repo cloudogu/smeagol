@@ -1,23 +1,47 @@
 import React from "react";
-import { useEditPage, useCreatePage, usePage, useRenamePage, useDeletePage, useRestorePage } from "../modules/page";
-import { useWiki } from "../modules/wiki";
+import { useEditPage, useCreatePage, usePage, useRenamePage, useDeletePage, useRestorePage } from "../hooks/page";
+import { useWiki } from "../hooks/wiki";
 import PageViewer from "../components/PageViewer";
 import * as queryString from "query-string";
 import PageEditor from "../components/PageEditor";
 import Loading from "../../Loading";
 import I18nAlert from "../../I18nAlert";
 import { PAGE_NOT_FOUND_ERROR } from "../../apiclient";
+import { match } from "react-router";
+
+type Params = {
+  repository: string;
+  branch: string;
+};
 
 type Props = {
   history: any;
-  match: any;
-  location: any;
+  match: match<Params>;
+  location: Location;
 };
 
 export default function Page(props: Props) {
+  const { repository, branch } = props.match.params;
   const pushLandingPageState = () => {
     pushPageStateClosure()(wikiQuery.data.landingPage);
   };
+
+  const pushPageStateClosure = () => {
+    return function (pagePath: string) {
+      props.history.push(`/${repository}/${branch}/${pagePath}`);
+    };
+  };
+
+  const path = findPagePath(props);
+
+  const pageQuery = usePage(repository, branch, path, getCommitParameter(props));
+  const wikiQuery = useWiki(repository, branch);
+
+  const editPageMutation = useEditPage(repository, branch, path);
+  const deletePageMutation = useDeletePage(repository, branch, path, pushLandingPageState);
+  const createPageMutation = useCreatePage(repository, branch, path);
+  const renamePageMutation = useRenamePage(repository, branch, path, pushPageStateClosure());
+  const restorePageMutation = useRestorePage(repository, branch, path, pushPageStateClosure());
 
   const deletePage = () => {
     // TODO i18n
@@ -29,13 +53,6 @@ export default function Page(props: Props) {
     // TODO i18n
     const message = "Restore commit " + commit + " from page " + pagePath + " (smeagol)";
     restorePageMutation.mutate({ message: message, commit: commit });
-  };
-
-  const pushPageStateClosure = () => {
-    const { repository, branch } = props.match.params;
-    return function (pagePath: string) {
-      props.history.push(`/${repository}/${branch}/${pagePath}`);
-    };
   };
 
   const onMove = (target: string) => {
@@ -52,21 +69,8 @@ export default function Page(props: Props) {
   };
 
   const search = (query: string) => {
-    const { repository, branch } = props.match.params;
     props.history.push(`/${repository}/${branch}/search?query=${query}`);
   };
-
-  const { repository, branch } = props.match.params;
-  const path = findPagePath(props);
-
-  const pageQuery = usePage(repository, branch, path, getCommitParameter(props));
-  const wikiQuery = useWiki(repository, branch);
-
-  const editPageMutation = useEditPage(repository, branch, path);
-  const deletePageMutation = useDeletePage(repository, branch, path, pushLandingPageState);
-  const createPageMutation = useCreatePage(repository, branch, path);
-  const renamePageMutation = useRenamePage(repository, branch, path, pushPageStateClosure());
-  const restorePageMutation = useRestorePage(repository, branch, path, pushPageStateClosure());
 
   const isLoading =
     pageQuery.isLoading ||
@@ -110,9 +114,11 @@ export default function Page(props: Props) {
     );
   }
 
-  const wiki = wikiQuery.data;
-  wiki.repository = repository;
-  wiki.branch = branch;
+  const wiki = {
+    ...wikiQuery.data,
+    repository,
+    branch
+  };
 
   if (
     editPageMutation.error ||

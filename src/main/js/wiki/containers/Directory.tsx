@@ -1,18 +1,29 @@
 import React from "react";
 import FileBrowser from "../components/FileBrowser";
 import Breadcrumb from "../components/Breadcrumb";
-import { useDirectory } from "../modules/directory";
+import { useDirectory } from "../hooks/directory";
 import I18nAlert from "../../I18nAlert";
 import Loading from "../../Loading";
 import { translate } from "react-i18next";
+import { match } from "react-router";
+
+type Params = {
+  repository: string;
+  branch: string;
+};
 
 type Props = {
-  t: any;
-  match: any;
-  location: any;
+  t: (string) => string;
+  match: match<Params>;
+  location: Location;
 };
 
 function Directory(props: Props) {
+  const { repository, branch } = props.match.params;
+
+  const path = findDirectoryPath(props);
+  const { isLoading, error, data } = useDirectory(repository, branch, path);
+
   const createDirectoryLink = (path: string) => {
     const { repository, branch } = props.match.params;
     return `/${repository}/${branch}/pages/${path}`;
@@ -42,11 +53,6 @@ function Directory(props: Props) {
     }
     return value;
   };
-
-  const { repository, branch } = props.match.params;
-
-  const path = findDirectoryPath(props);
-  const { isLoading, error, data } = useDirectory(repository, branch, path);
 
   if (error) {
     return (

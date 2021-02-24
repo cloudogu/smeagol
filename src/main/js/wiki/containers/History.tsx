@@ -2,14 +2,20 @@ import React from "react";
 import I18nAlert from "../../I18nAlert";
 import Loading from "../../Loading";
 import { translate } from "react-i18next";
-import { usePageHistory } from "../modules/pagehistory";
+import { usePageHistory } from "../hooks/pagehistory";
 import CommitsTable from "../components/CommitsTable";
 import ActionLink from "../components/ActionLink";
+import { match } from "react-router";
+
+type Params = {
+  repository: string;
+  branch: string;
+};
 
 type Props = {
-  t: any;
-  match: any;
-  location: any;
+  t: (string) => string;
+  match: match<Params>;
+  location: Location;
 };
 
 function History(props: Props) {

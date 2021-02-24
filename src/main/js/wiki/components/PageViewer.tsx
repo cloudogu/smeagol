@@ -8,10 +8,10 @@ type Props = {
   wiki: any;
   pagesLink: string;
   historyLink: string;
-  onDelete: any;
-  onHome: any;
-  onMove: any;
-  onRestore: any;
+  onDelete: () => void;
+  onHome: () => void;
+  onMove: () => void;
+  onRestore: () => void;
   search: (arg0: string) => void;
 };
 

@@ -1,19 +1,33 @@
 import React from "react";
 import * as queryString from "query-string";
-import { useSearch } from "../modules/search";
-import { useWiki } from "../modules/wiki";
+import { useSearch } from "../hooks/useSearch";
+import { useWiki } from "../hooks/wiki";
 import Loading from "../../Loading";
 import I18nAlert from "../../I18nAlert";
 import SearchResults from "../components/SearchResults";
 import SearchResultHeader from "../components/SearchResultHeader";
+import { match } from "react-router";
+
+type Params = {
+  repository: string;
+  branch: string;
+};
 
 type Props = {
-  match: any;
   history: any;
-  location: any;
+  match: match<Params>;
+  location: Location;
 };
 
 export default function Search(props: Props) {
+  const { repository, branch } = props.match.params;
+  const query = getQuery(props);
+
+  const searchQuery = useSearch(repository, branch, query);
+  const wikiQuery = useWiki(repository, branch);
+
+  const isLoading = searchQuery.isLoading || wikiQuery.isLoading;
+
   const createPageLink = (path: string) => {
     const { repository, branch } = props.match.params;
     return `/${repository}/${branch}/${path}`;
@@ -28,14 +42,6 @@ export default function Search(props: Props) {
     const { repository, branch } = props.match.params;
     return `/${repository}/${branch}/${wiki.landingPage}`;
   };
-
-  const { repository, branch } = props.match.params;
-  const query = getQuery(props);
-
-  const searchQuery = useSearch(repository, branch, query);
-  const wikiQuery = useWiki(repository, branch);
-
-  const isLoading = searchQuery.isLoading || wikiQuery.isLoading;
 
   let results;
   if (!searchQuery.data) {
