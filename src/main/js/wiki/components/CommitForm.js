@@ -1,57 +1,55 @@
 //@flow
-import React from 'react';
-import {Modal} from 'react-bootstrap';
-import {translate} from 'react-i18next';
-import ActionButton from './ActionButton';
+import React from "react";
+import { Modal } from "react-bootstrap";
+import { translate } from "react-i18next";
+import ActionButton from "./ActionButton";
 
 type Props = {
-    t: any,
-    show: boolean,
-    onSave: Function,
-    onAbort: Function,
-    defaultMessage: string
+  t: any,
+  show: boolean,
+  onSave: Function,
+  onAbort: Function,
+  defaultMessage: string
 };
 
 type State = {
-    message: string
+  message: string
 };
 
 class CommitForm extends React.Component<Props, State> {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            message: this.props.defaultMessage
-        };
-    }
-
-    handleChange = (event) => {
-        this.setState({message: event.target.value});
+  constructor(props) {
+    super(props);
+    this.state = {
+      message: this.props.defaultMessage
     };
+  }
 
-    save = () => {
-        this.props.onSave(this.state.message);
-    };
+  handleChange = (event) => {
+    this.setState({ message: event.target.value });
+  };
 
-    render() {
-        const { show, onAbort, t } = this.props;
+  save = () => {
+    this.props.onSave(this.state.message);
+  };
 
-        return (
-            <Modal show={ show } onHide={onAbort}>
-                <Modal.Header closeButton>
-                    <Modal.Title>{ t('commit-form_title') }</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <textarea className="form-control" value={this.state.message} onChange={ this.handleChange } />
-                </Modal.Body>
-                <Modal.Footer>
-                    <ActionButton type="primary" onClick={this.save} i18nKey="commit-form_save" />
-                    <ActionButton onClick={onAbort} i18nKey="commit-form_abort" />
-                </Modal.Footer>
-            </Modal>
-        );
-    }
+  render() {
+    const { show, onAbort, t } = this.props;
 
+    return (
+      <Modal show={show} onHide={onAbort}>
+        <Modal.Header closeButton>
+          <Modal.Title>{t("commit-form_title")}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <textarea className="form-control" value={this.state.message} onChange={this.handleChange} />
+        </Modal.Body>
+        <Modal.Footer>
+          <ActionButton type="primary" onClick={this.save} i18nKey="commit-form_save" />
+          <ActionButton onClick={onAbort} i18nKey="commit-form_abort" />
+        </Modal.Footer>
+      </Modal>
+    );
+  }
 }
 
 export default translate()(CommitForm);
