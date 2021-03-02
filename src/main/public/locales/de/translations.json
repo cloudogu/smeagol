@@ -8,6 +8,7 @@
   "wikiroot_not_found_reason_permissions": "Du hast keine Zugriffsberechtigung auf das Repository.",
   "wikiroot_not_found_reason_missing_conf": "Das Repository enthält keine .smeagol.yml Datei.",
   "page_failed_to_fetch": "Die Seite konnte nicht geladen werden",
+  "page_failed_to_modify": "Die Seite konnte nicht bearbeitet werden",
   "page-editor_no_write_permissions": "Du hast nicht genügend Berechtigungen um diese Seite zu bearbeiten",
   "page-header_home": "Startseite",
   "page-header_pages": "Seiten",
