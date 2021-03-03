@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * HTML Sanitization (#106) by updating tui-editor
 
 ### Changed
+* Encode search results to prevent rendering of HTML in search results (#106) 
 * Use React Query instead of Redux to manage server-state #100
 * Use TypeScript instead of Flow for type checking
 

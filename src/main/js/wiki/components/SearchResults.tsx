@@ -1,8 +1,9 @@
 import React from "react";
 import SearchResult from "./SearchResult";
+import { SearchFindings } from "../types/searchFinding";
 
 type Props = {
-  results: any;
+  results: SearchFindings;
   createPageLink: (arg0: string) => string;
 };
 

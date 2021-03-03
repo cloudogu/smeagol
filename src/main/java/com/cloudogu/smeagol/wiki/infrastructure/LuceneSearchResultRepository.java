@@ -70,9 +70,10 @@ public class LuceneSearchResultRepository implements SearchResultRepository {
 
     private Highlighter createHighlighter(Query query) {
         Formatter formatter = new SimpleHTMLFormatter();
+        SimpleHTMLEncoder encoder = new SimpleHTMLEncoder();
         QueryScorer scorer = new QueryScorer(query);
 
-        Highlighter highlighter = new Highlighter(formatter, scorer);
+        Highlighter highlighter = new Highlighter(formatter, encoder, scorer);
         highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer));
 
         return highlighter;
