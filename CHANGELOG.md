@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.6.0-1] - 2021-03-03
 ### Changed
 * Use React Query instead of Redux to manage server-state #100
 * Use TypeScript instead of Flow for type checking
