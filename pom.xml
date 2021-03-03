@@ -12,7 +12,7 @@
 
     <groupId>com.cloudogu.wiki</groupId>
     <artifactId>smeagol</artifactId>
-    <version>0.5.7</version>
+    <version>0.6.0</version>
     <name>smeagol</name>
     <packaging>war</packaging>
 
@@ -228,8 +228,8 @@
                         <version>10.23.0</version>
                     </node>
                     <pkgManager>
-                        <type>NPM</type>
-                        <version>6.1.0</version>
+                        <type>YARN</type>
+                        <version>1.22.5</version>
                     </pkgManager>
                     <pkg/>
                     <script/>

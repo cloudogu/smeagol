@@ -1,7 +1,7 @@
 FROM openjdk:8u252-jdk as builder
 
 ENV SMEAGOL_DIR=/usr/src/smeagol
-COPY mvnw pom.xml package.json package-lock.json ${SMEAGOL_DIR}/
+COPY mvnw pom.xml package.json yarn.lock .prettierrc ${SMEAGOL_DIR}/
 COPY .mvn ${SMEAGOL_DIR}/.mvn
 # We resolve dependencies before copying src so we profit from dockers caching behavior
 RUN set -x \
@@ -14,7 +14,7 @@ RUN set -x \
 
 FROM registry.cloudogu.com/official/java:8u252-1
 LABEL NAME="official/smeagol" \
-      VERSION="0.5.7-1" \
+      VERSION="0.6.0-1" \
       maintainer="Sebastian Sdorra <sebastian.sdorra@cloudogu.com>"
 
 ENV SERVICE_TAGS=webapp \

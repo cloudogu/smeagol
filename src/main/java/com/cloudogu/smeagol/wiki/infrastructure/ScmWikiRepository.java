@@ -21,8 +21,6 @@ public class ScmWikiRepository implements WikiRepository {
     @VisibleForTesting
     static final String SETTINGS_FILE = ".smeagol.yml";
 
-    private final Yaml yaml = new Yaml();
-
     private final ScmHttpClient scmHttpClient;
 
     @Autowired
@@ -86,6 +84,8 @@ public class ScmWikiRepository implements WikiRepository {
     }
 
     private WikiSettings readSettings(String content) {
+        // create a new object since Yaml is not thread safe
+        Yaml yaml = new Yaml();
         return yaml.loadAs(content, WikiSettings.class);
     }
 
