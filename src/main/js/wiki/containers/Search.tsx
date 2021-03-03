@@ -7,6 +7,7 @@ import I18nAlert from "../../I18nAlert";
 import SearchResults from "../components/SearchResults";
 import SearchResultHeader from "../components/SearchResultHeader";
 import { match } from "react-router";
+import { SearchFindings } from "../types/searchFinding";
 
 type Params = {
   repository: string;
@@ -43,7 +44,7 @@ const Search: FC<Props> = (props) => {
     return `/${repository}/${branch}/${wiki.landingPage}`;
   };
 
-  let results;
+  let results: SearchFindings;
   if (!searchQuery.data) {
     results = [];
   } else {
