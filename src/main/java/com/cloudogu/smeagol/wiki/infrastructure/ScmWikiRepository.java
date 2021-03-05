@@ -40,10 +40,11 @@ public class ScmWikiRepository implements WikiRepository {
 
     private Wiki createWiki(WikiId id, RepositoryDTO repository, WikiSettings settings) {
         DisplayName displayName = displayName(repository, settings);
+        RepositoryName repositoryName = RepositoryName.valueOf(repository.name);
         Path directory = directory(settings, "docs");
         Path landingPage = landingPage(settings, "Home");
 
-        return new Wiki(id, repository.url, displayName, directory, landingPage);
+        return new Wiki(id, repository.url, displayName, repositoryName, directory, landingPage);
     }
 
     private DisplayName displayName(RepositoryDTO repository, WikiSettings settings) {

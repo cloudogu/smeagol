@@ -1,8 +1,13 @@
 import React from "react";
 import Logo from "ces-theme/dist/images/logo/blib-white-30px.png";
 import { Link } from "react-router-dom";
+import SearchBar from "./wiki/components/SearchBar";
 
-type Props = any;
+type Props = {
+  history?: any;
+  repository?: string;
+  branch?: string;
+};
 
 type State = {
   collapsed: boolean;
@@ -24,6 +29,19 @@ class Navigation extends React.Component<Props, State> {
 
   render() {
     const { collapsed } = this.state;
+
+    let searchBar: JSX.Element;
+    if (this.props.repository && this.props.branch) {
+      const search = (query: string) => {
+        this.props.history.push(`/${this.props.repository}/${this.props.branch}/search?query=${query}`);
+      };
+
+      searchBar = (
+        <li className="form-group navbar-form">
+          <SearchBar search={search} />
+        </li>
+      );
+    }
 
     let navBarClasses;
     if (collapsed) {
@@ -60,7 +78,8 @@ class Navigation extends React.Component<Props, State> {
             </Link>
           </div>
           <div className={navBarClasses}>
-            <ul className="nav navbar-nav">
+            <ul className="nav navbar-nav navbar-right">
+              {searchBar}
               <li>
                 {/* TODO context path */}
                 <a href={contextPath + "/api/v1/logout"}>Logout</a>

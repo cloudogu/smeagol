@@ -1,45 +1,39 @@
 import React from "react";
 import injectSheet from "react-jss";
-import { Link } from "react-router-dom";
+import classNames from "classnames";
 
-const styles = {};
+const styles = {
+  breadcrumb: {
+    "background-color": "white"
+  }
+};
+
+export type Entry = {
+  name: string;
+  link: string;
+};
 
 type Props = {
-  createLink: (path: string) => string;
-  path: string;
+  entries: Entry[];
   classes: any;
 };
 
 class Breadcrumb extends React.Component<Props> {
-  createEntries = () => {
-    const { path } = this.props;
-    const parts = path.split("/");
-
-    const entries = [];
-
-    let currentPath = "";
-    for (const part of parts) {
-      currentPath += part + "/";
-      entries.push({
-        name: part,
-        link: this.props.createLink(currentPath)
-      });
-    }
-
-    return entries;
-  };
-
   render() {
-    const entries = this.createEntries();
+    const { entries, classes } = this.props;
 
     return (
-      <div className="breadcrumb">
+      <div className={classNames("breadcrumb", classes.breadcrumb)}>
         {entries.map((entry) => {
-          return (
-            <span key={entry.name}>
-              / <Link to={entry.link}>{entry.name}</Link>{" "}
-            </span>
-          );
+          if (!entry.link) {
+            return <li className="active">{entry.name}</li>;
+          } else {
+            return (
+              <li key={entry.name}>
+                <a href={entry.link}>{entry.name}</a>
+              </li>
+            );
+          }
         })}
       </div>
     );

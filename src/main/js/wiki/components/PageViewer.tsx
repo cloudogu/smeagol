@@ -12,12 +12,11 @@ type Props = {
   onHome: () => void;
   onMove: (target: string) => void;
   onRestore: (pagePath: string, commit: string) => void;
-  search: (arg0: string) => void;
 };
 
 class PageViewer extends React.Component<Props> {
   render() {
-    const { page, wiki, onDelete, onHome, onMove, pagesLink, search, historyLink, onRestore } = this.props;
+    const { page, wiki, onDelete, onHome, onMove, pagesLink, historyLink, onRestore } = this.props;
     return (
       <div>
         <PageHeader
@@ -29,7 +28,6 @@ class PageViewer extends React.Component<Props> {
           onHomeClick={onHome}
           onOkMoveClick={onMove}
           onRestoreClick={onRestore}
-          search={search}
         />
         <PageContent page={page} />
         <PageFooter page={page} />

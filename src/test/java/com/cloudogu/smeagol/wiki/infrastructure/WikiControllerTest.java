@@ -62,7 +62,7 @@ public class WikiControllerTest {
                 wikiId,
                 new URL(remoteUrl),
                 DisplayName.valueOf("Heart Of Gold"),
-                Path.valueOf("docs"),
+                RepositoryName.valueOf("namespace/repo"), Path.valueOf("docs"),
                 Path.valueOf("Home")
         );
 
@@ -74,6 +74,7 @@ public class WikiControllerTest {
                 .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.displayName", is("Heart Of Gold")))
+                .andExpect(jsonPath("$.repositoryName", is("namespace/repo")))
                 .andExpect(jsonPath("$.landingPage", is("docs/Home")))
                 .andExpect(jsonPath("$.directory", is("docs")))
                 .andExpect(jsonPath("$._links.self.href", is(self)))

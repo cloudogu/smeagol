@@ -15,7 +15,7 @@
   "page-header_history": "Versionsübersicht",
   "page-header_edit": "Bearbeiten",
   "page-header_delete": "Löschen",
-  "page-header_create": "Neu",
+  "page-header_create": "Neue Seite",
   "page-header_move": "Umbenennen",
   "page-header_restore": "Wiederherstellen",
   "page-footer_edited_by": "Letzte Änderung von",
@@ -44,7 +44,7 @@
   "general-information_description": "Untenstehend siehst Du eine Liste aller Git-Repositories auf Deinem Repository-Server, auf die Du entsprechende Zugriffsrechte hast.Um eine Dokumentation für ein Repository zu schreiben, muss nur eine <em>.smeagol.yml</em> Datei in das Root-Verzeichnis des Repository abgelegt werden. Anschließend kann das Wiki in diesem Repository direkt genutzt werden. Alle Änderungen in einem Wiki werden nach dem Speichern von Smeagol an das Repository gepusht. Damit ist die Dokumentation immer auf dem neuesten Stand und dort, wo sie hingehört - nah am Code!",
   "back-to-repositories-button_text": "Zurück zur Repository-Übersicht",
   "history_heading": "Versionsübersicht für ",
-  "search-bar_placeholder": "Suchen nach ...",
+  "search-bar_placeholder": "In diesem Repository suchen ...",
   "search-result-header_title": "Suchergebnisse für",
   "search_failed_to_fetch": "Die Suchergebnisse konnten nicht geladen werden",
   "search-scoring_tooltip": "Relevanz für Deine Anfrage"

@@ -19,7 +19,7 @@ public class WikiResourceAssembler extends ResourceAssemblerSupport<Wiki, WikiRe
     public WikiResource toResource(Wiki wiki) {
         String path = wiki.getDirectory().concat(wiki.getLandingPage()).getValue();
 
-        WikiResource resource = new WikiResource(wiki.getDisplayName().getValue(), wiki.getDirectory().getValue(), path);
+        WikiResource resource = new WikiResource(wiki.getDisplayName().getValue(), wiki.getRepositoryName().getValue(), wiki.getDirectory().getValue(), path);
         resource.add(selfLink(wiki));
         resource.add(gitLink(wiki));
         resource.add(landingPageLink(wiki, path));

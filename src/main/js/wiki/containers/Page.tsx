@@ -8,6 +8,7 @@ import Loading from "../../Loading";
 import I18nAlert from "../../I18nAlert";
 import { PAGE_NOT_FOUND_ERROR } from "../../apiclient";
 import { match } from "react-router";
+import WikiHeader from "../components/WikiHeader";
 
 type Params = {
   repository: string;
@@ -32,6 +33,8 @@ const Page: FC<Props> = (props) => {
   };
 
   const path = findPagePath(props);
+  const pageName = getPageNameFromPath(path);
+  const directory = getDirectoryFromPath(path);
 
   const pageQuery = usePage(repository, branch, path, getCommitParameter(props));
   const wikiQuery = useWiki(repository, branch);
@@ -65,10 +68,6 @@ const Page: FC<Props> = (props) => {
 
   const onAbortCreate = () => {
     pushLandingPageState();
-  };
-
-  const search = (query: string) => {
-    props.history.push(`/${repository}/${branch}/search?query=${query}`);
   };
 
   const isLoading =
@@ -136,14 +135,24 @@ const Page: FC<Props> = (props) => {
 
   if (isEditMode(props)) {
     return (
-      <PageEditor
-        path={pageQuery.data.path}
-        content={pageQuery.data.content}
-        onSave={(message, content) => {
-          editPageMutation.mutate({ message: message, content: content });
-        }}
-        onAbort={onAbortEdit}
-      />
+      <div>
+        <WikiHeader
+          branch={branch}
+          repository={repository}
+          wiki={wikiQuery.data}
+          pageName={pageName}
+          directory={directory}
+        />
+        <hr />
+        <PageEditor
+          path={pageQuery.data.path}
+          content={pageQuery.data.content}
+          onSave={(message, content) => {
+            editPageMutation.mutate({ message: message, content: content });
+          }}
+          onAbort={onAbortEdit}
+        />
+      </div>
     );
   }
   let pagesLink = "#";
@@ -158,17 +167,26 @@ const Page: FC<Props> = (props) => {
   }
 
   return (
-    <PageViewer
-      page={pageQuery.data}
-      wiki={wiki}
-      onDelete={deletePage}
-      onHome={pushLandingPageState}
-      onMove={onMove}
-      pagesLink={pagesLink}
-      historyLink={historyLink}
-      onRestore={onRestore}
-      search={search}
-    />
+    <div>
+      <WikiHeader
+        branch={branch}
+        repository={repository}
+        wiki={wikiQuery.data}
+        pageName={pageName}
+        directory={directory}
+      />
+      <hr />
+      <PageViewer
+        page={pageQuery.data}
+        wiki={wiki}
+        onDelete={deletePage}
+        onHome={pushLandingPageState}
+        onMove={onMove}
+        pagesLink={pagesLink}
+        historyLink={historyLink}
+        onRestore={onRestore}
+      />
+    </div>
   );
 };
 export default Page;
@@ -196,4 +214,14 @@ function findPagePath(props) {
   const { pathname } = props.location;
   const parts = pathname.split("/");
   return parts.slice(3).join("/");
+}
+
+export function getPageNameFromPath(path: string) {
+  const parts = path.split("/");
+  return parts[parts.length - 1];
+}
+
+export function getDirectoryFromPath(path: string) {
+  const parts = path.split("/");
+  return parts.slice(0, parts.length - 1).join("/");
 }

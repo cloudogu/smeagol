@@ -8,6 +8,7 @@ import SearchResults from "../components/SearchResults";
 import SearchResultHeader from "../components/SearchResultHeader";
 import { match } from "react-router";
 import { SearchFindings } from "../types/searchFinding";
+import WikiHeader from "../components/WikiHeader";
 
 type Params = {
   repository: string;
@@ -32,11 +33,6 @@ const Search: FC<Props> = (props) => {
   const createPageLink = (path: string) => {
     const { repository, branch } = props.match.params;
     return `/${repository}/${branch}/${path}`;
-  };
-
-  const search = (query: string) => {
-    const { history } = props;
-    history.push(`?query=${query}`);
   };
 
   const createHomeLink = (wiki: any) => {
@@ -69,7 +65,9 @@ const Search: FC<Props> = (props) => {
     const homeLink = createHomeLink(wikiQuery.data);
     return (
       <div>
-        <SearchResultHeader query={query} search={search} homeLink={homeLink} />
+        <WikiHeader branch={branch} repository={repository} wiki={wikiQuery.data} />
+        <hr />
+        <SearchResultHeader query={query} homeLink={homeLink} />
         <hr />
         <SearchResults results={results} createPageLink={createPageLink} />
       </div>

@@ -6,6 +6,8 @@ import I18nAlert from "../../I18nAlert";
 import Loading from "../../Loading";
 import { translate } from "react-i18next";
 import { match } from "react-router";
+import WikiHeader from "../components/WikiHeader";
+import { useWiki } from "../hooks/wiki";
 
 type Params = {
   repository: string;
@@ -22,7 +24,11 @@ const Directory: FC<Props> = (props) => {
   const { repository, branch } = props.match.params;
 
   const path = findDirectoryPath(props);
-  const { isLoading, error, data } = useDirectory(repository, branch, path);
+  const directoryQuery = useDirectory(repository, branch, path);
+  const wikiQuery = useWiki(repository, branch);
+
+  const isLoading = directoryQuery.isLoading || wikiQuery.isLoading;
+  const error = directoryQuery.error || wikiQuery.error;
 
   const createDirectoryLink = (path: string) => {
     const { repository, branch } = props.match.params;
@@ -68,9 +74,11 @@ const Directory: FC<Props> = (props) => {
         <Loading />
       </div>
     );
-  } else if (!data) {
+  } else if (!directoryQuery.data) {
     return (
       <div>
+        <WikiHeader branch={branch} repository={repository} wiki={wikiQuery.data} directory={path} />
+        <hr />
         <h1>Smeagol</h1>
       </div>
     );
@@ -78,9 +86,10 @@ const Directory: FC<Props> = (props) => {
 
   return (
     <div>
+      <WikiHeader branch={branch} repository={repository} wiki={wikiQuery.data} directory={path} />
+      <hr />
       <h1>{props.t("directory_heading")}</h1>
-      <Breadcrumb path={path} createLink={createDirectoryLink} />
-      <FileBrowser directory={data} createLink={createLink} />
+      <FileBrowser directory={directoryQuery.data} createLink={createLink} />
     </div>
   );
 };

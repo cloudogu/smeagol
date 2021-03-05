@@ -12,7 +12,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="App">
-        <Navigation />
         <Main />
       </div>
       <ReactQueryDevtools initialIsOpen={false} />
