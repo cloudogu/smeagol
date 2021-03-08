@@ -19,7 +19,12 @@ const WikiHeader: FC<Props> = (props) => {
   };
 
   const landingPage = `/${repository}/${branch}/${wiki.landingPage}`;
-  entries.push({ name: wiki.repositoryName, link: landingPage });
+  const namespace = getNamespace(wiki.repositoryName);
+  if (namespace) {
+    const name = getName(wiki.repositoryName);
+    entries.push({ name: namespace, link: "" });
+    entries.push({ name: name, link: landingPage });
+  }
 
   if (directory) {
     const parts = directory.split("/");
@@ -41,5 +46,17 @@ const WikiHeader: FC<Props> = (props) => {
 
   return <Breadcrumb entries={entries} />;
 };
+
+export function getNamespace(repositoryName: string) {
+  const parts: string[] = repositoryName.split("/");
+  if (parts.length != 2) return "";
+  return parts[0];
+}
+
+export function getName(repositoryName: string) {
+  const parts: string[] = repositoryName.split("/");
+  if (parts.length != 2) return "";
+  return parts[1];
+}
 
 export default WikiHeader;
