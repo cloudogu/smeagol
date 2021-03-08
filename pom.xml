@@ -278,6 +278,16 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
         </plugins>
 
         <pluginManagement>
@@ -343,9 +353,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <cas-client.version>3.4.1</cas-client.version>
+        <java.version>11</java.version>
         <jaxb.version>2.3.0</jaxb.version>
     </properties>
 </project>
