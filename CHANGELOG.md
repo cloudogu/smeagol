@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   * `server.contextPath` is now configured under `server.servlet.contextPath`
   * `/api/v1/repositories` now returns `{"_embedded":{"repositories":[<repositories>]}` instead of `[<repositories>]`
   * `/api/v1/repositories/{repositoryId}/branches/{branch}/search` now returns `{"_embedded":{"searchResults":[<searchResults>]}` instead of `[<searchResults>]`
-     
+* Replaced favicons (#108)
 
 ## [v0.6.0-1] - 2021-03-03
 ### Changed
