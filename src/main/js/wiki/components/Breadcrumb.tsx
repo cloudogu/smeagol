@@ -7,7 +7,10 @@ const styles = {
   breadcrumb: {
     "background-color": "white",
     "font-weight": "bold",
-    "font-size": "medium"
+    "font-size": "medium",
+    "padding-top": "11px",
+    "padding-bottom": "1px",
+    "padding-left": "0px"
   }
 };
 
@@ -26,7 +29,7 @@ class Breadcrumb extends React.Component<Props> {
     const { entries, classes } = this.props;
 
     return (
-      <div className={classNames("breadcrumb", classes.breadcrumb)}>
+      <ul className={classNames("breadcrumb", classes.breadcrumb)}>
         {entries.map((entry) => {
           if (!entry.link) {
             return <li className="active">{entry.name}</li>;
@@ -38,7 +41,7 @@ class Breadcrumb extends React.Component<Props> {
             );
           }
         })}
-      </div>
+      </ul>
     );
   }
 }
