@@ -1,9 +1,11 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.core.Relation;
 
 import java.util.Objects;
 
+@Relation(collectionRelation = "searchResults")
 public class SearchResultResource extends ResourceSupport {
 
     private String path;
