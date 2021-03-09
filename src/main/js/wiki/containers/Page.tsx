@@ -9,6 +9,7 @@ import I18nAlert from "../../I18nAlert";
 import { PAGE_NOT_FOUND_ERROR } from "../../apiclient";
 import { match } from "react-router";
 import WikiHeader from "../components/WikiHeader";
+import WikiNotFoundError from "../components/WikiNotFoundError";
 
 type Params = {
   repository: string;
@@ -102,7 +103,7 @@ const Page: FC<Props> = (props) => {
         <Loading />
       </div>
     );
-  } else if (pageQuery.error === PAGE_NOT_FOUND_ERROR || wikiQuery.error === PAGE_NOT_FOUND_ERROR) {
+  } else if (pageQuery.error === PAGE_NOT_FOUND_ERROR) {
     return (
       <div>
         {wikiHeader}
@@ -116,6 +117,8 @@ const Page: FC<Props> = (props) => {
         />
       </div>
     );
+  } else if (wikiQuery.error === PAGE_NOT_FOUND_ERROR) {
+    return <WikiNotFoundError />;
   } else if (pageQuery.error || wikiQuery.error) {
     return (
       <div>
