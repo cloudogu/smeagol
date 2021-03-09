@@ -21,7 +21,7 @@ parallel(
             node() { // No specific label
                 timestamps {
 
-                    def mvnDockerName = '3.6-openjdk-8'
+                    def mvnDockerName = '3.6-openjdk-11'
                     Maven mvn = new MavenInDocker(this, mvnDockerName)
 
                     stage('Checkout') {

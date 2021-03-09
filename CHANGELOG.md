@@ -10,8 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * HTML Sanitization (#106) by updating tui-editor
 
 ### Changed
+* UI of wiki menu #25
 * Encode search results to prevent rendering of HTML in search results (#106)
 * Update to Java 11
+* Use newer version of spring boot (2.1.18) which results in breaking changes
+  * `server.contextPath` is now configured under `server.servlet.contextPath`
+  * `/api/v1/repositories` now returns `{"_embedded":{"repositories":[<repositories>]}` instead of `[<repositories>]`
+  * `/api/v1/repositories/{repositoryId}/branches/{branch}/search` now returns `{"_embedded":{"searchResults":[<searchResults>]}` instead of `[<searchResults>]`
+     
 
 ## [v0.6.0-1] - 2021-03-03
 ### Changed
