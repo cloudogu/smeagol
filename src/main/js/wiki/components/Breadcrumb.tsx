@@ -5,7 +5,9 @@ import { Link } from "react-router-dom";
 
 const styles = {
   breadcrumb: {
-    "background-color": "white"
+    "background-color": "white",
+    "font-weight": "bold",
+    "font-size": "medium"
   }
 };
 
