@@ -66,8 +66,6 @@ public class EditPageCommandHandlerTest {
 
     @Test(expected = PageNotFoundException.class)
     public void testEditNotFound() {
-        when(accountService.get()).thenReturn(AccountTestData.TRILLIAN);
-
         WikiId id = new WikiId("123", "master");
         Path path = Path.valueOf("Home");
 

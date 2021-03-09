@@ -1,6 +1,9 @@
 package com.cloudogu.smeagol.repository.infrastructure;
 
-import com.cloudogu.smeagol.repository.domain.*;
+import com.cloudogu.smeagol.repository.domain.BranchRepository;
+import com.cloudogu.smeagol.repository.domain.Repository;
+import com.cloudogu.smeagol.repository.domain.RepositoryId;
+import com.cloudogu.smeagol.repository.domain.RepositoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

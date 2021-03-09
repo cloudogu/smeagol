@@ -66,7 +66,7 @@ public class ScmHttpClient {
 
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         requestFactory.setHttpClient(httpClientBuilder.build());
-        return restTemplateBuilder.requestFactory(requestFactory)
+        return restTemplateBuilder.requestFactory( () -> requestFactory)
                 .rootUri(scmUrl)
                 .build();
     }
