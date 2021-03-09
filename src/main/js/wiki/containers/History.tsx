@@ -4,7 +4,6 @@ import Loading from "../../Loading";
 import { translate } from "react-i18next";
 import { usePageHistory } from "../hooks/pagehistory";
 import CommitsTable from "../components/CommitsTable";
-import ActionLink from "../components/ActionLink";
 import { match } from "react-router";
 import WikiHeader from "../components/WikiHeader";
 import { useWiki } from "../hooks/wiki";
@@ -72,7 +71,6 @@ const History: FC<Props> = (props) => {
       <hr />
       <div className="page-header">
         <h1>{props.t("history_heading") + page}</h1>
-        <ActionLink to={pagePath} i18nKey="history-header_show_page" type="primary" />
       </div>
       <CommitsTable commits={pageHistoryQuery.data.commits} pagePath={pagePath} />
     </div>

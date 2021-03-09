@@ -44,7 +44,11 @@ class ActionButton extends React.Component<Props> {
     const typeClass = "btn-" + btnType;
     let icon: JSX.Element;
     if (glyphicon) {
-      icon = <span className={classNames("glyphicon", glyphicon)}></span>;
+      icon = (
+        <>
+          <span className={classNames("glyphicon", glyphicon)} />{" "}
+        </>
+      );
     }
     return (
       <button

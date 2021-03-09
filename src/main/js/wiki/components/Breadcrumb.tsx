@@ -1,6 +1,7 @@
 import React from "react";
 import injectSheet from "react-jss";
 import classNames from "classnames";
+import { Link } from "react-router-dom";
 
 const styles = {
   breadcrumb: {
@@ -30,7 +31,7 @@ class Breadcrumb extends React.Component<Props> {
           } else {
             return (
               <li key={entry.name}>
-                <a href={entry.link}>{entry.name}</a>
+                <Link to={entry.link}>{entry.name}</Link>
               </li>
             );
           }

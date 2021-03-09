@@ -37,7 +37,11 @@ class ActionLink extends React.Component<Props> {
     const typeClass = "btn-" + btnType;
     let icon: JSX.Element;
     if (glyphicon) {
-      icon = <span className={classNames("glyphicon", glyphicon)} />;
+      icon = (
+        <>
+          <span className={classNames("glyphicon", glyphicon)} />{" "}
+        </>
+      );
     }
     return (
       <Link className={classNames("btn", typeClass, classes.button, additionalClasses)} to={to}>

@@ -79,29 +79,48 @@ const Page: FC<Props> = (props) => {
     deletePageMutation.isLoading ||
     restorePageMutation.isLoading;
 
-  if (pageQuery.error === PAGE_NOT_FOUND_ERROR || wikiQuery.error === PAGE_NOT_FOUND_ERROR) {
+  let wikiHeader: JSX.Element;
+  if (wikiQuery.data) {
+    wikiHeader = (
+      <>
+        <WikiHeader
+          branch={branch}
+          repository={repository}
+          wiki={wikiQuery.data}
+          pageName={pageName}
+          directory={directory}
+        />
+        <hr />
+      </>
+    );
+  }
+
+  if (isLoading) {
     return (
-      <PageEditor
-        path={path}
-        content=""
-        onSave={(message, content) => {
-          createPageMutation.mutate({ message: message, content: content });
-        }}
-        onAbort={onAbortCreate}
-      />
+      <div>
+        <h1>Smeagol</h1>
+        <Loading />
+      </div>
+    );
+  } else if (pageQuery.error === PAGE_NOT_FOUND_ERROR || wikiQuery.error === PAGE_NOT_FOUND_ERROR) {
+    return (
+      <div>
+        {wikiHeader}
+        <PageEditor
+          path={path}
+          content=""
+          onSave={(message, content) => {
+            createPageMutation.mutate({ message: message, content: content });
+          }}
+          onAbort={onAbortCreate}
+        />
+      </div>
     );
   } else if (pageQuery.error || wikiQuery.error) {
     return (
       <div>
         <h1>Smeagol</h1>
         <I18nAlert i18nKey="page_failed_to_fetch" />
-      </div>
-    );
-  } else if (isLoading) {
-    return (
-      <div>
-        <h1>Smeagol</h1>
-        <Loading />
       </div>
     );
   } else if (!pageQuery.data || !wikiQuery.data) {
@@ -136,14 +155,7 @@ const Page: FC<Props> = (props) => {
   if (isEditMode(props)) {
     return (
       <div>
-        <WikiHeader
-          branch={branch}
-          repository={repository}
-          wiki={wikiQuery.data}
-          pageName={pageName}
-          directory={directory}
-        />
-        <hr />
+        {wikiHeader}
         <PageEditor
           path={pageQuery.data.path}
           content={pageQuery.data.content}
@@ -168,14 +180,7 @@ const Page: FC<Props> = (props) => {
 
   return (
     <div>
-      <WikiHeader
-        branch={branch}
-        repository={repository}
-        wiki={wikiQuery.data}
-        pageName={pageName}
-        directory={directory}
-      />
-      <hr />
+      {wikiHeader}
       <PageViewer
         page={pageQuery.data}
         wiki={wiki}

@@ -180,7 +180,6 @@ class PageHeader extends React.Component<Props, State> {
 
     return (
       <div className={classes.header}>
-        <h1>{page.path}</h1>
         <div className={classNames(classes.actions, "row")}>
           <div className="col-xs-9">
             {createButton}
