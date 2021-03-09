@@ -3,20 +3,15 @@
   "name": "Smeagol - Store your technical documentation with in your git repositories",
   "icons": [
     {
-      "src": "favicon-64px.png",
-      "sizes": "64x64",
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "favicon-32px.png",
-      "sizes": "32x32",
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
       "type": "image/png"
-    },
-    {
-      "src": "favicon-16px.png",
-      "sizes": "16x16",
-      "type": "image/png"
-    },
+    }
   ],
   "start_url": "./index.html",
   "display": "standalone",
