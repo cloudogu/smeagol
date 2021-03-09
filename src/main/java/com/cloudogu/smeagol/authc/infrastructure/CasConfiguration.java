@@ -19,7 +19,7 @@ public class CasConfiguration {
 
     @Autowired
     public CasConfiguration(
-            @Value("${server.contextPath}") String contextPath,
+            @Value("${server.servlet.contextPath}") String contextPath,
             @Value("${cas.serviceUrl}") String serviceUrl,
             @Value("${cas.url}") String casUrl
     ) {
