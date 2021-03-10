@@ -7,21 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-* HTML Sanitization (#106) by updating tui-editor
+* Add XSS attack mitigation by updating the WYSIWYG editor component (#106)
+* Add repository name to the breadcrumb for easier orientation (#25)
 
 ### Changed
-* UI of wiki menu #25
-* Encode search results to prevent rendering of HTML in search results (#106)
-* Update to Java 11
-* Use newer version of spring boot (2.1.18) which results in breaking changes
-  * `server.contextPath` is now configured under `server.servlet.contextPath`
+* Introduce a lighter menu UI styling, so the user can focus even more on the documentation tasks (#25)
+  * support the user for an intuitive navigation with a clickable page breadcrumbs
+  * add icons to the main buttons for easier visual recognition 
+  * move the search bar to the top to support focussing on the wiki page content
+* Change structure of Smeagol API results
   * `/api/v1/repositories` now returns `{"_embedded":{"repositories":[<repositories>]}` instead of `[<repositories>]`
   * `/api/v1/repositories/{repositoryId}/branches/{branch}/search` now returns `{"_embedded":{"searchResults":[<searchResults>]}` instead of `[<searchResults>]`
-* Replaced favicons (#108)
+* Encode search results to prevent rendering of HTML in search results (#106)
+* Update favicons (#108)
+* Update to Java 11
 
 ## [v0.6.0-1] - 2021-03-03
 ### Changed
-* Use React Query instead of Redux to manage server-state #100
+* Use React Query instead of Redux to manage server-state (#100)
 * Use TypeScript instead of Flow for type checking
 
 ## [v0.5.7-1] - 2021-02-12
