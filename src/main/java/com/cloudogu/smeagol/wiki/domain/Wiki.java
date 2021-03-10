@@ -70,6 +70,7 @@ public class Wiki {
             .add("id", id)
             .add("repositoryUrl", repositoryUrl)
             .add("displayName", displayName)
+            .add("repositoryName", repositoryName)
             .add("directory", directory)
             .add("landingPage", landingPage)
             .toString();
