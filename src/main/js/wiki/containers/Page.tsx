@@ -117,7 +117,12 @@ const Page: FC<Props> = (props) => {
     }
 
     if (wikiQuery.error === PAGE_NOT_FOUND_ERROR) {
-      return <WikiNotFoundError />;
+      return (
+        <>
+          <h1>Smeagol</h1>
+          <WikiNotFoundError />
+        </>
+      );
     }
     return <WikiAlertPage i18nKey={"page_failed_to_fetch"} />;
   }
