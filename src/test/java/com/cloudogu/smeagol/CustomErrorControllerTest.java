@@ -34,7 +34,7 @@ public class CustomErrorControllerTest {
     public void testErrorPageHandling_BAD_REQUEST() {
         HttpStatus expectedError = HttpStatus.BAD_REQUEST;
 
-        doReturn(HttpStatus.BAD_REQUEST).when(requestMock)
+        doReturn(HttpStatus.BAD_REQUEST.value()).when(requestMock)
                 .getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
         Object errorMessage = "SOMETHING THAT PRODUCED A 400 ERROR";
@@ -47,7 +47,7 @@ public class CustomErrorControllerTest {
         String responseTemplate = customErrorController.handleError(requestMock);
 
         //check for HTTP status code (400), reasonPhrase(Bad Gateway) and error message (errorMessage)
-        Assert.assertThat(responseTemplate, CoreMatchers.containsString(expectedError.toString()));
+        Assert.assertThat(responseTemplate, CoreMatchers.containsString(Integer.toString(expectedError.value())));
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(expectedError.getReasonPhrase()));
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(errorMessage.toString()));
         //check for correct resource path (should be /static see ProductionDispatcher)
@@ -59,7 +59,7 @@ public class CustomErrorControllerTest {
     public void testErrorPageHandling_INTERNAL_SERVER_ERROR() {
         HttpStatus expectedError = HttpStatus.INTERNAL_SERVER_ERROR;
 
-        doReturn(HttpStatus.INTERNAL_SERVER_ERROR).when(requestMock)
+        doReturn(HttpStatus.INTERNAL_SERVER_ERROR.value()).when(requestMock)
                 .getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
         Object errorMessage = "SOMETHING THAT PRODUCED A 500 ERROR";
@@ -72,7 +72,7 @@ public class CustomErrorControllerTest {
         String responseTemplate = customErrorController.handleError(requestMock);
 
         //check for HTTP status code (500), reasonPhrase(Internal Server Error) and error message (errorMessage)
-        Assert.assertThat(responseTemplate, CoreMatchers.containsString(expectedError.toString()));
+        Assert.assertThat(responseTemplate, CoreMatchers.containsString(Integer.toString(expectedError.value())));
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(expectedError.getReasonPhrase()));
         Assert.assertThat(responseTemplate, CoreMatchers.containsString(errorMessage.toString()));
         //check for correct resource path (should be /static see ProductionDispatcher)
@@ -86,9 +86,6 @@ public class CustomErrorControllerTest {
 
         doReturn(null).when(requestMock)
                 .getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
-
-        doReturn(HttpStatus.OK).when(requestMock)
-                .getAttribute(RequestDispatcher.ERROR_MESSAGE);
 
         String responseTemplate = customErrorController.handleError(requestMock);
 

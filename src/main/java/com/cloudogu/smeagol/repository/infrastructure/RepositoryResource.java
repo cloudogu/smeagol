@@ -3,11 +3,13 @@ package com.cloudogu.smeagol.repository.infrastructure;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.core.Relation;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@Relation(collectionRelation = "repositories")
 public class RepositoryResource extends ResourceSupport {
 
     @JsonProperty("id")

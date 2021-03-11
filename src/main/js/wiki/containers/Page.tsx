@@ -4,10 +4,12 @@ import { useWiki } from "../hooks/wiki";
 import PageViewer from "../components/PageViewer";
 import * as queryString from "query-string";
 import PageEditor from "../components/PageEditor";
-import Loading from "../../Loading";
-import I18nAlert from "../../I18nAlert";
 import { PAGE_NOT_FOUND_ERROR } from "../../apiclient";
 import { match } from "react-router";
+import WikiHeader from "../components/WikiHeader";
+import WikiNotFoundError from "../components/WikiNotFoundError";
+import WikiLoadingPage from "../components/WikiLoadingPage";
+import WikiAlertPage from "../components/WikiAlertPage";
 
 type Params = {
   repository: string;
@@ -32,6 +34,8 @@ const Page: FC<Props> = (props) => {
   };
 
   const path = findPagePath(props);
+  const pageName = getPageNameFromPath(path);
+  const directory = getDirectoryFromPath(path);
 
   const pageQuery = usePage(repository, branch, path, getCommitParameter(props));
   const wikiQuery = useWiki(repository, branch);
@@ -67,10 +71,6 @@ const Page: FC<Props> = (props) => {
     pushLandingPageState();
   };
 
-  const search = (query: string) => {
-    props.history.push(`/${repository}/${branch}/search?query=${query}`);
-  };
-
   const isLoading =
     pageQuery.isLoading ||
     wikiQuery.isLoading ||
@@ -80,32 +80,53 @@ const Page: FC<Props> = (props) => {
     deletePageMutation.isLoading ||
     restorePageMutation.isLoading;
 
-  if (pageQuery.error === PAGE_NOT_FOUND_ERROR || wikiQuery.error === PAGE_NOT_FOUND_ERROR) {
-    return (
-      <PageEditor
-        path={path}
-        content=""
-        onSave={(message, content) => {
-          createPageMutation.mutate({ message: message, content: content });
-        }}
-        onAbort={onAbortCreate}
-      />
+  let wikiHeader: JSX.Element;
+  if (wikiQuery.data) {
+    wikiHeader = (
+      <>
+        <WikiHeader
+          branch={branch}
+          repository={repository}
+          wiki={wikiQuery.data}
+          pageName={pageName}
+          directory={directory}
+        />
+        <hr />
+      </>
     );
-  } else if (pageQuery.error || wikiQuery.error) {
-    return (
-      <div>
-        <h1>Smeagol</h1>
-        <I18nAlert i18nKey="page_failed_to_fetch" />
-      </div>
-    );
-  } else if (isLoading) {
-    return (
-      <div>
-        <h1>Smeagol</h1>
-        <Loading />
-      </div>
-    );
-  } else if (!pageQuery.data || !wikiQuery.data) {
+  }
+
+  if (isLoading) {
+    return <WikiLoadingPage />;
+  }
+  if (pageQuery.error || wikiQuery.error) {
+    if (pageQuery.error === PAGE_NOT_FOUND_ERROR) {
+      return (
+        <div>
+          {wikiHeader}
+          <PageEditor
+            path={path}
+            content=""
+            onSave={(message, content) => {
+              createPageMutation.mutate({ message: message, content: content });
+            }}
+            onAbort={onAbortCreate}
+          />
+        </div>
+      );
+    }
+
+    if (wikiQuery.error === PAGE_NOT_FOUND_ERROR) {
+      return (
+        <>
+          <h1>Smeagol</h1>
+          <WikiNotFoundError />
+        </>
+      );
+    }
+    return <WikiAlertPage i18nKey={"page_failed_to_fetch"} />;
+  }
+  if (!pageQuery.data || !wikiQuery.data) {
     return (
       <div>
         <h1>Smeagol</h1>
@@ -126,24 +147,22 @@ const Page: FC<Props> = (props) => {
     deletePageMutation.error ||
     restorePageMutation.error
   ) {
-    return (
-      <div>
-        <h1>Smeagol</h1>
-        <I18nAlert i18nKey="page_failed_to_modify" />
-      </div>
-    );
+    return <WikiAlertPage i18nKey={"page_failed_to_modify"} />;
   }
 
   if (isEditMode(props)) {
     return (
-      <PageEditor
-        path={pageQuery.data.path}
-        content={pageQuery.data.content}
-        onSave={(message, content) => {
-          editPageMutation.mutate({ message: message, content: content });
-        }}
-        onAbort={onAbortEdit}
-      />
+      <div>
+        {wikiHeader}
+        <PageEditor
+          path={pageQuery.data.path}
+          content={pageQuery.data.content}
+          onSave={(message, content) => {
+            editPageMutation.mutate({ message: message, content: content });
+          }}
+          onAbort={onAbortEdit}
+        />
+      </div>
     );
   }
   let pagesLink = "#";
@@ -158,17 +177,19 @@ const Page: FC<Props> = (props) => {
   }
 
   return (
-    <PageViewer
-      page={pageQuery.data}
-      wiki={wiki}
-      onDelete={deletePage}
-      onHome={pushLandingPageState}
-      onMove={onMove}
-      pagesLink={pagesLink}
-      historyLink={historyLink}
-      onRestore={onRestore}
-      search={search}
-    />
+    <div>
+      {wikiHeader}
+      <PageViewer
+        page={pageQuery.data}
+        wiki={wiki}
+        onDelete={deletePage}
+        onHome={pushLandingPageState}
+        onMove={onMove}
+        pagesLink={pagesLink}
+        historyLink={historyLink}
+        onRestore={onRestore}
+      />
+    </div>
   );
 };
 export default Page;
@@ -196,4 +217,14 @@ function findPagePath(props) {
   const { pathname } = props.location;
   const parts = pathname.split("/");
   return parts.slice(3).join("/");
+}
+
+export function getPageNameFromPath(path: string) {
+  const parts = path.split("/");
+  return parts[parts.length - 1];
+}
+
+export function getDirectoryFromPath(path: string) {
+  const parts = path.split("/");
+  return parts.slice(0, parts.length - 1).join("/");
 }

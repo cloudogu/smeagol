@@ -18,8 +18,7 @@ import java.net.URL;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -62,7 +61,7 @@ public class WikiControllerTest {
                 wikiId,
                 new URL(remoteUrl),
                 DisplayName.valueOf("Heart Of Gold"),
-                Path.valueOf("docs"),
+                RepositoryName.valueOf("namespace/repo"), Path.valueOf("docs"),
                 Path.valueOf("Home")
         );
 
@@ -74,6 +73,7 @@ public class WikiControllerTest {
                 .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.displayName", is("Heart Of Gold")))
+                .andExpect(jsonPath("$.repositoryName", is("namespace/repo")))
                 .andExpect(jsonPath("$.landingPage", is("docs/Home")))
                 .andExpect(jsonPath("$.directory", is("docs")))
                 .andExpect(jsonPath("$._links.self.href", is(self)))

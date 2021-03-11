@@ -1,6 +1,6 @@
 package com.cloudogu.smeagol;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 /**
  * Allows for being deployed as a war into an external container

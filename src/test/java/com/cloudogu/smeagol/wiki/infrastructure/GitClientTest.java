@@ -76,26 +76,26 @@ public class GitClientTest {
         when(directoryResolver.resolve(wikiId)).thenReturn(targetDirectory);
 
         Wiki wiki = new Wiki(
-                wikiId,
-                remoteDirectory.toURI().toURL(),
-                DisplayName.valueOf("42"),
-                Path.valueOf("docs"),
-                Path.valueOf("docs/Home")
+            wikiId,
+            remoteDirectory.toURI().toURL(),
+            DisplayName.valueOf("42"),
+            RepositoryName.valueOf("namespace/repo"), Path.valueOf("docs"),
+            Path.valueOf("docs/Home")
         );
 
         target = new GitClient(
-                publisher,
-                directoryResolver,
-                new AlwaysPullChangesStrategy(),
-                AccountTestData.TRILLIAN,
-                wiki
+            publisher,
+            directoryResolver,
+            new AlwaysPullChangesStrategy(),
+            AccountTestData.TRILLIAN,
+            wiki
         );
     }
 
     private Git createGitRepo(File directory) throws GitAPIException {
         return Git.init()
-                .setDirectory(directory)
-                .call();
+            .setDirectory(directory)
+            .call();
     }
 
     @After
@@ -126,16 +126,16 @@ public class GitClientTest {
         }
     }
 
-    private RevCommit commit( Git git, String fileName, String content ) throws IOException, GitAPIException {
+    private RevCommit commit(Git git, String fileName, String content) throws IOException, GitAPIException {
         File file = new File(git.getRepository().getWorkTree(), fileName);
         Files.write(content, file, Charsets.UTF_8);
 
         git.add().addFilepattern(fileName).call();
 
         return git.commit()
-                .setMessage("added ".concat(fileName))
-                .setAuthor("Tricia McMillian", "trillian@hitchhiker.com")
-                .call();
+            .setMessage("added ".concat(fileName))
+            .setAuthor("Tricia McMillian", "trillian@hitchhiker.com")
+            .call();
     }
 
     @Test
@@ -143,10 +143,10 @@ public class GitClientTest {
         commit(remote, "a.md", "# My Headline");
 
         Git.cloneRepository()
-                .setDirectory(targetDirectory)
-                .setURI(remoteDirectory.toURI().toURL().toExternalForm())
-                .call()
-                .close();
+            .setDirectory(targetDirectory)
+            .setURI(remoteDirectory.toURI().toURL().toExternalForm())
+            .call()
+            .close();
 
         RevCommit commit = commit(remote, "b.md", "File b");
 
@@ -223,7 +223,7 @@ public class GitClientTest {
     public void testPathContentAtCommitNotFound() throws GitAPIException, IOException {
         RevCommit rc;
         try (Git git = Git.init().setDirectory(targetDirectory).call()) {
-            rc = commit(git, "b.md", "Content 0");;
+            rc = commit(git, "b.md", "Content 0");
         }
         RevCommit receivedRc = target.getCommitFromId(rc.getId().getName());
 
@@ -263,7 +263,7 @@ public class GitClientTest {
         target.commit("secfile.md", "Tricia McMillian", "trillian@hitchhiker.com", "added secfile");
 
         remote.checkout().setName("master").call();
-        assertTrue( new File(remoteDirectory, "myfile.md").exists() );
+        assertTrue(new File(remoteDirectory, "myfile.md").exists());
 
         assertTrue(file.delete());
         target.commit("myfile.md", "Tricia McMillian", "trillian@hitchhiker.com", "remove myfile");
@@ -274,8 +274,8 @@ public class GitClientTest {
         RevCommit lastRemoteCommit = remote.log().addPath("myfile.md").setMaxCount(1).call().iterator().next();
         assertEquals("remove myfile", lastRemoteCommit.getFullMessage());
 
-        assertFalse( new File(remoteDirectory, "myfile.md").exists() );
-        assertTrue( new File(remoteDirectory, "secfile.md").exists() );
+        assertFalse(new File(remoteDirectory, "myfile.md").exists());
+        assertTrue(new File(remoteDirectory, "secfile.md").exists());
     }
 
     @Test
@@ -313,19 +313,19 @@ public class GitClientTest {
         Files.write(GitClient.INDEX_VERSION, versionFile, Charsets.UTF_8);
 
         Git.cloneRepository()
-                .setDirectory(targetDirectory)
-                .setURI(remoteDirectory.toURI().toURL().toExternalForm())
-                .call()
-                .close();
+            .setDirectory(targetDirectory)
+            .setURI(remoteDirectory.toURI().toURL().toExternalForm())
+            .call()
+            .close();
 
         new File(new File(targetDirectory, ".git"), "search-index").mkdirs();
 
         commit(remote, "a.md", "# My Changed Headline");
         remote.rm().addFilepattern("b.md").call();
         remote.commit()
-                .setMessage("removed b.md")
-                .setAuthor("Tricia McMillian", "trillian@hitchhiker.com")
-                .call();
+            .setMessage("removed b.md")
+            .setAuthor("Tricia McMillian", "trillian@hitchhiker.com")
+            .call();
         commit(remote, "c.md", "# My Third Headline");
 
         target.refresh();
@@ -358,10 +358,10 @@ public class GitClientTest {
         commit(remote, "b.md", "# My Second Headline");
 
         Git.cloneRepository()
-                .setDirectory(targetDirectory)
-                .setURI(remoteDirectory.toURI().toURL().toExternalForm())
-                .call()
-                .close();
+            .setDirectory(targetDirectory)
+            .setURI(remoteDirectory.toURI().toURL().toExternalForm())
+            .call()
+            .close();
 
         targetSearchIndexDirectory.delete();
 
@@ -387,25 +387,25 @@ public class GitClientTest {
         RevCommit commit = commit(remote, "a.md", "# My Headline");
 
         Git.cloneRepository()
-                .setDirectory(targetDirectory)
-                .setURI(remoteDirectory.toURI().toURL().toExternalForm())
-                .call()
-                .close();
+            .setDirectory(targetDirectory)
+            .setURI(remoteDirectory.toURI().toURL().toExternalForm())
+            .call()
+            .close();
 
         Wiki wiki = new Wiki(
-                wikiId,
-                remoteDirectory.toURI().toURL(),
-                DisplayName.valueOf("42"),
-                Path.valueOf("docs"),
-                Path.valueOf("docs/Home")
+            wikiId,
+            remoteDirectory.toURI().toURL(),
+            DisplayName.valueOf("42"),
+            RepositoryName.valueOf("namespace/repo"), Path.valueOf("docs"),
+            Path.valueOf("docs/Home")
         );
 
         target = new GitClient(
-                publisher,
-                directoryResolver,
-                new TimeBasedPullChangesStrategy(2000L),
-                AccountTestData.TRILLIAN,
-                wiki
+            publisher,
+            directoryResolver,
+            new TimeBasedPullChangesStrategy(2000L),
+            AccountTestData.TRILLIAN,
+            wiki
         );
 
         target.refresh();
@@ -485,9 +485,9 @@ public class GitClientTest {
         commit(remote, "a.md", "# My Headline");
 
         Git temporary = Git.cloneRepository()
-                .setDirectory(targetDirectory)
-                .setURI(remoteDirectory.toURI().toURL().toExternalForm())
-                .call();
+            .setDirectory(targetDirectory)
+            .setURI(remoteDirectory.toURI().toURL().toExternalForm())
+            .call();
 
         RemoteSetUrlCommand setUrlCommand = temporary.remoteSetUrl();
         setUrlCommand.setName(DEFAULT_REMOTE);
