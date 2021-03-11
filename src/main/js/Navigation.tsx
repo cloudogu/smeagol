@@ -81,7 +81,6 @@ class Navigation extends React.Component<Props, State> {
             <ul className="nav navbar-nav navbar-right">
               {searchBar}
               <li>
-                {/* TODO context path */}
                 <a href={contextPath + "/api/v1/logout"}>Logout</a>
               </li>
             </ul>

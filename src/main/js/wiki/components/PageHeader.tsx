@@ -119,7 +119,7 @@ class PageHeader extends React.Component<Props, State> {
 
     const pathWithoutRoot = this.getPagePathWithoutRootDirectory(page, wiki);
 
-    const edit = page._links.edit ? (
+    const editButton = page._links.edit ? (
       <ActionLink glyphicon="glyphicon-edit" type="menu" to="?edit=true" i18nKey="page-header_edit" />
     ) : (
       ""
@@ -183,7 +183,7 @@ class PageHeader extends React.Component<Props, State> {
         <div className={classNames(classes.actions, "row")}>
           <div className="col-xs-9">
             {createButton}
-            {edit}
+            {editButton}
             {moveButton}
             {historyButton}
             {deleteButton}

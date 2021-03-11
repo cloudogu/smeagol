@@ -33,13 +33,12 @@ class Breadcrumb extends React.Component<Props> {
         {entries.map((entry) => {
           if (!entry.link) {
             return <li className="active">{entry.name}</li>;
-          } else {
-            return (
-              <li key={entry.name}>
-                <Link to={entry.link}>{entry.name}</Link>
-              </li>
-            );
           }
+          return (
+            <li key={entry.name}>
+              <Link to={entry.link}>{entry.name}</Link>
+            </li>
+          );
         })}
       </ul>
     );

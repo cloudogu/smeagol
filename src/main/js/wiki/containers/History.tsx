@@ -1,6 +1,4 @@
 import React, { FC } from "react";
-import I18nAlert from "../../I18nAlert";
-import Loading from "../../Loading";
 import { translate } from "react-i18next";
 import { usePageHistory } from "../hooks/pagehistory";
 import CommitsTable from "../components/CommitsTable";
@@ -8,6 +6,8 @@ import { match } from "react-router";
 import WikiHeader from "../components/WikiHeader";
 import { useWiki } from "../hooks/wiki";
 import { getDirectoryFromPath, getPageNameFromPath } from "./Page";
+import WikiLoadingPage from "../components/WikiLoadingPage";
+import WikiAlertPage from "../components/WikiAlertPage";
 
 type Params = {
   repository: string;
@@ -30,20 +30,12 @@ const History: FC<Props> = (props) => {
   const wikiQuery = useWiki(repository, branch);
   const pagePath = `/${repository}/${branch}/${page}`;
   if (pageHistoryQuery.error || wikiQuery.error) {
-    return (
-      <div>
-        <h1>Smeagol</h1>
-        <I18nAlert i18nKey="directory_failed_to_fetch" />
-      </div>
-    );
-  } else if (pageHistoryQuery.isLoading || wikiQuery.isLoading) {
-    return (
-      <div>
-        <h1>Smeagol</h1>
-        <Loading />
-      </div>
-    );
-  } else if (!pageHistoryQuery.data) {
+    return <WikiAlertPage i18nKey={"directory_failed_to_fetch"} />;
+  }
+  if (pageHistoryQuery.isLoading || wikiQuery.isLoading) {
+    return <WikiLoadingPage />;
+  }
+  if (!pageHistoryQuery.data) {
     return (
       <div>
         <WikiHeader

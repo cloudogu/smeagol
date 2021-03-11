@@ -4,12 +4,12 @@ import { useWiki } from "../hooks/wiki";
 import PageViewer from "../components/PageViewer";
 import * as queryString from "query-string";
 import PageEditor from "../components/PageEditor";
-import Loading from "../../Loading";
-import I18nAlert from "../../I18nAlert";
 import { PAGE_NOT_FOUND_ERROR } from "../../apiclient";
 import { match } from "react-router";
 import WikiHeader from "../components/WikiHeader";
 import WikiNotFoundError from "../components/WikiNotFoundError";
+import WikiLoadingPage from "../components/WikiLoadingPage";
+import WikiAlertPage from "../components/WikiAlertPage";
 
 type Params = {
   repository: string;
@@ -97,36 +97,31 @@ const Page: FC<Props> = (props) => {
   }
 
   if (isLoading) {
-    return (
-      <div>
-        <h1>Smeagol</h1>
-        <Loading />
-      </div>
-    );
-  } else if (pageQuery.error === PAGE_NOT_FOUND_ERROR) {
-    return (
-      <div>
-        {wikiHeader}
-        <PageEditor
-          path={path}
-          content=""
-          onSave={(message, content) => {
-            createPageMutation.mutate({ message: message, content: content });
-          }}
-          onAbort={onAbortCreate}
-        />
-      </div>
-    );
-  } else if (wikiQuery.error === PAGE_NOT_FOUND_ERROR) {
-    return <WikiNotFoundError />;
-  } else if (pageQuery.error || wikiQuery.error) {
-    return (
-      <div>
-        <h1>Smeagol</h1>
-        <I18nAlert i18nKey="page_failed_to_fetch" />
-      </div>
-    );
-  } else if (!pageQuery.data || !wikiQuery.data) {
+    return <WikiLoadingPage />;
+  }
+  if (pageQuery.error || wikiQuery.error) {
+    if (pageQuery.error === PAGE_NOT_FOUND_ERROR) {
+      return (
+        <div>
+          {wikiHeader}
+          <PageEditor
+            path={path}
+            content=""
+            onSave={(message, content) => {
+              createPageMutation.mutate({ message: message, content: content });
+            }}
+            onAbort={onAbortCreate}
+          />
+        </div>
+      );
+    }
+
+    if (wikiQuery.error === PAGE_NOT_FOUND_ERROR) {
+      return <WikiNotFoundError />;
+    }
+    return <WikiAlertPage i18nKey={"page_failed_to_fetch"} />;
+  }
+  if (!pageQuery.data || !wikiQuery.data) {
     return (
       <div>
         <h1>Smeagol</h1>
@@ -147,12 +142,7 @@ const Page: FC<Props> = (props) => {
     deletePageMutation.error ||
     restorePageMutation.error
   ) {
-    return (
-      <div>
-        <h1>Smeagol</h1>
-        <I18nAlert i18nKey="page_failed_to_modify" />
-      </div>
-    );
+    return <WikiAlertPage i18nKey={"page_failed_to_modify"} />;
   }
 
   if (isEditMode(props)) {

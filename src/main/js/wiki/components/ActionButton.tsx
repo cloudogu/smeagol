@@ -25,7 +25,7 @@ class ActionButton extends React.Component<Props> {
     type: "default"
   };
 
-  handleClick = (e: Event) => {
+  handleClick = (e: React.MouseEvent<HTMLElement>) => {
     // use prevent default to avoid a complete page reload, if the button is used within a form
     e.preventDefault();
     this.props.onClick();

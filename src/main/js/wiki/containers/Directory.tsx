@@ -1,13 +1,12 @@
 import React, { FC } from "react";
 import FileBrowser from "../components/FileBrowser";
-import Breadcrumb from "../components/Breadcrumb";
 import { useDirectory } from "../hooks/directory";
-import I18nAlert from "../../I18nAlert";
-import Loading from "../../Loading";
 import { translate } from "react-i18next";
 import { match } from "react-router";
 import WikiHeader from "../components/WikiHeader";
 import { useWiki } from "../hooks/wiki";
+import WikiLoadingPage from "../components/WikiLoadingPage";
+import WikiAlertPage from "../components/WikiAlertPage";
 
 type Params = {
   repository: string;
@@ -45,11 +44,11 @@ const Directory: FC<Props> = (props) => {
 
     if (file.type === "directory") {
       return createDirectoryLink(endingSlash(path));
-    } else if (file.type === "page") {
-      return createPageLink(path);
-    } else {
-      return "#";
     }
+    if (file.type === "page") {
+      return createPageLink(path);
+    }
+    return "#";
   };
 
   const endingSlash = (value: string) => {
@@ -61,20 +60,12 @@ const Directory: FC<Props> = (props) => {
   };
 
   if (error) {
-    return (
-      <div>
-        <h1>Smeagol</h1>
-        <I18nAlert i18nKey="directory_failed_to_fetch" />
-      </div>
-    );
-  } else if (isLoading) {
-    return (
-      <div>
-        <h1>Smeagol</h1>
-        <Loading />
-      </div>
-    );
-  } else if (!directoryQuery.data) {
+    return <WikiAlertPage i18nKey={"directory_failed_to_fetch"} />;
+  }
+  if (isLoading) {
+    return <WikiLoadingPage />;
+  }
+  if (!directoryQuery.data) {
     return (
       <div>
         <WikiHeader branch={branch} repository={repository} wiki={wikiQuery.data} directory={path} />
