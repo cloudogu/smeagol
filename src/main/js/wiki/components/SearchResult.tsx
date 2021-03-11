@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { translate } from "react-i18next";
+import { SearchFinding } from "../types/searchFinding";
 
 type Props = {
-  result: any;
+  result: SearchFinding;
   createPageLink: (path: string) => string;
   t: any;
 };

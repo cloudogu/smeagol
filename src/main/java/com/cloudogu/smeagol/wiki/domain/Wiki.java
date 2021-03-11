@@ -10,13 +10,15 @@ public class Wiki {
     private final WikiId id;
     private final URL repositoryUrl;
     private final DisplayName displayName;
+    private final RepositoryName repositoryName;
     private final Path directory;
     private final Path landingPage;
 
-    public Wiki(WikiId id, URL repositoryUrl, DisplayName displayName, Path directory, Path landingPage) {
+    public Wiki(WikiId id, URL repositoryUrl, DisplayName displayName, RepositoryName repositoryName, Path directory, Path landingPage) {
         this.id = id;
         this.repositoryUrl = repositoryUrl;
         this.displayName = displayName;
+        this.repositoryName = repositoryName;
         this.directory = directory;
         this.landingPage = landingPage;
     }
@@ -31,6 +33,10 @@ public class Wiki {
 
     public DisplayName getDisplayName() {
         return displayName;
+    }
+
+    public RepositoryName getRepositoryName() {
+        return repositoryName;
     }
 
     public Path getDirectory() {
@@ -61,11 +67,12 @@ public class Wiki {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("id", id)
-                .add("repositoryUrl", repositoryUrl)
-                .add("displayName", displayName)
-                .add("directory", directory)
-                .add("landingPage", landingPage)
-                .toString();
+            .add("id", id)
+            .add("repositoryUrl", repositoryUrl)
+            .add("displayName", displayName)
+            .add("repositoryName", repositoryName)
+            .add("directory", directory)
+            .add("landingPage", landingPage)
+            .toString();
     }
 }

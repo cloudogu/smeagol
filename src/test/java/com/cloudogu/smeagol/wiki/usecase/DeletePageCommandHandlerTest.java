@@ -63,8 +63,6 @@ public class DeletePageCommandHandlerTest {
 
     @Test(expected = PageNotFoundException.class)
     public void testDeleteNotFound() {
-        when(accountService.get()).thenReturn(AccountTestData.TRILLIAN);
-
         WikiId id = new WikiId("123", "master");
         Path path = Path.valueOf("Home");
         Page page = new Page(id, path, Content.valueOf("Old Content"));

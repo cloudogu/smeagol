@@ -1,47 +1,46 @@
 import React from "react";
 import injectSheet from "react-jss";
+import classNames from "classnames";
 import { Link } from "react-router-dom";
 
-const styles = {};
+const styles = {
+  breadcrumb: {
+    "background-color": "white",
+    "font-weight": "bold",
+    "font-size": "medium",
+    "padding-top": "11px",
+    "padding-bottom": "1px",
+    "padding-left": "0px"
+  }
+};
+
+export type Entry = {
+  name: string;
+  link: string;
+};
 
 type Props = {
-  createLink: (path: string) => string;
-  path: string;
+  entries: Entry[];
   classes: any;
 };
 
 class Breadcrumb extends React.Component<Props> {
-  createEntries = () => {
-    const { path } = this.props;
-    const parts = path.split("/");
-
-    const entries = [];
-
-    let currentPath = "";
-    for (const part of parts) {
-      currentPath += part + "/";
-      entries.push({
-        name: part,
-        link: this.props.createLink(currentPath)
-      });
-    }
-
-    return entries;
-  };
-
   render() {
-    const entries = this.createEntries();
+    const { entries, classes } = this.props;
 
     return (
-      <div className="breadcrumb">
+      <ul className={classNames("breadcrumb", classes.breadcrumb)}>
         {entries.map((entry) => {
+          if (!entry.link) {
+            return <li className="active">{entry.name}</li>;
+          }
           return (
-            <span key={entry.name}>
-              / <Link to={entry.link}>{entry.name}</Link>{" "}
-            </span>
+            <li key={entry.name}>
+              <Link to={entry.link}>{entry.name}</Link>
+            </li>
           );
         })}
-      </div>
+      </ul>
     );
   }
 }

@@ -7,17 +7,23 @@ import java.util.Objects;
 public class WikiResource extends ResourceSupport {
 
     private final String displayName;
+    private final String repositoryName;
     private final String directory;
     private final String landingPage;
 
-    public WikiResource(String displayName, String directory, String landingPage) {
+    public WikiResource(String displayName, String repositoryName, String directory, String landingPage) {
         this.displayName = displayName;
+        this.repositoryName = repositoryName;
         this.directory = directory;
         this.landingPage = landingPage;
     }
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public String getRepositoryName() {
+        return repositoryName;
     }
 
     public String getDirectory() {

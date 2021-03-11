@@ -66,14 +66,14 @@ public class SearchControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/repositories/42/branches/galaxy/search?query=guide")
                 .contentType("application/json"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].path", is("docs/Home")))
-                .andExpect(jsonPath("$.[0].score", is(2.4)))
-                .andExpect(jsonPath("$.[0].contentFragment", is("This is Home")))
-                .andExpect(jsonPath("$.[0]._links.self.href", is(selfHome)))
-                .andExpect(jsonPath("$.[1].path", is("docs/Galaxy")))
-                .andExpect(jsonPath("$.[1].score", is(1.2)))
-                .andExpect(jsonPath("$.[1].contentFragment", is("This is my Galaxy")))
-                .andExpect(jsonPath("$.[1]._links.self.href", is(selfGalaxy)));
+                .andExpect(jsonPath("$._embedded.searchResults.[0].path", is("docs/Home")))
+                .andExpect(jsonPath("$._embedded.searchResults.[0].score", is(2.4)))
+                .andExpect(jsonPath("$._embedded.searchResults.[0].contentFragment", is("This is Home")))
+                .andExpect(jsonPath("$._embedded.searchResults.[0]._links.self.href", is(selfHome)))
+                .andExpect(jsonPath("$._embedded.searchResults.[1].path", is("docs/Galaxy")))
+                .andExpect(jsonPath("$._embedded.searchResults.[1].score", is(1.2)))
+                .andExpect(jsonPath("$._embedded.searchResults.[1].contentFragment", is("This is my Galaxy")))
+                .andExpect(jsonPath("$._embedded.searchResults.[1]._links.self.href", is(selfGalaxy)));
     }
 
     @Test
@@ -83,6 +83,6 @@ public class SearchControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/repositories/42/branches/galaxy/search?query=guide")
                 .contentType("application/json"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
+                .andExpect(content().json("{}"));
     }
 }

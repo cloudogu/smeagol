@@ -53,14 +53,14 @@ public class RepositoryControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/repositories")
                 .contentType("application/json"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].id", is("4xQfahsId3")))
-                .andExpect(jsonPath("$.[0].name", is("hitchhiker/heartOfGold")))
-                .andExpect(jsonPath("$.[0]._links.self.href", is("http://localhost/api/v1/repositories/4xQfahsId3")))
-                .andExpect(jsonPath("$.[0].lastModified", is("1985-04-09T10:15:30Z")))
-                .andExpect(jsonPath("$.[1].id", is("30QQIOlg42")))
-                .andExpect(jsonPath("$.[1].name", is("hitchhiker/restaurantAtTheEndOfTheUniverse")))
-                .andExpect(jsonPath("$.[1]._links.self.href", is("http://localhost/api/v1/repositories/30QQIOlg42")))
-                .andExpect(jsonPath("$.[1].lastModified", is("2018-01-28T16:58:42Z")));
+                .andExpect(jsonPath("$._embedded.repositories.[0].id", is("4xQfahsId3")))
+                .andExpect(jsonPath("$._embedded.repositories.[0].name", is("hitchhiker/heartOfGold")))
+                .andExpect(jsonPath("$._embedded.repositories.[0]._links.self.href", is("http://localhost/api/v1/repositories/4xQfahsId3")))
+                .andExpect(jsonPath("$._embedded.repositories.[0].lastModified", is("1985-04-09T10:15:30Z")))
+                .andExpect(jsonPath("$._embedded.repositories.[1].id", is("30QQIOlg42")))
+                .andExpect(jsonPath("$._embedded.repositories.[1].name", is("hitchhiker/restaurantAtTheEndOfTheUniverse")))
+                .andExpect(jsonPath("$._embedded.repositories.[1]._links.self.href", is("http://localhost/api/v1/repositories/30QQIOlg42")))
+                .andExpect(jsonPath("$._embedded.repositories.[1].lastModified", is("2018-01-28T16:58:42Z")));
     }
 
     @Test

@@ -5,7 +5,6 @@ import ActionButton from "./ActionButton";
 import PageNameForm from "./PageNameForm";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
-import SearchBar from "./SearchBar";
 import ConfirmModal from "./ConfirmModal";
 
 const styles = {
@@ -20,7 +19,6 @@ const styles = {
 type Props = {
   page: any;
   wiki: any;
-  pagesLink: string;
   historyLink: string;
   onDelete: () => void;
   onHomeClick: () => void;
@@ -117,27 +115,38 @@ class PageHeader extends React.Component<Props, State> {
   }
 
   render() {
-    const { page, wiki, pagesLink, classes, onDelete, onHomeClick, historyLink, search } = this.props;
+    const { page, wiki, classes, onDelete, historyLink } = this.props;
 
     const pathWithoutRoot = this.getPagePathWithoutRootDirectory(page, wiki);
 
-    const homeButton = <ActionButton onClick={onHomeClick} i18nKey="page-header_home" type="primary" />;
-    const createButton = <ActionButton onClick={this.onCreateClick} i18nKey="page-header_create" type="primary" />;
-    const pagesButton = <ActionLink to={pagesLink} i18nKey="page-header_pages" type="primary" />;
-    const historyButton = <ActionLink to={historyLink} i18nKey="page-header_history" type="primary" />;
-    const edit = page._links.edit ? <ActionLink to="?edit=true" i18nKey="page-header_edit" type="primary" /> : "";
+    const editButton = page._links.edit ? (
+      <ActionLink glyphicon="glyphicon-edit" type="menu" to="?edit=true" i18nKey="page-header_edit" />
+    ) : (
+      ""
+    );
+    const createButton = (
+      <ActionButton glyphicon="glyphicon-plus" type="menu" onClick={this.onCreateClick} i18nKey="page-header_create" />
+    );
+    const historyButton = (
+      <ActionLink glyphicon="glyphicon-step-backward" type="menu" to={historyLink} i18nKey="page-header_history" />
+    );
     const moveButton = page._links.move ? (
-      <ActionButton onClick={this.onMoveClick} i18nKey="page-header_move" type="primary" />
+      <ActionButton onClick={this.onMoveClick} glyphicon="glyphicon-pencil" type="menu" i18nKey="page-header_move" />
     ) : (
       ""
     );
     const deleteButton = page._links.delete ? (
-      <ActionButton onClick={this.onDeleteClick} i18nKey="page-header_delete" type="primary" />
+      <ActionButton glyphicon="glyphicon-trash" type="menu" onClick={this.onDeleteClick} i18nKey="page-header_delete" />
     ) : (
       ""
     );
     const restoreButton = page._links.restore ? (
-      <ActionButton onClick={this.onRestoreClick} i18nKey="page-header_restore" type="primary" />
+      <ActionButton
+        glyphicon="glyphicon-retweet"
+        type="menu"
+        onClick={this.onRestoreClick}
+        i18nKey="page-header_restore"
+      />
     ) : (
       ""
     );
@@ -171,20 +180,14 @@ class PageHeader extends React.Component<Props, State> {
 
     return (
       <div className={classes.header}>
-        <h1>{page.path}</h1>
         <div className={classNames(classes.actions, "row")}>
           <div className="col-xs-9">
-            {homeButton}
             {createButton}
+            {editButton}
             {moveButton}
-            {pagesButton}
             {historyButton}
-            {edit}
             {deleteButton}
             {restoreButton}
-          </div>
-          <div className="col-xs-3">
-            <SearchBar search={search} />
           </div>
         </div>
         {createForm}

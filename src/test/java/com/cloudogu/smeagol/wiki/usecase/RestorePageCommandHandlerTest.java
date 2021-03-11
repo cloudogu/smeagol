@@ -65,8 +65,6 @@ public class RestorePageCommandHandlerTest {
 
     @Test(expected = PageNotFoundException.class)
     public void testRestoreNotFound() {
-        when(accountService.get()).thenReturn(AccountTestData.TRILLIAN);
-
         WikiId id = new WikiId("123", "master");
         Path path = Path.valueOf("Home");
 
