@@ -22,10 +22,14 @@ public class ScmRepositoryRepository implements RepositoryRepository {
     }
 
     @Override
-    public Iterable<Repository> findAll() {
-        Optional<RepositoryDTO[]> dtos = scmHttpClient.get("/api/rest/repositories.json", RepositoryDTO[].class);
+    public Iterable<Repository> findAll(Optional<Boolean> wikiEnabled) {
+        String queryParam = "";
+        if (wikiEnabled.isPresent() && wikiEnabled.get()) {
+            queryParam = "?wikiEnabled=true";
+        }
+        Optional<RepositoriesEndpointDTO> dtos = scmHttpClient.get("/api/v2/smeagol/repositories"+queryParam, RepositoriesEndpointDTO.class);
 
-        return Arrays.stream(dtos.get())
+        return Arrays.stream(dtos.get()._embedded.repositories)
             .filter(dto -> "git".equals(dto.type))
             .map(this::map)
             .collect(Collectors.toList());
@@ -34,7 +38,7 @@ public class ScmRepositoryRepository implements RepositoryRepository {
     @Override
     public Optional<Repository> findById(RepositoryId id) {
         return scmHttpClient.get("/api/rest/repositories/{id}.json", RepositoryDTO.class, id)
-                .map(this::map);
+            .map(this::map);
     }
 
     private Repository map(RepositoryDTO dto) {
@@ -43,6 +47,15 @@ public class ScmRepositoryRepository implements RepositoryRepository {
             Name.valueOf(dto.name),
             Description.valueOf(dto.description),
             dto.lastModified != null ? new Date(dto.lastModified).toInstant() : null
+        );
+    }
+
+    private Repository map(RepositoryDTOv2 dto) {
+        return new Repository(
+            RepositoryId.valueOf(dto.id),
+            Name.valueOf(dto.namespace + "/" + dto.name),
+            Description.valueOf(dto.description),
+            null
         );
     }
 
@@ -55,4 +68,23 @@ public class ScmRepositoryRepository implements RepositoryRepository {
         private Long lastModified;
     }
 
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+    private static class RepositoriesEndpointDTO {
+        private RepositoriesEndpointEmbeddedDTO _embedded;
+    }
+
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+    private static class RepositoriesEndpointEmbeddedDTO {
+        private RepositoryDTOv2[] repositories;
+    }
+
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+    private static class RepositoryDTOv2 {
+        private String id;
+        private String type;
+        private String name;
+        private String namespace;
+        private String description;
+        private String defaultBranch;
+    }
 }

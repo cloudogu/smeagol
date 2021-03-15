@@ -1,5 +1,6 @@
 {
   "repositories_failed_to_fetch": "Die Repositories konnten nicht geladen werden.",
+  "display_repositories_without_wiki": "Repositories ohne Dokumentation einblenden",
   "branches_failed_to_fetch": "Das Repository konnte nicht geladen werden",
   "wikiroot_failed_to_fetch": "Das Wiki konnte nicht geladen werden",
   "wikiroot_not_found_prefix": "Das gesuchte Wiki konnte nicht gefunden werden. Dieses kann mehrere Gründe haben:",

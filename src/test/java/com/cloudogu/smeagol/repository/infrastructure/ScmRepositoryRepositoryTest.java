@@ -63,7 +63,7 @@ public class ScmRepositoryRepositoryTest {
                 .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
                 .andRespond(withSuccess(content, MediaType.APPLICATION_JSON));
 
-        Iterator<Repository> repositories = repository.findAll().iterator();
+        Iterator<Repository> repositories = repository.findAll(Optional.empty()).iterator();
 
         Repository restaurant = repositories.next();
         assertEquals("30QQIOlg42", restaurant.getId().getValue());

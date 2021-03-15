@@ -1,5 +1,6 @@
 {
   "repositories_failed_to_fetch": "Failed to fetch repositories",
+  "display_repositories_without_wiki": "Display repositories without documentation",
   "branches_failed_to_fetch": "Failed to fetch repository",
   "wikiroot_failed_to_fetch": "Failed to fetch wiki",
   "wikiroot_not_found_prefix": "The requested Wiki could not be found. This could have several reasons:",

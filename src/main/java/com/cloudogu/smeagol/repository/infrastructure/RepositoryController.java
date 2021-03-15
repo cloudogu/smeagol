@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
@@ -34,8 +35,8 @@ public class RepositoryController {
     }
 
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Resources<Resource<RepositoryResource>> findAll() {
-        Collection<RepositoryResource> repositories = repositoryAssembler.toResources(repositoryRepository.findAll());
+    public Resources<Resource<RepositoryResource>> findAll(@RequestParam Optional<Boolean> wikiEnabled) {
+        Collection<RepositoryResource> repositories = repositoryAssembler.toResources(repositoryRepository.findAll(wikiEnabled));
         return wrap(repositories);
     }
 

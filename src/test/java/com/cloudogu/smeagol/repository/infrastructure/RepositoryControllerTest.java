@@ -48,7 +48,7 @@ public class RepositoryControllerTest {
                 RepositoryTestData.createHeartOfGold(),
                 RepositoryTestData.createRestaurantAtTheEndOfTheUniverse()
         );
-        when(repositoryRepository.findAll()).thenReturn(repositories);
+        when(repositoryRepository.findAll(Optional.empty())).thenReturn(repositories);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/repositories")
                 .contentType("application/json"))
