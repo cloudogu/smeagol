@@ -54,7 +54,7 @@ const clickWarpMenuButton = () => {
 }
 
 /**
- * Log the testuser out of the cas via click oh link in warp menu.
+ * Log the testuser out of the cas via click on link in warp menu.
  */
 const logoutViaWarpMenu = () => {
     cy.get('a[href="/cas/logout').click()

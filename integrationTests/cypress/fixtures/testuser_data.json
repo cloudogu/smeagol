@@ -1,7 +1,7 @@
 {
-  "username": "admin",
-  "password": "adminpw",
-  "givenname": "admin",
+  "username": "testuser",
+  "password": "testuserpassword",
+  "givenname": "test",
   "surname": "test",
   "displayName": "test",
   "mail": "test@cloudogu.com"
