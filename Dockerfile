@@ -23,6 +23,11 @@ ENV SERVICE_TAGS=webapp \
 COPY --from=builder /usr/src/smeagol/target/smeagol.war /app/smeagol.war
 COPY resources/ /
 
+# Install Yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && apt-get update && apt-get -y install yarn
+
 VOLUME ${SMEAGOL_HOME}
 EXPOSE 8080
 
