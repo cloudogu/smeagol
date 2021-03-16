@@ -24,12 +24,12 @@ public class ScmRepositoryRepository implements RepositoryRepository {
         this.scmHttpClient = scmHttpClient;
     }
 
-    synchronized private String getRepositoriesURL() throws MissingSmeagolPluginException {
+    private synchronized String getRepositoriesURL() throws MissingSmeagolPluginException {
         if (repositoriesURL != null) {
             return repositoriesURL;
         }
         Optional<SCMRootEndpointDTO> dto = scmHttpClient.get("/api/v2", SCMRootEndpointDTO.class);
-        if (!dto.isPresent()) {
+        if (dto.isEmpty()) {
             throw new CouldNotGetSCMRootException();
         }
 
@@ -41,12 +41,16 @@ public class ScmRepositoryRepository implements RepositoryRepository {
             .filter(link -> "repositories".equals(link.name))
             .findFirst();
 
-        if (!smeagolLink.isPresent()) {
+        if (smeagolLink.isEmpty()) {
             throw new MissingSmeagolPluginException();
         }
 
         repositoriesURL = smeagolLink.get().href;
         return repositoriesURL;
+    }
+
+    public synchronized void resetRepositoriesURL() {
+        this.repositoriesURL = null;
     }
 
     @Override

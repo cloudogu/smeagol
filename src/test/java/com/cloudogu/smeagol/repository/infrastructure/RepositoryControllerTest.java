@@ -1,7 +1,9 @@
 package com.cloudogu.smeagol.repository.infrastructure;
 
 import com.cloudogu.smeagol.repository.domain.*;
+import com.cloudogu.smeagol.wiki.infrastructure.MissingSmeagolPluginException;
 import com.google.common.collect.Lists;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,16 +13,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.ContentResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(RepositoryController.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -61,6 +64,16 @@ public class RepositoryControllerTest {
                 .andExpect(jsonPath("$._embedded.repositories.[1].name", is("hitchhiker/restaurantAtTheEndOfTheUniverse")))
                 .andExpect(jsonPath("$._embedded.repositories.[1]._links.self.href", is("http://localhost/api/v1/repositories/30QQIOlg42")))
                 .andExpect(jsonPath("$._embedded.repositories.[1].lastModified", is("2018-01-28T16:58:42Z")));
+    }
+
+    @Test
+    public void findAllMissingSmeagolPlugin() throws Exception {
+        when(repositoryRepository.findAll(false)).thenThrow(new MissingSmeagolPluginException());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/repositories")
+            .contentType("application/json"))
+            .andExpect(status().is5xxServerError())
+            .andExpect(content().string("SCM is missing Smeagol plugin"));
     }
 
     @Test
