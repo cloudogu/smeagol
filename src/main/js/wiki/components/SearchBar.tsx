@@ -1,5 +1,7 @@
 import React from "react";
 import { translate } from "react-i18next";
+import injectSheet from "react-jss";
+import classNames from "classnames";
 
 type Props = {
   search: (arg0: string) => void;
@@ -7,6 +9,13 @@ type Props = {
 
 type State = {
   query: string;
+};
+
+const styles = {
+  searchButton: {
+    "border-color": "#1b7daa",
+    height: "34px"
+  }
 };
 
 class SearchBar extends React.Component<Props, State> {
@@ -27,7 +36,7 @@ class SearchBar extends React.Component<Props, State> {
   };
 
   render() {
-    const { t } = this.props;
+    const { t, classes } = this.props;
     return (
       <form className="input-group" method="GET" onSubmit={this.search}>
         <input
@@ -37,7 +46,11 @@ class SearchBar extends React.Component<Props, State> {
           onChange={this.handleChange}
         />
         <span className="input-group-btn">
-          <button className="btn btn-default" type="button" onClick={this.search}>
+          <button
+            className={classNames(classes.searchButton, "btn", "btn-default")}
+            type="button"
+            onClick={this.search}
+          >
             <i className="glyphicon glyphicon-search" />
           </button>
         </span>
@@ -46,4 +59,4 @@ class SearchBar extends React.Component<Props, State> {
   }
 }
 
-export default translate()(SearchBar);
+export default translate()(injectSheet(styles)(SearchBar));
