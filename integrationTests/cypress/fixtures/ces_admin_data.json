@@ -1,5 +1,5 @@
 {
-  "adminuser": "admin",
-  "adminpassword": "adminpw",
+  "username": "admin",
+  "password": "adminpw",
   "admingroup": "CesAdministrators"
 }

@@ -11,9 +11,8 @@ const {
 //
 
 Given(/^the user is logged in to the CES$/, function () {
-    cy.fixture("testuser_data").then(function (testUser) {
-        cy.login(testUser.username, testUser.password)
-    })
+    cy.loginAdmin()
+
 });
 
 Given(/^the user is logged out of the CES$/, function () {
@@ -32,15 +31,13 @@ When(/^the user opens the dogu start page$/, function () {
 
 When(/^the user types in wrong login credentials$/, function () {
     cy.get('input[type="checkbox"]').click()
-    cy.fixture('testuser_data').then(userdata => {
-        cy.get('input[name="username"]').type("RaNd0mUSR_?123")
-        cy.get('input[name="password"]').type("RaNd0mPWöäü_?123")
-    });
+    cy.get('input[name="username"]').type("RaNd0mUSR_?123")
+    cy.get('input[name="password"]').type("RaNd0mPWöäü_?123")
 });
 
 When(/^the user types in correct login credentials$/, function () {
     cy.get('input[type="checkbox"]').click()
-    cy.fixture('testuser_data').then(userdata => {
+    cy.fixture('ces_admin_data').then(userdata => {
         cy.get('input[name="username"]').type(userdata.username)
         cy.get('input[name="password"]').type(userdata.password)
     });

@@ -112,6 +112,7 @@ parallel(
                             stage('Setup') {
                                 ecoSystem.loginBackend('cesmarvin-setup')
                                 ecoSystem.setup([additionalDependencies: ['official/scm']])
+                                ecoSystem.setup([adminUsername:"admin", adminPassword:"adminpw"])
                             }
 
                             stage('Wait for dependencies') {

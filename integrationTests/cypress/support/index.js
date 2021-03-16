@@ -15,7 +15,6 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands/misc_commands'
-import './commands/usermgt_commands'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

@@ -74,7 +74,7 @@ const clickWarpMenuCheckboxIfPossible = () => {
 }
 
 Cypress.Commands.add("login", login)
-Cypress.Commands.add("loginAdmin", login)
+Cypress.Commands.add("loginAdmin", loginAdmin)
 Cypress.Commands.add("logout", logout)
 Cypress.Commands.add("logoutViaWarpMenu", logoutViaWarpMenu)
 Cypress.Commands.add("clickWarpMenuCheckboxIfPossible", clickWarpMenuCheckboxIfPossible)
