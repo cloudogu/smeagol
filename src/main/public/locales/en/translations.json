@@ -1,7 +1,7 @@
 {
   "repositories_failed_to_fetch": "Failed to fetch repositories",
-  "missing_smeagol_plugin": "Failed to fetch repositories. It's likely that the used SCM-Manager is missing the plugin 'Smeagol Integration'.",
-  "display_repositories_without_wiki": "Display repositories without documentation",
+  "missing_smeagol_plugin": "Failed to fetch repositories. It's likely that the SCM-Manager is missing the plugin Smeagol Integration.",
+  "display_repositories_without_wiki": "Display repositories without wiki",
   "branches_failed_to_fetch": "Failed to fetch repository",
   "wikiroot_failed_to_fetch": "Failed to fetch wiki",
   "wikiroot_not_found_prefix": "The requested Wiki could not be found. This could have several reasons:",

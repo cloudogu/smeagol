@@ -1,7 +1,7 @@
 {
   "repositories_failed_to_fetch": "Die Repositories konnten nicht geladen werden.",
-  "missing_smeagol_plugin": "Die Repositories konnten nicht geladen werden. Es ist wahrscheinlich, dass im SCM-Manager das Plugin 'Smeagol Integration' nicht installiert wurde.",
-  "display_repositories_without_wiki": "Repositories ohne Dokumentation einblenden",
+  "missing_smeagol_plugin": "Die Repositories konnten nicht geladen werden. Es ist wahrscheinlich, dass im SCM-Manager das Plugin Smeagol Integration nicht installiert wurde.",
+  "display_repositories_without_wiki": "Repositories ohne Wiki anzeigen",
   "branches_failed_to_fetch": "Das Repository konnte nicht geladen werden",
   "wikiroot_failed_to_fetch": "Das Wiki konnte nicht geladen werden",
   "wikiroot_not_found_prefix": "Das gesuchte Wiki konnte nicht gefunden werden. Dieses kann mehrere Gründe haben:",
