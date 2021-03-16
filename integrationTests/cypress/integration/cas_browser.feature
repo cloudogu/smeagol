@@ -19,17 +19,6 @@ Feature: CAS handling login and logout via Browser
     And the user presses the login button
     Then the login page informs user about invalid credentials
 
-  Scenario: logged in user can log out via logout button
-    Given the user is logged in to the CES
-    When the user opens the dogu start page
-    And the user clicks the logout button
-    Then the user is logged out of the dogu
-
-  Scenario: logged in user can log out via cas logout page
-    Given the user is logged in to the CES
-    When the user opens the CAS logout page
-    Then the user is logged out of the dogu
-
   Scenario: logged in user can log out via warp menu
     Given the user is logged in to the CES
     When the user opens the warp menu
