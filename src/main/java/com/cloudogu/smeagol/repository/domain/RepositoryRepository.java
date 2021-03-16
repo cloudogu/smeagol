@@ -10,10 +10,10 @@ public interface RepositoryRepository {
     /**
      * Find all repositories.
      *
-     * @param wikiEnabled Optional<Boolean> wikiEnabled
+     * @param wikiEnabled boolean wikiEnabled
      * @return all repositories
      */
-    Iterable<Repository> findAll(Optional<Boolean> wikiEnabled);
+    Iterable<Repository> findAll(boolean wikiEnabled);
 
     /**
      * Find repository with given id.

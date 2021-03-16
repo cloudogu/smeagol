@@ -1,5 +1,6 @@
 {
   "repositories_failed_to_fetch": "Failed to fetch repositories",
+  "missing_smeagol_plugin": "Failed to fetch repositories. It's likely that the used SCM-Manager is missing the plugin 'Smeagol Integration'.",
   "display_repositories_without_wiki": "Display repositories without documentation",
   "branches_failed_to_fetch": "Failed to fetch repository",
   "wikiroot_failed_to_fetch": "Failed to fetch wiki",
