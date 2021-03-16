@@ -111,13 +111,12 @@ parallel(
 
                             stage('Setup') {
                                 ecoSystem.loginBackend('cesmarvin-setup')
-                                ecoSystem.setup([additionalDependencies: ['official/scm', 'official/usermgt']])
+                                ecoSystem.setup([additionalDependencies: ['official/scm']])
                             }
 
                             stage('Wait for dependencies') {
                                 timeout(15) {
                                     ecoSystem.waitForDogu("scm")
-                                    ecoSystem.waitForDogu("usermgt")
                                 }
                             }
 
