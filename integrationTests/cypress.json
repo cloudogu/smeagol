@@ -1,5 +1,5 @@
 {
-  "baseUrl": "https://192.168.56.2",
+  "baseUrl": "https://192.168.56.1",
   "videoUploadOnPasses": true,
   "videoCompression": false
 }
