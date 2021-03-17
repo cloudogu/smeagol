@@ -15,10 +15,10 @@ const styles = {
     cursor: "pointer",
     "user-select": "none",
     color: "inherit",
-    "font-size": "2.6em",
-    "& + ul": {
+    "font-size": "1.8em",
+    "& + ul > li": {
       padding: "0",
-      "font-size": "2.1em"
+      "font-size": "1.8em"
     }
   },
   main: {
@@ -35,7 +35,7 @@ const styles = {
   },
   item: {
     color: "inherit",
-    "font-size": "80%"
+    "font-size": "1.4rem"
   }
 };
 
