@@ -1,5 +1,4 @@
 import React from "react";
-import Navigation from "./Navigation";
 import Main from "./Main";
 import "ces-theme/dist/css/ces.css";
 import { withRouter } from "react-router-dom";

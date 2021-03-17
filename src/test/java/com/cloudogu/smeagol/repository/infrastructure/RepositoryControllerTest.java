@@ -1,9 +1,7 @@
 package com.cloudogu.smeagol.repository.infrastructure;
 
 import com.cloudogu.smeagol.repository.domain.*;
-import com.cloudogu.smeagol.wiki.infrastructure.MissingSmeagolPluginException;
 import com.google.common.collect.Lists;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +11,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.ContentResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 

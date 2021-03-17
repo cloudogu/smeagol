@@ -5,7 +5,6 @@ import com.cloudogu.smeagol.AccountTestData;
 import com.cloudogu.smeagol.ScmHttpClient;
 import com.cloudogu.smeagol.repository.domain.Repository;
 import com.cloudogu.smeagol.repository.domain.RepositoryId;
-import com.cloudogu.smeagol.wiki.infrastructure.MissingSmeagolPluginException;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import org.junit.Before;

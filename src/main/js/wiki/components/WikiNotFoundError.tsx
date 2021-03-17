@@ -3,7 +3,7 @@ import { translate } from "react-i18next";
 import Alert from "../../Alert";
 
 type Props = {
-  t: any;
+  t: (string) => string;
 };
 
 class WikiNotFoundError extends React.Component<Props> {

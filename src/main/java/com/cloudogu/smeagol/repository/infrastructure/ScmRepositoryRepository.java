@@ -2,8 +2,6 @@ package com.cloudogu.smeagol.repository.infrastructure;
 
 import com.cloudogu.smeagol.ScmHttpClient;
 import com.cloudogu.smeagol.repository.domain.*;
-import com.cloudogu.smeagol.wiki.infrastructure.CouldNotGetSCMRootException;
-import com.cloudogu.smeagol.wiki.infrastructure.MissingSmeagolPluginException;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +22,7 @@ public class ScmRepositoryRepository implements RepositoryRepository {
         this.scmHttpClient = scmHttpClient;
     }
 
-    private synchronized String getRepositoriesURL() throws MissingSmeagolPluginException {
+    private synchronized String getRepositoriesURL() {
         if (repositoriesURL != null) {
             return repositoriesURL;
         }
@@ -54,13 +52,17 @@ public class ScmRepositoryRepository implements RepositoryRepository {
     }
 
     @Override
-    public Iterable<Repository> findAll(boolean wikiEnabled) throws MissingSmeagolPluginException {
+    public Iterable<Repository> findAll(boolean wikiEnabled) {
         String queryParam = "";
         if (wikiEnabled) {
             queryParam = "?wikiEnabled=true";
         }
 
         Optional<RepositoriesEndpointDTO> dto = scmHttpClient.get(getRepositoriesURL() + queryParam, RepositoriesEndpointDTO.class);
+
+        if (dto.isEmpty()) {
+            throw new CouldNotReachSCMException();
+        }
 
         return Arrays.stream(dto.get()._embedded.repositories)
             .filter(repository -> "git".equals(repository.type))
@@ -95,7 +97,6 @@ public class ScmRepositoryRepository implements RepositoryRepository {
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
     private static class RepositoryDTO {
         private String id;
-        private String type;
         private String name;
         private String description;
         private Long lastModified;

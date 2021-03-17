@@ -4,7 +4,6 @@ import com.cloudogu.smeagol.repository.domain.BranchRepository;
 import com.cloudogu.smeagol.repository.domain.Repository;
 import com.cloudogu.smeagol.repository.domain.RepositoryId;
 import com.cloudogu.smeagol.repository.domain.RepositoryRepository;
-import com.cloudogu.smeagol.wiki.infrastructure.MissingSmeagolPluginException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
