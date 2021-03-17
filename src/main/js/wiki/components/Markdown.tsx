@@ -24,7 +24,8 @@ const styles = {
       height: "auto",
       display: "block"
     }
-  }
+  },
+  toAddId: {}
 };
 
 type Props = {
@@ -33,6 +34,44 @@ type Props = {
 };
 
 class Markdown extends React.Component<Props> {
+  readonly blankSpaceReplaceText = "-";
+  readonly idsCountByName = new Map<string, number>();
+
+  getCount(name: string): number {
+    if (!this.idsCountByName.has(name)) {
+      return 0;
+    } else return this.idsCountByName.get(name);
+  }
+
+  count(name: string) {
+    const newCount = this.getCount(name) + 1;
+    this.idsCountByName.set(name, newCount);
+  }
+
+  setClasses(base: any, depth = 1) {
+    const elements = Array.prototype.slice.call(base.getElementsByTagName("h" + depth));
+    elements.forEach((element) => {
+      this.setClasses(element.parentElement, depth + 1);
+      element.className = this.props.classes.toAddId;
+    });
+  }
+
+  setIds() {
+    const elements = Array.prototype.slice.call(this.viewerNode.getElementsByClassName(this.props.classes.toAddId));
+    elements.forEach((element) => {
+      const text = element.innerText.replace(/\s+/g, this.blankSpaceReplaceText);
+      const count = this.getCount(text);
+
+      if (count == 0) {
+        element.id = text;
+      } else {
+        element.id = text + this.blankSpaceReplaceText + count;
+      }
+
+      this.count(text);
+    });
+  }
+
   componentDidMount() {
     this.editor = new Editor.factory({
       el: this.viewerNode,
@@ -52,6 +91,9 @@ class Markdown extends React.Component<Props> {
         "legacyplantuml"
       ]
     });
+
+    this.setClasses(this.viewerNode);
+    this.setIds();
   }
 
   componentDidUpdate(prevProps) {
