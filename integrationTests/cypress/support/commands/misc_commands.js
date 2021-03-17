@@ -8,14 +8,12 @@ let doguName = "smeagol"
  */
 const login = (username, password) => {
     cy.visit("/" + doguName)
-    cy.waitFor()
 
     cy.clickWarpMenuCheckboxIfPossible()
 
     cy.get('input[name="username"]').type(username)
     cy.get('input[name="password"]').type(password)
     cy.get('input[name="submit"]').click()
-    cy.waitFor()
 }
 
 
@@ -25,14 +23,12 @@ const login = (username, password) => {
 const loginAdmin = () => {
     cy.fixture("ces_admin_data").then(function (admin) {
         cy.visit("/" + doguName)
-        cy.waitFor()
 
         cy.clickWarpMenuCheckboxIfPossible()
 
         cy.get('input[name="username"]').type(admin.username)
         cy.get('input[name="password"]').type(admin.password)
         cy.get('input[name="submit"]').click()
-        cy.waitFor()
     })
 }
 
@@ -41,9 +37,7 @@ const loginAdmin = () => {
  */
 const logout = () => {
     cy.visit("/cas/logout")
-    cy.waitFor()
     cy.visit("/" + doguName)
-    cy.waitFor()
 }
 
 /**
@@ -58,7 +52,6 @@ const clickWarpMenuButton = () => {
  */
 const logoutViaWarpMenu = () => {
     cy.get('a[href="/cas/logout').click()
-    cy.waitFor()
 }
 
 /**
