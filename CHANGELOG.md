@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-* Integration tests for CAS.
+* Integration tests for CAS. (#110)
 
 ## [v0.7.0-1] - 2021-03-11
 ### Added
