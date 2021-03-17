@@ -1,5 +1,6 @@
 import React from "react";
 import injectSheet from "react-jss";
+import { translate } from "react-i18next";
 import ReactMarkdownHeading from "react-markdown-heading";
 
 const cloudoguDarkBlue = "#00426b";
@@ -42,6 +43,7 @@ const styles = {
 type Props = {
   page: any;
   classes: any;
+  t: any;
 };
 
 class TableOfContents extends React.Component<Props> {
@@ -58,14 +60,15 @@ class TableOfContents extends React.Component<Props> {
   };
 
   render() {
-    const { page, classes } = this.props;
+    const { page, classes, t } = this.props;
+    console.log(this.props);
     return (
       <div className={classes.main}>
         <a
           onClick={this.handleToggle}
           className={[classes.tocToggle, this.collapsed ? classes.tocHidden : ""].join(" ")}
         >
-          Table of Contents
+          {t("table-of-contents")}
         </a>
         <ReactMarkdownHeading
           hyperlink={true}
@@ -78,4 +81,4 @@ class TableOfContents extends React.Component<Props> {
   }
 }
 
-export default injectSheet(styles)(TableOfContents);
+export default translate()(injectSheet(styles)(TableOfContents));

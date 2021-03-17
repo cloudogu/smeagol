@@ -47,5 +47,6 @@
   "search-bar_placeholder": "Search in this repository ...",
   "search-result-header_title": "Search Results for",
   "search_failed_to_fetch": "Failed to fetch search results",
-  "search-scoring_tooltip": "Relevance for your search"
+  "search-scoring_tooltip": "Relevance for your search",
+  "table-of-contents": "Table of Contents"
 }
