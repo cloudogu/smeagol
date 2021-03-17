@@ -8,18 +8,30 @@ const cloudoguLightGray = "#f5f5f5";
 
 const styles = {
   tocHidden: {
-    "& + ul": {
-      display: "none"
+    "& ~ ul": {
+      display: "none !important"
+    },
+    "& ~ i.glyphicon-chevron-down": {
+      display: "none !important"
+    }
+  },
+  tocVisible: {
+    "& ~ i.glyphicon-chevron-right": {
+      display: "none !important"
     }
   },
   tocToggle: {
     cursor: "pointer",
     "user-select": "none",
     color: "inherit",
-    "font-size": "1.8em",
-    "& + ul > li": {
+    "font-size": "1.8rem",
+    "& ~ ul > li": {
       padding: "0",
-      "font-size": "1.8em"
+      "font-size": "1.8rem"
+    },
+    "& ~ i": {
+      "font-size": "1.4rem",
+      "margin-left": "0.5rem"
     }
   },
   main: {
@@ -65,10 +77,12 @@ class TableOfContents extends React.Component<Props> {
       <div className={classes.main}>
         <a
           onClick={this.handleToggle}
-          className={[classes.tocToggle, this.collapsed ? classes.tocHidden : ""].join(" ")}
+          className={[classes.tocToggle, this.collapsed ? classes.tocHidden : classes.tocVisible].join(" ")}
         >
           {t("table-of-contents")}
         </a>
+        <i className="glyphicon glyphicon-chevron-down" />
+        <i className="glyphicon glyphicon-chevron-right" />
         <ReactMarkdownHeading
           hyperlink={true}
           markdown={page.content}
