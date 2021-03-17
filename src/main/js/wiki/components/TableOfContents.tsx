@@ -61,7 +61,6 @@ class TableOfContents extends React.Component<Props> {
 
   render() {
     const { page, classes, t } = this.props;
-    console.log(this.props);
     return (
       <div className={classes.main}>
         <a
