@@ -52,29 +52,78 @@ public class ScmRepositoryRepositoryTest {
         // clear cache to avoid side effects
         httpClient.invalidateCache();
         when(accountService.get()).thenReturn(AccountTestData.TRILLIAN);
+        repository.resetRepositoriesURL();
     }
 
     @Test
     public void testFindAll() throws IOException {
+        URL rootUrl = Resources.getResource("com/cloudogu/smeagol/repository/infrastructure/v2.json");
+        String rootContent = Resources.toString(rootUrl, Charsets.UTF_8);
+
+        server.expect(requestTo("/api/v2"))
+            .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
+            .andRespond(withSuccess(rootContent, MediaType.APPLICATION_JSON));
+
+
         URL url = Resources.getResource("com/cloudogu/smeagol/repository/infrastructure/repositories.json");
         String content = Resources.toString(url, Charsets.UTF_8);
 
-        server.expect(requestTo("/api/rest/repositories.json"))
+        server.expect(requestTo("https://ecosystem.hitchhiker.com/scm/api/v2/smeagol/repositories"))
                 .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
                 .andRespond(withSuccess(content, MediaType.APPLICATION_JSON));
 
-        Iterator<Repository> repositories = repository.findAll().iterator();
+        Iterator<Repository> repositories = repository.findAll(false).iterator();
 
         Repository restaurant = repositories.next();
         assertEquals("30QQIOlg42", restaurant.getId().getValue());
         assertEquals("hitchhiker/restaurantAtTheEndOfTheUniverse", restaurant.getName().getValue());
-        assertEquals(1513941908, restaurant.getLastModified().getEpochSecond());
 
         Repository heartOfGold = repositories.next();
         assertEquals("4xQfahsId3", heartOfGold.getId().getValue());
         assertEquals("Heart Of Gold", heartOfGold.getDescription().getValue());
 
         assertFalse(repositories.hasNext());
+    }
+
+    @Test
+    public void testFindAllWithWikiEnabled() throws IOException {
+        URL rootUrl = Resources.getResource("com/cloudogu/smeagol/repository/infrastructure/v2.json");
+        String rootContent = Resources.toString(rootUrl, Charsets.UTF_8);
+
+        server.expect(requestTo("/api/v2"))
+            .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
+            .andRespond(withSuccess(rootContent, MediaType.APPLICATION_JSON));
+
+        URL url = Resources.getResource("com/cloudogu/smeagol/repository/infrastructure/repositories.json");
+        String content = Resources.toString(url, Charsets.UTF_8);
+
+        server.expect(requestTo("https://ecosystem.hitchhiker.com/scm/api/v2/smeagol/repositories?wikiEnabled=true"))
+            .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
+            .andRespond(withSuccess(content, MediaType.APPLICATION_JSON));
+
+        Iterator<Repository> repositories = repository.findAll(true).iterator();
+
+        Repository restaurant = repositories.next();
+        assertEquals("30QQIOlg42", restaurant.getId().getValue());
+        assertEquals("hitchhiker/restaurantAtTheEndOfTheUniverse", restaurant.getName().getValue());
+
+        Repository heartOfGold = repositories.next();
+        assertEquals("4xQfahsId3", heartOfGold.getId().getValue());
+        assertEquals("Heart Of Gold", heartOfGold.getDescription().getValue());
+
+        assertFalse(repositories.hasNext());
+    }
+
+    @Test(expected = MissingSmeagolPluginException.class)
+    public void testFindAllMissingSmeagolPlugin() throws IOException {
+        URL rootUrl = Resources.getResource("com/cloudogu/smeagol/repository/infrastructure/v2-missing-plugin.json");
+        String rootContent = Resources.toString(rootUrl, Charsets.UTF_8);
+
+        server.expect(requestTo("/api/v2"))
+            .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
+            .andRespond(withSuccess(rootContent, MediaType.APPLICATION_JSON));
+
+        repository.findAll(true).iterator();
     }
 
     @Test

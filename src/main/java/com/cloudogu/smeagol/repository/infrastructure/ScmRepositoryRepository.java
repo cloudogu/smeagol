@@ -15,18 +15,57 @@ import java.util.stream.Collectors;
 public class ScmRepositoryRepository implements RepositoryRepository {
 
     private ScmHttpClient scmHttpClient;
+    private String repositoriesURL;
 
     @Autowired
     public ScmRepositoryRepository(ScmHttpClient scmHttpClient) {
         this.scmHttpClient = scmHttpClient;
     }
 
-    @Override
-    public Iterable<Repository> findAll() {
-        Optional<RepositoryDTO[]> dtos = scmHttpClient.get("/api/rest/repositories.json", RepositoryDTO[].class);
+    private synchronized String getRepositoriesURL() {
+        if (repositoriesURL != null) {
+            return repositoriesURL;
+        }
+        Optional<SCMRootEndpointDTO> dto = scmHttpClient.get("/api/v2", SCMRootEndpointDTO.class);
+        if (dto.isEmpty()) {
+            throw new CouldNotGetSCMRootException();
+        }
 
-        return Arrays.stream(dtos.get())
-            .filter(dto -> "git".equals(dto.type))
+        if (dto.get()._links.smeagol == null) {
+            throw new MissingSmeagolPluginException();
+        }
+
+        Optional<SmeagolLinkDTO> smeagolLink = Arrays.stream(dto.get()._links.smeagol)
+            .filter(link -> "repositories".equals(link.name))
+            .findFirst();
+
+        if (smeagolLink.isEmpty()) {
+            throw new MissingSmeagolPluginException();
+        }
+
+        repositoriesURL = smeagolLink.get().href;
+        return repositoriesURL;
+    }
+
+    public synchronized void resetRepositoriesURL() {
+        this.repositoriesURL = null;
+    }
+
+    @Override
+    public Iterable<Repository> findAll(boolean wikiEnabled) {
+        String queryParam = "";
+        if (wikiEnabled) {
+            queryParam = "?wikiEnabled=true";
+        }
+
+        Optional<RepositoriesEndpointDTO> dto = scmHttpClient.get(getRepositoriesURL() + queryParam, RepositoriesEndpointDTO.class);
+
+        if (dto.isEmpty()) {
+            throw new CouldNotReachSCMException();
+        }
+
+        return Arrays.stream(dto.get()._embedded.repositories)
+            .filter(repository -> "git".equals(repository.type))
             .map(this::map)
             .collect(Collectors.toList());
     }
@@ -34,7 +73,7 @@ public class ScmRepositoryRepository implements RepositoryRepository {
     @Override
     public Optional<Repository> findById(RepositoryId id) {
         return scmHttpClient.get("/api/rest/repositories/{id}.json", RepositoryDTO.class, id)
-                .map(this::map);
+            .map(this::map);
     }
 
     private Repository map(RepositoryDTO dto) {
@@ -46,13 +85,56 @@ public class ScmRepositoryRepository implements RepositoryRepository {
         );
     }
 
+    private Repository map(RepositoryDTOv2 dto) {
+        return new Repository(
+            RepositoryId.valueOf(dto.id),
+            Name.valueOf(dto.namespace + "/" + dto.name),
+            Description.valueOf(dto.description),
+            null
+        );
+    }
+
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
     private static class RepositoryDTO {
         private String id;
-        private String type;
         private String name;
         private String description;
         private Long lastModified;
     }
 
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+    private static class RepositoriesEndpointDTO {
+        private RepositoriesEndpointEmbeddedDTO _embedded;
+    }
+
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+    private static class RepositoriesEndpointEmbeddedDTO {
+        private RepositoryDTOv2[] repositories;
+    }
+
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+    private static class RepositoryDTOv2 {
+        private String id;
+        private String type;
+        private String name;
+        private String namespace;
+        private String description;
+        private String defaultBranch;
+    }
+
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+    private static class SCMRootEndpointDTO {
+        private LinksDTO _links;
+    }
+
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+    private static class LinksDTO {
+        private SmeagolLinkDTO[] smeagol;
+    }
+
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+    private static class SmeagolLinkDTO {
+        private String name;
+        private String href;
+    }
 }

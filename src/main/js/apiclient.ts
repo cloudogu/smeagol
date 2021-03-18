@@ -2,6 +2,7 @@
 const apiUrl = process.env.API_URL || process.env.PUBLIC_URL || "";
 
 export const PAGE_NOT_FOUND_ERROR = Error("page not found");
+export const MISSING_SMEAGOL_PLUGIN = Error("missing smeagol plugin");
 
 // fetch does not send the X-Requested-With header (https://github.com/github/fetch/issues/17),
 // but we need the header to detect ajax request (AjaxAwareAuthenticationRedirectStrategy).
@@ -22,13 +23,17 @@ function isAuthenticationRedirect(response) {
   return false;
 }
 
-function handleStatusCode(response) {
+async function handleStatusCode(response: Response) {
   if (!response.ok) {
     if (response.status === 401) {
       return response;
     }
     if (response.status === 404) {
       throw PAGE_NOT_FOUND_ERROR;
+    }
+    const body = await response.text();
+    if (body === "SCM is missing Smeagol plugin") {
+      throw MISSING_SMEAGOL_PLUGIN;
     }
     throw new Error(response.body.message || "server returned status code " + response.status);
   }
