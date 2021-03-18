@@ -35,29 +35,46 @@ type Props = {
 
 class Markdown extends React.Component<Props> {
   readonly blankSpaceReplaceText = "-";
-  readonly idsCountByName = new Map<string, number>();
+  /**
+   * Used to count the occurrences of exactly the same headline
+   */
+  readonly countById = new Map<string, number>();
 
-  getCount(name: string): number {
-    if (!this.idsCountByName.has(name)) {
+  /**
+   * Returns the current count of headlines with the given id which were counted with the count method.
+   * @see count
+   * @param id The id of the headline
+   */
+  getCount(id: string): number {
+    if (!this.countById.has(id)) {
       return 0;
-    } else return this.idsCountByName.get(name);
+    } else return this.countById.get(id);
   }
 
-  count(name: string) {
-    const newCount = this.getCount(name) + 1;
-    this.idsCountByName.set(name, newCount);
+  /**
+   * Increases the counter for a given id by one.
+   * @see getCount
+   * @param id The id to increase the counter for
+   */
+  count(id: string) {
+    const newCount = this.getCount(id) + 1;
+    this.countById.set(id, newCount);
   }
 
-  setClasses(base: any, depth = 1) {
-    const elements = Array.prototype.slice.call(base.getElementsByTagName("h" + depth));
-    elements.forEach((element) => {
-      this.setClasses(element.parentElement, depth + 1);
-      element.className = this.props.classes.toAddId;
-    });
-  }
+  /**
+   * Adds ids to any tag of "h1, h2, h3, h4, h5, h6" based on their content.
+   * Spaces in id are replaced with a '-'.
+   * If there is exactly the same content twice or more, a counter is applied to the id.
+   *
+   * This is necessary because in the current version of tui editor (1.4.10), there is no way
+   * implemented to add ids to the headlines.
+   * But ids are necessary to scroll to the headline by using the table of contents.
+   *
+   * @param parentNode The html element in which the tags should be searched.
+   */
+  setIdsOnHeadlines(parentNode: any) {
+    const elements = Array.prototype.slice.call(parentNode.querySelectorAll("h1, h2, h3, h4, h5, h6"));
 
-  setIds() {
-    const elements = Array.prototype.slice.call(this.viewerNode.getElementsByClassName(this.props.classes.toAddId));
     elements.forEach((element) => {
       const text = element.innerText.replace(/\s+/g, this.blankSpaceReplaceText);
       const count = this.getCount(text);
@@ -92,8 +109,8 @@ class Markdown extends React.Component<Props> {
       ]
     });
 
-    this.setClasses(this.viewerNode);
-    this.setIds();
+    // After the markdown has been rendered, the ids for the headlines need to be applied.
+    this.setIdsOnHeadlines(this.viewerNode);
   }
 
   componentDidUpdate(prevProps) {
