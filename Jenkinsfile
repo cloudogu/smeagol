@@ -47,16 +47,16 @@ parallel(
 
                             if (branch == "master") {
                                 echo "This branch has been detected as the master branch."
-                                sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${doguName} -Dsonar.doguName=${doguName}"
+                                sh "${scannerHome}/bin/sonar-scanner"
                             } else if (branch == "develop") {
                                 echo "This branch has been detected as the develop branch."
-                                sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${doguName} -Dsonar.doguName=${doguName} -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=master  "
+                                sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=master  "
                             } else if (env.CHANGE_TARGET) {
                                 echo "This branch has been detected as a pull request."
-                                sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${doguName} -Dsonar.doguName=${doguName} -Dsonar.branch.name=${env.CHANGE_BRANCH}-PR${env.CHANGE_ID} -Dsonar.branch.target=${env.CHANGE_TARGET} "
+                                sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.CHANGE_BRANCH}-PR${env.CHANGE_ID} -Dsonar.branch.target=${env.CHANGE_TARGET} "
                             } else if (branch.startsWith("feature/")) {
                                 echo "This branch has been detected as a feature branch."
-                                sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${doguName} -Dsonar.doguName=${doguName} -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=develop"
+                                sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=develop"
                             }
                         }
                         timeout(time: 2, unit: 'MINUTES') { // Needed when there is no webhook for example
