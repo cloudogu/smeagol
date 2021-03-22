@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-* Automatically generated table of contents on each doc page
+* Automatically generated table of contents on each doc page (#113)
 
 ## [v0.7.0-1] - 2021-03-11
 ### Added
