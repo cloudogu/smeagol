@@ -15,6 +15,7 @@ import "codemirror/lib/codemirror.css";
 
 import "highlight.js/lib";
 import "highlight.js/styles/default.css";
+import { IdUtil } from "../../idUtil";
 
 const styles = {
   markdown: {
@@ -34,33 +35,6 @@ type Props = {
 };
 
 class Markdown extends React.Component<Props> {
-  readonly blankSpaceReplaceText = "-";
-  /**
-   * Used to count the occurrences of exactly the same headline
-   */
-  readonly countById = new Map<string, number>();
-
-  /**
-   * Returns the current count of headlines with the given id which were counted with the count method.
-   * @see count
-   * @param id The id of the headline
-   */
-  getCount(id: string): number {
-    if (!this.countById.has(id)) {
-      return 0;
-    } else return this.countById.get(id);
-  }
-
-  /**
-   * Increases the counter for a given id by one.
-   * @see getCount
-   * @param id The id to increase the counter for
-   */
-  count(id: string) {
-    const newCount = this.getCount(id) + 1;
-    this.countById.set(id, newCount);
-  }
-
   /**
    * Adds ids to any tag of "h1, h2, h3, h4, h5, h6" based on their content.
    * Spaces in id are replaced with a '-'.
@@ -73,19 +47,11 @@ class Markdown extends React.Component<Props> {
    * @param parentNode The html element in which the tags should be searched.
    */
   setIdsOnHeadlines(parentNode: any) {
+    const idUtil = new IdUtil();
     const elements = Array.prototype.slice.call(parentNode.querySelectorAll("h1, h2, h3, h4, h5, h6"));
 
     elements.forEach((element) => {
-      const text = element.innerText.replace(/\s+/g, this.blankSpaceReplaceText);
-      const count = this.getCount(text);
-
-      if (count == 0) {
-        element.id = text;
-      } else {
-        element.id = text + this.blankSpaceReplaceText + count;
-      }
-
-      this.count(text);
+      element.id = idUtil.nextId(element.innerText);
     });
   }
 
