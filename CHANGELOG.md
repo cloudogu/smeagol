@@ -6,14 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.0.0-1] - 2021-03-22
 ### Added
-* Integration tests for CAS. (#110)
-* Automatically generated table of contents on each doc page (#113)
+* Generate a table of contents on each wiki page (#113)
+  * ToC entries are generated over markdown headlines per wiki page
+* Integration tests for CAS (#110)
 
 ### Changed
-* In the repository overview only repositories with wiki (.smeagol.yml file) are displayed #112
-  * The remaining repositories can be displayed by clicking a checkbox
-  * This requires that the `Smeagol Integration` plugin is installed in SCM
+* Display only repositories with enabled wiki (`.smeagol.yml` file) in the repository overview (#112)
+  * the remaining repositories can be displayed by clicking a checkbox
+  * this requires that the [Smeagol Integration plugin](https://www.scm-manager.org/plugins/scm-smeagol-plugin/) is installed in the SCM Manager
 
 ## [v0.7.0-1] - 2021-03-11
 ### Added
