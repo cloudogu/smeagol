@@ -1,5 +1,5 @@
 #!groovy
-@Library(['github.com/cloudogu/ces-build-lib@1.44.3', 'github.com/cloudogu/dogu-build-lib@v1.2.0'])
+@Library(['github.com/cloudogu/ces-build-lib@1.45.0', 'github.com/cloudogu/dogu-build-lib@v1.2.0'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
@@ -111,7 +111,7 @@ parallel(
 
                             stage('Setup') {
                                 ecoSystem.loginBackend('cesmarvin-setup')
-                                ecoSystem.setup([additionalDependencies: ['official/scm']])
+                                ecoSystem.setup([adminUsername:"admin", adminPassword:"adminpw", additionalDependencies: ['official/scm'], ])
                             }
 
                             stage('Wait for dependencies') {
@@ -126,6 +126,30 @@ parallel(
 
                             stage('Verify') {
                                 ecoSystem.verify("/dogu")
+                            }
+
+                            stage('Integration tests') {
+                                println "cleaning up previous test results..."
+                                sh "rm -rf integrationTests/cypress/videos"
+                                sh "rm -rf integrationTests/cypress/screenshots"
+                                sh "rm -rf integrationTests/cypress-reports"
+
+                                try {
+                                    def runID = UUID.randomUUID().toString()
+                                    def reportName = "TEST-${runID}-[hash].xml"
+                                    def testArgs = "-q --headless --record false --reporter junit --reporter-options mochaFile=cypress-reports/${reportName}"
+                                    String externalIP = ecoSystem.externalIP
+                                    docker.image("cypress/included:6.6.0").inside("--ipc=host -v ${WORKSPACE}/integrationTests:/integrationTests -w /integrationTests -e XDG_CONFIG_HOME=/integrationTests -e YARN_CACHE_FOLDER=/integrationTests -e CYPRESS_BASE_URL=https://${externalIP} --entrypoint=''") {
+                                        sh "cd integrationTests && yarn install && cypress run ${testArgs}"
+                                    }
+                                }
+                                finally {
+                                    catchError {
+                                        println "archiving videos and screenshots from test execution..."
+                                        junit allowEmptyResults: true, testResults: 'integrationTests/cypress-reports/TEST-*.xml'
+                                        archiveArtifacts "integrationTests/cypress/videos/**/*.mp4"
+                                    }
+                                }
                             }
 
                             if (params.TestDoguUpgrade != null && params.TestDoguUpgrade) {

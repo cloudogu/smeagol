@@ -5,12 +5,12 @@ import com.cloudogu.smeagol.repository.domain.Repository;
 import com.cloudogu.smeagol.repository.domain.RepositoryId;
 import com.cloudogu.smeagol.repository.domain.RepositoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
@@ -34,9 +34,13 @@ public class RepositoryController {
     }
 
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Resources<Resource<RepositoryResource>> findAll() {
-        Collection<RepositoryResource> repositories = repositoryAssembler.toResources(repositoryRepository.findAll());
-        return wrap(repositories);
+    public ResponseEntity findAll(@RequestParam(defaultValue = "false") boolean wikiEnabled) {
+        try {
+            Collection<RepositoryResource> repositories = repositoryAssembler.toResources(repositoryRepository.findAll(wikiEnabled));
+            return ResponseEntity.ok(wrap(repositories));
+        } catch (MissingSmeagolPluginException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
     }
 
     @RequestMapping("/{repositoryId}")

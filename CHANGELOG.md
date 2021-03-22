@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+* Integration tests for CAS. (#110)
 * Automatically generated table of contents on each doc page (#113)
+
+### Changed
+* In the repository overview only repositories with wiki (.smeagol.yml file) are displayed #112
+  * The remaining repositories can be displayed by clicking a checkbox
+  * This requires that the `Smeagol Integration` plugin is installed in SCM
 
 ## [v0.7.0-1] - 2021-03-11
 ### Added

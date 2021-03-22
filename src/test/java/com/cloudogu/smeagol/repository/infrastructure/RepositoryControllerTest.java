@@ -17,10 +17,10 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(RepositoryController.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -48,7 +48,7 @@ public class RepositoryControllerTest {
                 RepositoryTestData.createHeartOfGold(),
                 RepositoryTestData.createRestaurantAtTheEndOfTheUniverse()
         );
-        when(repositoryRepository.findAll()).thenReturn(repositories);
+        when(repositoryRepository.findAll(false)).thenReturn(repositories);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/repositories")
                 .contentType("application/json"))
@@ -61,6 +61,16 @@ public class RepositoryControllerTest {
                 .andExpect(jsonPath("$._embedded.repositories.[1].name", is("hitchhiker/restaurantAtTheEndOfTheUniverse")))
                 .andExpect(jsonPath("$._embedded.repositories.[1]._links.self.href", is("http://localhost/api/v1/repositories/30QQIOlg42")))
                 .andExpect(jsonPath("$._embedded.repositories.[1].lastModified", is("2018-01-28T16:58:42Z")));
+    }
+
+    @Test
+    public void findAllMissingSmeagolPlugin() throws Exception {
+        when(repositoryRepository.findAll(false)).thenThrow(new MissingSmeagolPluginException());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/repositories")
+            .contentType("application/json"))
+            .andExpect(status().is5xxServerError())
+            .andExpect(content().string("SCM is missing Smeagol plugin"));
     }
 
     @Test
