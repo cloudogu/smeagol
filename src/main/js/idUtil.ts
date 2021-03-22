@@ -39,9 +39,9 @@ export class IdUtil {
    */
   public nextId(rawText: string) {
     const text = rawText.replace(/\s+/g, this.blankSpaceReplaceText);
-    this.count(text);
     const count = this.getCount(text);
 
+    this.count(text);
     if (count == 0) {
       return text;
     }
