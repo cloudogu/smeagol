@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 * Integration tests for CAS. (#110)
+* Automatically generated table of contents on each doc page (#113)
 
 ### Changed
 * In the repository overview only repositories with wiki (.smeagol.yml file) are displayed #112
