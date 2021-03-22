@@ -28,6 +28,7 @@ With those credentials you can also enter the VM via SSH:
 * `ssh admin@192.168.56.2`
 * or `cd .workspace/ecosystem; vagrant ssh`  
 
+Hint: Make sure your SCM-Manager has the Smeagol Plugin installed!
 
 To stop the vm use the down execution:
 

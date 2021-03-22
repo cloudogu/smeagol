@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.0.0-1] - 2021-03-22
+### Added
+* Generate a table of contents on each wiki page (#113)
+  * ToC entries are generated over markdown headlines per wiki page
+* Integration tests for CAS (#110)
+
+### Changed
+* Display only repositories with enabled wiki (`.smeagol.yml` file) in the repository overview (#112)
+  * the remaining repositories can be displayed by clicking a checkbox
+  * this requires that the [Smeagol Integration plugin](https://www.scm-manager.org/plugins/scm-smeagol-plugin/) is installed in the SCM Manager
+
 ## [v0.7.0-1] - 2021-03-11
 ### Added
 * Add XSS attack mitigation by updating the WYSIWYG editor component (#106)

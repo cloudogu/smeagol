@@ -1,5 +1,7 @@
 {
   "repositories_failed_to_fetch": "Failed to fetch repositories",
+  "missing_smeagol_plugin": "Failed to fetch repositories. It's likely that the SCM-Manager is missing the plugin Smeagol Integration.",
+  "display_repositories_without_wiki": "Display repositories without wiki",
   "branches_failed_to_fetch": "Failed to fetch repository",
   "wikiroot_failed_to_fetch": "Failed to fetch wiki",
   "wikiroot_not_found_prefix": "The requested Wiki could not be found. This could have several reasons:",
@@ -47,5 +49,6 @@
   "search-bar_placeholder": "Search in this repository ...",
   "search-result-header_title": "Search Results for",
   "search_failed_to_fetch": "Failed to fetch search results",
-  "search-scoring_tooltip": "Relevance for your search"
+  "search-scoring_tooltip": "Relevance for your search",
+  "table-of-contents": "Table of Contents"
 }

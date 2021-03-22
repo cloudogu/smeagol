@@ -115,6 +115,9 @@ public class ScmHttpClient {
         byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(Charsets.US_ASCII));
         String authHeader = "Basic " + new String( encodedAuth );
         headers.set("Authorization", authHeader);
+        // The accept header is set explicitly to access the endpoint /scm/api/v2.
+        // For SCM versions <= 2.15.0 the server otherwise would respond with a 406.
+        headers.set("Accept", "application/*");
         return headers;
     }
 
