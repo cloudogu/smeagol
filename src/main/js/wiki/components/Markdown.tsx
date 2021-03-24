@@ -15,6 +15,7 @@ import "codemirror/lib/codemirror.css";
 
 import "highlight.js/lib";
 import "highlight.js/styles/default.css";
+import { IdUtil } from "../../idUtil";
 
 const styles = {
   markdown: {
@@ -24,7 +25,8 @@ const styles = {
       height: "auto",
       display: "block"
     }
-  }
+  },
+  toAddId: {}
 };
 
 type Props = {
@@ -33,6 +35,26 @@ type Props = {
 };
 
 class Markdown extends React.Component<Props> {
+  /**
+   * Adds ids to any tag of "h1, h2, h3, h4, h5, h6" based on their content.
+   * Spaces in id are replaced with a '-'.
+   * If there is exactly the same content twice or more, a counter is applied to the id.
+   *
+   * This is necessary because in the current version of tui editor (1.4.10), there is no way
+   * implemented to add ids to the headlines.
+   * But ids are necessary to scroll to the headline by using the table of contents.
+   *
+   * @param parentNode The html element in which the tags should be searched.
+   */
+  setIdsOnHeadlines(parentNode: any) {
+    const idUtil = new IdUtil();
+    const elements = Array.prototype.slice.call(parentNode.querySelectorAll("h1, h2, h3, h4, h5, h6"));
+
+    elements.forEach((element) => {
+      element.id = idUtil.nextId(element.innerText);
+    });
+  }
+
   componentDidMount() {
     this.editor = new Editor.factory({
       el: this.viewerNode,
@@ -52,6 +74,9 @@ class Markdown extends React.Component<Props> {
         "legacyplantuml"
       ]
     });
+
+    // After the markdown has been rendered, the ids for the headlines need to be applied.
+    this.setIdsOnHeadlines(this.viewerNode);
   }
 
   componentDidUpdate(prevProps) {

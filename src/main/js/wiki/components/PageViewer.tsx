@@ -2,6 +2,7 @@ import React from "react";
 import PageContent from "./PageContent";
 import PageHeader from "./PageHeader";
 import PageFooter from "./PageFooter";
+import TableOfContents from "./TableOfContents";
 
 type Props = {
   page: any;
@@ -29,6 +30,7 @@ class PageViewer extends React.Component<Props> {
           onOkMoveClick={onMove}
           onRestoreClick={onRestore}
         />
+        <TableOfContents page={page} />
         <PageContent page={page} />
         <PageFooter page={page} />
       </div>

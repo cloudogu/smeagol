@@ -49,5 +49,6 @@
   "search-bar_placeholder": "In diesem Repository suchen ...",
   "search-result-header_title": "Suchergebnisse für",
   "search_failed_to_fetch": "Die Suchergebnisse konnten nicht geladen werden",
-  "search-scoring_tooltip": "Relevanz für Deine Anfrage"
+  "search-scoring_tooltip": "Relevanz für Deine Anfrage",
+  "table-of-contents": "Inhaltsverzeichnis"
 }
