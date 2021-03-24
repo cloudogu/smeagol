@@ -6,12 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Added
-* Integration tests for CAS. (#110)
 ### Changed
-* In the repository overview only repositories with wiki (.smeagol.yml file) are displayed #112
-  * The remaining repositories can be displayed by clicking a checkbox
-  * This requires that the `Smeagol Integration` plugin is installed in SCM
 * Updates the appearance of tables inside the markdown editor (#117)
 
 ## [v1.0.0-1] - 2021-03-22
