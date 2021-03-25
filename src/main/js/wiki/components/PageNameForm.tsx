@@ -90,6 +90,7 @@ class PageNameForm extends React.Component<Props, State> {
               type="primary"
               onClick={this.onOkClick}
               i18nKey={labelPrefix + "-form_ok"}
+              title={!isButtonEnabled ? "path-validation-note_valid" : null}
             />
             <ActionButton onClick={onAbortClick} i18nKey={labelPrefix + "-form_abort"} />
           </Modal.Footer>
