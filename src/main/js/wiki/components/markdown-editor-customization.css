@@ -1,0 +1,34 @@
+/* markdown editor custom colors
+you can use the custom properties only in the tui-editor and tui-editor-contents scope
+the second parameter of the var() func is a fallback for IE and other browser which may not support custom properties*/
+.tui-editor, .tui-editor-contents{
+  --primary-color: #1B7DAA;
+  --dark-gray: #333;
+  --light-gray: #e5e5e5;
+}
+
+/* There is a bug in the Markdown editor (tui-editor). The preview window of the Markdown text is only displayed
+   extremely narrowly. The most recent library of the tui-editor (version 1.40.10) does not yet fix this error.
+   The bug can be fixed by overwriting the css settings listed in the file.
+   For further details see: https://github.com/nhn/tui.editor/issues/923
+ */
+.tui-editor .te-md-splitter
+{ display: none;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 100%;
+  width: 100%
+  !important; border-left: 1px solid var(--light-gray, #e5e5e5);
+}
+
+/* markdown editor table borders */
+.tui-editor-contents table,th,td{
+  border: 1px solid var(--dark-gray, #333);
+}
+
+/* markdown editor table header */
+.tui-editor-contents th{
+  background-color: var(--primary-color, #1B7DAA);
+  color: white;
+}
