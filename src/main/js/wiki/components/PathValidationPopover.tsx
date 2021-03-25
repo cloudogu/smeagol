@@ -13,7 +13,7 @@ class PathValidationPopover extends React.Component<Props> {
       <Popover {...this.props} title={t("path-validation-note_title")}>
         <ul>
           <li>{t("path-validation-note_valid")}</li>
-          <li>{t("path-validation-note_invalid")}</li>
+          <li>{t("path-validation-note_dir_creation")}</li>
         </ul>
       </Popover>
     );

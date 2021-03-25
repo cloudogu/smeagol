@@ -17,6 +17,7 @@ type Props = {
   i18nKey: string;
   type?: string;
   disabled: boolean;
+  title: string;
   glyphicon: string;
 };
 
@@ -32,7 +33,7 @@ class ActionButton extends React.Component<Props> {
   };
 
   render() {
-    const { i18nKey, type, classes, t, disabled, glyphicon } = this.props;
+    const { i18nKey, type, classes, t, disabled, title, glyphicon } = this.props;
 
     let btnType = type;
     let additionalClasses;
@@ -55,6 +56,7 @@ class ActionButton extends React.Component<Props> {
         disabled={disabled}
         className={classNames("btn", typeClass, classes.button, additionalClasses)}
         onClick={this.handleClick}
+        title={t(title)}
       >
         {icon}
         {t(i18nKey)}

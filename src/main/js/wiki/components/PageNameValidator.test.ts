@@ -7,9 +7,9 @@ it("should return true for the paths", () => {
   expect(isPageNameValid("", "Home")).toBeTruthy();
   expect(isPageNameValid("", "Home.page")).toBeTruthy();
   expect(isPageNameValid("", "Home_page")).toBeTruthy();
-  expect(isPageNameValid("", "Home page")).toBeTruthy();
+  expect(isPageNameValid("", "Home page")).toBeFalsy();
   expect(isPageNameValid("", "Home-page")).toBeTruthy();
-  expect(isPageNameValid("", "./Home")).toBeTruthy();
+  expect(isPageNameValid("", "./Home")).toBeFalsy();
   expect(isPageNameValid("", "with0123456789")).toBeTruthy();
 });
 
@@ -22,11 +22,11 @@ it("should not contain //", () => {
   expect(isPageNameValid("", "abc//def")).toBeFalsy();
 });
 
-it("should start with /", () => {
+it("should not start with /", () => {
   expect(isPageNameValid("", "/def")).toBeFalsy();
 });
 
-it('should start with " "', () => {
+it('should not start with " "', () => {
   expect(isPageNameValid("", " def")).toBeFalsy();
 });
 
@@ -34,11 +34,11 @@ it('should end with " "', () => {
   expect(isPageNameValid("", "def ")).toBeFalsy();
 });
 
-it("should should not end with /", () => {
+it("should not end with /", () => {
   expect(isPageNameValid("", "myPageName/")).toBeFalsy();
 });
 
-it("should should not end with .", () => {
+it("should not end with .", () => {
   expect(isPageNameValid("", "myPageName.")).toBeFalsy();
 });
 
