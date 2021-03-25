@@ -1,13 +1,10 @@
----
-title: "Smeagol"
----
-
 # Smeagol
-Smeagol ist ein Wiki-System auf Basis eines Git-Repository. Das bedeutet, dass nicht nur der Quellcode des Softwareprodukts, sondern auch die zugehörige Dokumentation im Git Repository versioniert wird. Dadurch ist die Dokumentation genau dort, wo sie auch hin gehört – direkt neben dem Source Code.  \newline
 
-Die Dokumentation kann bequem über eine Weboberfläche aufgerufen werden, wobei jede Nutzerin und jeder Nutzer die Wikis der Repositories sehen kann, auf die er auch im SCM-Manager Zugriff hat. Die Funktion der Weboberfläche ist aber nicht nur auf die Anzeige der Inhalte beschränkt: Sie erlaubt es der Nutzerin und dem Nutzer auch, die Dokumentation zu bearbeiten (inklusive Live-Vorschau) und die bereits erstellten Inhalte zu durchsuchen. Darüber hinaus kann man sich die Versionshistorie der Wikis, eine Übersicht aller Dokumentationsdateien eines Repository, sowie globale Änderungen anzeigen lassen.  \newline
+Smeagol ist ein Wiki-System auf Basis eines Git-Repository. Das bedeutet, dass nicht nur der Quellcode des Softwareprodukts, sondern auch die zugehörige Dokumentation im Git Repository versioniert wird. Dadurch ist die Dokumentation genau dort, wo sie auch hin gehört – direkt neben dem Source Code.  
 
-Um Smeagol für ein Repository verwenden zu können, muss lediglich eine leere \newline
+Die Dokumentation kann bequem über eine Weboberfläche aufgerufen werden, wobei jede Nutzerin und jeder Nutzer die Wikis der Repositories sehen kann, auf die er auch im SCM-Manager Zugriff hat. Die Funktion der Weboberfläche ist aber nicht nur auf die Anzeige der Inhalte beschränkt: Sie erlaubt es der Nutzerin und dem Nutzer auch, die Dokumentation zu bearbeiten (inklusive Live-Vorschau) und die bereits erstellten Inhalte zu durchsuchen. Darüber hinaus kann man sich die Versionshistorie der Wikis, eine Übersicht aller Dokumentationsdateien eines Repository, sowie globale Änderungen anzeigen lassen.  
+
+Um Smeagol für ein Repository verwenden zu können, muss lediglich eine leere 
 ".smeagol.yml-Datei" im Root-Verzeichnis des Repository angelegt werden. Anschlie\ss end kann die Dokumentation entweder auf der Smeagol-Weboberfläche oder über einen gängigen Editor erstellt werden, je nachdem wie  bevorzugt gearbeitet wird. Diesen Prozess finden Sie nachfolgend skizziert.
 
 ![Smeagol Workflow](figures/smeagol/SmeagolWorkflow.png)
@@ -18,7 +15,7 @@ Wenn diese Datei in das Repository hinzugefügt wurde, wird das Wiki in der List
 
 ![Smeagol Übersicht](figures/smeagol/SmeagolUebersicht.png)
 
-\pagebreak
+
 
 Wenn Sie auf das Wiki klicken, bekommen Sie eine Übersicht aller Branches in dem Repository.
 
@@ -29,7 +26,7 @@ Mit der Suchfunktion kann das Wiki nach Begriffen durchsucht werden. Mit dem But
 
 ![Smeagol Wiki Home](figures/smeagol/SmeagolWiki.png)
 
-\pagebreak
+
 
 Unter "Seiten" sind alle zugehörigen Wiki-Seiten aufgelistet:
 
@@ -39,13 +36,13 @@ Mit "Neu" wird eine neue Wiki-Seite erstellt. Sie müssen einen Namen für die S
 
 ![Smeagol Wiki-Seite anlegen](figures/smeagol/SmeagolWikiNeueSeite.png)
 
-\pagebreak
+
 
 Unter "Umbenennen" können Sie die aktuell ausgewählte Seite umbenennen. Dafür geben Sie den neuen Namen an und bestätigen mit "OK".
 
 ![Smeagol Wiki-Seite umbenennen](figures/smeagol/SmeagolWikiSeiteUmbenennen.png)
 
-\pagebreak
+
 
 Über "Löschen" können Seiten wieder gelöscht werden.
 
@@ -55,7 +52,7 @@ Unter "Bearbeiten" öffnet sich der Editor und Sie können die Seite direkt im B
 
 ![Smeagol Wiki Editor](figures/smeagol/SmeagolEditor.png)
 
-\pagebreak
+
 
 In der Versionsübersicht werden alle Änderungen der gerade ausgewählten Wiki-Seite angezeigt.
 
