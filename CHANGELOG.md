@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 * Updates the appearance of tables inside the markdown editor (#117)
 
+### Fixed
+* Invalid pagename in new and rename page dialogue (#120)
+
 ## [v1.0.0-1] - 2021-03-22
 ### Added
 * Generate a table of contents on each wiki page (#113)
