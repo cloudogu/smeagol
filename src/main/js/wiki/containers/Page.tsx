@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { useEditPage, useCreatePage, usePage, useRenamePage, useDeletePage, useRestorePage } from "../hooks/page";
+import { useCreatePage, useDeletePage, useEditPage, usePage, useRenamePage, useRestorePage } from "../hooks/page";
 import { useWiki } from "../hooks/wiki";
 import PageViewer from "../components/PageViewer";
 import * as queryString from "query-string";
@@ -10,6 +10,7 @@ import WikiHeader from "../components/WikiHeader";
 import WikiNotFoundError from "../components/WikiNotFoundError";
 import WikiLoadingPage from "../components/WikiLoadingPage";
 import WikiAlertPage from "../components/WikiAlertPage";
+import { useRepository } from "../../repository/hooks/useRepository";
 
 type Params = {
   repository: string;
@@ -29,6 +30,10 @@ const Page: FC<Props> = (props) => {
     props.history.push(`/${repository}/${branch}/${pagePath}`);
   };
 
+  const pushBranchState = (branchName: string, pagePath: string) => {
+    props.history.push(`/${repository}/${branchName}/${pagePath}`);
+  };
+
   const pushLandingPageState = () => {
     pushPageState(wikiQuery.data.landingPage);
   };
@@ -39,6 +44,7 @@ const Page: FC<Props> = (props) => {
 
   const pageQuery = usePage(repository, branch, path, getCommitParameter(props));
   const wikiQuery = useWiki(repository, branch);
+  const repositoryQuery = useRepository(repository);
 
   const editPageMutation = useEditPage(repository, branch, path);
   const deletePageMutation = useDeletePage(repository, branch, path, pushLandingPageState);
@@ -78,6 +84,7 @@ const Page: FC<Props> = (props) => {
     createPageMutation.isLoading ||
     renamePageMutation.isLoading ||
     deletePageMutation.isLoading ||
+    repositoryQuery.isLoading ||
     restorePageMutation.isLoading;
 
   let wikiHeader: JSX.Element;
@@ -99,7 +106,7 @@ const Page: FC<Props> = (props) => {
   if (isLoading) {
     return <WikiLoadingPage />;
   }
-  if (pageQuery.error || wikiQuery.error) {
+  if (pageQuery.error || wikiQuery.error || repositoryQuery.error) {
     if (pageQuery.error === PAGE_NOT_FOUND_ERROR) {
       return (
         <div>
@@ -124,9 +131,15 @@ const Page: FC<Props> = (props) => {
         </>
       );
     }
+
+    if (repositoryQuery.error) {
+      return <WikiAlertPage i18nKey={"error_in_repository_query_for_branches_data"} />;
+    }
+    // any other errors are caught here
     return <WikiAlertPage i18nKey={"page_failed_to_fetch"} />;
   }
-  if (!pageQuery.data || !wikiQuery.data) {
+  // no error but no data
+  if (!pageQuery.data || !wikiQuery.data || !repositoryQuery.data) {
     return (
       <div>
         <h1>Smeagol</h1>
@@ -176,20 +189,29 @@ const Page: FC<Props> = (props) => {
     }
   }
 
+  if (repositoryQuery.isError) {
+    return <WikiAlertPage i18nKey={"could_not_fetch_branch_info"} />;
+  }
+
   return (
-    <div>
-      {wikiHeader}
-      <PageViewer
-        page={pageQuery.data}
-        wiki={wiki}
-        onDelete={deletePage}
-        onHome={pushLandingPageState}
-        onMove={onMove}
-        pagesLink={pagesLink}
-        historyLink={historyLink}
-        onRestore={onRestore}
-      />
-    </div>
+    <>
+      <div>
+        {wikiHeader}
+        <PageViewer
+          page={pageQuery.data}
+          wiki={wiki}
+          onDelete={deletePage}
+          onHome={pushLandingPageState}
+          onMove={onMove}
+          pagesLink={pagesLink}
+          historyLink={historyLink}
+          onRestore={onRestore}
+          pushBranchStateFunction={pushBranchState}
+          branch={branch}
+          branches={repositoryQuery.data._embedded.branches}
+        />
+      </div>
+    </>
   );
 };
 export default Page;
