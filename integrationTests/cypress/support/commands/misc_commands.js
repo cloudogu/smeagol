@@ -44,7 +44,7 @@ const logout = () => {
  * Clicks the button of the warp menu
  */
 const clickWarpMenuButton = () => {
-    cy.get('a[id="warp-menu-warpbtn"]').click()
+    cy.get('button[id="warp-menu-warpbtn"]').click()
 }
 
 /**

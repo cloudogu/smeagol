@@ -3,6 +3,7 @@ import PageContent from "./PageContent";
 import PageHeader from "./PageHeader";
 import PageFooter from "./PageFooter";
 import TableOfContents from "./TableOfContents";
+import { Branch } from "../../repository/types/repositoryDto";
 
 type Props = {
   page: any;
@@ -13,11 +14,27 @@ type Props = {
   onHome: () => void;
   onMove: (target: string) => void;
   onRestore: (pagePath: string, commit: string) => void;
+  pushBranchStateFunction: (branchName: string, pagePath: string) => void;
+  branch: string;
+  branches: Branch[];
 };
 
 class PageViewer extends React.Component<Props> {
   render() {
-    const { page, wiki, onDelete, onHome, onMove, pagesLink, historyLink, onRestore } = this.props;
+    const {
+      page,
+      wiki,
+      onDelete,
+      onHome,
+      onMove,
+      pagesLink,
+      historyLink,
+      onRestore,
+      pushBranchStateFunction,
+      branch,
+      branches
+    } = this.props;
+
     return (
       <div>
         <PageHeader
@@ -29,6 +46,9 @@ class PageViewer extends React.Component<Props> {
           onHomeClick={onHome}
           onOkMoveClick={onMove}
           onRestoreClick={onRestore}
+          pushBranchStateFunction={pushBranchStateFunction}
+          branch={branch}
+          branches={branches}
         />
         <TableOfContents page={page} />
         <PageContent page={page} />

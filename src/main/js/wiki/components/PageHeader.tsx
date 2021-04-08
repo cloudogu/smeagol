@@ -6,6 +6,8 @@ import PageNameForm from "./PageNameForm";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import ConfirmModal from "./ConfirmModal";
+import BranchDropdown from "./BranchDropdown";
+import { Branch } from "../../repository/types/repositoryDto";
 
 const styles = {
   header: {
@@ -27,6 +29,9 @@ type Props = {
   search: (arg0: string) => void;
   history: any;
   classes: any;
+  branch: string;
+  branches: Branch[];
+  pushBranchStateFunction: (branchName: string, pagePath: string) => void;
 };
 
 type State = {
@@ -115,7 +120,7 @@ class PageHeader extends React.Component<Props, State> {
   }
 
   render() {
-    const { page, wiki, classes, onDelete, historyLink } = this.props;
+    const { page, wiki, classes, onDelete, historyLink, branch, branches, pushBranchStateFunction } = this.props;
 
     const pathWithoutRoot = this.getPagePathWithoutRootDirectory(page, wiki);
 
@@ -178,17 +183,26 @@ class PageHeader extends React.Component<Props, State> {
       />
     );
 
+    const branchDropdown = (
+      <BranchDropdown
+        page={page}
+        repository={this.props.wiki.repository}
+        pushBranchStateFunction={pushBranchStateFunction}
+        branch={branch}
+        branches={branches}
+      />
+    );
+
     return (
       <div className={classes.header}>
-        <div className={classNames(classes.actions, "row")}>
-          <div className="col-xs-9">
-            {createButton}
-            {editButton}
-            {moveButton}
-            {historyButton}
-            {deleteButton}
-            {restoreButton}
-          </div>
+        <div className={classNames(classes.actions, classes.row)}>
+          {createButton}
+          {editButton}
+          {moveButton}
+          {historyButton}
+          {deleteButton}
+          {restoreButton}
+          {branchDropdown}
         </div>
         {createForm}
         {moveForm}
