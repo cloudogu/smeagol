@@ -1,5 +1,6 @@
 {
   "repositories_failed_to_fetch": "Die Repositories konnten nicht geladen werden.",
+  "error_in_repository_query_for_branches_data": "Die Branch Informationen für dieses Repository konnten nicht geladen werden.",
   "missing_smeagol_plugin": "Die Repositories konnten nicht geladen werden. Es ist wahrscheinlich, dass im SCM-Manager das Plugin Smeagol Integration nicht installiert wurde.",
   "display_repositories_without_wiki": "Repositories ohne Wiki anzeigen",
   "branches_failed_to_fetch": "Das Repository konnte nicht geladen werden",

@@ -1,5 +1,6 @@
 import { apiClient } from "../../apiclient";
 import { QueryClient, useMutation, UseMutationResult, useQuery, useQueryClient, UseQueryResult } from "react-query";
+import { PageDto } from "../types/pageDto";
 
 function createPageUrl(repositoryId: string, branch: string, path: string, commit: string) {
   let url = `/repositories/${repositoryId}/branches/${branch}/pages/${path}`;
@@ -9,9 +10,9 @@ function createPageUrl(repositoryId: string, branch: string, path: string, commi
   return url;
 }
 
-export function usePage(repository: string, branch: string, path: string, commit: string): UseQueryResult {
+export function usePage(repository: string, branch: string, path: string, commit: string): UseQueryResult<PageDto> {
   const url = createPageUrl(repository, branch, path, commit);
-  return useQuery(["page", { repository: repository, branch: branch, path: path, commit: commit }], () =>
+  return useQuery<PageDto>(["page", { repository: repository, branch: branch, path: path, commit: commit }], () =>
     apiClient.get(url).then((response) => response.json())
   );
 }
