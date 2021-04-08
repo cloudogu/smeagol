@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 * On every doc-page the user can now change the branch (#123).
 
+### Fixed
+* The test coverage is now displayed correctly in SonarQube. (#116)
+
 ## [v1.0.1-1] - 2021-03-25
 ### Changed
 * Updates the appearance of tables inside the markdown editor (#117)

@@ -132,7 +132,7 @@
             <artifactId>activation</artifactId>
             <version>1.1.1</version>
         </dependency>
-        
+
         <!-- util -->
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -334,6 +334,13 @@
                                 <id>agent-for-it</id>
                                 <goals>
                                     <goal>prepare-agent-integration</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>jacoco-report</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>report</goal>
                                 </goals>
                             </execution>
                         </executions>
