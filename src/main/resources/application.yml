@@ -1,6 +1,6 @@
 server:
+  port: 8080
   servlet:
-    port: 8080
     contextPath: /
     session:
       timeout: 7200

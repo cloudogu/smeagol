@@ -10,10 +10,18 @@ function createPageUrl(repositoryId: string, branch: string, path: string, commi
   return url;
 }
 
-export function usePage(repository: string, branch: string, path: string, commit: string): UseQueryResult<PageDto> {
+export function usePage(
+  repository: string,
+  branch: string,
+  path: string,
+  commit: string,
+  refetchOnFocus = true
+): UseQueryResult<PageDto> {
   const url = createPageUrl(repository, branch, path, commit);
-  return useQuery<PageDto>(["page", { repository: repository, branch: branch, path: path, commit: commit }], () =>
-    apiClient.get(url).then((response) => response.json())
+  return useQuery<PageDto>(
+    ["page", { repository: repository, branch: branch, path: path, commit: commit }],
+    () => apiClient.get(url).then((response) => response.json()),
+    { refetchOnWindowFocus: refetchOnFocus }
   );
 }
 
