@@ -2,6 +2,8 @@ import React from "react";
 import MarkdownEditor from "./MarkdownEditor";
 
 type Props = {
+  repository: string;
+  branch: string;
   path: string;
   content: string;
   onSave: (...args: Array<any>) => any;
@@ -10,10 +12,17 @@ type Props = {
 
 class PageEditor extends React.Component<Props> {
   render() {
-    const { path, content, onSave, onAbort } = this.props;
+    const { repository, branch, path, content, onSave, onAbort } = this.props;
     return (
       <div>
-        <MarkdownEditor path={path} content={content} onSave={onSave} onAbortClick={onAbort} />
+        <MarkdownEditor
+          repository={repository}
+          branch={branch}
+          path={path}
+          content={content}
+          onSave={onSave}
+          onAbortClick={onAbort}
+        />
       </div>
     );
   }

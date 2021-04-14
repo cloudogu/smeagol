@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.2.0-1] - 2021-04-14
+### Added
+* Option to restore unsaved changes (#125)
+* Support for `main` branches
+
 ## [v1.1.0-1] - 2021-04-08
 ### Added
 * On every doc-page the user can now change the branch (#123).

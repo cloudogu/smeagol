@@ -15,7 +15,11 @@ type Props = {
 // followed by develop the rest should be ordered by its name
 export function orderBranches(branches) {
   branches.sort((a, b) => {
-    if (a.name === "master" && b.name !== "master") {
+    if (a.name === "main" && b.name !== "main") {
+      return -20;
+    } else if (a.name !== "main" && b.name === "main") {
+      return 20;
+    } else if (a.name === "master" && b.name !== "master") {
       return -10;
     } else if (a.name !== "master" && b.name === "master") {
       return 10;
