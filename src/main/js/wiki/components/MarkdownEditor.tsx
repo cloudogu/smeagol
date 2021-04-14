@@ -20,6 +20,9 @@ import "highlight.js/styles/default.css";
 import ActionButton from "./ActionButton";
 import CommitForm from "./CommitForm";
 import { withRouter } from "react-router-dom";
+import ConfirmModal from "./ConfirmModal";
+
+export const LOCAL_STORAGE_UNSAVED_CHANGES_KEY = "unsaved-changes";
 
 const styles = {
   action: {
@@ -40,23 +43,31 @@ type Props = {
   history: any;
   classes: any;
   content: string;
+  repository: string;
+  branch: string;
   path: string;
   onAbortClick: () => void;
 };
 
 type State = {
   showCommitForm: boolean;
+  unsavedChanges: string;
 };
 
 class MarkdownEditor extends Component<Props, State> {
+  private editor: Editor.factory;
+  private ignoreUnsavedChanges = false;
+
   constructor(props) {
     super(props);
     this.state = {
-      showCommitForm: false
+      showCommitForm: false,
+      unsavedChanges: null
     };
   }
 
   componentDidMount() {
+    this.checkForUnsavedChangesInLocalStorage();
     this.editor = new Editor.factory({
       el: this.editorNode,
       height: "640px",
@@ -76,6 +87,10 @@ class MarkdownEditor extends Component<Props, State> {
         "history"
       ]
     });
+  }
+
+  componentWillUnmount() {
+    this.putUnsavedChangesInLocalStorage();
   }
 
   commit = () => {
@@ -105,7 +120,7 @@ class MarkdownEditor extends Component<Props, State> {
   };
 
   render() {
-    const { classes, path, onAbortClick } = this.props;
+    const { classes, path } = this.props;
     const defaultMessage = "Updated " + path + " (smeagol)";
 
     return (
@@ -113,7 +128,7 @@ class MarkdownEditor extends Component<Props, State> {
         <div className={this.props.classes.markdownEditor} ref={(ref) => (this.editorNode = ref)} />
         <div className={classes.action}>
           <ActionButton i18nKey="markdown-editor_save" type="primary" onClick={this.commit} />
-          <ActionButton i18nKey="markdown-editor_abort" onClick={onAbortClick} />
+          <ActionButton i18nKey="markdown-editor_abort" onClick={this.onAbortEditor} />
         </div>
         <CommitForm
           defaultMessage={defaultMessage}
@@ -121,9 +136,62 @@ class MarkdownEditor extends Component<Props, State> {
           onSave={this.save}
           onAbort={this.abortCommit}
         />
+        <ConfirmModal
+          labelPrefix="unsaved_changes"
+          show={this.state.unsavedChanges != null}
+          onOk={this.onRestoreUnsavedChanges}
+          onAbortClick={this.onAbortUnsavedChanges}
+        />
       </div>
     );
   }
+  onAbortEditor = () => {
+    this.ignoreUnsavedChanges = true;
+    this.props.onAbortClick();
+  };
+
+  onRestoreUnsavedChanges = () => {
+    this.editor.setValue(this.state.unsavedChanges);
+    localStorage.removeItem(LOCAL_STORAGE_UNSAVED_CHANGES_KEY);
+    this.setState({ unsavedChanges: null });
+  };
+
+  onAbortUnsavedChanges = () => {
+    localStorage.removeItem(LOCAL_STORAGE_UNSAVED_CHANGES_KEY);
+    this.setState({ unsavedChanges: null });
+  };
+
+  putUnsavedChangesInLocalStorage = () => {
+    const content = this.editor.getMarkdown();
+    if (content != this.props.content && !this.ignoreUnsavedChanges) {
+      // The local storage is limited in space (usually around 5MB). In cases where a page exceeds this limit, an error can occur.
+      try {
+        localStorage.setItem(
+          LOCAL_STORAGE_UNSAVED_CHANGES_KEY,
+          JSON.stringify({
+            item: { repository: this.props.repository, branch: this.props.branch, path: this.props.path },
+            content: content
+          })
+        );
+      } catch (e) {
+        console.log("Failed to set local storage:" + e);
+      }
+    }
+  };
+
+  checkForUnsavedChangesInLocalStorage = () => {
+    const localContent = localStorage.getItem(LOCAL_STORAGE_UNSAVED_CHANGES_KEY);
+    const localContentJSON = JSON.parse(localContent);
+    if (
+      localContentJSON &&
+      localContentJSON["item"].repository === this.props.repository &&
+      localContentJSON["item"].branch === this.props.branch &&
+      localContentJSON["item"].path === this.props.path &&
+      this.props.content != localContentJSON.content
+    ) {
+      this.setState({ unsavedChanges: localContentJSON.content });
+    }
+  };
 }
 
 export default withRouter(injectSheet(styles)(MarkdownEditor));

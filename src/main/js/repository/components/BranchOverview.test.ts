@@ -16,12 +16,16 @@ test("orderBranches", () => {
     },
     {
       name: "develop"
+    },
+    {
+      name: "main"
     }
   ];
 
   orderBranches(branches);
 
   let i = 0;
+  expect(branches[i++].name).toBe("main");
   expect(branches[i++].name).toBe("master");
   expect(branches[i++].name).toBe("develop");
   expect(branches[i++].name).toBe("feature/one");

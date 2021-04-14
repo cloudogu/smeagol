@@ -11,6 +11,7 @@ import WikiNotFoundError from "../components/WikiNotFoundError";
 import WikiLoadingPage from "../components/WikiLoadingPage";
 import WikiAlertPage from "../components/WikiAlertPage";
 import { useRepository } from "../../repository/hooks/useRepository";
+import { LOCAL_STORAGE_UNSAVED_CHANGES_KEY } from "../components/MarkdownEditor";
 
 type Params = {
   repository: string;
@@ -42,15 +43,26 @@ const Page: FC<Props> = (props) => {
   const pageName = getPageNameFromPath(path);
   const directory = getDirectoryFromPath(path);
 
-  const pageQuery = usePage(repository, branch, path, getCommitParameter(props));
-  const wikiQuery = useWiki(repository, branch);
-  const repositoryQuery = useRepository(repository);
+  const refetch = !isEditMode(props);
+  const pageQuery = usePage(repository, branch, path, getCommitParameter(props), refetch);
+  const wikiQuery = useWiki(repository, branch, refetch);
+  const repositoryQuery = useRepository(repository, refetch);
 
   const editPageMutation = useEditPage(repository, branch, path);
   const deletePageMutation = useDeletePage(repository, branch, path, pushLandingPageState);
   const createPageMutation = useCreatePage(repository, branch, path);
   const renamePageMutation = useRenamePage(repository, branch, path, pushPageState);
   const restorePageMutation = useRestorePage(repository, branch, path, pushPageState);
+
+  if (editPageMutation.isSuccess) {
+    localStorage.removeItem(LOCAL_STORAGE_UNSAVED_CHANGES_KEY);
+    editPageMutation.reset();
+  }
+
+  if (createPageMutation.isSuccess) {
+    localStorage.removeItem(LOCAL_STORAGE_UNSAVED_CHANGES_KEY);
+    createPageMutation.reset();
+  }
 
   const deletePage = () => {
     // TODO i18n
@@ -112,6 +124,8 @@ const Page: FC<Props> = (props) => {
         <div>
           {wikiHeader}
           <PageEditor
+            repository={repository}
+            branch={branch}
             path={path}
             content=""
             onSave={(message, content) => {
@@ -168,6 +182,8 @@ const Page: FC<Props> = (props) => {
       <div>
         {wikiHeader}
         <PageEditor
+          repository={repository}
+          branch={branch}
           path={pageQuery.data.path}
           content={pageQuery.data.content}
           onSave={(message, content) => {
