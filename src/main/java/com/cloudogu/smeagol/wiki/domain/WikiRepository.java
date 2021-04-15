@@ -1,5 +1,8 @@
 package com.cloudogu.smeagol.wiki.domain;
 
+import org.eclipse.jgit.api.errors.GitAPIException;
+
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -16,4 +19,6 @@ public interface WikiRepository {
      * @return wiki
      */
     Optional<Wiki> findById(WikiId id);
+
+    Wiki init(WikiId wikiId, Commit commit, WikiSettings settings) throws IOException, GitAPIException;
 }

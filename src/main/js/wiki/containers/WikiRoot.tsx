@@ -6,8 +6,9 @@ import WikiNotFoundError from "../components/WikiNotFoundError";
 import BackToRepositoriesButton from "../../BackToRepositoriesButton";
 import { match, withRouter } from "react-router";
 import { pathWithTrailingSlash } from "../../pathUtil";
-import { useWiki } from "../hooks/wiki";
+import { useInitWiki, useWiki } from "../hooks/wiki";
 import { PAGE_NOT_FOUND_ERROR } from "../../apiclient";
+import ActionButton from "../components/ActionButton";
 
 type Params = {
   repository: string;
@@ -18,17 +19,25 @@ type Props = {
   match: match<Params>;
 };
 const WikiRoot: FC<Props> = (props) => {
-  const { isLoading, error, data } = useWiki(props.match.params.repository, props.match.params.branch);
+  const wikiQuery = useWiki(props.match.params.repository, props.match.params.branch);
+  const initWikiMutation = useInitWiki(props.match.params.repository, props.match.params.branch);
 
   let child = <div />;
-  if (error === PAGE_NOT_FOUND_ERROR) {
-    child = <WikiNotFoundError />;
-  } else if (error) {
+  if (initWikiMutation.error) {
+    child = <I18nAlert i18nKey="init_smeagol_failed" />;
+  } else if (wikiQuery.error === PAGE_NOT_FOUND_ERROR) {
+    child = (
+      <div>
+        <WikiNotFoundError />
+        <ActionButton i18nKey="init_smeagol" type="primary" onClick={initWikiMutation.mutate} />
+      </div>
+    );
+  } else if (wikiQuery.error) {
     child = <I18nAlert i18nKey="wikiroot_failed_to_fetch" />;
-  } else if (isLoading) {
+  } else if (wikiQuery.isLoading || initWikiMutation.isLoading) {
     child = <Loading />;
-  } else if (data) {
-    child = <Redirect to={pathWithTrailingSlash(props.match.url) + data.landingPage} />;
+  } else if (wikiQuery.data) {
+    child = <Redirect to={pathWithTrailingSlash(props.match.url) + wikiQuery.data.landingPage} />;
   }
 
   return (
