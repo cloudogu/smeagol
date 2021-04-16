@@ -19,7 +19,7 @@ export function useEditWiki(repository: string, branch: string): UseMutationResu
   return useMutation(
     ["editWiki", url],
     (data: editParams) => {
-      return apiClient.post(url, data);
+      return apiClient.patch(url, data);
     },
     {
       onSuccess: () => {

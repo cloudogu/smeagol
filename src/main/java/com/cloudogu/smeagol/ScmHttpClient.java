@@ -121,7 +121,6 @@ public class ScmHttpClient {
         return headers;
     }
 
-    @VisibleForTesting
     public void invalidateCache() {
         cache.invalidateAll();
     }

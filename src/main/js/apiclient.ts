@@ -61,6 +61,10 @@ class ApiClient {
     return this.httpRequestWithJSONBody(url, payload, "POST");
   }
 
+  patch(url: string, payload: any) {
+    return this.httpRequestWithJSONBody(url, payload, "PATCH");
+  }
+
   delete(url: string, payload: any) {
     return this.httpRequestWithJSONBody(url, payload, "DELETE");
   }

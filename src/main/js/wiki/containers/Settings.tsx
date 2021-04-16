@@ -5,6 +5,8 @@ import WikiHeader from "../components/WikiHeader";
 import { useEditWiki, useWiki } from "../hooks/wiki";
 import WikiLoadingPage from "../components/WikiLoadingPage";
 import ActionButton from "../components/ActionButton";
+import WikiNotFoundError from "../components/WikiNotFoundError";
+import WikiAlertPage from "../components/WikiAlertPage";
 
 type Params = {
   repository: string;
@@ -22,14 +24,31 @@ const Settings: FC<Props> = (props) => {
   const { repository, branch } = props.match.params;
   const wikiQuery = useWiki(repository, branch);
   const editWikiMutation = useEditWiki(repository, branch);
-  const [rootDir, setRootDir] = useState("docs");
-  const [landingPage, setLandingPage] = useState("Home");
 
-  if (wikiQuery.isLoading) {
+  const [rootDir, setRootDir] = useState("");
+  const [landingPage, setLandingPage] = useState("");
+
+  if (wikiQuery.isLoading || editWikiMutation.isLoading) {
     return <WikiLoadingPage />;
   }
 
-  // TODO: wikiQuery error / no data
+  if (wikiQuery.error) {
+    return <WikiNotFoundError />;
+  }
+
+  if (editWikiMutation.error) {
+    return <WikiAlertPage i18nKey={"wiki_failed_to_edit"} />;
+  }
+
+  if (wikiQuery.data && !rootDir) {
+    setRootDir(wikiQuery.data.directory);
+  }
+
+  if (wikiQuery.data && !landingPage) {
+    const currentLandingPage = wikiQuery.data.landingPage.substr(wikiQuery.data.directory.length + 1);
+    setLandingPage(currentLandingPage);
+  }
+
   return (
     <div>
       <WikiHeader branch={branch} repository={repository} wiki={wikiQuery.data} />
@@ -51,7 +70,7 @@ const Settings: FC<Props> = (props) => {
         value={landingPage}
         onChange={(event) => setLandingPage(event.target.value)}
       />
-
+      <hr />
       <div>
         <ActionButton
           i18nKey="settings_save"

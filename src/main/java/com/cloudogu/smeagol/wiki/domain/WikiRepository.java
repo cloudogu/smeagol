@@ -21,4 +21,6 @@ public interface WikiRepository {
     Optional<Wiki> findById(WikiId id);
 
     Wiki init(WikiId wikiId, Commit commit, WikiSettings settings) throws IOException, GitAPIException;
+
+    void save(WikiId wikiId, Commit commit, WikiSettings settings) throws IOException, GitAPIException;
 }

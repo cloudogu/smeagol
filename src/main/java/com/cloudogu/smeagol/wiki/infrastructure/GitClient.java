@@ -252,7 +252,7 @@ public class GitClient implements AutoCloseable {
         return !head.equals(oldHead);
     }
 
-    private void createClone() throws GitAPIException, IOException {
+    public void createClone() throws GitAPIException, IOException {
         String branch = wiki.getId().getBranch();
         LOG.info("clone repository {} to {}", wiki.getRepositoryUrl(), repository);
         gitRepository = Git.cloneRepository()

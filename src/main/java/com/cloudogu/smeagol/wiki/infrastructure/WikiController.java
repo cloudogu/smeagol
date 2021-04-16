@@ -1,6 +1,7 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.*;
+import com.cloudogu.smeagol.wiki.usecase.EditWikiCommand;
 import com.cloudogu.smeagol.wiki.usecase.InitWikiCommand;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.google.common.base.Strings;
@@ -44,23 +45,43 @@ public class WikiController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<WikiResource> wiki(
+    public ResponseEntity<WikiResource> initWiki(
         HttpServletRequest request,
         @PathVariable("repositoryId") String repositoryId,
         @PathVariable("branch") String branch,
-        @RequestBody PostRequestPayload payload
+        @RequestBody WikiRequestPayload payload
     ) throws URISyntaxException {
         WikiId id = new WikiId(repositoryId, branch);
         WikiSettings settings = new WikiSettings();
         settings.setLandingPage(payload.getLandingPage());
         settings.setDirectory(payload.getRootDir());
-        InitWikiCommand command = new InitWikiCommand(id, Message.valueOf("Init smeagol wiki"), settings);
+        InitWikiCommand command = new InitWikiCommand(id, Message.valueOf("Initialize wiki (smeagol)"), settings);
         commandBus.execute(command);
         return ResponseEntity.created(new URI(request.getRequestURI())).build();
     }
 
+    @RequestMapping(method = RequestMethod.PATCH)
+    public ResponseEntity<WikiResource> editWiki(
+        HttpServletRequest request,
+        @PathVariable("repositoryId") String repositoryId,
+        @PathVariable("branch") String branch,
+        @RequestBody WikiRequestPayload payload
+    ) throws URISyntaxException {
+        WikiId id = new WikiId(repositoryId, branch);
+        Optional<Wiki> wiki = repository.findById(id);
+        if (wiki.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        WikiSettings settings = new WikiSettings();
+        settings.setLandingPage(payload.getLandingPage());
+        settings.setDirectory(payload.getRootDir());
+        EditWikiCommand command = new EditWikiCommand(id, Message.valueOf("Change settings of wiki (smeagol)"), settings);
+        commandBus.execute(command);
+        return ResponseEntity.noContent().build();
+    }
+
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-    public static class PostRequestPayload {
+    public static class WikiRequestPayload {
         private String landingPage;
         private String rootDir;
 

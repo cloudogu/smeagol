@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.nodes.Tag;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,11 +71,20 @@ public class ScmWikiRepository implements WikiRepository {
             RepositoryName.valueOf(repository.get().name), settings.getDirectory(), settings.getLandingPage());
         EventDelayer eventDelayer = new EventDelayer(this.publisher);
         GitClient gitClient = new GitClient(eventDelayer, this.directoryResolver, this.strategy, account, newWiki);
-        gitClient.refresh();
+        gitClient.createClone();
         try {
             File file = gitClient.file(SETTINGS_FILE);
-            // TODO: set correct file content
-            Files.asCharSink(file, Charsets.UTF_8).write("");
+            if (file.exists()) {
+                throw new FailedToInitWikiException(wikiId, settings);
+            }
+            WikiSettingsFile settingsFile = new WikiSettingsFile();
+            settingsFile.setDirectory(settings.getDirectory().getValue());
+            settingsFile.setLandingPage(settings.getLandingPage().getValue());
+            DumperOptions dumperOptions = new DumperOptions();
+            dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+            Yaml yaml = new Yaml(dumperOptions);
+            String fileContent = yaml.dumpAs(settingsFile, Tag.MAP, null);
+            Files.asCharSink(file, Charsets.UTF_8).write(fileContent);
             gitClient.commit(
                 SETTINGS_FILE,
                 commit.getAuthor().getDisplayName().getValue(),
@@ -87,9 +98,52 @@ public class ScmWikiRepository implements WikiRepository {
             throw new FailedToInitWikiException(wikiId, settings);
         }
 
+        // invalidate cache since the wiki response changes
+        this.scmHttpClient.invalidateCache();
         eventDelayer.forwardEvents();
 
         return newWiki;
+    }
+
+    @Override
+    public void save(WikiId wikiId, Commit commit, WikiSettings settings) throws IOException, GitAPIException {
+        Optional<RepositoryDTO> repository = getRepository(wikiId);
+        if (repository.isEmpty()) {
+            throw new RuntimeException("");
+        }
+        Account account = accountService.get();
+        Optional<Wiki> wiki = findById(wikiId);
+        if (wiki.isEmpty()) {
+            throw new RuntimeException("");
+        }
+        GitClient gitClient = new GitClient(this.publisher, this.directoryResolver, this.strategy, account, wiki.get());
+        gitClient.refresh();
+        try {
+            File file = gitClient.file(SETTINGS_FILE);
+            if (!file.exists()) {
+                throw new RuntimeException("");
+            }
+            WikiSettingsFile settingsFile = new WikiSettingsFile();
+            settingsFile.setDirectory(settings.getDirectory().getValue());
+            settingsFile.setLandingPage(settings.getLandingPage().getValue());
+            DumperOptions dumperOptions = new DumperOptions();
+            dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+            Yaml yaml = new Yaml(dumperOptions);
+            String fileContent = yaml.dumpAs(settingsFile, Tag.MAP, null);
+            Files.asCharSink(file, Charsets.UTF_8).write(fileContent);
+            gitClient.commit(
+                SETTINGS_FILE,
+                commit.getAuthor().getDisplayName().getValue(),
+                commit.getAuthor().getEmail().getValue(),
+                commit.getMessage().getValue()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("");
+        }
+
+        // invalidate cache since the wiki response changes
+        this.scmHttpClient.invalidateCache();
     }
 
     private Wiki createWiki(WikiId id, RepositoryDTO repository, WikiSettingsFile settings) {

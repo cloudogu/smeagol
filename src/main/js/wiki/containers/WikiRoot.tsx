@@ -9,6 +9,7 @@ import { pathWithTrailingSlash } from "../../pathUtil";
 import { useInitWiki, useWiki } from "../hooks/wiki";
 import { PAGE_NOT_FOUND_ERROR } from "../../apiclient";
 import ActionButton from "../components/ActionButton";
+import InitWikiNote from "../components/InitWikiNote";
 
 type Params = {
   repository: string;
@@ -24,18 +25,19 @@ const WikiRoot: FC<Props> = (props) => {
 
   let child = <div />;
   if (initWikiMutation.error) {
-    child = <I18nAlert i18nKey="init_smeagol_failed" />;
+    child = <I18nAlert i18nKey="init_wiki_failed" />;
+  } else if (wikiQuery.isLoading || initWikiMutation.isLoading) {
+    child = <Loading />;
   } else if (wikiQuery.error === PAGE_NOT_FOUND_ERROR) {
     child = (
-      <div>
+      <>
         <WikiNotFoundError />
-        <ActionButton i18nKey="init_smeagol" type="primary" onClick={initWikiMutation.mutate} />
-      </div>
+        <InitWikiNote />
+        <ActionButton i18nKey="init_wiki" type="primary" onClick={initWikiMutation.mutate} />
+      </>
     );
   } else if (wikiQuery.error) {
     child = <I18nAlert i18nKey="wikiroot_failed_to_fetch" />;
-  } else if (wikiQuery.isLoading || initWikiMutation.isLoading) {
-    child = <Loading />;
   } else if (wikiQuery.data) {
     child = <Redirect to={pathWithTrailingSlash(props.match.url) + wikiQuery.data.landingPage} />;
   }
