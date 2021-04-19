@@ -1,14 +1,12 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import com.cloudogu.smeagol.Account;
-import com.cloudogu.smeagol.AccountService;
 import com.cloudogu.smeagol.ScmHttpClient;
 import com.cloudogu.smeagol.ScmHttpClientResponse;
 import com.cloudogu.smeagol.wiki.domain.*;
 import com.cloudogu.smeagol.wiki.usecase.FailedToInitWikiException;
+import com.cloudogu.smeagol.wiki.usecase.FailedToSaveWikiException;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
 import com.google.common.io.Files;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -23,6 +21,7 @@ import org.yaml.snakeyaml.nodes.Tag;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -35,18 +34,14 @@ public class ScmWikiRepository implements WikiRepository {
     static final String SETTINGS_FILE = ".smeagol.yml";
 
     private final ScmHttpClient scmHttpClient;
-    private final DirectoryResolver directoryResolver;
-    private final AccountService accountService;
+    private final GitClientProviderForScmWikiRepository gitClientProvider;
     private final ApplicationEventPublisher publisher;
-    private final PullChangesStrategy strategy;
 
     @Autowired
-    public ScmWikiRepository(ScmHttpClient scmHttpClient, ApplicationEventPublisher publisher, PullChangesStrategy strategy, DirectoryResolver directoryResolver, AccountService accountService) {
+    public ScmWikiRepository(ScmHttpClient scmHttpClient, GitClientProviderForScmWikiRepository gitClientProvider, ApplicationEventPublisher publisher) {
         this.scmHttpClient = scmHttpClient;
-        this.directoryResolver = directoryResolver;
-        this.accountService = accountService;
+        this.gitClientProvider = gitClientProvider;
         this.publisher = publisher;
-        this.strategy = strategy;
     }
 
     @Override
@@ -61,41 +56,29 @@ public class ScmWikiRepository implements WikiRepository {
 
 
     @Override
-    public Wiki init(WikiId wikiId, Commit commit, WikiSettings settings) throws IOException, GitAPIException {
-        Optional<RepositoryDTO> repository = getRepository(wikiId);
-        if (repository.isEmpty()) {
-            throw new FailedToInitWikiException(wikiId, settings);
-        }
-        Account account = accountService.get();
-        Wiki newWiki = new Wiki(wikiId, repository.get().url, settings.getDisplayName(),
-            RepositoryName.valueOf(repository.get().name), settings.getDirectory(), settings.getLandingPage());
+    public Wiki init(WikiId wikiId, Commit commit, WikiSettings settings) {
+        RepositoryDTO repository = getRepository(wikiId)
+            .orElseThrow(() -> new FailedToInitWikiException("could not get repository"));
+        Wiki newWiki = new Wiki(wikiId, repository.url, settings.getDisplayName(),
+            RepositoryName.valueOf(repository.name), settings.getDirectory(), settings.getLandingPage());
         EventDelayer eventDelayer = new EventDelayer(this.publisher);
-        GitClient gitClient = new GitClient(eventDelayer, this.directoryResolver, this.strategy, account, newWiki);
-        gitClient.createClone();
+        GitClient gitClient = this.gitClientProvider.createGitClient(eventDelayer, newWiki);
+
         try {
+            gitClient.createClone();
             File file = gitClient.file(SETTINGS_FILE);
             if (file.exists()) {
-                throw new FailedToInitWikiException(wikiId, settings);
+                throw new FailedToInitWikiException("settings file already exists");
             }
-            WikiSettingsFile settingsFile = new WikiSettingsFile();
-            settingsFile.setDirectory(settings.getDirectory().getValue());
-            settingsFile.setLandingPage(settings.getLandingPage().getValue());
-            DumperOptions dumperOptions = new DumperOptions();
-            dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-            Yaml yaml = new Yaml(dumperOptions);
-            String fileContent = yaml.dumpAs(settingsFile, Tag.MAP, null);
-            Files.asCharSink(file, Charsets.UTF_8).write(fileContent);
-            gitClient.commit(
-                SETTINGS_FILE,
-                commit.getAuthor().getDisplayName().getValue(),
-                commit.getAuthor().getEmail().getValue(),
-                commit.getMessage().getValue()
-            );
+            writeSettingsToFile(gitClient, commit, settings, file);
         } catch (Exception e) {
-            e.printStackTrace();
-            // delete the local repository if the init failed
-            gitClient.deleteClone();
-            throw new FailedToInitWikiException(wikiId, settings);
+            try {
+                // delete the local repository if the init failed
+                gitClient.deleteClone();
+            } catch (Exception ee) {
+                throw new FailedToInitWikiException(ee.getMessage());
+            }
+            throw new FailedToInitWikiException(e.getMessage());
         }
 
         // invalidate cache since the wiki response changes
@@ -105,41 +88,41 @@ public class ScmWikiRepository implements WikiRepository {
         return newWiki;
     }
 
+    private void writeSettingsToFile(GitClient gitClient, Commit commit, WikiSettings settings, File file) throws IOException, GitAPIException {
+        WikiSettingsFile settingsFile = new WikiSettingsFile();
+        settingsFile.setDirectory(settings.getDirectory().getValue());
+        settingsFile.setLandingPage(settings.getLandingPage().getValue());
+        DumperOptions dumperOptions = new DumperOptions();
+        dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        Yaml yaml = new Yaml(dumperOptions);
+
+        String fileContent = yaml.dumpAs(settingsFile, Tag.MAP, null);
+        Files.asCharSink(file, StandardCharsets.UTF_8).write(fileContent);
+        gitClient.commit(
+            SETTINGS_FILE,
+            commit.getAuthor().getDisplayName().getValue(),
+            commit.getAuthor().getEmail().getValue(),
+            commit.getMessage().getValue()
+        );
+    }
+
     @Override
-    public void save(WikiId wikiId, Commit commit, WikiSettings settings) throws IOException, GitAPIException {
-        Optional<RepositoryDTO> repository = getRepository(wikiId);
-        if (repository.isEmpty()) {
-            throw new RuntimeException("");
+    public void save(WikiId wikiId, Commit commit, WikiSettings settings) {
+        if (getRepository(wikiId).isEmpty()) {
+            throw new FailedToSaveWikiException("could not get repository");
         }
-        Account account = accountService.get();
-        Optional<Wiki> wiki = findById(wikiId);
-        if (wiki.isEmpty()) {
-            throw new RuntimeException("");
-        }
-        GitClient gitClient = new GitClient(this.publisher, this.directoryResolver, this.strategy, account, wiki.get());
-        gitClient.refresh();
+        Wiki wiki = findById(wikiId).orElseThrow(() -> new FailedToSaveWikiException("could not find wiki"));
+        GitClient gitClient = this.gitClientProvider.createGitClient(this.publisher, wiki);
+
         try {
+            gitClient.refresh();
             File file = gitClient.file(SETTINGS_FILE);
             if (!file.exists()) {
-                throw new RuntimeException("");
+                throw new FailedToSaveWikiException("could not find settings file for wiki");
             }
-            WikiSettingsFile settingsFile = new WikiSettingsFile();
-            settingsFile.setDirectory(settings.getDirectory().getValue());
-            settingsFile.setLandingPage(settings.getLandingPage().getValue());
-            DumperOptions dumperOptions = new DumperOptions();
-            dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-            Yaml yaml = new Yaml(dumperOptions);
-            String fileContent = yaml.dumpAs(settingsFile, Tag.MAP, null);
-            Files.asCharSink(file, Charsets.UTF_8).write(fileContent);
-            gitClient.commit(
-                SETTINGS_FILE,
-                commit.getAuthor().getDisplayName().getValue(),
-                commit.getAuthor().getEmail().getValue(),
-                commit.getMessage().getValue()
-            );
+            writeSettingsToFile(gitClient, commit, settings, file);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("");
+            throw new FailedToSaveWikiException(e.getMessage());
         }
 
         // invalidate cache since the wiki response changes
@@ -259,14 +242,15 @@ public class ScmWikiRepository implements WikiRepository {
 
         }
 
+        @Override
+        public void publishEvent(Object o) {
+            queue.add((ApplicationEvent) o);
+        }
+
         public void forwardEvents() {
             for (ApplicationEvent event : queue) {
                 this.publisher.publishEvent(event);
             }
-        }
-
-        @Override
-        public void publishEvent(Object o) {
         }
     }
 }

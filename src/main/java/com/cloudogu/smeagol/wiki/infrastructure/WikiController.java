@@ -30,7 +30,7 @@ public class WikiController {
         this.commandBus = commandBus;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity<WikiResource> wiki(
         @PathVariable("repositoryId") String repositoryId,
         @PathVariable("branch") String branch
@@ -38,13 +38,11 @@ public class WikiController {
         WikiId id = new WikiId(repositoryId, branch);
 
         Optional<Wiki> wiki = repository.findById(id);
-        if (wiki.isPresent()) {
-            return ResponseEntity.ok(assembler.toResource(wiki.get()));
-        }
-        return ResponseEntity.notFound().build();
+        return wiki.map(value -> ResponseEntity.ok(assembler.toResource(value))).
+            orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<WikiResource> initWiki(
         HttpServletRequest request,
         @PathVariable("repositoryId") String repositoryId,
@@ -52,29 +50,25 @@ public class WikiController {
         @RequestBody WikiRequestPayload payload
     ) throws URISyntaxException {
         WikiId id = new WikiId(repositoryId, branch);
-        WikiSettings settings = new WikiSettings();
-        settings.setLandingPage(payload.getLandingPage());
-        settings.setDirectory(payload.getRootDir());
+        WikiSettings settings = new WikiSettings(null, payload.getRootDir(), payload.getLandingPage());
         InitWikiCommand command = new InitWikiCommand(id, Message.valueOf("Initialize wiki (smeagol)"), settings);
         commandBus.execute(command);
         return ResponseEntity.created(new URI(request.getRequestURI())).build();
     }
 
-    @RequestMapping(method = RequestMethod.PATCH)
+    @PatchMapping
     public ResponseEntity<WikiResource> editWiki(
         HttpServletRequest request,
         @PathVariable("repositoryId") String repositoryId,
         @PathVariable("branch") String branch,
         @RequestBody WikiRequestPayload payload
-    ) throws URISyntaxException {
+    ) {
         WikiId id = new WikiId(repositoryId, branch);
         Optional<Wiki> wiki = repository.findById(id);
         if (wiki.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        WikiSettings settings = new WikiSettings();
-        settings.setLandingPage(payload.getLandingPage());
-        settings.setDirectory(payload.getRootDir());
+        WikiSettings settings = new WikiSettings(null, payload.getRootDir(), payload.getLandingPage());
         EditWikiCommand command = new EditWikiCommand(id, Message.valueOf("Change settings of wiki (smeagol)"), settings);
         commandBus.execute(command);
         return ResponseEntity.noContent().build();

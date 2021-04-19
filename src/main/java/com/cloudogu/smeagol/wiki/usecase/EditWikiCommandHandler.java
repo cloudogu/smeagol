@@ -4,12 +4,8 @@ import com.cloudogu.smeagol.AccountService;
 import com.cloudogu.smeagol.wiki.domain.Commit;
 import com.cloudogu.smeagol.wiki.domain.WikiRepository;
 import de.triology.cb.CommandHandler;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 import static com.cloudogu.smeagol.wiki.usecase.Commits.createNewCommit;
 
@@ -19,13 +15,11 @@ import static com.cloudogu.smeagol.wiki.usecase.Commits.createNewCommit;
 @Component
 public class EditWikiCommandHandler implements CommandHandler<Void, EditWikiCommand> {
 
-    private final ApplicationEventPublisher publisher;
     private final WikiRepository repository;
     private final AccountService accountService;
 
     @Autowired
-    public EditWikiCommandHandler(ApplicationEventPublisher publisher, WikiRepository repository, AccountService accountService) {
-        this.publisher = publisher;
+    public EditWikiCommandHandler(WikiRepository repository, AccountService accountService) {
         this.repository = repository;
         this.accountService = accountService;
     }
@@ -33,12 +27,7 @@ public class EditWikiCommandHandler implements CommandHandler<Void, EditWikiComm
     @Override
     public Void handle(EditWikiCommand command) {
         Commit commit = createNewCommit(accountService, command.getMessage());
-        try {
-            repository.save(command.getWikiId(), commit, command.getSettings());
-        } catch (IOException | GitAPIException e) {
-            e.printStackTrace();
-            throw new RuntimeException("");
-        }
+        repository.save(command.getWikiId(), commit, command.getSettings());
         return null;
     }
 }

@@ -5,6 +5,12 @@ public class WikiSettings {
     private Path directory;
     private Path landingPage;
 
+    public WikiSettings(DisplayName displayName, Path directory, Path landingPage) {
+        this.displayName = displayName;
+        this.directory = directory;
+        this.landingPage = landingPage;
+    }
+
     public DisplayName getDisplayName() {
         return displayName;
     }
