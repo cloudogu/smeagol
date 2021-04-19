@@ -58,7 +58,6 @@ public class WikiController {
 
     @PatchMapping
     public ResponseEntity<WikiResource> editWiki(
-        HttpServletRequest request,
         @PathVariable("repositoryId") String repositoryId,
         @PathVariable("branch") String branch,
         @RequestBody WikiRequestPayload payload

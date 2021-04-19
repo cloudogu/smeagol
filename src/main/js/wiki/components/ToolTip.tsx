@@ -2,7 +2,7 @@ import React from "react";
 import classNames from "classnames";
 import injectSheet from "react-jss";
 import { OverlayTrigger } from "react-bootstrap";
-import InitWikiPopover from "./InitWikiPopover";
+import ToolTipPopover from "./ToolTipPopover";
 
 const styles = {
   help: {
@@ -11,11 +11,16 @@ const styles = {
   }
 };
 
-class InitWikiNote extends React.Component {
-  render() {
-    const { classes } = this.props;
+type Props = {
+  prefix: string;
+  classes: any;
+};
 
-    const popover = <InitWikiPopover />;
+class ToolTip extends React.Component<Props> {
+  render() {
+    const { classes, prefix } = this.props;
+
+    const popover = <ToolTipPopover prefix={prefix} />;
 
     return (
       <OverlayTrigger placement="bottom" overlay={popover} shouldUpdatePosition={true}>
@@ -25,4 +30,4 @@ class InitWikiNote extends React.Component {
   }
 }
 
-export default injectSheet(styles)(InitWikiNote);
+export default injectSheet(styles)(ToolTip);

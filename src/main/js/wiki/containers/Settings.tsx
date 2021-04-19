@@ -7,6 +7,7 @@ import WikiLoadingPage from "../components/WikiLoadingPage";
 import ActionButton from "../components/ActionButton";
 import WikiNotFoundError from "../components/WikiNotFoundError";
 import WikiAlertPage from "../components/WikiAlertPage";
+import ToolTip from "../components/ToolTip";
 
 type Params = {
   repository: string;
@@ -56,14 +57,14 @@ const Settings: FC<Props> = (props) => {
       <div className="page-header">
         <h1>{props.t("settings_heading")}</h1>
       </div>
-      <label>{props.t("settings_rootDir_label")}</label>
+      <label>{props.t("settings_rootDir_label")}</label> <ToolTip prefix={"settings-rootDir"} />
       <input
         type="text"
         className="form-control"
         value={rootDir}
         onChange={(event) => setRootDir(event.target.value)}
       />
-      <label>{props.t("settings_landingPage_label")}</label>
+      <label>{props.t("settings_landingPage_label")}</label> <ToolTip prefix={"settings-landingPage"} />
       <input
         type="text"
         className="form-control"

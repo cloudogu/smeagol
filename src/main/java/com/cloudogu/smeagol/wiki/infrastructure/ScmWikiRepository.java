@@ -229,7 +229,9 @@ public class ScmWikiRepository implements WikiRepository {
 
     private static class EventDelayer implements ApplicationEventPublisher {
 
-        ArrayList<ApplicationEvent> queue = new ArrayList<>();
+        ArrayList<ApplicationEvent> eventQueue = new ArrayList<>();
+        ArrayList<Object> objectQueue = new ArrayList<>();
+
         ApplicationEventPublisher publisher;
 
         public EventDelayer(ApplicationEventPublisher publisher) {
@@ -238,18 +240,21 @@ public class ScmWikiRepository implements WikiRepository {
 
         @Override
         public void publishEvent(ApplicationEvent event) {
-            queue.add(event);
-
+            eventQueue.add(event);
         }
 
         @Override
         public void publishEvent(Object o) {
-            queue.add((ApplicationEvent) o);
+            objectQueue.add(o);
         }
 
         public void forwardEvents() {
-            for (ApplicationEvent event : queue) {
+            for (ApplicationEvent event : eventQueue) {
                 this.publisher.publishEvent(event);
+            }
+
+            for (Object o : objectQueue) {
+                this.publisher.publishEvent(o);
             }
         }
     }

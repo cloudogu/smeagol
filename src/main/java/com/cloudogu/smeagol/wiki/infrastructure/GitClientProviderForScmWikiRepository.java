@@ -15,7 +15,7 @@ public class GitClientProviderForScmWikiRepository {
     private final PullChangesStrategy strategy;
 
     @Autowired
-    public GitClientProviderForScmWikiRepository(DirectoryResolver directoryResolver, PullChangesStrategy strategy, AccountService accountService, ScmWikiRepository wikiRepository) {
+    public GitClientProviderForScmWikiRepository(DirectoryResolver directoryResolver, PullChangesStrategy strategy, AccountService accountService) {
         this.directoryResolver = directoryResolver;
         this.accountService = accountService;
         this.strategy = strategy;

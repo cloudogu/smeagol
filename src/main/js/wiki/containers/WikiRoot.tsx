@@ -9,7 +9,7 @@ import { pathWithTrailingSlash } from "../../pathUtil";
 import { useInitWiki, useWiki } from "../hooks/wiki";
 import { PAGE_NOT_FOUND_ERROR } from "../../apiclient";
 import ActionButton from "../components/ActionButton";
-import InitWikiNote from "../components/InitWikiNote";
+import ToolTip from "../components/ToolTip";
 
 type Params = {
   repository: string;
@@ -32,7 +32,7 @@ const WikiRoot: FC<Props> = (props) => {
     child = (
       <>
         <WikiNotFoundError />
-        <InitWikiNote />
+        <ToolTip prefix={"init-wiki"} />
         <ActionButton i18nKey="init_wiki" type="primary" onClick={initWikiMutation.mutate} />
       </>
     );
