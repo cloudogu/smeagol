@@ -227,7 +227,7 @@ public class ScmWikiRepository implements WikiRepository {
         }
     }
 
-    private static class EventDelayer implements ApplicationEventPublisher {
+    public static class EventDelayer implements ApplicationEventPublisher {
 
         ArrayList<ApplicationEvent> eventQueue = new ArrayList<>();
         ArrayList<Object> objectQueue = new ArrayList<>();

@@ -3,14 +3,19 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 import com.cloudogu.smeagol.ScmHttpClient;
 import com.cloudogu.smeagol.ScmHttpClientResponse;
 import com.cloudogu.smeagol.wiki.domain.*;
+import com.cloudogu.smeagol.wiki.usecase.FailedToInitWikiException;
+import com.cloudogu.smeagol.wiki.usecase.FailedToSaveWikiException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 
 import java.io.File;
@@ -30,6 +35,9 @@ public class ScmWikiRepositoryTest {
 
     @Mock
     private ScmHttpClient httpClient;
+
+    @Mock
+    private ApplicationEventPublisher publisher;
 
     @InjectMocks
     private ScmWikiRepository repository;
@@ -149,8 +157,16 @@ public class ScmWikiRepositoryTest {
             )
         ).thenReturn(Optional.of(dto));
         GitClient gitClient = mock(GitClient.class);
-        when(gitClientProvider.createGitClient(any(), any())).thenReturn(gitClient);
+        ArgumentCaptor<ScmWikiRepository.EventDelayer> publisherCapture = ArgumentCaptor.forClass(ScmWikiRepository.EventDelayer.class);
+        when(gitClientProvider.createGitClient(publisherCapture.capture(), any())).thenReturn(gitClient);
         File settingsFile = new File(temporaryFolder.newFolder(), ".smeagol.yml");
+        Object publishObject = new Object();
+        ApplicationEvent publishEvent = mock(ApplicationEvent.class);
+        doAnswer(invocation -> {
+            publisherCapture.getValue().publishEvent(publishObject);
+            publisherCapture.getValue().publishEvent(publishEvent);
+            return null;
+        }).when(gitClient).createClone();
         when(gitClient.file(".smeagol.yml")).thenReturn(settingsFile);
         WikiSettings settings = new WikiSettings(DisplayName.valueOf("heartOfGold"),
             Path.valueOf("docs"), Path.valueOf("home"));
@@ -160,6 +176,8 @@ public class ScmWikiRepositoryTest {
         verify(this.httpClient).invalidateCache();
         verify(gitClient).commit(".smeagol.yml", DISPLAY_NAME_TRILLIAN.getValue(),
             EMAIL_TRILLIAN.getValue(), MESSAGE_PANIC.getValue());
+        verify(this.publisher).publishEvent(publishObject);
+        verify(this.publisher).publishEvent(publishEvent);
         String settingsContent = Files.readString(settingsFile.toPath());
         assertEquals("directory: docs\n" +
             "displayName: null\n" +
@@ -172,7 +190,7 @@ public class ScmWikiRepositoryTest {
         assertEquals(settings.getLandingPage(), newWiki.getLandingPage());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = FailedToInitWikiException.class)
     public void initFailedToWrite() throws IOException {
         WikiId id = new WikiId("123", "master");
         URL url = new URL("https://github.com/cloudogu/smeagol");
@@ -187,6 +205,30 @@ public class ScmWikiRepositoryTest {
         GitClient gitClient = mock(GitClient.class);
         when(gitClientProvider.createGitClient(any(), any())).thenReturn(gitClient);
         File settingsFile = new File(temporaryFolder.newFolder().getAbsolutePath() + "/doesNotExist", ".smeagol.yml");
+        when(gitClient.file(".smeagol.yml")).thenReturn(settingsFile);
+        WikiSettings settings = new WikiSettings(DisplayName.valueOf("heartOfGold"),
+            Path.valueOf("docs"), Path.valueOf("home"));
+
+        repository.init(id, COMMIT, settings);
+
+        verify(gitClient).deleteClone();
+    }
+
+    @Test(expected = FailedToInitWikiException.class)
+    public void initFileExists() throws IOException {
+        WikiId id = new WikiId("123", "master");
+        URL url = new URL("https://github.com/cloudogu/smeagol");
+        ScmWikiRepository.RepositoryDTO dto = new ScmWikiRepository.RepositoryDTO("heartOfGold", url);
+        when(
+            httpClient.get(
+                "/api/rest/repositories/{id}.json",
+                ScmWikiRepository.RepositoryDTO.class,
+                id.getRepositoryID()
+            )
+        ).thenReturn(Optional.of(dto));
+        GitClient gitClient = mock(GitClient.class);
+        when(gitClientProvider.createGitClient(any(), any())).thenReturn(gitClient);
+        File settingsFile = temporaryFolder.newFile(".smeagol.yml");
         when(gitClient.file(".smeagol.yml")).thenReturn(settingsFile);
         WikiSettings settings = new WikiSettings(DisplayName.valueOf("heartOfGold"),
             Path.valueOf("docs"), Path.valueOf("home"));
@@ -233,5 +275,36 @@ public class ScmWikiRepositoryTest {
         assertEquals("directory: docs\n" +
             "displayName: null\n" +
             "landingPage: home\n", settingsContent);
+    }
+
+    @Test(expected = FailedToSaveWikiException.class)
+    public void saveFileDoesNotExist() throws IOException, GitAPIException {
+        WikiId id = new WikiId("123", "master");
+        URL url = new URL("https://github.com/cloudogu/smeagol");
+        ScmWikiRepository.RepositoryDTO dto = new ScmWikiRepository.RepositoryDTO("heartOfGold", url);
+        when(
+            httpClient.get(
+                "/api/rest/repositories/{id}.json",
+                ScmWikiRepository.RepositoryDTO.class,
+                id.getRepositoryID()
+            )
+        ).thenReturn(Optional.of(dto));
+        when(
+            httpClient.getEntity(
+                "/api/rest/repositories/{id}/content?path={conf}&revision={branch}",
+                String.class,
+                id.getRepositoryID(),
+                ScmWikiRepository.SETTINGS_FILE,
+                id.getBranch()
+            )
+        ).thenReturn(ScmHttpClientResponse.of(HttpStatus.OK, "displayName: Heart of Gold\ndirectory: pages\nlandingPage: Index"));
+        GitClient gitClient = mock(GitClient.class);
+        when(gitClientProvider.createGitClient(any(), any())).thenReturn(gitClient);
+        File settingsFile = new File(temporaryFolder.newFolder().getAbsolutePath() + "/doesNotExist", ".smeagol.yml");
+        when(gitClient.file(".smeagol.yml")).thenReturn(settingsFile);
+        WikiSettings settings = new WikiSettings(DisplayName.valueOf("heartOfGold"),
+            Path.valueOf("docs"), Path.valueOf("home"));
+
+        repository.save(id, COMMIT, settings);
     }
 }

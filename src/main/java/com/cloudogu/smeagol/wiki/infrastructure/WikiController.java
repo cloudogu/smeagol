@@ -50,6 +50,10 @@ public class WikiController {
         @RequestBody WikiRequestPayload payload
     ) throws URISyntaxException {
         WikiId id = new WikiId(repositoryId, branch);
+        Optional<Wiki> wiki = repository.findById(id);
+        if (wiki.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
         WikiSettings settings = new WikiSettings(null, payload.getRootDir(), payload.getLandingPage());
         InitWikiCommand command = new InitWikiCommand(id, Message.valueOf("Initialize wiki (smeagol)"), settings);
         commandBus.execute(command);
