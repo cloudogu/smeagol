@@ -23,7 +23,7 @@ export function useEditWiki(repository: string, branch: string): UseMutationResu
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["wiki", { repository: repository, branch: branch }]);
+        queryClient.removeQueries(["wiki", { repository: repository, branch: branch }]);
       }
     }
   );
@@ -43,7 +43,7 @@ export function useInitWiki(repository: string, branch: string): UseMutationResu
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["wiki", { repository: repository, branch: branch }]);
+        queryClient.removeQueries(["wiki", { repository: repository, branch: branch }]);
       }
     }
   );

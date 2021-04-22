@@ -7,7 +7,7 @@ import WikiLoadingPage from "../components/WikiLoadingPage";
 import ActionButton from "../components/ActionButton";
 import WikiNotFoundError from "../components/WikiNotFoundError";
 import WikiAlertPage from "../components/WikiAlertPage";
-import ToolTip from "../components/ToolTip";
+import SettingsInputField from "../components/SettingsInputField";
 
 type Params = {
   repository: string;
@@ -29,6 +29,14 @@ const Settings: FC<Props> = (props) => {
   const [rootDir, setRootDir] = useState("");
   const [landingPage, setLandingPage] = useState("");
 
+  const changeToWikiRoot = () => {
+    props.history.push(`/${repository}/${branch}`);
+  };
+
+  if (editWikiMutation.isSuccess) {
+    changeToWikiRoot();
+  }
+
   if (wikiQuery.isLoading || editWikiMutation.isLoading) {
     return <WikiLoadingPage />;
   }
@@ -41,15 +49,6 @@ const Settings: FC<Props> = (props) => {
     return <WikiAlertPage i18nKey={"wiki_failed_to_edit"} />;
   }
 
-  if (wikiQuery.data && !rootDir) {
-    setRootDir(wikiQuery.data.directory);
-  }
-
-  if (wikiQuery.data && !landingPage) {
-    const currentLandingPage = wikiQuery.data.landingPage.substr(wikiQuery.data.directory.length + 1);
-    setLandingPage(currentLandingPage);
-  }
-
   return (
     <div>
       <WikiHeader branch={branch} repository={repository} wiki={wikiQuery.data} />
@@ -57,19 +56,15 @@ const Settings: FC<Props> = (props) => {
       <div className="page-header">
         <h1>{props.t("settings_heading")}</h1>
       </div>
-      <label>{props.t("settings_rootDir_label")}</label> <ToolTip prefix={"settings-rootDir"} />
-      <input
-        type="text"
-        className="form-control"
-        value={rootDir}
-        onChange={(event) => setRootDir(event.target.value)}
+      <SettingsInputField
+        prefix={"settings-rootDir"}
+        setParentState={setRootDir}
+        initValue={wikiQuery.data.directory}
       />
-      <label>{props.t("settings_landingPage_label")}</label> <ToolTip prefix={"settings-landingPage"} />
-      <input
-        type="text"
-        className="form-control"
-        value={landingPage}
-        onChange={(event) => setLandingPage(event.target.value)}
+      <SettingsInputField
+        prefix={"settings-landingPage"}
+        setParentState={setLandingPage}
+        initValue={wikiQuery.data.landingPage.substr(wikiQuery.data.directory.length + 1)}
       />
       <hr />
       <div>
@@ -80,12 +75,7 @@ const Settings: FC<Props> = (props) => {
             editWikiMutation.mutate({ landingPage: landingPage, rootDir: rootDir });
           }}
         />
-        <ActionButton
-          i18nKey="settings_abort"
-          onClick={() => {
-            props.history.push(`/${repository}/${branch}`);
-          }}
-        />
+        <ActionButton i18nKey="settings_abort" onClick={changeToWikiRoot} />
       </div>
     </div>
   );
