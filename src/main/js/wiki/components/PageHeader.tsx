@@ -145,6 +145,20 @@ class PageHeader extends React.Component<Props, State> {
     ) : (
       ""
     );
+    const settingsButton = page._links.edit ? (
+      <ActionButton
+        glyphicon="glyphicon-cog"
+        type="menu"
+        onClick={() => {
+          const { repository, branch } = this.props.wiki;
+          const wikiPath = `/${repository}/${branch}/`;
+          this.props.history.push(wikiPath + "settings");
+        }}
+        i18nKey="page-header_settings"
+      />
+    ) : (
+      ""
+    );
     const restoreButton = page._links.restore ? (
       <ActionButton
         glyphicon="glyphicon-retweet"
@@ -203,6 +217,7 @@ class PageHeader extends React.Component<Props, State> {
           {deleteButton}
           {restoreButton}
           {branchDropdown}
+          {settingsButton}
         </div>
         {createForm}
         {moveForm}
