@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.3.0-1] - 2021-04-22
+### Added
+* Option to init smeagol wiki #3
+* Settings menu to change wiki paths
+
 ## [v1.2.0-1] - 2021-04-14
 ### Added
 * Option to restore unsaved changes (#125)

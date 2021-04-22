@@ -13,7 +13,7 @@ const login = (username, password) => {
 
     cy.get('input[name="username"]').type(username)
     cy.get('input[name="password"]').type(password)
-    cy.get('input[name="submit"]').click()
+    cy.get('button[name="submit"]').click()
 }
 
 
@@ -28,7 +28,7 @@ const loginAdmin = () => {
 
         cy.get('input[name="username"]').type(admin.username)
         cy.get('input[name="password"]').type(admin.password)
-        cy.get('input[name="submit"]').click()
+        cy.get('button[name="submit"]').click()
     })
 }
 

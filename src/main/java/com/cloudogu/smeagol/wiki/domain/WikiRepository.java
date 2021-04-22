@@ -16,4 +16,8 @@ public interface WikiRepository {
      * @return wiki
      */
     Optional<Wiki> findById(WikiId id);
+
+    Wiki init(WikiId wikiId, Commit commit, WikiSettings settings);
+
+    void save(WikiId wikiId, Commit commit, WikiSettings settings);
 }

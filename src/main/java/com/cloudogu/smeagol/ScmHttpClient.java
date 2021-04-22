@@ -1,6 +1,5 @@
 package com.cloudogu.smeagol;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Throwables;
@@ -121,7 +120,6 @@ public class ScmHttpClient {
         return headers;
     }
 
-    @VisibleForTesting
     public void invalidateCache() {
         cache.invalidateAll();
     }

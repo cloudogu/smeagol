@@ -1,14 +1,14 @@
 export type Author = {
   displayName: string;
   email: string;
-}
+};
 
 export type Commit = {
-  author: Author
+  author: Author;
   commitId: string;
   date: any;
   message: string;
-}
+};
 
 export type PageDto = {
   commit: Commit;

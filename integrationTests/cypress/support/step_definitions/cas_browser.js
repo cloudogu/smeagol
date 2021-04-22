@@ -44,7 +44,7 @@ When(/^the user types in correct login credentials$/, function () {
 });
 
 When(/^the user presses the login button$/, function () {
-    cy.get('input[name="submit"]').click()
+    cy.get('button[name="submit"]').click()
 });
 
 When(/^the user clicks the logout button$/, function () {

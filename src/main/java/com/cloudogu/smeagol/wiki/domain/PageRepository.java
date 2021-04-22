@@ -29,7 +29,7 @@ public interface PageRepository {
      *
      * @return page with path
      */
-    Optional<Page> findByWikiIdAndPath(WikiId wikiId, Path path);
+    Optional<Page>  findByWikiIdAndPath(WikiId wikiId, Path path);
 
     /**
      * Find the page with the given path and commitId in the requested wiki.
