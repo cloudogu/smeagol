@@ -76,9 +76,9 @@ public class ScmWikiRepository implements WikiRepository {
                 // delete the local repository if the init failed
                 gitClient.deleteClone();
             } catch (Exception ee) {
-                throw new FailedToInitWikiException(ee.getMessage());
+                throw new FailedToInitWikiException(ee);
             }
-            throw new FailedToInitWikiException(e.getMessage());
+            throw new FailedToInitWikiException(e);
         }
 
         // invalidate cache since the wiki response changes
@@ -122,7 +122,7 @@ public class ScmWikiRepository implements WikiRepository {
             }
             writeSettingsToFile(gitClient, commit, settings, file);
         } catch (Exception e) {
-            throw new FailedToSaveWikiException(e.getMessage());
+            throw new FailedToSaveWikiException(e);
         }
 
         // invalidate cache since the wiki response changes

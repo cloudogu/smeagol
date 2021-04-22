@@ -8,4 +8,8 @@ public class FailedToSaveWikiException extends RuntimeException {
     public FailedToSaveWikiException(String message) {
         super(message);
     }
+
+    public FailedToSaveWikiException(Throwable cause) {
+        super(cause);
+    }
 }

@@ -116,6 +116,14 @@ public class WikiControllerTest {
     }
 
     @Test
+    public void initWikiWrongArguments() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/repositories/4xQfahsId3/branches/master")
+            .content("\"rootDir\": \"docsroot\"}")
+            .contentType("application/json"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void initWikiAlreadyExists() throws Exception {
         WikiId wikiId = new WikiId("4xQfahsId3", "master");
         when(wikiRepository.findById(wikiId)).thenReturn(Optional.of(mock(Wiki.class)));
@@ -143,6 +151,16 @@ public class WikiControllerTest {
         assertEquals("docsroot", commandCaptor.getValue().getSettings().getDirectory().getValue());
         assertEquals("landing", commandCaptor.getValue().getSettings().getLandingPage().getValue());
         assertEquals("Change settings of wiki (smeagol)", commandCaptor.getValue().getMessage().getValue());
+    }
+
+    @Test
+    public void editWikiWrongArguments() throws Exception {
+        WikiId wikiId = new WikiId("4xQfahsId3", "master");
+        when(wikiRepository.findById(wikiId)).thenReturn(Optional.of(mock(Wiki.class)));
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/repositories/4xQfahsId3/branches/master")
+            .content("{\"landingPage\": \"landing\", \"rootDir\": \"\"}")
+            .contentType("application/json"))
+            .andExpect(status().isBadRequest());
     }
 
     @Test

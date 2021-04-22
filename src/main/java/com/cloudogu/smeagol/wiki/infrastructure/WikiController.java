@@ -54,6 +54,9 @@ public class WikiController {
         if (wiki.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
+        if (payload.getRootDir() == null ||  payload.getLandingPage() == null) {
+            return ResponseEntity.badRequest().build();
+        }
         WikiSettings settings = new WikiSettings(null, payload.getRootDir(), payload.getLandingPage());
         InitWikiCommand command = new InitWikiCommand(id, Message.valueOf("Initialize wiki (smeagol)"), settings);
         commandBus.execute(command);
@@ -70,6 +73,9 @@ public class WikiController {
         Optional<Wiki> wiki = repository.findById(id);
         if (wiki.isEmpty()) {
             return ResponseEntity.notFound().build();
+        }
+        if (payload.getRootDir() == null ||  payload.getLandingPage() == null) {
+            return ResponseEntity.badRequest().build();
         }
         WikiSettings settings = new WikiSettings(null, payload.getRootDir(), payload.getLandingPage());
         EditWikiCommand command = new EditWikiCommand(id, Message.valueOf("Change settings of wiki (smeagol)"), settings);
