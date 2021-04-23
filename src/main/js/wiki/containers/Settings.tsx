@@ -8,6 +8,7 @@ import ActionButton from "../components/ActionButton";
 import WikiNotFoundError from "../components/WikiNotFoundError";
 import WikiAlertPage from "../components/WikiAlertPage";
 import SettingsInputField from "../components/SettingsInputField";
+import { isValidPath } from "../../pathUtil";
 
 type Params = {
   repository: string;
@@ -19,6 +20,11 @@ type Props = {
   match: match<Params>;
   location: Location;
   history: any;
+};
+
+type Configuration = {
+  rootDir: string;
+  landingPage: string;
 };
 
 const Settings: FC<Props> = (props) => {
@@ -74,11 +80,40 @@ const Settings: FC<Props> = (props) => {
           onClick={() => {
             editWikiMutation.mutate({ landingPage: landingPage, rootDir: rootDir });
           }}
+          disabled={
+            !settingsValid({
+              landingPage: landingPage,
+              rootDir: rootDir
+            })
+          }
         />
         <ActionButton i18nKey="settings_abort" onClick={changeToWikiRoot} />
       </div>
     </div>
   );
 };
+
+/**
+ * Checks if the entered configuration is valid.
+ */
+function settingsValid(configuration: Configuration) {
+  const rootDirValid = isValid(configuration.rootDir);
+  const landingPageValid = isValid(configuration.landingPage);
+  return rootDirValid && landingPageValid;
+}
+
+/**
+ * Validates that the given path is a valid path.
+ * Also validates that the path does not start with '.' or '/'
+ * @param path The path to check
+ */
+function isValid(path: string): boolean {
+  let result = isValidPath(path);
+
+  result = result && !path.startsWith("/");
+  result = result && !path.startsWith(".");
+
+  return result;
+}
 
 export default translate()(Settings);
