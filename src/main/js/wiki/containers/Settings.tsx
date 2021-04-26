@@ -8,7 +8,7 @@ import ActionButton from "../components/ActionButton";
 import WikiNotFoundError from "../components/WikiNotFoundError";
 import WikiAlertPage from "../components/WikiAlertPage";
 import SettingsInputField from "../components/SettingsInputField";
-import { isValidPath } from "../../pathUtil";
+import { isValidRelativePath } from "../../pathUtil";
 
 type Params = {
   repository: string;
@@ -20,11 +20,6 @@ type Props = {
   match: match<Params>;
   location: Location;
   history: any;
-};
-
-type Configuration = {
-  rootDir: string;
-  landingPage: string;
 };
 
 const Settings: FC<Props> = (props) => {
@@ -55,6 +50,10 @@ const Settings: FC<Props> = (props) => {
     return <WikiAlertPage i18nKey={"wiki_failed_to_edit"} />;
   }
 
+  const rootDirValid = isValidRelativePath(rootDir);
+  const landingPageValid = isValidRelativePath(landingPage);
+  const allValid = rootDirValid && landingPageValid;
+
   return (
     <div>
       <WikiHeader branch={branch} repository={repository} wiki={wikiQuery.data} />
@@ -66,11 +65,13 @@ const Settings: FC<Props> = (props) => {
         prefix={"settings-rootDir"}
         setParentState={setRootDir}
         initValue={wikiQuery.data.directory}
+        isValid={rootDirValid}
       />
       <SettingsInputField
         prefix={"settings-landingPage"}
         setParentState={setLandingPage}
         initValue={wikiQuery.data.landingPage.substr(wikiQuery.data.directory.length + 1)}
+        isValid={landingPageValid}
       />
       <hr />
       <div>
@@ -80,40 +81,12 @@ const Settings: FC<Props> = (props) => {
           onClick={() => {
             editWikiMutation.mutate({ landingPage: landingPage, rootDir: rootDir });
           }}
-          disabled={
-            !settingsValid({
-              landingPage: landingPage,
-              rootDir: rootDir
-            })
-          }
+          disabled={!allValid}
         />
         <ActionButton i18nKey="settings_abort" onClick={changeToWikiRoot} />
       </div>
     </div>
   );
 };
-
-/**
- * Checks if the entered configuration is valid.
- */
-function settingsValid(configuration: Configuration) {
-  const rootDirValid = isValid(configuration.rootDir);
-  const landingPageValid = isValid(configuration.landingPage);
-  return rootDirValid && landingPageValid;
-}
-
-/**
- * Validates that the given path is a valid path.
- * Also validates that the path does not start with '.' or '/'
- * @param path The path to check
- */
-function isValid(path: string): boolean {
-  let result = isValidPath(path);
-
-  result = result && !path.startsWith("/");
-  result = result && !path.startsWith(".");
-
-  return result;
-}
 
 export default translate()(Settings);

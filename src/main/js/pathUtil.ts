@@ -6,23 +6,10 @@ export function pathWithTrailingSlash(path: string) {
   return path;
 }
 
-export function isValidPath(path: string): boolean {
-  const allowlistCharactersInPath = /^([\w.\-_/ ]+)$/;
-
+export function isValidRelativePath(path: string): boolean {
   if (path === null || path === undefined || path.length === 0) {
     return false;
   }
-
-  let result = true;
-
-  result = result && !path.includes("..");
-  result = result && !path.includes("//");
-  result = result && !path.startsWith("/");
-  result = result && !path.endsWith(".");
-  result = result && !path.endsWith("/");
-  result = result && !path.startsWith(" ");
-  result = result && !path.endsWith(" ");
-  result = result && path.match(allowlistCharactersInPath).length > 0;
-
-  return result;
+  const absolutePathRegex = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/g;
+  return path.match(absolutePathRegex).length > 0;
 }

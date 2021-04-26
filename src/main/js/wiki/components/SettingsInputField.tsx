@@ -16,6 +16,7 @@ type Props = {
   setParentState: (string) => void;
   prefix: string;
   classes: any;
+  isValid: boolean;
 };
 
 const SettingsInputField: FC<Props> = (props) => {
@@ -37,6 +38,7 @@ const SettingsInputField: FC<Props> = (props) => {
           setInputValue(event.target.value);
         }}
       />
+      {!props.isValid && <div>{t(prefix + "_validationText")}</div>}
     </>
   );
 };
