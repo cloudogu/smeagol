@@ -10,6 +10,6 @@ export function isValidRelativePath(path: string): boolean {
   if (path === null || path === undefined || path.length === 0) {
     return false;
   }
-  const absolutePathRegex = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/g;
-  return path.match(absolutePathRegex).length > 0;
+  const absolutePathRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\/[a-zA-Z0-9]([a-zA-Z0-9-]*[A-Z0-9])?)*$/g;
+  return path.match(absolutePathRegex) !== null;
 }

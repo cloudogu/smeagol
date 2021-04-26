@@ -5,8 +5,8 @@ import injectSheet from "react-jss";
 import classNames from "classnames";
 
 const styles = {
-  inputField: {
-    marginBottom: "20px"
+  validationText: {
+    marginTop: "5px"
   }
 };
 
@@ -27,19 +27,19 @@ const SettingsInputField: FC<Props> = (props) => {
   });
 
   return (
-    <>
+    <div className={classNames("form-group", !props.isValid ? "has-error" : "")}>
       <label>{t(prefix + "_label")}</label> <ToolTip prefix={prefix} />
       <input
         type="text"
-        className={classNames(classes.inputField, "form-control")}
+        className={"form-control"}
         value={inputValue}
         onChange={(event) => {
           setParentState(event.target.value);
           setInputValue(event.target.value);
         }}
       />
-      {!props.isValid && <div>{t(prefix + "_validationText")}</div>}
-    </>
+      {!props.isValid && <div className={classes.validationText}>{t(prefix + "_validationText")}</div>}
+    </div>
   );
 };
 
