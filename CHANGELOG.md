@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.3.1-1] - 2021-04-27
+### Changed
+* Validate configuration in repository settings (#129)
+
 ## [v1.3.0-1] - 2021-04-22
 ### Added
 * Option to init smeagol wiki #3
