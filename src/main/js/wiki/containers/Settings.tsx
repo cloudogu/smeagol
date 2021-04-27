@@ -8,6 +8,7 @@ import ActionButton from "../components/ActionButton";
 import WikiNotFoundError from "../components/WikiNotFoundError";
 import WikiAlertPage from "../components/WikiAlertPage";
 import SettingsInputField from "../components/SettingsInputField";
+import { isValidRelativePath } from "../../pathUtil";
 
 type Params = {
   repository: string;
@@ -49,6 +50,10 @@ const Settings: FC<Props> = (props) => {
     return <WikiAlertPage i18nKey={"wiki_failed_to_edit"} />;
   }
 
+  const rootDirValid = isValidRelativePath(rootDir);
+  const landingPageValid = isValidRelativePath(landingPage);
+  const allValid = rootDirValid && landingPageValid;
+
   return (
     <div>
       <WikiHeader branch={branch} repository={repository} wiki={wikiQuery.data} />
@@ -60,11 +65,13 @@ const Settings: FC<Props> = (props) => {
         prefix={"settings-rootDir"}
         setParentState={setRootDir}
         initValue={wikiQuery.data.directory}
+        isValid={rootDirValid}
       />
       <SettingsInputField
         prefix={"settings-landingPage"}
         setParentState={setLandingPage}
         initValue={wikiQuery.data.landingPage.substr(wikiQuery.data.directory.length + 1)}
+        isValid={landingPageValid}
       />
       <hr />
       <div>
@@ -74,6 +81,7 @@ const Settings: FC<Props> = (props) => {
           onClick={() => {
             editWikiMutation.mutate({ landingPage: landingPage, rootDir: rootDir });
           }}
+          disabled={!allValid}
         />
         <ActionButton i18nKey="settings_abort" onClick={changeToWikiRoot} />
       </div>
