@@ -7,11 +7,11 @@ Die Dokumentation kann bequem über eine Weboberfläche aufgerufen werden, wobei
 Um Smeagol für ein Repository verwenden zu können, muss lediglich eine leere 
 ".smeagol.yml"-Datei im Root-Verzeichnis des Repositorys angelegt werden. Dies ist auch direkt in der Weboberfläche möglich. Standardmäßig sind Repositories ohne Wiki ausgeblendet. Um diese anzuzeigen, muss in der Übersicht die Checkbox "Repositories ohne Wiki anzeigen" aktiviert werden.
 
-![Smeagol leere Wikis anzeigen](figures/smeagol/SmeagolShowEmptyRepos.png)
+![Smeagol leere Wikis anzeigen](figures/smeagol/SmeagolShowEmptyRepos_DE.png)
 
 Wird in der Weboberfläche ein Repository ohne Wiki angewählt, kann nach Auswählen des Branches, auf dem gearbeitet werden soll, durch den Button "Wiki initialisieren" ein neues Wiki angelegt werden (Die smeagol.yml wird automatisch erzeugt).
 
-![Smeagol Wiki initialisieren](figures/smeagol/SmeagolInitRepo.png)
+![Smeagol Wiki initialisieren](docs/figures/smeagol/SmeagolInitRepo_DE.png)
 
 Anschlie&szlig;end kann die Dokumentation entweder auf der Smeagol-Weboberfläche oder über einen gängigen Editor erstellt werden, je nachdem wie bevorzugt gearbeitet wird. Diesen Prozess finden Sie nachfolgend skizziert.
 
@@ -21,48 +21,48 @@ Anschlie&szlig;end kann die Dokumentation entweder auf der Smeagol-Weboberfläch
 
 Alle Repositories, die über eine smeagol.yml verfügen, werden in der Wikis-Übersicht angezeigt.
 
-![Smeagol Übersicht](figures/smeagol/SmeagolUebersicht.png)
+![Smeagol Übersicht](docs/figures/smeagol/SmeagolOverview_DE.png)
 
 Wenn Sie auf das Wiki klicken, bekommen Sie eine Übersicht aller Branches in dem Repository.
 
-![Smeagol Branches](figures/smeagol/SmeagolBranches.png)
+![Smeagol Branches](docs/figures/smeagol/SmeagolBranches_DE.png)
 
 Mit einem Klick auf den gewünschten Branch werden Sie auf die Wiki-Seite weitergeleitet.
 Mit der Suchfunktion kann das Wiki nach Begriffen durchsucht werden. Mit dem Button "Startseite" werden Sie wieder auf die erste Seite des Wikis geleitet.
 Das Root-Verzeichnis (standardmäßig "docs") und die Hauptseite (also jene Seite, die beim Anwählen des Repositorys zuerst angezeigt wird) können außerdem über die Schaltfläche
 "Einstellungen" angepasst werden.
 
-![Smeagol Wiki Home](figures/smeagol/SmeagolWiki.png)
+![Smeagol Wiki Home](docs/figures/smeagol/SmeagolWiki_DE.png)
 
 Über das Breadcrumb ist eine einfache Navigation durch das Wiki möglich. Sollen bspw. alle Seiten zu dem zugehörigen Wiki aufgelistet werden, reicht ein Klick auf das oberste Verzeichnis "docs".
 
-![Smeagol Wiki Seitenübersicht mithilfe von Breadcrumbs](figures/smeagol/SmeagolBreadcrumb.png)
+![Smeagol Wiki Seitenübersicht mithilfe von Breadcrumbs](docs/figures/smeagol/SmeagolBreadcrumb_DE.png)
 
 Bei langen Wikis ist das ausklappbare Inhaltsverzeichnis eine große Hilfe. Es wird automatisch bei Änderungen am Wiki aktualisiert und orientiert sich an den Überschriften. Diese dienen als Sprungmarken auf den jeweiligen Abschnitt.
 
-![Smeagol Inhaltsverzeichnis](figures/smeagol/SmeagolTableOfContents.png)
+![Smeagol Inhaltsverzeichnis](docs/figures/smeagol/SmeagolTableOfContents_DE.png)
 
 Mit der Schaltfläche "Neue Seite" wird eine neue Wiki-Seite erstellt. Sie müssen einen Namen für die Seite festlegen und können anschlie\ss end mit "OK" die Seite anlegen.
 
-![Smeagol Wiki-Seite anlegen](figures/smeagol/SmeagolWikiNeueSeite.png)
+![Smeagol Wiki-Seite anlegen](docs/figures/smeagol/SmeagolWikiNewPage.png)
 
 Unter "Umbenennen" können Sie die aktuell ausgewählte Seite umbenennen. Dafür geben Sie den neuen Namen an und bestätigen mit "OK".
 
-![Smeagol Wiki-Seite umbenennen](figures/smeagol/SmeagolWikiSeiteUmbenennen.png)
+![Smeagol Wiki-Seite umbenennen](docs/figures/smeagol/SmeagolWikiRenamePage_DE.png)
 
 Über "Löschen" können Seiten wieder gelöscht werden.
 
-![Smeagol Wiki-Seite löschen](figures/smeagol/SmeagolWikiSeiteEntf.png)
+![Smeagol Wiki-Seite löschen](docs/figures/smeagol/SmeagolWikiDeletePage_DE.png)
 
 Unter "Bearbeiten" öffnet sich der Editor und Sie können die Seite direkt im Browser ändern. Sie haben die Möglichkeit, sich neben der Bearbeitung eine Vorschau anzeigen zu lassen ("Markdown") oder einen zusammengefassten Editor zu nutzen ("WYSIWYG"). Mit einem Kommentar können Sie Änderungen an der Seite speichern.
 
-![Smeagol Wiki Editor](figures/smeagol/SmeagolEditor.png)
+![Smeagol Wiki Editor](docs/figures/smeagol/SmeagolEditor_DE.png)
 
 In der Versionsübersicht werden alle Änderungen der gerade ausgewählten Wiki-Seite angezeigt.
 
-![Smeagol Wiki History](figures/smeagol/SmeagolVersion.png)
+![Smeagol Wiki History](docs/figures/smeagol/SmeagolHistory_DE.png)
 
 Rechts in der Menüleiste kann der eingangs gewählte Branch verändert werden.
 
-![Smeagol Wiki Branch auswahl](figures/smeagol/SmeagolBranchDropdown.png)
+![Smeagol Wiki Branch auswahl](docs/figures/smeagol/SmeagolBranchDropdown_DE.png)
 
