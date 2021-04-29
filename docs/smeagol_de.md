@@ -44,7 +44,7 @@ Bei langen Wikis ist das ausklappbare Inhaltsverzeichnis eine große Hilfe. Es w
 
 Mit der Schaltfläche "Neue Seite" wird eine neue Wiki-Seite erstellt. Sie müssen einen Namen für die Seite festlegen und können anschlie\ss end mit "OK" die Seite anlegen.
 
-![Smeagol Wiki-Seite anlegen](figures/smeagol/SmeagolWikiNewPage.png)
+![Smeagol Wiki-Seite anlegen](figures/smeagol/SmeagolWikiNewPage_DE.png)
 
 Unter "Umbenennen" können Sie die aktuell ausgewählte Seite umbenennen. Dafür geben Sie den neuen Namen an und bestätigen mit "OK".
 
