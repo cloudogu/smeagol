@@ -8,19 +8,21 @@ The documentation can be conveniently accessed via a web interface, where each u
 
 To use Smeagol for a repository, all you need to do is create an empty
 ".smeagol.yml" file in the root directory of the repository. This can also be done directly in the web interface. By default, repositories without wiki are hidden. To display them, the checkbox "Show repositories without wiki" must be activated in the overview.
+
 ![Smeagol display empty Wikis](figures/smeagol/SmeagolShowEmptyRepos.png)
-If a repository without a wiki is selected in the web interface, a new wiki can be created by clicking on the "Initialize wiki" button after selecting the branch on which to work (the smeagol.yml is created automatically). 
+
+If a repository without a wiki is selected in the web interface, a new wiki can be created by clicking on the "Initialize wiki" button after selecting the branch on which to work (the smeagol.yml is created automatically).
+
 ![Smeagol initialise Wiki ](figures/smeagol/SmeagolInitRepo.png)
-A
+
+Subsequently, the documentation can be created either on the Smeagol web interface or via a common editor, depending on how it is preferred to work. This process is outlined below.
 ![Smeagol Workflow](figures/smeagol/SmeagolWorkflow.png)
 
 Existing pages can be modified and new ones created via the web interface. As soon as changes are saved, Smeagol automatically performs a push to the repository, versioning the documentation. When using an editor, this has to be done manually. There are several syntaxes to choose from for creating the documentation, such as Markdown or Rdoc.
 
 All repositories that have a smeagol.yml are displayed in the wiki overview.
 
-![Smeagol Overview](figures/smeagol/SmeagolOverview.png)
-
-
+![Smeagol Overview](figures/smeagol/SmeagolUebersicht.png)
 
 If you click on the wiki, you get an overview of all branches in the repository.
 
@@ -28,6 +30,7 @@ If you click on the wiki, you get an overview of all branches in the repository.
 
 By clicking on the desired branch you will be redirected to the wiki page.
 With the search function you can search the wiki for terms. With the button "Home" you will be redirected to the first page of the wiki.
+The root directory (by default "docs") and the main page (i.e. the page that is displayed first when the repository is selected) can also be customized via the "Settings" button.
 
 ![Smeagol Wiki Home](figures/smeagol/SmeagolWiki.png)
 
@@ -35,37 +38,29 @@ A simple navigation through the wiki is possible via the breadcumb. For example,
 
 ![Smeagol Wiki Seitenübersicht mithilfe von Breadcrumbs](figures/smeagol/SmeagolBreadcrumb.png)
 
-The root directory (by default "docs") and the main page (i.e. the page that is displayed first when the repository is selected) can also be customized via the "Settings" button.
-
 For long wikis, the fold-out table of contents is a great help. It is automatically updated when changes are made to the wiki and is based on the headings. These serve as jumping points to the respective section.
-![Smeagol Table of Contents](figures/smeagol/SmeagolTableOfContents.png)
 
+![Smeagol Table of Contents](figures/smeagol/SmeagolTableOfContents.png)
 
 Under "Pages" all related wiki pages are listed:
 
-![Smeagol Wiki Page Overview](figures/smeagol/SmeagolWikiFiles.png)
+![Smeagol Wiki Page Overview](figures/smeagol/SmeagolWikiDateien.png)
 
 Click "New" to create a new wiki page. You have to define a name for the page and then click "OK" to create the page.
 
 ![Create Smeagol Wiki Page](figures/smeagol/SmeagolWikiNeueSeite.png)
 
-
-
 Under "Rename" you can rename the currently selected page. To do this, enter the new name and confirm with "OK".
 
-![Rename Smeagol Wiki Page](figures/smeagol/SmeagolWikiPageRename.png)
-
-
+![Rename Smeagol Wiki Page](figures/smeagol/SmeagolWikiSeiteUmbenennen.png)
 
 With "Delete" pages can be deleted again.
 
-![Delete Smeagol Wiki Page](figures/smeagol/SmeagolWikiPageDel.png)
+![Delete Smeagol Wiki Page](figures/smeagol/SmeagolWikiSeiteEntf.png)
 
 Under "Edit" the editor opens and you can change the page directly in the browser. You have the possibility to display a preview next to the editing ("Markdown") or to use a summarized editor ("WYSIWYG"). With a comment you can save changes to the page.
 
 ![Smeagol Wiki Editor](figures/smeagol/SmeagolEditor.png)
-
-
 
 The version history shows all changes of the currently selected wiki page.
 
