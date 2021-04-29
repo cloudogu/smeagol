@@ -13,7 +13,7 @@ To use Smeagol for a repository, all you need to do is create an empty
 
 If a repository without a wiki is selected in the web interface, a new wiki can be created by clicking on the "Initialize wiki" button after selecting the branch on which to work (the smeagol.yml is created automatically).
 
-![Smeagol initialise Wiki ](docs/figures/smeagol/SmeagolInitRepo_EN.png)
+![Smeagol initialise Wiki ](figures/smeagol/SmeagolInitRepo_EN.png)
 
 Subsequently, the documentation can be created either on the Smeagol web interface or via a common editor, depending on how it is preferred to work. This process is outlined below.
 ![Smeagol Workflow](figures/smeagol/SmeagolWorkflow.png)
@@ -22,50 +22,50 @@ Existing pages can be modified and new ones created via the web interface. As so
 
 All repositories that have a smeagol.yml are displayed in the wiki overview.
 
-![Smeagol Overview](docs/figures/smeagol/SmeagolOverview_EN.png)
+![Smeagol Overview](figures/smeagol/SmeagolOverview_EN.png)
 
 If you click on the wiki, you get an overview of all branches in the repository.
 
-![Smeagol Branches](docs/figures/smeagol/SmeagolBranches_EN.png)
+![Smeagol Branches](figures/smeagol/SmeagolBranches_EN.png)
 
 By clicking on the desired branch you will be redirected to the wiki page.
 With the search function you can search the wiki for terms. With the button "Home" you will be redirected to the first page of the wiki.
 The root directory (by default "docs") and the main page (i.e. the page that is displayed first when the repository is selected) can also be customized via the "Settings" button.
 
-![Smeagol Wiki Home](docs/figures/smeagol/SmeagolWiki_EN.png)
+![Smeagol Wiki Home](figures/smeagol/SmeagolWiki_EN.png)
 
 A simple navigation through the wiki is possible via the breadcumb. For example, if you want to list all pages of the corresponding wiki, just click on the top directory "docs".
 
-![Smeagol Wiki Seitenübersicht mithilfe von Breadcrumbs](docs/figures/smeagol/SmeagolBreadcrumb_EN.png)
+![Smeagol Wiki Seitenübersicht mithilfe von Breadcrumbs](figures/smeagol/SmeagolBreadcrumb_EN.png)
 
 For long wikis, the fold-out table of contents is a great help. It is automatically updated when changes are made to the wiki and is based on the headings. These serve as jumping points to the respective section.
 
-![Smeagol Table of Contents](docs/figures/smeagol/SmeagolTableOfContents_EN.png)
+![Smeagol Table of Contents](figures/smeagol/SmeagolTableOfContents_EN.png)
 
 Under "Pages" all related wiki pages are listed:
 
-![Smeagol Wiki Page Overview](docs/figures/smeagol/SmeagolWikiPages_EN.png)
+![Smeagol Wiki Page Overview](figures/smeagol/SmeagolWikiPages_EN.png)
 
 Click "New" to create a new wiki page. You have to define a name for the page and then click "OK" to create the page.
 
-![Create Smeagol Wiki Page](docs/figures/smeagol/SmeagolWikiNewPage_EN.png)
+![Create Smeagol Wiki Page](figures/smeagol/SmeagolWikiNewPage_EN.png)
 
 Under "Rename" you can rename the currently selected page. To do this, enter the new name and confirm with "OK".
 
-![Rename Smeagol Wiki Page](docs/figures/smeagol/SmeagolWikiRenamePage_EN.png)
+![Rename Smeagol Wiki Page](figures/smeagol/SmeagolWikiRenamePage_EN.png)
 
 With "Delete" pages can be deleted again.
 
-![Delete Smeagol Wiki Page](docs/figures/smeagol/SmeagolWikiDeletePage_EN.png)
+![Delete Smeagol Wiki Page](figures/smeagol/SmeagolWikiDeletePage_EN.png)
 
 Under "Edit" the editor opens and you can change the page directly in the browser. You have the possibility to display a preview next to the editing ("Markdown") or to use a summarized editor ("WYSIWYG"). With a comment you can save changes to the page.
 
-![Smeagol Wiki Editor](docs/figures/smeagol/SmeagolEditor_EN.png)
+![Smeagol Wiki Editor](figures/smeagol/SmeagolEditor_EN.png)
 
 The version history shows all changes of the currently selected wiki page.
 
-![Smeagol Wiki History](docs/figures/smeagol/SmeagolHistory_EN.png)
+![Smeagol Wiki History](figures/smeagol/SmeagolHistory_EN.png)
 
 The branch selected at the beginning can be changed on the right in branch-dropdown in the menu bar.
 
-![Smeagol Wiki change Branch](docs/figures/smeagol/SmeagolBranchDropdown_EN.png)
+![Smeagol Wiki change Branch](figures/smeagol/SmeagolBranchDropdown_EN.png)
