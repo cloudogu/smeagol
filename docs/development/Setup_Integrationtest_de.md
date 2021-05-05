@@ -1,15 +1,10 @@
----
-title: "Setup für die Integrationstests"
----
-
 # Setup für die Integrationstests
 
-In diesem Abschnitt werden die benötigten Schritte beschrieben um die Integrationstests für Smeagol korrekt ausführen zu können.
+In diesem Abschnitt werden die benötigten Schritte beschrieben um die Integrationstests korrekt ausführen zu können.
 
 ## Voraussetzungen
 
-* Es ist notwendig [yarn](https://classic.yarnpkg.com/en/docs/install#debian-stable) zu installieren:
-    *  `npm install --global yarn`
+* Es ist notwendig das Program `yarn` zu installieren
 
 ## Konfiguration
 
@@ -17,12 +12,29 @@ Damit alle Integrationstests auch einwandfrei funktionieren, müssen vorher eini
 
 **integrationTests/cypress.json** [[Link zur Datei](../../integrationTests/cypress.json)]
 
-In dieser Datei muss die base-URL auf das Hostsystem angepasst werden.
-Dafür muss das Feld `baseUrl` auf die Host-FQDN angepasst werden (`https://local.cloudogu.com`)
+1) Es muss die base-URL auf das Hostsystem angepasst werden.
+   Dafür muss das Feld `baseUrl` auf die Host-FQDN angepasst werden (`https://local.cloudogu.com`)
+2) Es müssen noch weitere Aspekte konfiguriert werden.
+   Diese werdeb als Umgebungsvariablen in der `cypress.json` gesetzt:
+- `DoguName` - Bestimmt den Namen des jetzigen Dogus und wir beim Routing benutzt.
+- `MaxLoginRetries` - Bestimmt die Anzahl der Loginversuche, bevor ein Test fehlschlägt.
+- `AdminUsername` - Der Benutzername des CES-Admins.
+- `AdminPassword` - Das Passwort des CES-Admins.
+- `AdminGroup` - Die Benutzergruppe für CES-Administratoren.
 
-**integrationTests/cypress/fixtures/ces_admin_data.json** [[Link zur Datei](../../integrationTests/cypress/fixtures/ces_admin_data.json)]
-
-In der `userdata.json` müssen die Login-Information eines CES-Admin in den Feldern `username` und `password` eingetragen werden.
+Eine Beispiel-`cypress.json` sieht folgendermaßen aus:
+```json
+{
+  "baseUrl": "https://192.168.56.2",
+  "env": {
+    "DoguName": "redmine",
+    "MaxLoginRetries": 3,
+    "AdminUsername":  "ces-admin",
+    "AdminPassword":  "ecosystem2016",
+    "AdminGroup":  "CesAdministrators"
+  }
+}
+```
 
 ## Starten der Integrationstests
 
