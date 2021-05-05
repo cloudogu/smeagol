@@ -709,10 +709,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@cloudogu/dogu-integration-test-library@0.1.7-development":
-  version "0.1.7-development"
-  resolved "https://registry.yarnpkg.com/@cloudogu/dogu-integration-test-library/-/dogu-integration-test-library-0.1.7-development.tgz#64845f3227d5c4d686bdb76c0bad2d951d60fa9b"
-  integrity sha512-rYtJnaHgh3TmaOT3lOW8o/uXIsXeja9jSst5r4au2rTKdLAo810u0/R8/0jACbXXtjI9P8s0Ow19eUcDCukr7g==
+"@cloudogu/dogu-integration-test-library@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@cloudogu/dogu-integration-test-library/-/dogu-integration-test-library-0.2.0.tgz#18d2c5d93db304c7a22978212dd96e73caede792"
+  integrity sha512-h+gmIJRu06CkttAbkW1wm990z+usKWuMGTq3X7iKzQ6N1f9ifjfjjQvt9Ft4gUl6Rrp5eGwRnWeyfJYuEG7nJA==
 
 "@cypress/browserify-preprocessor@^3.0.1":
   version "3.0.1"
