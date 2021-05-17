@@ -5,7 +5,7 @@ import PageViewer from "../components/PageViewer";
 import * as queryString from "query-string";
 import PageEditor from "../components/PageEditor";
 import { PAGE_NOT_FOUND_ERROR } from "../../apiclient";
-import { match } from "react-router";
+import { match, Redirect } from "react-router";
 import WikiHeader from "../components/WikiHeader";
 import WikiNotFoundError from "../components/WikiNotFoundError";
 import WikiLoadingPage from "../components/WikiLoadingPage";
@@ -43,7 +43,7 @@ const Page: FC<Props> = (props) => {
   const pageName = getPageNameFromPath(path);
   const directory = getDirectoryFromPath(path);
 
-  const refetch = !isEditMode(props);
+  const refetch = !isEditMode(props) && !isCreateMode(props);
   const pageQuery = usePage(repository, branch, path, getCommitParameter(props), refetch);
   const wikiQuery = useWiki(repository, branch, refetch);
   const repositoryQuery = useRepository(repository, refetch);
@@ -119,7 +119,16 @@ const Page: FC<Props> = (props) => {
     return <WikiLoadingPage />;
   }
   if (pageQuery.error || wikiQuery.error || repositoryQuery.error) {
-    if (pageQuery.error === PAGE_NOT_FOUND_ERROR) {
+    if (wikiQuery.error === PAGE_NOT_FOUND_ERROR) {
+      return (
+        <>
+          <h1>Smeagol</h1>
+          <WikiNotFoundError />
+        </>
+      );
+    }
+
+    if (isCreateMode(props)) {
       return (
         <div>
           {wikiHeader}
@@ -137,13 +146,8 @@ const Page: FC<Props> = (props) => {
       );
     }
 
-    if (wikiQuery.error === PAGE_NOT_FOUND_ERROR) {
-      return (
-        <>
-          <h1>Smeagol</h1>
-          <WikiNotFoundError />
-        </>
-      );
+    if (pageQuery.error === PAGE_NOT_FOUND_ERROR) {
+      return <Redirect to={"?create=true"} />;
     }
 
     if (repositoryQuery.error) {
@@ -235,6 +239,11 @@ export default Page;
 function isEditMode(props): boolean {
   const queryParams = queryString.parse(props.location.search);
   return queryParams.edit === "true";
+}
+
+function isCreateMode(props): boolean {
+  const queryParams = queryString.parse(props.location.search);
+  return queryParams.create === "true";
 }
 
 function isCommitPage(props): boolean {
