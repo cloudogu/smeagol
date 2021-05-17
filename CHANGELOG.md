@@ -6,8 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.3.2-1] - 2021-05-17
 ### Changed
 * Complement user docu with more recent screenshots and documentation of new features (#131)
+
 ### Fixed
 * Prevent page refresh when creating a new page (#137)
 
