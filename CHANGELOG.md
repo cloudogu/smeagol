@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.3.2-1] - 2021-05-17
+### Changed
+* Complement user docu with more recent screenshots and documentation of new features (#131)
+
+### Fixed
+* Prevent page refresh when creating a new page (#137)
+
 ## [v1.3.1-1] - 2021-04-27
 ### Changed
 * Validate configuration in repository settings (#129)

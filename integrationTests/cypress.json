@@ -1,5 +1,12 @@
 {
   "baseUrl": "https://192.168.56.2",
-  "videoUploadOnPasses": true,
-  "videoCompression": false
+  "env": {
+    "DoguName": "smeagol",
+    "MaxLoginRetries": 3,
+    "AdminUsername":  "ces-admin",
+    "AdminPassword":  "ecosystem2016",
+    "AdminGroup":  "CesAdministrators"
+  },
+  "videoCompression": false,
+  "nonGlobalStepBaseDir": false
 }
