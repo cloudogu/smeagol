@@ -1,13 +1,12 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
+import com.cloudogu.smeagol.repository.domain.RepositoryRepository;
 import com.cloudogu.smeagol.wiki.domain.WikiId;
+import com.cloudogu.smeagol.wiki.domain.WikiRepository;
 import com.google.common.base.Throwables;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.*;
 import org.apache.lucene.store.FSDirectory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +16,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PreDestroy;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,12 +30,16 @@ public class LuceneContext {
     private static final Logger LOG = LoggerFactory.getLogger(LuceneContext.class);
 
     private final DirectoryResolver directoryResolver;
+    private final RepositoryRepository repositoryRepository;
+    private final WikiRepository wikiRepository;
 
     private ConcurrentHashMap<WikiId, IndexWriter> writers = new ConcurrentHashMap<>();
 
     @Autowired
-    public LuceneContext(DirectoryResolver directoryResolver) {
+    public LuceneContext(DirectoryResolver directoryResolver, WikiRepository wikiRepository, RepositoryRepository repositoryRepository) {
         this.directoryResolver = directoryResolver;
+        this.wikiRepository = wikiRepository;
+        this.repositoryRepository = repositoryRepository;
     }
 
 
@@ -94,8 +99,31 @@ public class LuceneContext {
      * @throws IOException
      */
     public IndexReader createReader(WikiId wikiId) throws IOException {
-        File indexDirectory = directoryResolver.resolveSearchIndex(wikiId);
-        return DirectoryReader.open(FSDirectory.open(indexDirectory.toPath()));
+        final List<IndexReader> readers = new ArrayList<>();
+
+        System.out.println(wikiId);
+        this.repositoryRepository.findAll(true).forEach(repository -> {
+            final WikiId mainId = new WikiId(repository.getId().getValue(), "main");
+            final WikiId masterId = new WikiId(repository.getId().getValue(), "master");
+            System.out.println(mainId);
+            System.out.println(masterId);
+            try {
+                File mainDirectory = directoryResolver.resolveSearchIndex(mainId);
+                DirectoryReader main = DirectoryReader.open(FSDirectory.open(mainDirectory.toPath()));
+                readers.add(main);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                File masterDirectory = directoryResolver.resolveSearchIndex(masterId);
+                DirectoryReader master = DirectoryReader.open(FSDirectory.open(masterDirectory.toPath()));
+                readers.add(master);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        return new MultiReader(readers.toArray(IndexReader[]::new), false);
     }
 
     /**
