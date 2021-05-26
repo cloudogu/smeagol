@@ -54,9 +54,9 @@ class BranchDropdown extends React.Component<Props> {
 
   handleBranchChange = (event) => {
     event.target.size = 1;
-    console.log("CHANGE");
     const { page, pushBranchStateFunction } = this.props;
     pushBranchStateFunction(event.target.value, page.path);
+    this.forceUpdate();
   };
 
   render() {
