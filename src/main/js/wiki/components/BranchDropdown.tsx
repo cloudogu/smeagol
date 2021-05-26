@@ -3,7 +3,6 @@ import injectSheet from "react-jss";
 import classNames from "classnames";
 import { orderBranches } from "../../repository/components/BranchOverview";
 import { Branch } from "../../repository/types/repositoryDto";
-import "./pseudoclass-styling.css";
 
 const styles = {
   dropdownWrapper: {
@@ -34,7 +33,8 @@ const styles = {
   label: {
     fontWeight: "400 !important",
     paddingLeft: "6px",
-    paddingRight: "3px"
+    paddingRight: "3px",
+    verticalAlign: "text-top"
   }
 };
 
@@ -62,11 +62,13 @@ class BranchDropdown extends React.Component<Props> {
   handleFocus = (event) => {
     event.target.size = 5;
     console.log("FOCUS");
+    event.stopPropagation();
   };
 
   handleBlur = (event) => {
     event.target.size = 0;
     console.log("BLUR");
+    event.stopPropagation();
   };
 
   render() {
