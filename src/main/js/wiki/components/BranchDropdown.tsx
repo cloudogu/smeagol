@@ -34,7 +34,7 @@ const styles = {
     fontWeight: "400 !important",
     paddingLeft: "6px",
     paddingRight: "3px",
-    verticalAlign: "text-top"
+    verticalAlign: "top"
   }
 };
 
@@ -59,18 +59,6 @@ class BranchDropdown extends React.Component<Props> {
     pushBranchStateFunction(event.target.value, page.path);
   };
 
-  handleFocus = (event) => {
-    event.target.size = 5;
-    console.log("FOCUS");
-    event.stopPropagation();
-  };
-
-  handleBlur = (event) => {
-    event.target.size = 0;
-    console.log("BLUR");
-    event.stopPropagation();
-  };
-
   render() {
     const { branch, branches, classes } = this.props;
 
@@ -83,8 +71,8 @@ class BranchDropdown extends React.Component<Props> {
 
     return (
       <div className={classNames(classes.dropdownWrapper)}>
-        <span className={"glyphicon glyphicon-random"} />
         <label className={classNames(classes.label)} htmlFor={"branchSelect"}>
+          <span style={{ marginRight: "10px" }} className={"glyphicon glyphicon-random"} />
           Branch
         </label>
         <select
@@ -92,8 +80,8 @@ class BranchDropdown extends React.Component<Props> {
           key="branchDropdown"
           value={branch}
           onChange={this.handleBranchChange}
-          onBlur={this.handleBlur}
-          onFocus={this.handleFocus}
+          onBlur={(e) => (e.target.size = 0)}
+          onFocus={(e) => (e.target.size = 5)}
           className={classNames(classes.dropdown)}
         >
           {branchEntries.map((branch) => {
