@@ -8,6 +8,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -413,8 +414,9 @@ public class GitClient implements AutoCloseable {
                 .call();
         } catch (TransportException e) {
             LOG.info("TransportException revert {}", commit);
-            git.revert()
-                .include(commit)
+            git.reset()
+                .setMode(ResetCommand.ResetType.HARD)
+                .setRef(commit.getParent(0).toObjectId().getName())
                 .call();
             throw e;
         }
