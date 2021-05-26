@@ -55,7 +55,7 @@ public class GitClient implements AutoCloseable {
 
     private final ApplicationEventPublisher publisher;
 
-    private Account account;
+    private final Account account;
     private final DirectoryResolver directoryResolver;
     private final Wiki wiki;
 
