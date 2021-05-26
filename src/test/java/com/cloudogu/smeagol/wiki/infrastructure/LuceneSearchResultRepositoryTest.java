@@ -4,6 +4,7 @@ import com.cloudogu.smeagol.wiki.domain.ContentFragment;
 import com.cloudogu.smeagol.wiki.domain.Path;
 import com.cloudogu.smeagol.wiki.domain.Score;
 import com.cloudogu.smeagol.wiki.domain.SearchResult;
+import net.bytebuddy.utility.RandomString;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -66,7 +67,10 @@ public class LuceneSearchResultRepositoryTest {
     }
 
     private Document createSampleDocument() {
-        return createDocument("docs/Home", "Hitchers guide to the Galaxy", "don't panic");
+        String longGeneratedString = RandomString.make(60000);
+        longGeneratedString += "Hitchers guide to the Galaxy";
+
+        return createDocument("docs/Home", longGeneratedString, "don't panic");
     }
 
     private Document createDocument(String path, String content, String message) {
