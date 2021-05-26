@@ -3,6 +3,7 @@ import injectSheet from "react-jss";
 import classNames from "classnames";
 import { orderBranches } from "../../repository/components/BranchOverview";
 import { Branch } from "../../repository/types/repositoryDto";
+import "./pseudoclass-styling.css";
 
 const styles = {
   dropdownWrapper: {
@@ -25,8 +26,9 @@ const styles = {
   },
   option: {
     wordBreak: "break-all",
-    maxWidth: "200px",
     textOverflow: "ellipsis",
+    overflow: "hidden",
+    maxWidth: "inherit",
     fontSize: "16px"
   },
   label: {
@@ -51,8 +53,20 @@ class BranchDropdown extends React.Component<Props> {
   }
 
   handleBranchChange = (event) => {
+    event.target.size = 1;
+    console.log("CHANGE");
     const { page, pushBranchStateFunction } = this.props;
     pushBranchStateFunction(event.target.value, page.path);
+  };
+
+  handleFocus = (event) => {
+    event.target.size = 5;
+    console.log("FOCUS");
+  };
+
+  handleBlur = (event) => {
+    event.target.size = 0;
+    console.log("BLUR");
   };
 
   render() {
@@ -73,8 +87,11 @@ class BranchDropdown extends React.Component<Props> {
         </label>
         <select
           id={"branchSelect"}
+          key="branchDropdown"
           value={branch}
           onChange={this.handleBranchChange}
+          onBlur={this.handleBlur}
+          onFocus={this.handleFocus}
           className={classNames(classes.dropdown)}
         >
           {branchEntries.map((branch) => {
