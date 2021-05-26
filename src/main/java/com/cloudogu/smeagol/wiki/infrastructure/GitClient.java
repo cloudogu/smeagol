@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
@@ -54,7 +55,7 @@ public class GitClient implements AutoCloseable {
 
     private final ApplicationEventPublisher publisher;
 
-    private final Account account;
+    private Account account;
     private final DirectoryResolver directoryResolver;
     private final Wiki wiki;
 
@@ -361,7 +362,7 @@ public class GitClient implements AutoCloseable {
             .setMessage(message)
             .call();
 
-        pushChanges();
+        pushChanges(commit);
 
         return commit;
     }
@@ -397,18 +398,26 @@ public class GitClient implements AutoCloseable {
         return new String(resultBytes.toByteArray());
     }
 
-    private void pushChanges() throws GitAPIException, IOException {
+    private void pushChanges(RevCommit commit) throws GitAPIException, IOException {
         String branch = wiki.getId().getBranch();
         CredentialsProvider credentials = credentialsProvider(account);
 
         Git git = open();
 
         LOG.info("push changes to remote {} on branch {}", wiki.getRepositoryUrl(), branch);
-        git.push()
-            .setRemote(getRemoteRepositoryUrl())
-            .setRefSpecs(new RefSpec(branch + ":" + branch))
-            .setCredentialsProvider(credentials)
-            .call();
+        try {
+            git.push()
+                .setRemote(getRemoteRepositoryUrl())
+                .setRefSpecs(new RefSpec(branch + ":" + branch))
+                .setCredentialsProvider(credentials)
+                .call();
+        } catch (TransportException e) {
+            LOG.info("TransportException revert {}", commit);
+            git.revert()
+                .include(commit)
+                .call();
+            throw e;
+        }
     }
 
     @Override
