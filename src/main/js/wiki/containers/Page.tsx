@@ -146,6 +146,10 @@ const Page: FC<Props> = (props) => {
       );
     }
 
+    if (createPageMutation.error) {
+      return <WikiAlertPage i18nKey={"page_failed_to_create"} />;
+    }
+
     if (pageQuery.error === PAGE_NOT_FOUND_ERROR) {
       return <Redirect to={"?create=true"} />;
     }
