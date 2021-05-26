@@ -76,6 +76,11 @@ public class LuceneSearchResultRepository implements SearchResultRepository {
         Highlighter highlighter = new Highlighter(formatter, encoder, scorer);
         highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer));
 
+        // By default the Highlighter will only process the first 51200 chars of a Document.
+        // This could lead to problems with very long texts and with texts with pictures.
+        // Therefore, the value here is increased to the highest possible value.
+        highlighter.setMaxDocCharsToAnalyze(Integer.MAX_VALUE);
+
         return highlighter;
     }
 
