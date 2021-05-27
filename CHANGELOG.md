@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
+* Commit gets reverted in case of a failed push (#142)
 * Users with special characters in their passwords are now able to see repositories (#144)
 
 ## [v1.3.2-1] - 2021-05-17

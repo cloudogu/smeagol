@@ -29,6 +29,7 @@
   "wiki_failed_to_edit": "Das Wiki konnte nicht bearbeitet werden",
   "page_failed_to_fetch": "Die Seite konnte nicht geladen werden",
   "page_failed_to_modify": "Die Seite konnte nicht bearbeitet werden",
+  "page_failed_to_create": "Die Seite konnte nicht erstellt werden",
   "page-editor_no_write_permissions": "Du hast nicht genügend Berechtigungen um diese Seite zu bearbeiten",
   "page-header_home": "Startseite",
   "page-header_pages": "Seiten",
