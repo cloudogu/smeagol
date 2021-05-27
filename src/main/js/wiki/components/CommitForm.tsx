@@ -2,6 +2,8 @@ import React from "react";
 import { Modal } from "react-bootstrap";
 import { translate } from "react-i18next";
 import ActionButton from "./ActionButton";
+import VerifiableTextArea from "./VerifiableTextArea";
+import ToolTip from "./ToolTip";
 
 type Props = {
   t: any;
@@ -23,12 +25,22 @@ class CommitForm extends React.Component<Props, State> {
     };
   }
 
-  handleChange = (event) => {
-    this.setState({ message: event.target.value });
-  };
-
   save = () => {
     this.props.onSave(this.state.message);
+  };
+
+  isValidCommitMessage = (message) => {
+    if (message === null || message === undefined || message.length === 0) {
+      return false;
+    }
+    const absolutePathRegex = /(\S)+/;
+    return message.match(absolutePathRegex) !== null;
+  };
+
+  handleCommitMessageUpdate = (message) => {
+    this.setState({
+      message: message
+    });
   };
 
   render() {
@@ -37,13 +49,25 @@ class CommitForm extends React.Component<Props, State> {
     return (
       <Modal show={show} onHide={onAbort}>
         <Modal.Header closeButton>
-          <Modal.Title>{t("commit-form_title")}</Modal.Title>
+          <Modal.Title>
+            {t("commit-form_title")} <ToolTip prefix={"commit-form-message"} />
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <textarea className="form-control" value={this.state.message} onChange={this.handleChange} />
+          <VerifiableTextArea
+            prefix={"commit-form-message"}
+            initValue={this.state.message}
+            setParentState={this.handleCommitMessageUpdate}
+            isValid={this.isValidCommitMessage(this.state.message)}
+          />
         </Modal.Body>
         <Modal.Footer>
-          <ActionButton type="primary" onClick={this.save} i18nKey="commit-form_save" />
+          <ActionButton
+            disabled={!this.isValidCommitMessage(this.state.message)}
+            type="primary"
+            onClick={this.save}
+            i18nKey="commit-form_save"
+          />
           <ActionButton onClick={onAbort} i18nKey="commit-form_abort" />
         </Modal.Footer>
       </Modal>
