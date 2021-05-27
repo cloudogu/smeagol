@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 * Fix a search error that can occur when searching long texts (#145)
+* Commit gets reverted in case of a failed push (#142)
 
 ## [v1.3.2-1] - 2021-05-17
 ### Changed
