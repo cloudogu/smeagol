@@ -7,16 +7,19 @@ This repository contains smeagol, an wiki server which stores its files in a git
 ## Development
 
 ### Environment
+> **Note**: If you intend to use your local ecosystem, which will also reside on `192.168.56.2` by default, you have to set an etcd key first.
+> This can be done in vagrant with the command `etcdctl set/config/_global/stage "development"` and restarting CAS in vagrant via `docker restart cas`.
 
-Smeagol requires a proper configured Cloudogu EcoSystem in order to work properly. 
+#### Setting up a development ecosystem via groovy
+Smeagol requires a proper configured Cloudogu EcoSystem in order to work properly.
 This can be achieved by using the provided groovy execution:
 
 ```bash 
 ./mvnw groovy:execute@up
 ```
 
-This command will clone the ecosystem repository into the `.workspace` folder, creates a `setup.json` with a proper 
-configuration and starts the vm. After the vm has started, open the setup in your browser at 
+This command will clone the ecosystem repository into the `.workspace` folder, creates a `setup.json` with a proper
+configuration and starts the vm. After the vm has started, open the setup in your browser at
 [192.168.56.2:8080](http://192.168.56.2:8080), register the instance and finish the setup.
 
 Then you can access SCM-Manager at: [https://192.168.56.2/scm/](https://192.168.56.2/scm/).
@@ -26,7 +29,7 @@ Username: `admin`, Password: `adminpw`
 With those credentials you can also enter the VM via SSH:
 
 * `ssh admin@192.168.56.2`
-* or `cd .workspace/ecosystem; vagrant ssh`  
+* or `cd .workspace/ecosystem; vagrant ssh`
 
 Hint: Make sure your SCM-Manager has the Smeagol Plugin installed!
 
@@ -70,11 +73,11 @@ The spring-boot server from the RESTApi will proxy every ui request to the UI se
 
 ### Hot Reload
 
-Hot reload should work out of the box for the ui. 
+Hot reload should work out of the box for the ui.
 
-To enable hot reload for java classes, the application must be started with the maven goal "spring-boot:run". For 
-Intellij we have to recompile the project or enable "Make project automatically", but this requires some sort of hack. 
-Please have a look at the description of the issue [IDEA-141638](https://youtrack.jetbrains.com/issue/IDEA-141638). 
+To enable hot reload for java classes, the application must be started with the maven goal "spring-boot:run". For
+Intellij we have to recompile the project or enable "Make project automatically", but this requires some sort of hack.
+Please have a look at the description of the issue [IDEA-141638](https://youtrack.jetbrains.com/issue/IDEA-141638).
 
 ---
 ### What is the Cloudogu EcoSystem?

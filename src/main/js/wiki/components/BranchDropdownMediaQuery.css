@@ -1,0 +1,12 @@
+/* Styling with media query's is necessarily done in a own css file because the inline styling in components does not
+allow media query's*/
+@media only screen and (max-width: 600px) {
+  #branchDropdownWrapper {
+    flex-grow: 1; /* Let's the dropdown slide to the next line beginning*/
+    padding-left: 0px;
+  }
+
+  #branchDropdownWrapper > label {
+    padding-left: 12px; /* beginn the new parallel to those above*/
+  }
+}
