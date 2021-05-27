@@ -3,6 +3,7 @@ import injectSheet from "react-jss";
 import classNames from "classnames";
 import { orderBranches } from "../../repository/components/BranchOverview";
 import { Branch } from "../../repository/types/repositoryDto";
+import "./BranchDropdownMediaQuery.css";
 
 const styles = {
   dropdownWrapper: {
@@ -12,20 +13,17 @@ const styles = {
     padding: "6px 12px",
     fontSize: "14px",
     marginLeft: "auto",
-    float: "right !important",
-    fontFamily: "sans-serif"
+    fontFamily: "sans-serif",
+    justifySelf: "end"
   },
   dropdown: {
     maxWidth: "200px",
     textOverflow: "ellipsis",
-    border: "1px solid #777777",
     backgroundColor: "transparent",
-    borderRadius: "3px",
     fontSize: "14px"
   },
   option: {
     wordBreak: "break-all",
-    textOverflow: "ellipsis",
     overflow: "hidden",
     maxWidth: "inherit",
     fontSize: "16px"
@@ -53,10 +51,8 @@ class BranchDropdown extends React.Component<Props> {
   }
 
   handleBranchChange = (event) => {
-    event.target.size = 1;
     const { page, pushBranchStateFunction } = this.props;
     pushBranchStateFunction(event.target.value, page.path);
-    this.forceUpdate();
   };
 
   render() {
@@ -70,7 +66,7 @@ class BranchDropdown extends React.Component<Props> {
     }
 
     return (
-      <div className={classNames(classes.dropdownWrapper)}>
+      <div id="branchDropdownWrapper" className={classNames(classes.dropdownWrapper)}>
         <label className={classNames(classes.label)} htmlFor={"branchSelect"}>
           <span style={{ marginRight: "10px" }} className={"glyphicon glyphicon-random"} />
           Branch
@@ -80,8 +76,6 @@ class BranchDropdown extends React.Component<Props> {
           key="branchDropdown"
           value={branch}
           onChange={this.handleBranchChange}
-          onBlur={(e) => (e.target.size = 0)}
-          onFocus={(e) => (e.target.size = 5)}
           className={classNames(classes.dropdown)}
         >
           {branchEntries.map((branch) => {
