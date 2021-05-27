@@ -80,12 +80,7 @@ class BranchDropdown extends React.Component<Props> {
         >
           {branchEntries.map((branch) => {
             return (
-              <option
-                className={classNames(classes.option)}
-                key={branch.name}
-                value={encodeURIComponent(branch.name)}
-                // label={branch.name.substr(0, branch.name.length)} possible leverage point for to long branch names, other solutions did not work
-              >
+              <option className={classNames(classes.option)} key={branch.name} value={encodeURIComponent(branch.name)}>
                 {branch.name}
               </option>
             );
