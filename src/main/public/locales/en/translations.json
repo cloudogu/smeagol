@@ -29,6 +29,7 @@
   "wiki_failed_to_edit": "Failed to modify wiki",
   "page_failed_to_fetch": "Failed to fetch page",
   "page_failed_to_modify": "Failed to modify page",
+  "page_failed_to_create": "Failed to create page",
   "page-editor_no_write_permissions": "You have not enough permission to edit this page",
   "page-header_home": "Home",
   "page-header_pages": "Pages",
