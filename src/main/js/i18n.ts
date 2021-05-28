@@ -1,14 +1,13 @@
 import i18n from "i18next";
-import Backend from "i18next-fetch-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { reactI18nextModule } from "react-i18next";
 
 import "moment/locale/de";
 
-const loadPath = process.env.PUBLIC_URL + "/locales/{{lng}}/{{ns}}.json";
+// The import is essentio for webpack to detect the translations and to pack them together with the bundle.js
+import resBundle from "i18next-resource-store-loader!./assets/locales/DoNotDelete";
 
 i18n
-  .use(Backend)
   .use(LanguageDetector)
   .use(reactI18nextModule)
   .init({
@@ -17,22 +16,12 @@ i18n
     // have a common namespace used around the full app
     ns: ["translations"],
     defaultNS: "translations",
+    resources: resBundle,
 
     debug: true,
 
-    interpolation: {
-      escapeValue: false // not needed for react!!
-    },
-
     react: {
       wait: true
-    },
-
-    backend: {
-      loadPath: loadPath,
-      init: {
-        credentials: "same-origin"
-      }
     }
   });
 

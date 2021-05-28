@@ -10,6 +10,7 @@
     "i18next": "^10.3.0",
     "i18next-browser-languagedetector": "^2.1.0",
     "i18next-fetch-backend": "^0.1.0",
+    "i18next-resource-store-loader": "^0.1.2",
     "moment": "^2.20.1",
     "object-assign": "4.1.1",
     "promise": "8.0.1",
