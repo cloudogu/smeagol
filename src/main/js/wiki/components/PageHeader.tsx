@@ -11,10 +11,19 @@ import { Branch } from "../../repository/types/repositoryDto";
 
 const styles = {
   header: {
-    borderBottom: "1px solid #ddd"
+    borderBottom: "1px solid #ddd",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
   actions: {
-    marginBottom: "1em"
+    marginBottom: "1em",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    flexWrap: "wrap",
+    alignItems: "flex-start"
   }
 };
 
@@ -216,8 +225,8 @@ class PageHeader extends React.Component<Props, State> {
           {historyButton}
           {deleteButton}
           {restoreButton}
-          {branchDropdown}
           {settingsButton}
+          {branchDropdown}
         </div>
         {createForm}
         {moveForm}

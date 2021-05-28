@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.3.3-1] - 2021-05-28
+### Fixed
+* Prevent saving changes when commit message is invalid (#139)
+* Commit gets reverted in case of a failed push (#142)
+* Users with special characters in their passwords are now able to see repositories (#144)
+* Fix a search error that can occur when searching long texts (#145)
+* Improved pagination of the branch selection box. (#140)
+
 ## [v1.3.2-1] - 2021-05-17
 ### Changed
 * Complement user docu with more recent screenshots and documentation of new features (#131)
