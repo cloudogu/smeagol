@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.3.3-1] - 2021-05-28
 ### Fixed
 * Prevent saving changes when commit message is invalid (#139)
 * Commit gets reverted in case of a failed push (#142)
