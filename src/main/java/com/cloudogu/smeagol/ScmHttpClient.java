@@ -110,9 +110,7 @@ public class ScmHttpClient {
         Account account = accountService.get();
         LOG.trace("create headers for account {}", account.getUsername());
         HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth(account.getUsername(), new String(account.getPassword()), Charsets.UTF_8);
-        // The user-agent chrome is set to force scm using utf-8 decoding (opera is also possible)
-        headers.set("User-Agent", "chrome");
+        headers.setBasicAuth(account.getUsername(), new String(account.getPassword()));
         // The accept header is set explicitly to access the endpoint /scm/api/v2.
         // For SCM versions <= 2.15.0 the server otherwise would respond with a 406.
         headers.set("Accept", "application/*");
