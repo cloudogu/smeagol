@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.3.4-1] - 2021-06-01
+### Fixed
+- Occasional wrong caching of translations by integrating the translations into the webpack bundle (#151)
+
 ## [v1.3.3-1] - 2021-05-28
 ### Fixed
 * Prevent saving changes when commit message is invalid (#139)

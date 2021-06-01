@@ -6,7 +6,7 @@ import ToolTipPopover from "./ToolTipPopover";
 
 const styles = {
   help: {
-    fontSize: "150%",
+    fontSize: "100%",
     "margin-right": "5px"
   }
 };
