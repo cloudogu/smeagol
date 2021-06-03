@@ -24,9 +24,9 @@ This can be achieved by using the provided groovy execution:
 
 This command will clone the ecosystem repository into the `.workspace` folder, creates a `setup.json` with a proper
 configuration and starts the vm. After the vm has started, open the setup in your browser at
-[192.168.56.2:8080](http://192.168.56.2:8080), register the instance and finish the setup.
+`http://192.168.56.2:8080`, register the instance and finish the setup.
 
-Then you can access SCM-Manager at: [https://192.168.56.2/scm/](https://192.168.56.2/scm/).
+Then you can access SCM-Manager at: `https://192.168.56.2/scm/`.
 
 Username: `admin`, Password: `adminpw`
 
@@ -55,8 +55,8 @@ The server for the REST API can be started with the run goal of the spring-boot 
 ```bash
 ./mvnw clean spring-boot:run
 ```
-To access the development instance open [192.168.56.1:8080](http://192.168.56.1:8080) in your browser.
-For example, you can get all repositories from [http://192.168.56.1:8080/smeagol/api/v1/repositories](http://192.168.56.1:8080/smeagol/api/v1/repositories).
+To access the development instance open `http://192.168.56.1:8080` in your browser.
+For example, you can get all repositories from `http://192.168.56.1:8080/smeagol/api/v1/repositories`.
 
 ### UI
 
@@ -72,7 +72,7 @@ After the dependency installation has finished, start the development server:
 yarn run start
 ```
 
-After the RESTApi and the UI are successfully started, we can open Smeagol in our browser at [192.168.56.1:8080](http://192.168.56.1:8080).
+After the RESTApi and the UI are successfully started, we can open Smeagol in our browser at `http://192.168.56.1:8080`.
 The spring-boot server from the RESTApi will proxy every ui request to the UI server.
 
 ### Hot Reload
