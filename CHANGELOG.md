@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.3.5-1] - 2021-06-09
+### Fixed
+- wrong encoding of credentials by using the `smeagol` user-agent with the scm that enforces UTF-8 encoding (#144)
+
 ## [v1.3.4-1] - 2021-06-01
 ### Fixed
 - Occasional wrong caching of translations by integrating the translations into the webpack bundle (#151)
