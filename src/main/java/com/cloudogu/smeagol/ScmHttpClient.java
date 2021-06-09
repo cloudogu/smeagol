@@ -1,5 +1,6 @@
 package com.cloudogu.smeagol;
 
+import com.cloudogu.versionname.VersionNames;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Throwables;
@@ -110,8 +111,14 @@ public class ScmHttpClient {
         Account account = accountService.get();
         LOG.trace("create headers for account {}", account.getUsername());
         HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth(account.getUsername(), new String(account.getPassword()));
-        headers.add("user-agent", "smeagol/v1");
+        headers.setBasicAuth(account.getUsername(), new String(account.getPassword()), Charsets.UTF_8);
+        String smeagolAppVersion =  VersionNames.getVersionNameFromManifest("META-INF/MANIFEST.MF", "Implementation-Version");
+        if (smeagolAppVersion.equals("")) {
+            // happens only in the dev environment -> set version to dev
+            smeagolAppVersion = "dev";
+        }
+        LOG.trace("set user agent to smeagol/{}", smeagolAppVersion);
+        headers.add("user-agent", "smeagol/" + smeagolAppVersion);
         // The accept header is set explicitly to access the endpoint /scm/api/v2.
         // For SCM versions <= 2.15.0 the server otherwise would respond with a 406.
         headers.set("Accept", "application/*");
