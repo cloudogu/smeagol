@@ -164,6 +164,13 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Used to extract the version at runtime -->
+        <dependency>
+            <groupId>com.cloudogu.versionName</groupId>
+            <artifactId>versionName</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
     </dependencies>
 
 
