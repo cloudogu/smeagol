@@ -10,7 +10,7 @@ In diesem Abschnitt werden die benötigten Schritte beschrieben um die Integrati
 
 Damit alle Integrationstests auch einwandfrei funktionieren, müssen vorher einige Daten konfiguriert werden.
 
-**integrationTests/cypress.json** [[Link zur Datei](../../integrationTests/cypress.json)]
+**integrationTests/cypress.json** [[Link zur Datei](https://github.com/cloudogu/smeagol/blob/develop/integrationTests/cypress.json)]
 
 1) Es muss die base-URL auf das Hostsystem angepasst werden.
    Dafür muss das Feld `baseUrl` auf die Host-FQDN angepasst werden (`https://local.cloudogu.com`)
