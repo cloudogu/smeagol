@@ -333,7 +333,7 @@ public class GitClient implements AutoCloseable {
 
 
     private CredentialsProvider credentialsProvider(Account account) {
-        return new UsernamePasswordCredentialsProvider(account.getUsername(), account.getPassword());
+        return new UsernamePasswordCredentialsProvider("__bearer_token", account.getAccessToken());
     }
 
     public RevCommit commit(String path, String displayName, String email, String message) throws GitAPIException, IOException {
