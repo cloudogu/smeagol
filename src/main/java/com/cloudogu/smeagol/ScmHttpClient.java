@@ -5,14 +5,27 @@ import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.net.ssl.SSLContext;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,15 +41,50 @@ public class ScmHttpClient {
     private final LoadingCache<CacheKey, ScmHttpClientResponse> cache;
 
     @Autowired
-    public ScmHttpClient(AccountService accountService, RestTemplateFactory restTemplateFactory) {
+    public ScmHttpClient(AccountService accountService, RestTemplateBuilder restTemplateBuilder, @Value("${scm.url}") String scmUrl, Stage stage) {
         this.accountService = accountService;
 
-        RestTemplate restTemplate = restTemplateFactory.createRestTemplate();
+        RestTemplate restTemplate = createRestTemplate(restTemplateBuilder, stage, scmUrl);
         // cache request for 10 seconds,
         // because some operations requesting the same resource multiple times (e.g. creating the initial search index)
         this.cache = CacheBuilder.newBuilder()
             .expireAfterWrite(10, TimeUnit.SECONDS)
             .build(new ScmRequestCacheLoader(restTemplate));
+    }
+
+    static protected RestTemplate createRestTemplate(RestTemplateBuilder restTemplateBuilder, Stage stage, String scmUrl) {
+        HttpClientBuilder httpClientBuilder = HttpClients.custom()
+            // disable cookie management to avoid scm-manager sessions
+            .disableCookieManagement();
+
+        if (stage == Stage.DEVELOPMENT) {
+            httpClientBuilder = disableSSLVerification(httpClientBuilder);
+        }
+
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setHttpClient(httpClientBuilder.build());
+        return restTemplateBuilder.requestFactory( () -> requestFactory)
+            .rootUri(scmUrl)
+            .build();
+    }
+
+    static private HttpClientBuilder disableSSLVerification(HttpClientBuilder httpClientBuilder) {
+        LOG.warn("disable ssl verification for scm-manager communication, because we are in development stage");
+        TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+        SSLContext sslContext = createSSLContext(acceptingTrustStrategy);
+
+        SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
+        return httpClientBuilder.setSSLSocketFactory(csf);
+    }
+
+    static private SSLContext createSSLContext(TrustStrategy acceptingTrustStrategy) {
+        try {
+            return SSLContexts.custom()
+                .loadTrustMaterial(null, acceptingTrustStrategy)
+                .build();
+        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException ex) {
+            throw Throwables.propagate(ex);
+        }
     }
 
     public <T> Optional<T> get(String url, Class<T> type, Object... urlVariables) {

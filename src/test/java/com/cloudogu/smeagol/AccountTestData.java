@@ -7,14 +7,14 @@ public final class AccountTestData {
 
     public static final Account TRILLIAN = new Account(
             "trillian",
-            "trillian123".toCharArray(),
+            "jwttrillian",
             "Tricia McMillan",
             "trillian@hitchhiker.com"
     );
 
     public static final Account SLARTI = new Account(
             "slarti",
-            "AwesomeFjorde".toCharArray(),
+            "jwtslarti",
             "Slartibartfaß",
             "slarti@hitchhiker.com"
     );

@@ -5,6 +5,7 @@ import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.Objects;
+
+import static com.cloudogu.smeagol.ScmHttpClient.createRestTemplate;
 
 /**
  * Util methods to get the authenticated {@link Account} from current request.
@@ -28,10 +31,12 @@ public class AccountService {
     private final String scmUrl;
     private final RestTemplate scmRestTemplate;
 
+    static private final String ACCESS_TOKEN_ENDPOINT = "/api/v2/cas/auth/";
+
     @Autowired
-    public AccountService(ObjectFactory<HttpServletRequest> requestFactory, @Value("${scm.url}") String scmUrl,
-                          RestTemplateFactory restTemplateFactory) {
-        this.scmRestTemplate = restTemplateFactory.createRestTemplate();
+    public AccountService(ObjectFactory<HttpServletRequest> requestFactory, RestTemplateBuilder restTemplateBuilder,
+                          @Value("${scm.url}") String scmUrl, Stage stage) {
+        this.scmRestTemplate = createRestTemplate(restTemplateBuilder, stage, scmUrl);
         this.requestFactory = requestFactory;
         this.scmUrl = scmUrl;
     }
@@ -73,15 +78,15 @@ public class AccountService {
         if (Strings.isNullOrEmpty(pt)) {
             throw new AuthenticationException("could not get proxy ticket for scm access token endpoint");
         }
-        return fetchSCMAccessToken(accessTokenEndpointURL, pt);
+        return fetchSCMAccessToken(ACCESS_TOKEN_ENDPOINT, pt);
     }
 
     private String getAccessTokenEndpoint() {
         String accessEndpointURL = scmUrl;
-        if (!accessEndpointURL.endsWith("/")) {
-            accessEndpointURL = accessEndpointURL.concat("/");
+        if (accessEndpointURL.endsWith("/")) {
+            accessEndpointURL = accessEndpointURL.substring(0, accessEndpointURL.length() - 1);
         }
-        return accessEndpointURL.concat("api/v2/cas/auth/");
+        return accessEndpointURL.concat(ACCESS_TOKEN_ENDPOINT);
     }
 
     private String fetchSCMAccessToken(String url, String proxyTicket) {
