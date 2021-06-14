@@ -21,6 +21,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 
+import static com.cloudogu.smeagol.AccountService.shouldRefetchToken;
+import static com.cloudogu.smeagol.AccountTestData.LONG_LASTING_JWT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.verify;
@@ -72,7 +74,7 @@ public class AccountServiceTest {
      * Tests {@link AccountService#get()} without principal.
      */
     @Test
-    public void testGetWithoutPrincipal(){
+    public void testGetWithoutPrincipal() {
         expectedException.expect(AuthenticationException.class);
         expectedException.expectMessage("principal");
 
@@ -83,7 +85,7 @@ public class AccountServiceTest {
      * Tests {@link AccountService#get()} without proxy ticket.
      */
     @Test
-    public void testGetWithoutProxyTicket(){
+    public void testGetWithoutProxyTicket() {
         when(request.getUserPrincipal()).thenReturn(principal);
 
         expectedException.expect(AuthenticationException.class);
@@ -99,7 +101,7 @@ public class AccountServiceTest {
     @Test
     public void testGetFailedToFetchAccessToken() {
         when(request.getUserPrincipal()).thenReturn(principal);
-        String accessTokenEndpoint =  "/api/v2/cas/auth/";
+        String accessTokenEndpoint = "/api/v2/cas/auth/";
         when(principal.getProxyTicketFor("https://192.168.56.2/scm" + accessTokenEndpoint)).thenReturn("pt-123");
 
         server.expect(requestTo(accessTokenEndpoint)).andRespond(withNoContent());
@@ -113,6 +115,7 @@ public class AccountServiceTest {
 
     /**
      * Tests {@link AccountService#get()}.
+     *
      * @throws IOException
      */
     @Test
@@ -127,7 +130,7 @@ public class AccountServiceTest {
         when(principal.getAttributes()).thenReturn(attributes);
 
         server.expect(requestTo(accessTokenEndpoint))
-            .andExpect(header("Content-Type","application/x-www-form-urlencoded"))
+            .andExpect(header("Content-Type", "application/x-www-form-urlencoded"))
             .andExpect(content().string("ticket=pt-123"))
             .andRespond(withSuccess("jwtadmin", MediaType.TEXT_PLAIN));
 
@@ -140,15 +143,26 @@ public class AccountServiceTest {
 
         verify(session).setAttribute(Account.class.getName(), account);
     }
-    
+
     /**
      * Tests {@link AccountService#get()} from session cache.
      */
     @Test
-    public void testGetGetFromSession(){
-        Account account = new Account("hans", "schalter", "hansamschalter@light.de");
+    public void testGetGetFromSession() {
+        Account account = new Account("hans", LONG_LASTING_JWT, "schalter", "hansamschalter@light.de");
         when(session.getAttribute(Account.class.getName())).thenReturn(account);
         Account returnedAccount = accountService.get();
         assertSame(account, returnedAccount);
+    }
+
+    @Test
+    public void testShouldRefetchToken_expired() throws IOException {
+        assertEquals(true, shouldRefetchToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImp0aSI6IjZSU2FKVmdWdkgiLCJpYXQiOjE1MjM2NzU2ODAsImV4cCI6MTUyMzY3OTI4MCwic2NtLW1hbmFnZXIucmVmcmVzaEV4cGlyYXRpb24iOjE2MjM3MTg4ODAyODQsInNjbS1tYW5hZ2VyLnBhcmVudFRva2VuSWQiOiI2UlNhSlZnVnZIIn0.ignored"));
+    }
+
+    @Test
+    public void testShouldRefetchToken_valid() throws IOException {
+        // Token expires in year 2271
+        assertEquals(false, shouldRefetchToken(LONG_LASTING_JWT));
     }
 }

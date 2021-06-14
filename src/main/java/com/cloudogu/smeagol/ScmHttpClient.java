@@ -52,7 +52,7 @@ public class ScmHttpClient {
             .build(new ScmRequestCacheLoader(restTemplate));
     }
 
-    static protected RestTemplate createRestTemplate(RestTemplateBuilder restTemplateBuilder, Stage stage, String scmUrl) {
+    protected static RestTemplate createRestTemplate(RestTemplateBuilder restTemplateBuilder, Stage stage, String scmUrl) {
         HttpClientBuilder httpClientBuilder = HttpClients.custom()
             // disable cookie management to avoid scm-manager sessions
             .disableCookieManagement();
@@ -68,7 +68,7 @@ public class ScmHttpClient {
             .build();
     }
 
-    static private HttpClientBuilder disableSSLVerification(HttpClientBuilder httpClientBuilder) {
+    private static HttpClientBuilder disableSSLVerification(HttpClientBuilder httpClientBuilder) {
         LOG.warn("disable ssl verification for scm-manager communication, because we are in development stage");
         TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
         SSLContext sslContext = createSSLContext(acceptingTrustStrategy);
