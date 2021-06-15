@@ -77,7 +77,7 @@ public class ScmHttpClient {
         return httpClientBuilder.setSSLSocketFactory(csf);
     }
 
-    static private SSLContext createSSLContext(TrustStrategy acceptingTrustStrategy) {
+    private static SSLContext createSSLContext(TrustStrategy acceptingTrustStrategy) {
         try {
             return SSLContexts.custom()
                 .loadTrustMaterial(null, acceptingTrustStrategy)

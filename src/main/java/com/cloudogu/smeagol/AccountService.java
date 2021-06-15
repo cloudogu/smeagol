@@ -128,7 +128,7 @@ public class AccountService {
         return accessToken;
     }
 
-    static protected boolean shouldRefetchToken(String jwt) throws IOException {
+    protected static boolean shouldRefetchToken(String jwt) throws IOException {
         String[] chunks = jwt.split("\\.");
         Base64.Decoder decoder = Base64.getDecoder();
         String payload = new String(decoder.decode(chunks[1]));
