@@ -1,45 +1,52 @@
 package com.cloudogu.smeagol;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Resources;
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.client.MockRestServiceServer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static com.cloudogu.smeagol.AccountService.shouldRefetchToken;
+import static com.cloudogu.smeagol.AccountTestData.LONG_LASTING_JWT;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withNoContent;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 /**
  * Unit tests for {@link com.cloudogu.smeagol.AccountService}.
  *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@RestClientTest(AccountService.class)
 public class AccountServiceTest {
 
-    @Mock
+    @MockBean
     private HttpServletRequest request;
 
     @Mock
     private HttpSession session;
 
-    @Mock
+    @MockBean
     private ObjectFactory<HttpServletRequest> requestFactory;
 
     @Mock
@@ -48,8 +55,11 @@ public class AccountServiceTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    @Autowired
+    private MockRestServiceServer server;
+
+    @Autowired
+    private AccountService accountService;
 
     /**
      * Prepare mocks.
@@ -64,146 +74,95 @@ public class AccountServiceTest {
      * Tests {@link AccountService#get()} without principal.
      */
     @Test
-    public void testGetWithoutPrincipal(){
+    public void testGetWithoutPrincipal() {
         expectedException.expect(AuthenticationException.class);
         expectedException.expectMessage("principal");
 
-        new AccountService(requestFactory, "com/cloudogu/smeagol").get();
+        accountService.get();
     }
 
     /**
      * Tests {@link AccountService#get()} without proxy ticket.
      */
     @Test
-    public void testGetWithoutProxyTicket(){
+    public void testGetWithoutProxyTicket() {
         when(request.getUserPrincipal()).thenReturn(principal);
 
         expectedException.expect(AuthenticationException.class);
         expectedException.expectMessage("proxy");
         expectedException.expectMessage("ticket");
 
-        new AccountService(requestFactory, "com/cloudogu/smeagol").get();
+        accountService.get();
     }
 
     /**
-     * Tests {@link AccountService#get()} with an error during clear pass
-     * fetch.
+     * Tests {@link AccountService#get()} with an error during access token fetch.
      */
     @Test
-    public void testGetFailedToFetchClearPass(){
+    public void testGetFailedToFetchAccessToken() {
         when(request.getUserPrincipal()).thenReturn(principal);
-        when(principal.getProxyTicketFor("com/cloudogu/smeagol/clearPass")).thenReturn("pt-123");
+        String accessTokenEndpoint = "/api/v2/cas/auth/";
+        when(principal.getProxyTicketFor("https://192.168.56.2/scm" + accessTokenEndpoint)).thenReturn("pt-123");
+
+        server.expect(requestTo(accessTokenEndpoint)).andRespond(withNoContent());
 
         expectedException.expect(AuthenticationException.class);
-        expectedException.expectMessage("fetch");
-        expectedException.expectMessage("clear pass");
+        expectedException.expectMessage("could not get accessToken from scm endpoint");
 
-        new AccountService(requestFactory, "com/cloudogu/smeagol").get();
+        accountService.get();
     }
 
-    /**
-     * Tests {@link AccountService#get()} without password in clear pass
-     * response.
-     * @throws IOException
-     */
-    @Test
-    public void testGetWithoutPassword() throws IOException {
-        File directory = folder.newFolder();
-
-        URL testResource = Resources.getResource("com/cloudogu/smeagol/clearpass-wo.xml");
-        try (FileOutputStream fos = new FileOutputStream(new File(directory, "clearPass")) ) {
-            Resources.copy(testResource, fos);
-        }
-
-        String url = directory.toURI().toURL().toExternalForm();
-
-        when(request.getUserPrincipal()).thenReturn(principal);
-        when(principal.getProxyTicketFor(url + "clearPass")).thenReturn("pt-123");
-
-        expectedException.expect(AuthenticationException.class);
-        expectedException.expectMessage("extract");
-        expectedException.expectMessage("clear pass");
-        expectedException.expectMessage("password");
-
-        new AccountService(requestFactory, url).get();
-    }
-
-    /**
-     * Tests {@link AccountService#get()} with clear pass failure.
-     * @throws IOException
-     */
-    @Test
-    public void testGetWithClearPassFailure() throws IOException {
-        File directory = folder.newFolder();
-
-        URL testResource = Resources.getResource("com/cloudogu/smeagol/clearpass-failure.xml");
-        try (FileOutputStream fos = new FileOutputStream(new File(directory, "clearPass")) ) {
-            Resources.copy(testResource, fos);
-        }
-
-        String url = directory.toURI().toURL().toExternalForm();
-
-        when(request.getUserPrincipal()).thenReturn(principal);
-        when(principal.getProxyTicketFor(url + "clearPass")).thenReturn("pt-123");
-
-        expectedException.expect(AuthenticationException.class);
-        expectedException.expectMessage("strange error");
-        expectedException.expectMessage("cas");
-
-        new AccountService(requestFactory, url).get();
-    }
 
     /**
      * Tests {@link AccountService#get()}.
+     *
      * @throws IOException
      */
     @Test
-    public void testGet() throws IOException {
-        File directory = folder.newFolder();
-        
-        URL testResource = Resources.getResource("com/cloudogu/smeagol/clearpass.xml");
-        try (FileOutputStream fos = new FileOutputStream(new File(directory, "clearPass")) ) {
-            Resources.copy(testResource, fos);
-        }
-        
-        String url = directory.toURI().toURL().toExternalForm();
-        
+    public void testGet() {
+
         when(request.getUserPrincipal()).thenReturn(principal);
-        // when(configuration.getCasUrl()).thenReturn(url);
-        when(principal.getProxyTicketFor(url + "clearPass")).thenReturn("pt-123");
-        Map<String,Object> attributes = ImmutableMap.of(
+        String accessTokenEndpoint = "/api/v2/cas/auth/";
+        when(principal.getProxyTicketFor("https://192.168.56.2/scm" + accessTokenEndpoint)).thenReturn("pt-123");
+        Map<String, Object> attributes = ImmutableMap.of(
             "username", "admin", "displayName", "Administrator", "mail", "super@admin.org"
         );
         when(principal.getAttributes()).thenReturn(attributes);
 
+        server.expect(requestTo(accessTokenEndpoint))
+            .andExpect(header("Content-Type", "application/x-www-form-urlencoded"))
+            .andExpect(content().string("ticket=pt-123"))
+            .andRespond(withSuccess("jwtadmin", MediaType.TEXT_PLAIN));
 
-        Account account = new AccountService(requestFactory, url).get();
+        Account account = accountService.get();
+
         assertEquals("admin", account.getUsername());
-        assertEquals("admin123", new String(account.getPassword()));
+        assertEquals("jwtadmin", account.getAccessToken());
         assertEquals("Administrator", account.getDisplayName());
         assertEquals("super@admin.org", account.getMail());
-        
+
         verify(session).setAttribute(Account.class.getName(), account);
     }
-    
+
     /**
      * Tests {@link AccountService#get()} from session cache.
      */
     @Test
-    public void testGetGetFromSession(){
-        Account account = new Account("hans", "schalter", "hansamschalter@light.de");
+    public void testGetGetFromSession() {
+        Account account = new Account("hans", LONG_LASTING_JWT, "schalter", "hansamschalter@light.de");
         when(session.getAttribute(Account.class.getName())).thenReturn(account);
-        Account returnedAccount = new AccountService(requestFactory, "com/cloudogu/smeagol").get();
+        Account returnedAccount = accountService.get();
         assertSame(account, returnedAccount);
     }
-    
-    /**
-     * Tests {@link AccountService#fetchClearPassCredentials(URL)}.
-     */
+
     @Test
-    public void testFetchClearPassCredentials() throws IOException {
-        URL url = Resources.getResource("com/cloudogu/smeagol/clearpass.xml");
-        assertArrayEquals("admin123".toCharArray(), AccountService.fetchClearPassCredentials(url));
+    public void testShouldRefetchToken_expired() throws IOException {
+        assertEquals(true, shouldRefetchToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImp0aSI6IjZSU2FKVmdWdkgiLCJpYXQiOjE1MjM2NzU2ODAsImV4cCI6MTUyMzY3OTI4MCwic2NtLW1hbmFnZXIucmVmcmVzaEV4cGlyYXRpb24iOjE2MjM3MTg4ODAyODQsInNjbS1tYW5hZ2VyLnBhcmVudFRva2VuSWQiOiI2UlNhSlZnVnZIIn0.ignored"));
     }
 
+    @Test
+    public void testShouldRefetchToken_valid() throws IOException {
+        // Token expires in year 2271
+        assertEquals(false, shouldRefetchToken(LONG_LASTING_JWT));
+    }
 }

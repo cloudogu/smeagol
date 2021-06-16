@@ -1,48 +1,59 @@
 package com.cloudogu.smeagol;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import org.jasig.cas.client.authentication.AttributePrincipal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.xml.bind.JAXB;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.IOException;
-import java.net.URL;
+import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.cloudogu.smeagol.ScmHttpClient.createRestTemplate;
+
 /**
  * Util methods to get the authenticated {@link Account} from current request.
- * 
+ *
  * @author Sebastian Sdorra
  */
 @Service
 public class AccountService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AccountService.class);
+
     private final ObjectFactory<HttpServletRequest> requestFactory;
-    private final String casUrl;
+    private final String scmUrl;
+    private final RestTemplate scmRestTemplate;
+
+    private static final String ACCESS_TOKEN_ENDPOINT = "/api/v2/cas/auth/";
 
     @Autowired
-    public AccountService(ObjectFactory<HttpServletRequest> requestFactory, @Value("${cas.url}") String casUrl) {
+    public AccountService(ObjectFactory<HttpServletRequest> requestFactory, RestTemplateBuilder restTemplateBuilder,
+                          @Value("${scm.url}") String scmUrl, Stage stage) {
+        this.scmRestTemplate = createRestTemplate(restTemplateBuilder, stage, scmUrl);
         this.requestFactory = requestFactory;
-        this.casUrl = casUrl;
+        this.scmUrl = scmUrl;
     }
 
     /**
-     * Retrieves the current account from the request. The method uses the stored cas account to build an 
-     * {@link Account} object, uses cas ClearPass to fetch the password from the cas server and caches the result in the
+     * Retrieves the current account from the request. The method uses the stored cas account to build an
+     * {@link Account} object, uses cas proxy ticket to fetch an access token from the scm server and caches the result in the
      * current user session.
-     * 
+     *
      * @return current authenticated account
      */
     public Account get() {
@@ -50,81 +61,92 @@ public class AccountService {
 
         HttpSession session = request.getSession(true);
         Account account = (Account) session.getAttribute(Account.class.getName());
-        if (account == null) {
-            AttributePrincipal principal = (AttributePrincipal) request.getUserPrincipal();
-            if (principal == null){
-                throw new AuthenticationException("could not find principal in request");
+
+        if (account != null) {
+            boolean shouldRefetch = true;
+            try {
+                shouldRefetch = shouldRefetchToken(account.getAccessToken());
+            } catch (Exception e) {
+                LOG.warn("could not determine whether access token should be refreshed: ", e);
             }
-            char[] password = getUserPassword(principal);
-            Map<String, Object> attributes = principal.getAttributes();
-            account = new Account(
-                    Objects.toString(attributes.get("username")),
-                    password,
-                    Objects.toString(attributes.get("displayName")),
-                    Objects.toString(attributes.get("mail"))
-            );
-            session.setAttribute(Account.class.getName(), account);
+            if (!shouldRefetch) {
+                return account;
+            }
         }
+
+        account = getNewAccount(request);
+        session.setAttribute(Account.class.getName(), account);
+        return account;
+    }
+
+    private Account getNewAccount(HttpServletRequest request) {
+        Account account;
+        AttributePrincipal principal = (AttributePrincipal) request.getUserPrincipal();
+        if (principal == null) {
+            throw new AuthenticationException("could not find principal in request");
+        }
+        String accessToken = getAccessToken(principal);
+        Map<String, Object> attributes = principal.getAttributes();
+        account = new Account(
+            Objects.toString(attributes.get("username")),
+            accessToken,
+            Objects.toString(attributes.get("displayName")),
+            Objects.toString(attributes.get("mail"))
+        );
 
         return account;
     }
 
-    private char[] getUserPassword(AttributePrincipal principal) {
-        String clearPassUrl = clearPassUrl();
-        String pt = principal.getProxyTicketFor(clearPassUrl);
-        if (Strings.isNullOrEmpty(pt)){
-            throw new AuthenticationException("could not get proxy ticket for clear pass");
+    private String getAccessToken(AttributePrincipal principal) {
+        String accessTokenEndpointURL = getAccessTokenEndpoint();
+        String pt = principal.getProxyTicketFor(accessTokenEndpointURL);
+        if (Strings.isNullOrEmpty(pt)) {
+            throw new AuthenticationException("could not get proxy ticket for scm access token endpoint");
         }
-        try {
-            return fetchClearPassCredentials(new URL(clearPassUrl.concat("?ticket=").concat(pt)));
-        } catch (IOException ex) {
-            throw new AuthenticationException("failed to fetch clear pass credentials", ex);
-        }
-    }
-    
-    private String clearPassUrl(){
-        String clearPassUrl = casUrl;
-        if (!clearPassUrl.endsWith("/")){
-            clearPassUrl = clearPassUrl.concat("/");
-        }
-        return clearPassUrl.concat("clearPass");
+        return fetchSCMAccessToken(ACCESS_TOKEN_ENDPOINT, pt);
     }
 
-    @VisibleForTesting
-    static char[] fetchClearPassCredentials(URL url) {
-        char[] credentials = JAXB.unmarshal(url, ClearPassResponse.class).getCredentials();
-        Preconditions.checkState(credentials != null, "failed to fetch password");
-        if (credentials.length == 0){
-            throw new AuthenticationException("could not extract password from clear pass response");
+    private String getAccessTokenEndpoint() {
+        String accessEndpointURL = scmUrl;
+        if (accessEndpointURL.endsWith("/")) {
+            accessEndpointURL = accessEndpointURL.substring(0, accessEndpointURL.length() - 1);
         }
-        return credentials;
+        return accessEndpointURL.concat(ACCESS_TOKEN_ENDPOINT);
     }
 
-    @XmlRootElement(name = "clearPassResponse", namespace = "http://www.yale.edu/tp/cas")
-    @XmlAccessorType(XmlAccessType.FIELD)
-    private static class ClearPassResponse {
+    private String fetchSCMAccessToken(String url, String proxyTicket) {
 
-        @XmlElement(name = "clearPassSuccess", namespace = "http://www.yale.edu/tp/cas")
-        private ClearPassSuccess clearPassSuccess;
-        
-        @XmlElement(name = "clearPassFailure", namespace = "http://www.yale.edu/tp/cas")
-        private String clearPassFailure;
-        
-        public char[] getCredentials() {
-            if (!Strings.isNullOrEmpty(clearPassFailure)){
-                throw new AuthenticationException("could not get user password, cas returned: " + clearPassFailure);
-            }
-            if ( clearPassSuccess != null && clearPassSuccess.credentials != null ){
-                return clearPassSuccess.credentials.toCharArray();
-            }
-            return new char[0];
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        HttpEntity<String> request = new HttpEntity<>("ticket=" + proxyTicket, headers);
+
+        String accessToken = this.scmRestTemplate.postForObject(url, request, String.class);
+        if (Strings.isNullOrEmpty(accessToken)) {
+            throw new AuthenticationException("could not get accessToken from scm endpoint");
         }
-
+        return accessToken;
     }
-    
-    private static class ClearPassSuccess {
-        @XmlElement(name = "credentials", namespace = "http://www.yale.edu/tp/cas")
-        private String credentials;        
+
+    protected static boolean shouldRefetchToken(String jwt) throws IOException {
+        String[] chunks = jwt.split("\\.");
+        Base64.Decoder decoder = Base64.getDecoder();
+        String payload = new String(decoder.decode(chunks[1]));
+        ObjectMapper mapper = new ObjectMapper();
+        SCMJwt scmJwt = mapper.readValue(payload, SCMJwt.class);
+        long currentUnixTime = System.currentTimeMillis() / 1000L;
+
+        return scmJwt.exp - currentUnixTime < 60;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    static class SCMJwt {
+
+        private long exp;
+
+        public void setExp(long exp) {
+            this.exp = exp;
+        }
     }
 
 }

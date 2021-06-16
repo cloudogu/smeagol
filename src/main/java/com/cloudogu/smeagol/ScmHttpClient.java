@@ -1,6 +1,5 @@
 package com.cloudogu.smeagol;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
@@ -28,7 +27,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -38,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class ScmHttpClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(ScmHttpClient.class);
+    public static final String BEARER_TOKEN_IDENTIFIER = "__bearer_token";
 
     private final AccountService accountService;
     private final LoadingCache<CacheKey, ScmHttpClientResponse> cache;
@@ -50,14 +49,14 @@ public class ScmHttpClient {
         // cache request for 10 seconds,
         // because some operations requesting the same resource multiple times (e.g. creating the initial search index)
         this.cache = CacheBuilder.newBuilder()
-                .expireAfterWrite(10, TimeUnit.SECONDS)
-                .build(new ScmRequestCacheLoader(restTemplate));
+            .expireAfterWrite(10, TimeUnit.SECONDS)
+            .build(new ScmRequestCacheLoader(restTemplate));
     }
 
-    private RestTemplate createRestTemplate(RestTemplateBuilder restTemplateBuilder, Stage stage, String scmUrl) {
+    protected static RestTemplate createRestTemplate(RestTemplateBuilder restTemplateBuilder, Stage stage, String scmUrl) {
         HttpClientBuilder httpClientBuilder = HttpClients.custom()
-                // disable cookie management to avoid scm-manager sessions
-                .disableCookieManagement();
+            // disable cookie management to avoid scm-manager sessions
+            .disableCookieManagement();
 
         if (stage == Stage.DEVELOPMENT) {
             httpClientBuilder = disableSSLVerification(httpClientBuilder);
@@ -65,12 +64,12 @@ public class ScmHttpClient {
 
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         requestFactory.setHttpClient(httpClientBuilder.build());
-        return restTemplateBuilder.requestFactory( () -> requestFactory)
-                .rootUri(scmUrl)
-                .build();
+        return restTemplateBuilder.requestFactory(() -> requestFactory)
+            .rootUri(scmUrl)
+            .build();
     }
 
-    private HttpClientBuilder disableSSLVerification(HttpClientBuilder httpClientBuilder) {
+    private static HttpClientBuilder disableSSLVerification(HttpClientBuilder httpClientBuilder) {
         LOG.warn("disable ssl verification for scm-manager communication, because we are in development stage");
         TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
         SSLContext sslContext = createSSLContext(acceptingTrustStrategy);
@@ -79,11 +78,11 @@ public class ScmHttpClient {
         return httpClientBuilder.setSSLSocketFactory(csf);
     }
 
-    private SSLContext createSSLContext(TrustStrategy acceptingTrustStrategy) {
+    private static SSLContext createSSLContext(TrustStrategy acceptingTrustStrategy) {
         try {
             return SSLContexts.custom()
-                    .loadTrustMaterial(null, acceptingTrustStrategy)
-                    .build();
+                .loadTrustMaterial(null, acceptingTrustStrategy)
+                .build();
         } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException ex) {
             throw Throwables.propagate(ex);
         }
@@ -106,11 +105,11 @@ public class ScmHttpClient {
         }
     }
 
-    private HttpHeaders createHeaders(){
+    private HttpHeaders createHeaders() {
         Account account = accountService.get();
         LOG.trace("create headers for account {}", account.getUsername());
         HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth(account.getUsername(), new String(account.getPassword()));
+        headers.setBasicAuth(BEARER_TOKEN_IDENTIFIER, account.getAccessToken());
         // The accept header is set explicitly to access the endpoint /scm/api/v2.
         // For SCM versions <= 2.15.0 the server otherwise would respond with a 406.
         headers.set("Accept", "application/*");
@@ -138,11 +137,11 @@ public class ScmHttpClient {
             HttpEntity<?> entity = new HttpEntity<>(key.headers);
             try {
                 ResponseEntity response = this.restTemplate.exchange(
-                        key.url,
-                        HttpMethod.GET,
-                        entity,
-                        key.type,
-                        key.urlVariables
+                    key.url,
+                    HttpMethod.GET,
+                    entity,
+                    key.type,
+                    key.urlVariables
                 );
 
                 return ScmHttpClientResponse.of(response.getStatusCode(), response.getBody());
@@ -180,9 +179,9 @@ public class ScmHttpClient {
             }
             CacheKey<?> cacheKey = (CacheKey<?>) o;
             return Objects.equals(url, cacheKey.url)
-                    && Objects.equals(type, cacheKey.type)
-                    && Arrays.equals(urlVariables, cacheKey.urlVariables)
-                    && Objects.equals(headers, cacheKey.headers);
+                && Objects.equals(type, cacheKey.type)
+                && Arrays.equals(urlVariables, cacheKey.urlVariables)
+                && Objects.equals(headers, cacheKey.headers);
         }
 
         @Override

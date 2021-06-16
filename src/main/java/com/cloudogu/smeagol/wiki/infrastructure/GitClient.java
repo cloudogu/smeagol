@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import static com.cloudogu.smeagol.ScmHttpClient.BEARER_TOKEN_IDENTIFIER;
 import static com.cloudogu.smeagol.wiki.infrastructure.GitConfig.DEFAULT_REMOTE;
 import static java.util.Collections.singleton;
 
@@ -333,7 +334,7 @@ public class GitClient implements AutoCloseable {
 
 
     private CredentialsProvider credentialsProvider(Account account) {
-        return new UsernamePasswordCredentialsProvider(account.getUsername(), account.getPassword());
+        return new UsernamePasswordCredentialsProvider(BEARER_TOKEN_IDENTIFIER, account.getAccessToken());
     }
 
     public RevCommit commit(String path, String displayName, String email, String message) throws GitAPIException, IOException {
