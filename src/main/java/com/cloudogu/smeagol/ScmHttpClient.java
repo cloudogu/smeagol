@@ -36,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class ScmHttpClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(ScmHttpClient.class);
+    public static final String BEARER_TOKEN_IDENTIFIER = "__bearer_token";
 
     private final AccountService accountService;
     private final LoadingCache<CacheKey, ScmHttpClientResponse> cache;
@@ -63,7 +64,7 @@ public class ScmHttpClient {
 
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         requestFactory.setHttpClient(httpClientBuilder.build());
-        return restTemplateBuilder.requestFactory( () -> requestFactory)
+        return restTemplateBuilder.requestFactory(() -> requestFactory)
             .rootUri(scmUrl)
             .build();
     }
@@ -108,7 +109,7 @@ public class ScmHttpClient {
         Account account = accountService.get();
         LOG.trace("create headers for account {}", account.getUsername());
         HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth("__bearer_token", account.getAccessToken());
+        headers.setBasicAuth(BEARER_TOKEN_IDENTIFIER, account.getAccessToken());
         // The accept header is set explicitly to access the endpoint /scm/api/v2.
         // For SCM versions <= 2.15.0 the server otherwise would respond with a 406.
         headers.set("Accept", "application/*");
