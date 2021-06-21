@@ -22,7 +22,7 @@ cat > /app/application.yml <<EOF
 stage: production
 server:
   servlet:
-    contextPath: /smeagol
+  contextPath: /smeagol
 homeDirectory: ${SMEAGOL_HOME}
 scm:
   url: https://${FQDN}/scm
@@ -37,6 +37,7 @@ if [[ "$(doguctl config "container_config/memory_limit" -d "empty")" == "empty" 
        -Djava.net.preferIPv4Stack=true \
        -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
        -Djavax.net.ssl.trustStorePassword=changeit \
+       -Dlogging.config=/app/logback.xml \
        -jar /app/smeagol.war
 else
   # Retrieve configurable java limits from etcd, valid default values exist
@@ -48,6 +49,7 @@ else
        -Djava.net.preferIPv4Stack=true \
        -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
        -Djavax.net.ssl.trustStorePassword=changeit \
+       -Dlogging.config=/app/logback.xml \
        -XX:MaxRAMPercentage="${MEMORY_LIMIT_MAX_PERCENTAGE}" \
        -XX:MinRAMPercentage="${MEMORY_LIMIT_MIN_PERCENTAGE}" \
        -jar /app/smeagol.war
