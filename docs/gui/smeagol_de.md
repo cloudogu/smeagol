@@ -1,4 +1,4 @@
-# Oberfläche
+# Smeagol
 
 Smeagol ist ein Wiki-System auf Basis eines Git-Repositorys. Das bedeutet, dass nicht nur der Quellcode des Softwareprodukts, sondern auch die zugehörige Dokumentation im Git-Repository versioniert wird. Dadurch ist die Dokumentation genau dort, wo sie auch hingehört – direkt neben dem Source Code.  
 
