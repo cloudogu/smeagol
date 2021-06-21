@@ -22,7 +22,7 @@ cat > /app/application.yml <<EOF
 stage: production
 server:
   servlet:
-  contextPath: /smeagol
+    contextPath: /smeagol
 homeDirectory: ${SMEAGOL_HOME}
 scm:
   url: https://${FQDN}/scm
