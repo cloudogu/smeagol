@@ -1,4 +1,4 @@
-# GUI
+# Smeagol
 
 Translated with www.DeepL.com/Translator
 
