@@ -109,7 +109,7 @@ public class ScmHttpClient {
 
     private HttpHeaders createHeaders(){
         Account account = accountService.get();
-        LOG.trace("create headers for account {}", account.getUsername());
+        LOG.debug("create headers for account {}", account.getUsername());
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(account.getUsername(), new String(account.getPassword()), Charsets.UTF_8);
         String smeagolAppVersion =  VersionNames.getVersionNameFromManifest("META-INF/MANIFEST.MF", "Implementation-Version");
@@ -117,7 +117,7 @@ public class ScmHttpClient {
             // happens only in the dev environment -> set version to dev
             smeagolAppVersion = "dev";
         }
-        LOG.trace("set user agent to smeagol/{}", smeagolAppVersion);
+        LOG.debug("set user agent to smeagol/{}", smeagolAppVersion);
         headers.add("user-agent", "smeagol/" + smeagolAppVersion);
         // The accept header is set explicitly to access the endpoint /scm/api/v2.
         // For SCM versions <= 2.15.0 the server otherwise would respond with a 406.
@@ -140,7 +140,7 @@ public class ScmHttpClient {
 
         @Override
         public ScmHttpClientResponse load(CacheKey key) {
-            LOG.trace("fetch {} from {} with {}", key.type, key.url, key.urlVariables);
+            LOG.debug("fetch {} from {} with {}", key.type, key.url, key.urlVariables);
             Stopwatch sw = Stopwatch.createStarted();
 
             HttpEntity<?> entity = new HttpEntity<>(key.headers);
@@ -160,7 +160,7 @@ public class ScmHttpClient {
                 }
                 throw ex;
             } finally {
-                LOG.trace("scm request {} finished in {}", key.url, sw.stop());
+                LOG.debug("scm request {} finished in {}", key.url, sw.stop());
             }
         }
     }

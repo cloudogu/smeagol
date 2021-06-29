@@ -29,7 +29,7 @@ public class ProductionDispatcher implements Dispatcher {
 
     @Override
     public void dispatch(HttpServletRequest request, HttpServletResponse response, String uri) throws ServletException, IOException {
-        LOG.trace("forward ui request {} to /index.html", uri);
+        LOG.debug("forward ui request {} to /index.html", uri);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/index.html");
         dispatcher.forward(request, response);
     }
