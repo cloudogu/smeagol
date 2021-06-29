@@ -99,7 +99,7 @@ public class GitClient implements AutoCloseable {
         try {
             pullChanges();
         } finally {
-            LOG.trace("pull changes of {} finished in {}", wiki.getId(), sw);
+            LOG.debug("pull changes of {} finished in {}", wiki.getId(), sw);
         }
     }
 
@@ -175,7 +175,7 @@ public class GitClient implements AutoCloseable {
     }
 
     private void pullChanges() throws GitAPIException, IOException {
-        LOG.trace("open repository {}", repository);
+        LOG.debug("open repository {}", repository);
         Git git = open();
 
         LOG.debug("pull changes from remote for repository {}", repository);
@@ -348,11 +348,11 @@ public class GitClient implements AutoCloseable {
             // git.add() does not work for removed files
             // so we have to use git.rm(), if commit is used for delete operation
             if (Files.exists(Paths.get(repository.getPath(), path))) {
-                LOG.trace("add file {} to git index", path);
+                LOG.debug("add file {} to git index", path);
                 git.add().addFilepattern(path)
                     .call();
             } else {
-                LOG.trace("remove file {} from git index", path);
+                LOG.debug("remove file {} from git index", path);
                 git.rm().addFilepattern(path)
                     .call();
             }

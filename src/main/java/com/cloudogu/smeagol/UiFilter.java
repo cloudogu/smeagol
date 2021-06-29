@@ -72,7 +72,7 @@ public class UiFilter implements Filter {
 
     private void handleStaticWikiFile(HttpServletRequest request, HttpServletResponse response, Matcher matcher) throws ServletException, IOException {
         String staticWikiFileUri = createStaticWikiFileUri(matcher);
-        LOG.trace("forward static file request to {}", staticWikiFileUri);
+        LOG.debug("forward static file request to {}", staticWikiFileUri);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher(staticWikiFileUri);
         requestDispatcher.forward(request, response);
     }

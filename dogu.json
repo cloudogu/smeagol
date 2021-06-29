@@ -1,6 +1,6 @@
 {
   "Name": "official/smeagol",
-  "Version": "1.3.5-1",
+  "Version": "1.4.0-1",
   "DisplayName": "Smeagol",
   "Description": "Store your technical documentation with in your git repositories",
   "Category": "Documentation",
@@ -19,6 +19,21 @@
     "scm"
   ],
   "Configuration": [
+    {
+      "Name": "logging/root",
+      "Description": "Set the root log level to one of ERROR, WARN, INFO, DEBUG.",
+      "Optional": true,
+      "Default": "WARN",
+      "Validation": {
+        "Type": "ONE_OF",
+        "Values": [
+          "WARN",
+          "DEBUG",
+          "INFO",
+          "ERROR"
+        ]
+      }
+    },
     {
       "Name": "container_config/memory_limit",
       "Description": "Limits the container's memory usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte).",

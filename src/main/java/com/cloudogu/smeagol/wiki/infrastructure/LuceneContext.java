@@ -55,7 +55,7 @@ public class LuceneContext {
                 LOG.warn("create new index writer for {}, because the previous one was closed", id);
                 return createWriter(id);
             }
-            LOG.trace("return previous index writer for {}", id);
+            LOG.debug("return previous index writer for {}", id);
             return previous;
         });
     }

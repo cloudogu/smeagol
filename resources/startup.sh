@@ -31,12 +31,27 @@ cas:
   serviceUrl: https://${FQDN}/smeagol
 EOF
 
+# configure logging behaviour using the etcd property logging/root <ERROR,WARN,INFO,DEBUG>
+
+# If an error occurs in logging.sh the whole scripting quits because of -o errexit. Catching the sourced exit code
+# leads to an zero exit code which enables further error handling.
+loggingExitCode=0
+# shellcheck disable=SC1091
+source /logging.sh || loggingExitCode=$?
+if [[ ${loggingExitCode} -ne 0 ]]; then
+  echo "ERROR: An error occurred during the root log level evaluation.";
+  doguctl state "ErrorRootLogLevelMapping"
+  sleep 300
+  exit 2
+fi
+
 if [[ "$(doguctl config "container_config/memory_limit" -d "empty")" == "empty" ]];  then
   echo "Starting Smeagol without memory limits..."
   java -Djava.awt.headless=true \
        -Djava.net.preferIPv4Stack=true \
        -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
        -Djavax.net.ssl.trustStorePassword=changeit \
+       -Dlogging.config=/app/logback.xml \
        -jar /app/smeagol.war
 else
   # Retrieve configurable java limits from etcd, valid default values exist
@@ -48,8 +63,8 @@ else
        -Djava.net.preferIPv4Stack=true \
        -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
        -Djavax.net.ssl.trustStorePassword=changeit \
+       -Dlogging.config=/app/logback.xml \
        -XX:MaxRAMPercentage="${MEMORY_LIMIT_MAX_PERCENTAGE}" \
        -XX:MinRAMPercentage="${MEMORY_LIMIT_MIN_PERCENTAGE}" \
        -jar /app/smeagol.war
 fi
-

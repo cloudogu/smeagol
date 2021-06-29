@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.4.0-1] - 2021-06-29
+### Added
+- Log level can be configured now. Default log level is ```WARN```. (#159)
+
 ## [v1.3.5-1] - 2021-06-09
 ### Fixed
 - wrong encoding of credentials by using the `smeagol` user-agent with the scm that enforces UTF-8 encoding (#144)
