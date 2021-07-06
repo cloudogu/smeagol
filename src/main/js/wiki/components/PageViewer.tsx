@@ -14,19 +14,19 @@ const styles = {
     "@media (min-width: 900px)": {
       display: "flex",
       alignItems: "flex-start",
-      "padding-top": "20px",
-      "padding-bottom": "20px"
+      "padding-top": "2rem",
+      "padding-bottom": "2rem"
     }
   },
   content: {
     "@media (min-width: 900px)": {
-      "padding-left": "20px",
+      "padding-left": "2rem",
       "border-left": "1px solid #ddd"
     }
   },
   withoutBorder: {
     "@media (min-width: 900px)": {
-      "padding-left": "0px",
+      "padding-left": "0rem",
       "border-left": "none"
     }
   },
@@ -34,8 +34,8 @@ const styles = {
     "@media (max-width: 900px)": {
       display: "none"
     },
-    "max-width": "200px",
-    "min-width": "200px"
+    "max-width": "20rem",
+    "min-width": "20rem"
   }
 };
 
