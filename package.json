@@ -25,6 +25,7 @@
     "react-query": "^3.9.6",
     "react-router": "4.2.0",
     "react-router-dom": "^4.2.2",
+    "react-sticky-box": "^0.9.3",
     "tui-editor": "^1.4.10",
     "whatwg-fetch": "2.0.3"
   },

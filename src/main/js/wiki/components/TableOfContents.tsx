@@ -2,6 +2,7 @@ import React from "react";
 import injectSheet from "react-jss";
 import { translate } from "react-i18next";
 import ReactMarkdownHeading from "react-markdown-heading";
+import { WIDTH_BOUNDARY } from "./PageViewer";
 
 const cloudoguDarkBlue = "#00426b";
 const cloudoguLightGray = "#fff";
@@ -39,7 +40,9 @@ const styles = {
   },
   main: {
     padding: "1rem",
-    "border-bottom": "1px solid #ddd",
+    "@media (max-width: 901px)": {
+      "border-bottom": "1px solid #ddd"
+    },
     color: cloudoguDarkBlue,
     "background-color": cloudoguLightGray
   },
@@ -47,7 +50,7 @@ const styles = {
     margin: "0",
     "list-style": "none",
     color: "inherit",
-    "padding-left": "1em"
+    "padding-left": "1rem"
   },
   item: {
     color: "inherit",
@@ -59,6 +62,7 @@ const styles = {
 type Props = {
   page: any;
   classes: any;
+  screenWidth: any;
   t: any;
 };
 
@@ -76,19 +80,22 @@ class TableOfContents extends React.Component<Props> {
   };
 
   render() {
-    const { page, classes, t } = this.props;
+    const { page, classes, screenWidth, t } = this.props;
+
     return (
       <div className={classes.main}>
-        <button
-          onClick={this.handleToggle}
-          className={[classes.tocToggle, this.collapsed ? classes.tocHidden : classes.tocVisible].join(" ")}
-          aria-expanded={[this.collapsed ? "false" : "true"]}
-          title={t("table-of-contents")}
-        >
-          {t("table-of-contents")}
-          <i className="glyphicon glyphicon-chevron-down" />
-          <i className="glyphicon glyphicon-chevron-right" />
-        </button>
+        {screenWidth < WIDTH_BOUNDARY && (
+          <button
+            onClick={this.handleToggle}
+            className={[classes.tocToggle, this.collapsed ? classes.tocVisible : classes.tocHidden].join(" ")}
+            aria-expanded={[this.collapsed ? "false" : "true"]}
+            title={t("table-of-contents")}
+          >
+            {t("table-of-contents")}
+            <i className="glyphicon glyphicon-chevron-down" />
+            <i className="glyphicon glyphicon-chevron-right" />
+          </button>
+        )}
         <ReactMarkdownHeading
           hyperlink={true}
           markdown={page.content}
