@@ -34,8 +34,8 @@ const styles = {
     "@media (max-width: 900px)": {
       display: "none"
     },
-    "max-width": "20rem",
-    "min-width": "20rem"
+    "max-width": "22rem",
+    "min-width": "22rem"
   }
 };
 

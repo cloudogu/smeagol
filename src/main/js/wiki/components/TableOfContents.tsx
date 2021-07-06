@@ -31,7 +31,7 @@ const styles = {
     "padding-left": "0",
     "& ~ ul > li": {
       padding: "0",
-      "font-size": "1.8rem"
+      "font-size": "1.4rem"
     },
     "& ~ i": {
       "font-size": "1.4rem",
@@ -39,7 +39,7 @@ const styles = {
     }
   },
   main: {
-    padding: "1rem",
+    padding: "1.5rem",
     "@media (max-width: 901px)": {
       "border-bottom": "1px solid #ddd"
     },
@@ -55,7 +55,7 @@ const styles = {
   item: {
     color: "inherit",
     "font-size": "1.4rem",
-    "padding-top": "0.5rem"
+    "padding-top": "0.75rem"
   }
 };
 
