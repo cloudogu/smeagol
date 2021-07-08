@@ -38,7 +38,7 @@ A simple navigation through the wiki is possible via the breadcumb. For example,
 
 ![Smeagol Wiki Seitenübersicht mithilfe von Breadcrumbs](figures/smeagol/SmeagolBreadcrumb_EN.png)
 
-For long wikis, the fold-out table of contents is a great help. It is automatically updated when changes are made to the wiki and is based on the headings. These serve as jumping points to the respective section.
+For long wikis, the fixed table of contents is a great help. It is automatically updated when changes are made to the wiki and is based on the headings. These serve as jumping points to the respective section.
 
 ![Smeagol Table of Contents](figures/smeagol/SmeagolTableOfContents_EN.png)
 
