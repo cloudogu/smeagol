@@ -3,7 +3,7 @@
 [![GitHub license](https://img.shields.io/github/license/cloudogu/smeagol.svg)](https://github.com/cloudogu/smeagol/blob/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/cloudogu/smeagol.svg)](https://github.com/cloudogu/smeagol/releases)
 
-# Smeagol
+# Smeagol Dogu
 [https://cloudogu.com](https://cloudogu.com/?mtm_campaign=smeagol&mtm_kwd=website&mtm_source=github&mtm_medium=link)
 
 This repository contains smeagol, an wiki server which stores its files in a git repository.
