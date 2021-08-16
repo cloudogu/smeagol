@@ -14,12 +14,7 @@ function run_notification() {
     TO_MAJOR_VERSION=$(echo "${TO_VERSION_WITHOUT_DOGU}" | cut -d '.' -f1)
     TO_MINOR_VERSION=$(echo "${TO_VERSION_WITHOUT_DOGU}" | cut -d '.' -f2)
 
-     if [[ "${FROM_MAJOR_VERSION}" -lt 1 && "${TO_MAJOR_VERSION}" -ge 1 ]]; then
-        echo "You are starting an upgrade of the Smeagol dogu (from ${FROM_VERSION} to ${TO_VERSION})."
-        echo "It is necessary to install the SCM dogu with a version higher than or equals to 2.20.0-1."
-    fi
-
-    if [[  "${FROM_MAJOR_VERSION}" -eq "${TO_MAJOR_VERSION}" && "${FROM_MINOR_VERSION}" -lt 4 && "${TO_MINOR_VERSION}" -ge 4 ]]; then
+    if [[ "${TO_MAJOR_VERSION}" -ge 1  && "${FROM_MINOR_VERSION}" -lt 6 && "${TO_MINOR_VERSION}" -ge 6 ]]; then
         echo "You are starting an upgrade of the Smeagol dogu (from ${FROM_VERSION} to ${TO_VERSION})."
         echo "It is necessary to install the SCM dogu with a version higher than or equals to 2.20.0-1."
     fi
