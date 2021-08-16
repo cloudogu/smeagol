@@ -1,4 +1,4 @@
-# Changelog
+# Smeagol Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 * Use proxy tickets instead of clearpass #157
+
+## [v1.5.0-1] - 2021-07-08
+### Changed
+- Changed position of the table of contents to the left side (sticky) (#161)
+
+## [v1.4.0-1] - 2021-06-29
+### Added
+- Log level can be configured now. Default log level is ```WARN```. (#159)
+
+## [v1.3.5-1] - 2021-06-09
+### Fixed
+- wrong encoding of credentials by using the `smeagol` user-agent with the scm that enforces UTF-8 encoding (#144)
 
 ## [v1.3.4-1] - 2021-06-01
 ### Fixed

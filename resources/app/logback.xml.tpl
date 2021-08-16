@@ -10,9 +10,9 @@
     </encoder>
   </appender>
   
-  <logger name="com.cloudogu" level="TRACE" />
+  <logger name="com.cloudogu" level='{{ .Config.GetOrDefault "logging/root" "WARN"}}' />
 
-  <root level="INFO">
+  <root level='{{ .Config.GetOrDefault "logging/root" "WARN"}}'>
     <appender-ref ref="STDOUT" />
   </root>
   

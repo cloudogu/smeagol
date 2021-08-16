@@ -1,4 +1,4 @@
-# Oberfläche
+# Smeagol
 
 Smeagol ist ein Wiki-System auf Basis eines Git-Repositorys. Das bedeutet, dass nicht nur der Quellcode des Softwareprodukts, sondern auch die zugehörige Dokumentation im Git-Repository versioniert wird. Dadurch ist die Dokumentation genau dort, wo sie auch hingehört – direkt neben dem Source Code.  
 
@@ -38,7 +38,7 @@ Das Root-Verzeichnis (standardmäßig "docs") und die Hauptseite (also jene Seit
 
 ![Smeagol Wiki Seitenübersicht mithilfe von Breadcrumbs](figures/smeagol/SmeagolBreadcrumb_DE.png)
 
-Bei langen Wikis ist das ausklappbare Inhaltsverzeichnis eine große Hilfe. Es wird automatisch bei Änderungen am Wiki aktualisiert und orientiert sich an den Überschriften. Diese dienen als Sprungmarken auf den jeweiligen Abschnitt.
+Bei langen Wikis ist das fixierte Inhaltsverzeichnis eine große Hilfe. Es wird automatisch bei Änderungen am Wiki aktualisiert und orientiert sich an den Überschriften. Diese dienen als Sprungmarken auf den jeweiligen Abschnitt.
 
 ![Smeagol Inhaltsverzeichnis](figures/smeagol/SmeagolTableOfContents_DE.png)
 
