@@ -31,7 +31,7 @@ parallel(
 
         stage('Build') {
           setupMaven(mvn)
-          mvn 'clean install -DskipTests'
+          mvn 'clean install -DskipTests -Dmaven.wagon.http.pool=false'
           archive '**/target/*.*ar,**/target/*.zip'
         }
 
