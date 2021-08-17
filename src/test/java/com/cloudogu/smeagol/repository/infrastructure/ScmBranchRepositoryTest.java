@@ -49,7 +49,7 @@ public class ScmBranchRepositoryTest {
         String content = Resources.toString(url, Charsets.UTF_8);
 
         this.server.expect(requestTo("/api/rest/repositories/30QQIOlg42/branches.json"))
-                .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
+                .andExpect(header("Authorization", "Basic X19iZWFyZXJfdG9rZW46and0dHJpbGxpYW4="))
                 .andRespond(withSuccess(content, MediaType.APPLICATION_JSON));
     }
 

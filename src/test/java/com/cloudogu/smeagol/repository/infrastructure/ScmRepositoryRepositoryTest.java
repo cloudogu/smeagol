@@ -61,7 +61,7 @@ public class ScmRepositoryRepositoryTest {
         String rootContent = Resources.toString(rootUrl, Charsets.UTF_8);
 
         server.expect(requestTo("/api/v2"))
-            .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
+            .andExpect(header("Authorization", "Basic X19iZWFyZXJfdG9rZW46and0dHJpbGxpYW4="))
             .andRespond(withSuccess(rootContent, MediaType.APPLICATION_JSON));
 
 
@@ -69,7 +69,7 @@ public class ScmRepositoryRepositoryTest {
         String content = Resources.toString(url, Charsets.UTF_8);
 
         server.expect(requestTo("https://ecosystem.hitchhiker.com/scm/api/v2/smeagol/repositories"))
-                .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
+                .andExpect(header("Authorization", "Basic X19iZWFyZXJfdG9rZW46and0dHJpbGxpYW4="))
                 .andRespond(withSuccess(content, MediaType.APPLICATION_JSON));
 
         Iterator<Repository> repositories = repository.findAll(false).iterator();
@@ -91,14 +91,14 @@ public class ScmRepositoryRepositoryTest {
         String rootContent = Resources.toString(rootUrl, Charsets.UTF_8);
 
         server.expect(requestTo("/api/v2"))
-            .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
+            .andExpect(header("Authorization", "Basic X19iZWFyZXJfdG9rZW46and0dHJpbGxpYW4="))
             .andRespond(withSuccess(rootContent, MediaType.APPLICATION_JSON));
 
         URL url = Resources.getResource("com/cloudogu/smeagol/repository/infrastructure/repositories.json");
         String content = Resources.toString(url, Charsets.UTF_8);
 
         server.expect(requestTo("https://ecosystem.hitchhiker.com/scm/api/v2/smeagol/repositories?wikiEnabled=true"))
-            .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
+            .andExpect(header("Authorization", "Basic X19iZWFyZXJfdG9rZW46and0dHJpbGxpYW4="))
             .andRespond(withSuccess(content, MediaType.APPLICATION_JSON));
 
         Iterator<Repository> repositories = repository.findAll(true).iterator();
@@ -120,7 +120,7 @@ public class ScmRepositoryRepositoryTest {
         String rootContent = Resources.toString(rootUrl, Charsets.UTF_8);
 
         server.expect(requestTo("/api/v2"))
-            .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
+            .andExpect(header("Authorization", "Basic X19iZWFyZXJfdG9rZW46and0dHJpbGxpYW4="))
             .andRespond(withSuccess(rootContent, MediaType.APPLICATION_JSON));
 
         repository.findAll(true).iterator();
@@ -132,7 +132,7 @@ public class ScmRepositoryRepositoryTest {
         String content = Resources.toString(url, Charsets.UTF_8);
 
         server.expect(requestTo("/api/rest/repositories/4xQfahsId3.json"))
-                .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
+                .andExpect(header("Authorization", "Basic X19iZWFyZXJfdG9rZW46and0dHJpbGxpYW4="))
                 .andRespond(withSuccess(content, MediaType.APPLICATION_JSON));
 
         RepositoryId id = RepositoryId.valueOf("4xQfahsId3");
@@ -145,7 +145,7 @@ public class ScmRepositoryRepositoryTest {
     @Test
     public void testFindByIdNotFound() {
         server.expect(requestTo("/api/rest/repositories/4xQfahsId3.json"))
-                .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
+                .andExpect(header("Authorization", "Basic X19iZWFyZXJfdG9rZW46and0dHJpbGxpYW4="))
                 .andRespond(withStatus(HttpStatus.NOT_FOUND));
 
         RepositoryId id = RepositoryId.valueOf("4xQfahsId3");

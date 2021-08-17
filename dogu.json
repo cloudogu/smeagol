@@ -14,9 +14,9 @@
   "Url": "https://cloudogu.com",
   "Image": "registry.cloudogu.com/official/smeagol",
   "Dependencies": [
-    "cas",
-    "nginx",
-    "scm"
+    {"type":"dogu", "name":"cas"},
+    {"type":"dogu", "name":"nginx"},
+    {"type":"dogu", "name":"scm", "version": ">=2.20.0-1"}
   ],
   "Configuration": [
     {
@@ -76,6 +76,12 @@
       "Owner": "1000",
       "Group": "1000",
       "NeedsBackup": false
+    }
+  ],
+  "ExposedCommands": [
+    {
+      "Name": "upgrade-notification",
+      "Command": "/upgrade-notification.sh"
     }
   ],
   "HealthCheck": {

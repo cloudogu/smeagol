@@ -14,13 +14,13 @@ public final class Account implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final String username;
-    private final char[] password;
+    private final String accessToken;
     private final String displayName;
     private final String mail;
 
     /**
      * Constructs a new account.
-     * 
+     *
      * @param username used for authentication
      * @param displayName displayName is used for git author name
      * @param mail mail is used for git author mail
@@ -31,15 +31,15 @@ public final class Account implements Serializable {
 
     /**
      * Constructs a new account.
-     * 
+     *
      * @param username used for authentication
-     * @param password used for authentication
+     * @param accessToken used for authentication
      * @param displayName displayName is used for git author name
      * @param mail mail is used for git author mail
-     */    
-    public Account(String username, char[] password, String displayName, String mail) {
+     */
+    public Account(String username, String accessToken, String displayName, String mail) {
         this.username = username;
-        this.password = password;
+        this.accessToken = accessToken;
         this.displayName = displayName;
         this.mail = mail;
     }
@@ -48,8 +48,8 @@ public final class Account implements Serializable {
         return username;
     }
 
-    public char[] getPassword() {
-        return password;
+    public String getAccessToken() {
+        return accessToken;
     }
 
     public String getDisplayName() {
@@ -64,10 +64,10 @@ public final class Account implements Serializable {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("username", username)
-                .add("password", password != null ? "xxx" : null)
+                .add("accessToken", accessToken != null ? "xxx" : null)
                 .add("displayName", displayName)
                 .add("mail", mail)
                 .toString();
     }
-    
+
 }
