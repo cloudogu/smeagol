@@ -1,6 +1,6 @@
 {
   "Name": "official/smeagol",
-  "Version": "1.5.0-1",
+  "Version": "1.6.0-1",
   "DisplayName": "Smeagol",
   "Description": "Store your technical documentation with in your git repositories",
   "Category": "Documentation",
@@ -14,9 +14,19 @@
   "Url": "https://cloudogu.com",
   "Image": "registry.cloudogu.com/official/smeagol",
   "Dependencies": [
-    {"type":"dogu", "name":"cas"},
-    {"type":"dogu", "name":"nginx"},
-    {"type":"dogu", "name":"scm", "version": ">=2.20.0-1"}
+    {
+      "type": "dogu",
+      "name": "cas"
+    },
+    {
+      "type": "dogu",
+      "name": "nginx"
+    },
+    {
+      "type": "dogu",
+      "name": "scm",
+      "version": ">=2.20.0-1"
+    }
   ],
   "Configuration": [
     {
