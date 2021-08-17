@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.6.0-1] - 2021-08-17
+### Changed
+* Use proxy tickets instead of clearpass #157
+
 ## [v1.5.0-1] - 2021-07-08
 ### Changed
 - Changed position of the table of contents to the left side (sticky) (#161)

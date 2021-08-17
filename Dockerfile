@@ -10,11 +10,11 @@ RUN set -x \
 COPY src ${SMEAGOL_DIR}/src
 RUN set -x \
  && cd ${SMEAGOL_DIR} \
- && ./mvnw package
+ && ./mvnw package -Dmaven.wagon.http.pool=false
 
 FROM registry.cloudogu.com/official/java:11.0.5-4
 LABEL NAME="official/smeagol" \
-      VERSION="1.5.0-1" \
+      VERSION="1.6.0-1" \
       maintainer="Sebastian Sdorra <sebastian.sdorra@cloudogu.com>"
 
 ENV SERVICE_TAGS=webapp \

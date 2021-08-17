@@ -43,8 +43,8 @@ public class ScmHttpClientTest {
     @Test
     public void testAuthentication() {
         this.server.expect(requestTo("/hitchhiker/trillian"))
-                .andExpect(header("Authorization", "Basic dHJpbGxpYW46dHJpbGxpYW4xMjM="))
-                .andRespond(withSuccess());
+            .andExpect(header("Authorization", "Basic X19iZWFyZXJfdG9rZW46and0dHJpbGxpYW4="))
+            .andRespond(withSuccess());
 
         httpClient.get("/hitchhiker/trillian", Void.class);
     }
@@ -52,7 +52,7 @@ public class ScmHttpClientTest {
     @Test
     public void testGet() {
         this.server.expect(requestTo("/hitchhiker/trillian"))
-                .andRespond(withSuccess("Hello Trillian", MediaType.TEXT_PLAIN));
+            .andRespond(withSuccess("Hello Trillian", MediaType.TEXT_PLAIN));
 
         String content = httpClient.get("/hitchhiker/trillian", String.class).get();
         assertEquals("Hello Trillian", content);
@@ -61,7 +61,7 @@ public class ScmHttpClientTest {
     @Test
     public void testGetWithUrlVariables() {
         this.server.expect(requestTo("/hitchhiker/trillian/hello"))
-                .andRespond(withSuccess());
+            .andRespond(withSuccess());
 
         httpClient.get("/hitchhiker/{name}/{action}", Void.class, "trillian", "hello");
     }
@@ -69,7 +69,7 @@ public class ScmHttpClientTest {
     @Test
     public void testGetWithNotFound() {
         this.server.expect(requestTo("/hitchhiker/trillian"))
-                .andRespond(withStatus(HttpStatus.NOT_FOUND));
+            .andRespond(withStatus(HttpStatus.NOT_FOUND));
 
         Optional<String> result = httpClient.get("/hitchhiker/trillian", String.class);
         assertFalse(result.isPresent());
@@ -78,7 +78,7 @@ public class ScmHttpClientTest {
     @Test
     public void testGetEntity() {
         this.server.expect(requestTo("/hitchhiker/trillian"))
-                .andRespond(withStatus(HttpStatus.NO_CONTENT));
+            .andRespond(withStatus(HttpStatus.NO_CONTENT));
 
         ScmHttpClientResponse<String> result = httpClient.getEntity("/hitchhiker/trillian", String.class);
         assertTrue(result.isSuccessful());
@@ -87,7 +87,7 @@ public class ScmHttpClientTest {
     @Test
     public void testGetWithCache() {
         this.server.expect(requestTo("/hitchhiker/trillian/notifications"))
-                .andRespond(withSuccess("{ \"message\": \"Don't Panic\" }", MediaType.APPLICATION_JSON));
+            .andRespond(withSuccess("{ \"message\": \"Don't Panic\" }", MediaType.APPLICATION_JSON));
 
         Optional<Notification> notification = httpClient.get("/hitchhiker/trillian/notifications", Notification.class);
         assertEquals("Don't Panic", notification.get().getMessage());
@@ -100,9 +100,9 @@ public class ScmHttpClientTest {
     @Test
     public void testGetCacheWithDifferentParameters() {
         this.server.expect(requestTo("/hitchhiker/trillian/notifications"))
-                .andRespond(withSuccess("{ \"message\": \"Don't Panic\" }", MediaType.APPLICATION_JSON));
+            .andRespond(withSuccess("{ \"message\": \"Don't Panic\" }", MediaType.APPLICATION_JSON));
         this.server.expect(requestTo("/hitchhiker/slarti/notifications"))
-                .andRespond(withSuccess("{ \"message\": \"Not your messages\" }", MediaType.APPLICATION_JSON));
+            .andRespond(withSuccess("{ \"message\": \"Not your messages\" }", MediaType.APPLICATION_JSON));
 
         Optional<Notification> notification = httpClient.get("/hitchhiker/{user}/notifications", Notification.class, "trillian");
         assertEquals("Don't Panic", notification.get().getMessage());
@@ -114,9 +114,9 @@ public class ScmHttpClientTest {
     @Test
     public void testGetCacheWithDifferentTypes() {
         this.server.expect(requestTo("/hitchhiker/notifications"))
-                .andRespond(withSuccess("{ \"message\": \"Don't Panic\" }", MediaType.APPLICATION_JSON));
+            .andRespond(withSuccess("{ \"message\": \"Don't Panic\" }", MediaType.APPLICATION_JSON));
         this.server.expect(requestTo("/hitchhiker/notifications"))
-                .andRespond(withSuccess("Not your messages", MediaType.TEXT_PLAIN));
+            .andRespond(withSuccess("Not your messages", MediaType.TEXT_PLAIN));
 
         Optional<Notification> notification = httpClient.get("/hitchhiker/notifications", Notification.class);
         assertEquals("Don't Panic", notification.get().getMessage());
@@ -128,9 +128,9 @@ public class ScmHttpClientTest {
     @Test
     public void testGetIsNotCachedBecauseOfDifferentAccount() {
         this.server.expect(requestTo("/hitchhiker/trillian/notifications"))
-                .andRespond(withSuccess("{ \"message\": \"Don't Panic\" }", MediaType.APPLICATION_JSON));
+            .andRespond(withSuccess("{ \"message\": \"Don't Panic\" }", MediaType.APPLICATION_JSON));
         this.server.expect(requestTo("/hitchhiker/trillian/notifications"))
-                .andRespond(withSuccess("{ \"message\": \"Not your messages\" }", MediaType.APPLICATION_JSON));
+            .andRespond(withSuccess("{ \"message\": \"Not your messages\" }", MediaType.APPLICATION_JSON));
 
         Optional<Notification> notification = httpClient.get("/hitchhiker/trillian/notifications", Notification.class);
         assertEquals("Don't Panic", notification.get().getMessage());
