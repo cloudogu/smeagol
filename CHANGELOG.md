@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- use word-break and hyphens in toc and pageviewer so that long words get wrapped #169 
+
 ## [v1.6.0-1] - 2021-08-17
 ### Changed
 * Use proxy tickets instead of clearpass #157

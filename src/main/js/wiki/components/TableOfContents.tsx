@@ -55,7 +55,12 @@ const styles = {
   item: {
     color: "inherit",
     "font-size": "1.4rem",
-    "padding-top": "0.75rem"
+    "padding-top": "0.75rem",
+    display: "inline-block",
+    "word-break": "break-word",
+    "-ms-hyphens": "auto",
+    "-webkit-hyphens": "auto",
+    hyphens: "auto"
   }
 };
 

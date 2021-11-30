@@ -1,5 +1,5 @@
 #!groovy
-@Library(['github.com/cloudogu/ces-build-lib@1.45.0', 'github.com/cloudogu/dogu-build-lib@v1.3.0'])
+@Library(['github.com/cloudogu/ces-build-lib@1.48.0', 'github.com/cloudogu/dogu-build-lib@v1.5.1'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
@@ -134,8 +134,9 @@ parallel(
             }
 
             stage('Integration tests') {
-              ecoSystem.runCypressIntegrationTests([enableVideo      : params.EnableVideoRecording,
-                                                    enableScreenshots: params.EnableScreenshotRecording])
+              ecoSystem.runCypressIntegrationTests([enableVideo          : params.EnableVideoRecording,
+                                                    enableScreenshots    : params.EnableScreenshotRecording,
+                                                    cypressImage         : "cypress/included:8.6.0",])
             }
 
             if (params.TestDoguUpgrade != null && params.TestDoguUpgrade) {
