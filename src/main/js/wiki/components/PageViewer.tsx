@@ -22,7 +22,12 @@ const styles = {
     "@media (min-width: 900px)": {
       "padding-left": "2rem",
       "border-left": "1px solid #ddd"
-    }
+    },
+    display: "inline-block",
+    "word-break": "break-word",
+    "-ms-hyphens": "auto",
+    "-webkit-hyphens": "auto",
+    hyphens: "auto"
   },
   withoutBorder: {
     "@media (min-width: 900px)": {
