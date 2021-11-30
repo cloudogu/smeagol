@@ -11,16 +11,14 @@ Feature: Browser-based CAS login and logout functionality
   Scenario: logged out user can log in to the dogu
     Given the user is logged out of the CES
     When the user opens the dogu start page
-    And the user types in correct login credentials
-    And the user clicks the login button
+    And the test user logs in with correct credentials
     Then the user is logged in to the dogu
 
   @requires_testuser
   Scenario: logged out user can not log in to the dogu with wrong credentials
     Given the user is logged out of the CES
     When the user opens the dogu start page
-    And the user types in wrong login credentials
-    And the user clicks the login button
+    And the user logs in with wrong credentials
     Then the login page informs the user about invalid credentials
 
   @requires_testuser
