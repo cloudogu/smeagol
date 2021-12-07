@@ -8,6 +8,7 @@ import { useWiki } from "../hooks/wiki";
 import { getDirectoryFromPath, getPageNameFromPath } from "./Page";
 import WikiLoadingPage from "../components/WikiLoadingPage";
 import WikiAlertPage from "../components/WikiAlertPage";
+import PageHeader from "../components/PageHeader";
 
 type Params = {
   repository: string;
@@ -25,7 +26,6 @@ const History: FC<Props> = (props) => {
   const page = findDirectoryPath(props);
   const pageName = getPageNameFromPath(page);
   const directory = getDirectoryFromPath(page);
-
   const pageHistoryQuery = usePageHistory(repository, branch, page);
   const wikiQuery = useWiki(repository, branch);
   const pagePath = `/${repository}/${branch}/${page}`;
@@ -50,16 +50,12 @@ const History: FC<Props> = (props) => {
       </div>
     );
   }
-
+  console.log(pageHistoryQuery.data.commits[0].commitId);
   return (
     <div>
-      <WikiHeader
-        branch={branch}
-        repository={repository}
-        wiki={wikiQuery.data}
-        pageName={pageName}
-        directory={directory}
-      />
+      <h1>Test</h1>
+
+      <PageHeader page={page} wiki={wikiQuery} />
       <hr />
       <div className="page-header">
         <h1>{props.t("history_heading") + page}</h1>
