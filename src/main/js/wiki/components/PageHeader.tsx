@@ -19,7 +19,6 @@ const styles = {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "100%",
     flexWrap: "wrap",
     alignItems: "flex-start"
   }
