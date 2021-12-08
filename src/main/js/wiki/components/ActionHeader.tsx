@@ -9,7 +9,6 @@ import { Branch } from "../../repository/types/repositoryDto";
 
 const styles = {
   header: {
-    borderBottom: "1px solid #ddd",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between"
