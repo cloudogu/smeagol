@@ -8,7 +8,6 @@ import { useWiki } from "../hooks/wiki";
 import WikiLoadingPage from "../components/WikiLoadingPage";
 import WikiAlertPage from "../components/WikiAlertPage";
 import ActionHeader from "../components/ActionHeader";
-import { usePage } from "../hooks/page";
 import { useRepository } from "../../repository/hooks/useRepository";
 
 type Params = {
@@ -31,8 +30,8 @@ const Directory: FC<Props> = (props) => {
   const wikiQuery = useWiki(repository, branch);
   const repositoryQuery = useRepository(repository, true);
 
-  const isLoading = directoryQuery.isLoading || wikiQuery.isLoading;
-  const error = directoryQuery.error || wikiQuery.error;
+  const isLoading = directoryQuery.isLoading || wikiQuery.isLoading || repositoryQuery.isLoading;
+  const error = directoryQuery.error || wikiQuery.error || repositoryQuery.error;
 
   const pushBranchState = (branchName: string, pagePath: string) => {
     props.history.push(`/${repository}/${branchName}/pages/${pagePath}`);
