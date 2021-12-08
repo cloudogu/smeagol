@@ -57,14 +57,9 @@ const History: FC<Props> = (props) => {
   }
 
   const pushBranchState = (branchName: string, pagePath: string) => {
-    props.history.push(`/${repository}/${branchName}/${pagePath}`);
+    props.history.push(`/${repository}/${branchName}/history/${pagePath}`);
   };
-
-  console.log("AHHHH");
-  console.log(pageHistoryQuery);
-  console.log(pagePath);
-  console.log(page);
-  console.log(directory);
+  const wiki = { ...wikiQuery.data, branch, repository };
 
   return (
     <div>
@@ -73,8 +68,8 @@ const History: FC<Props> = (props) => {
         <h1>{props.t("history_heading") + page}</h1>
       </div>
       <ActionHeader
-        wiki={wikiQuery.data}
-        path={pagePath}
+        wiki={wiki}
+        path={page}
         branch={branch}
         branches={repositoryQuery.data._embedded.branches}
         pushBranchStateFunction={pushBranchState}
