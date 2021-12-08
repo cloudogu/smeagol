@@ -67,6 +67,7 @@ const Settings: FC<Props> = (props) => {
   if (wikiQuery.data.directory) {
     historyLink = `/${repository}/${branch}/history/${path}`;
   }
+  const wiki = { ...wikiQuery.data, branch, repository };
 
   return (
     <div>
@@ -75,7 +76,7 @@ const Settings: FC<Props> = (props) => {
       <div className="page-header">
         <h1>{props.t("settings_heading")}</h1>
       </div>
-      <ActionHeader wiki={wikiQuery.data} historyLink={historyLink} inSettings={true} />
+      <ActionHeader wiki={wiki} historyLink={historyLink} inSettings={true} />
       <SettingsInputField
         prefix={"settings-rootDir"}
         setParentState={setRootDir}
