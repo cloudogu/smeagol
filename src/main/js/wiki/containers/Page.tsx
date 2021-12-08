@@ -12,6 +12,7 @@ import WikiLoadingPage from "../components/WikiLoadingPage";
 import WikiAlertPage from "../components/WikiAlertPage";
 import { useRepository } from "../../repository/hooks/useRepository";
 import { LOCAL_STORAGE_UNSAVED_CHANGES_KEY } from "../components/MarkdownEditor";
+import ActionHeader from "../components/ActionHeader";
 
 type Params = {
   repository: string;
@@ -45,6 +46,7 @@ const Page: FC<Props> = (props) => {
 
   const refetch = !isEditMode(props) && !isCreateMode(props);
   const pageQuery = usePage(repository, branch, path, getCommitParameter(props), refetch);
+  console.log("PageQuery Params: ", repository, branch, path, getCommitParameter(props), refetch);
   const wikiQuery = useWiki(repository, branch, refetch);
   const repositoryQuery = useRepository(repository, refetch);
 
@@ -185,10 +187,22 @@ const Page: FC<Props> = (props) => {
     return <WikiAlertPage i18nKey={"page_failed_to_modify"} />;
   }
 
+  let pagesLink = "#";
+  let historyLink = "#";
+  if (wiki.directory) {
+    pagesLink = `/${repository}/${branch}/pages/${wiki.directory}`;
+    historyLink = `/${repository}/${branch}/history/${path}`;
+    // TODO check for polyfill
+    if (!pagesLink.endsWith("/")) {
+      pagesLink += "/";
+    }
+  }
+
   if (isEditMode(props)) {
     return (
       <div>
         {wikiHeader}
+        <ActionHeader wiki={wiki} inEdit={true} />
         <PageEditor
           repository={repository}
           branch={branch}
@@ -201,16 +215,6 @@ const Page: FC<Props> = (props) => {
         />
       </div>
     );
-  }
-  let pagesLink = "#";
-  let historyLink = "#";
-  if (wiki.directory) {
-    pagesLink = `/${repository}/${branch}/pages/${wiki.directory}`;
-    historyLink = `/${repository}/${branch}/history/${path}`;
-    // TODO check for polyfill
-    if (!pagesLink.endsWith("/")) {
-      pagesLink += "/";
-    }
   }
 
   if (repositoryQuery.isError) {

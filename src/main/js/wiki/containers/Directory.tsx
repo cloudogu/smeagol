@@ -7,6 +7,9 @@ import WikiHeader from "../components/WikiHeader";
 import { useWiki } from "../hooks/wiki";
 import WikiLoadingPage from "../components/WikiLoadingPage";
 import WikiAlertPage from "../components/WikiAlertPage";
+import ActionHeader from "../components/ActionHeader";
+import { usePage } from "../hooks/page";
+import { useRepository } from "../../repository/hooks/useRepository";
 
 type Params = {
   repository: string;
@@ -17,6 +20,7 @@ type Props = {
   t: (string) => string;
   match: match<Params>;
   location: Location;
+  history: any;
 };
 
 const Directory: FC<Props> = (props) => {
@@ -25,9 +29,14 @@ const Directory: FC<Props> = (props) => {
   const path = findDirectoryPath(props);
   const directoryQuery = useDirectory(repository, branch, path);
   const wikiQuery = useWiki(repository, branch);
+  const repositoryQuery = useRepository(repository, true);
 
   const isLoading = directoryQuery.isLoading || wikiQuery.isLoading;
   const error = directoryQuery.error || wikiQuery.error;
+
+  const pushBranchState = (branchName: string, pagePath: string) => {
+    props.history.push(`/${repository}/${branchName}/pages/${pagePath}`);
+  };
 
   const createDirectoryLink = (path: string) => {
     const { repository, branch } = props.match.params;
@@ -75,11 +84,25 @@ const Directory: FC<Props> = (props) => {
     );
   }
 
+  const wiki = {
+    ...wikiQuery.data,
+    repository,
+    branch
+  };
+
   return (
     <div>
       <WikiHeader branch={branch} repository={repository} wiki={wikiQuery.data} directory={path} />
       <hr />
       <h1>{props.t("directory_heading")}</h1>
+      <hr />
+      <ActionHeader
+        path={directoryQuery.data.path}
+        wiki={wiki}
+        branch={branch}
+        branches={repositoryQuery.data._embedded.branches}
+        pushBranchStateFunction={pushBranchState}
+      />
       <FileBrowser directory={directoryQuery.data} createLink={createLink} />
     </div>
   );

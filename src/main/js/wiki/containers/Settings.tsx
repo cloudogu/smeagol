@@ -9,6 +9,7 @@ import WikiNotFoundError from "../components/WikiNotFoundError";
 import WikiAlertPage from "../components/WikiAlertPage";
 import SettingsInputField from "../components/SettingsInputField";
 import { isValidRelativePath } from "../../pathUtil";
+import ActionHeader from "../components/ActionHeader";
 
 type Params = {
   repository: string;
@@ -53,6 +54,19 @@ const Settings: FC<Props> = (props) => {
   const rootDirValid = isValidRelativePath(rootDir);
   const landingPageValid = isValidRelativePath(landingPage);
   const allValid = rootDirValid && landingPageValid;
+  let historyLink = "#";
+
+  function findDirectoryPath(props) {
+    const { pathname } = props.location;
+    const parts = pathname.split("/");
+    return parts.slice(4).join("/");
+  }
+
+  const path = findDirectoryPath(props);
+
+  if (wikiQuery.data.directory) {
+    historyLink = `/${repository}/${branch}/history/${path}`;
+  }
 
   return (
     <div>
@@ -61,6 +75,7 @@ const Settings: FC<Props> = (props) => {
       <div className="page-header">
         <h1>{props.t("settings_heading")}</h1>
       </div>
+      <ActionHeader wiki={wikiQuery.data} historyLink={historyLink} inSettings={true} />
       <SettingsInputField
         prefix={"settings-rootDir"}
         setParentState={setRootDir}

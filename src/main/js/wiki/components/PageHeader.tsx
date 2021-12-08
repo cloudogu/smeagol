@@ -6,8 +6,6 @@ import PageNameForm from "./PageNameForm";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import ConfirmModal from "./ConfirmModal";
-import BranchDropdown from "./BranchDropdown";
-import { Branch } from "../../repository/types/repositoryDto";
 
 const styles = {
   header: {
@@ -35,12 +33,8 @@ type Props = {
   onHomeClick: () => void;
   onOkMoveClick: () => void;
   onRestoreClick: () => void;
-  search: (arg0: string) => void;
   history: any;
   classes: any;
-  branch: string;
-  branches: Branch[];
-  pushBranchStateFunction: (branchName: string, pagePath: string) => void;
 };
 
 type State = {
@@ -57,18 +51,6 @@ class PageHeader extends React.Component<Props, State> {
     };
   }
 
-  onCreateClick = () => {
-    this.setState({
-      showCreateForm: true
-    });
-  };
-
-  onAbortCreateClick = () => {
-    this.setState({
-      showCreateForm: false
-    });
-  };
-
   onOkMoveClick = (name) => {
     const path = this.getPathFromPagename(name);
     this.props.onOkMoveClick(path);
@@ -84,14 +66,6 @@ class PageHeader extends React.Component<Props, State> {
     this.setState({
       showDeleteConfirm: false
     });
-  };
-
-  onOkCreate = (name) => {
-    const { repository, branch } = this.props.wiki;
-    const wikiPath = `/${repository}/${branch}/`;
-    const pagePath = this.getPathFromPagename(name);
-
-    this.props.history.push(wikiPath + pagePath);
   };
 
   getPathFromPagename = (name) => {
@@ -129,7 +103,7 @@ class PageHeader extends React.Component<Props, State> {
   }
 
   render() {
-    const { page, wiki, classes, onDelete, historyLink, branch, branches, pushBranchStateFunction } = this.props;
+    const { page, wiki, classes, onDelete, historyLink } = this.props;
 
     const pathWithoutRoot = this.getPagePathWithoutRootDirectory(page, wiki);
 
@@ -138,9 +112,7 @@ class PageHeader extends React.Component<Props, State> {
     ) : (
       ""
     );
-    const createButton = (
-      <ActionButton glyphicon="glyphicon-plus" type="menu" onClick={this.onCreateClick} i18nKey="page-header_create" />
-    );
+
     const historyButton = (
       <ActionLink glyphicon="glyphicon-step-backward" type="menu" to={historyLink} i18nKey="page-header_history" />
     );
@@ -154,20 +126,7 @@ class PageHeader extends React.Component<Props, State> {
     ) : (
       ""
     );
-    const settingsButton = page._links.edit ? (
-      <ActionButton
-        glyphicon="glyphicon-cog"
-        type="menu"
-        onClick={() => {
-          const { repository, branch } = this.props.wiki;
-          const wikiPath = `/${repository}/${branch}/`;
-          this.props.history.push(wikiPath + "settings");
-        }}
-        i18nKey="page-header_settings"
-      />
-    ) : (
-      ""
-    );
+
     const restoreButton = page._links.restore ? (
       <ActionButton
         glyphicon="glyphicon-retweet"
@@ -178,15 +137,7 @@ class PageHeader extends React.Component<Props, State> {
     ) : (
       ""
     );
-    const createForm = (
-      <PageNameForm
-        show={this.state.showCreateForm}
-        onOk={this.onOkCreate}
-        onAbortClick={this.onAbortCreateClick}
-        labelPrefix="create"
-        directory={wiki.directory}
-      />
-    );
+
     const moveForm = (
       <PageNameForm
         show={this.state.showMoveForm}
@@ -206,29 +157,15 @@ class PageHeader extends React.Component<Props, State> {
       />
     );
 
-    const branchDropdown = (
-      <BranchDropdown
-        page={page}
-        repository={this.props.wiki.repository}
-        pushBranchStateFunction={pushBranchStateFunction}
-        branch={branch}
-        branches={branches}
-      />
-    );
-
     return (
       <div className={classes.header}>
         <div className={classNames(classes.actions, classes.row)}>
-          {createButton}
           {editButton}
           {moveButton}
           {historyButton}
           {deleteButton}
           {restoreButton}
-          {settingsButton}
-          {branchDropdown}
         </div>
-        {createForm}
         {moveForm}
         {deleteConfirmModal}
       </div>

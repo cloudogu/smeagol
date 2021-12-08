@@ -38,7 +38,7 @@ const styles = {
 
 type Props = {
   repository: string;
-  page: any;
+  path: any;
   pushBranchStateFunction: (branchName: string, pagePath: string) => void;
   branch: string; //current branch
   branches: Branch[];
@@ -51,8 +51,8 @@ class BranchDropdown extends React.Component<Props> {
   }
 
   handleBranchChange = (event) => {
-    const { page, pushBranchStateFunction } = this.props;
-    pushBranchStateFunction(event.target.value, page.path);
+    const { path, pushBranchStateFunction } = this.props;
+    pushBranchStateFunction(event.target.value, path);
   };
 
   render() {
