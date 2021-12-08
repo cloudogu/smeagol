@@ -46,7 +46,6 @@ const Page: FC<Props> = (props) => {
 
   const refetch = !isEditMode(props) && !isCreateMode(props);
   const pageQuery = usePage(repository, branch, path, getCommitParameter(props), refetch);
-  console.log("PageQuery Params: ", repository, branch, path, getCommitParameter(props), refetch);
   const wikiQuery = useWiki(repository, branch, refetch);
   const repositoryQuery = useRepository(repository, refetch);
 
