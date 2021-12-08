@@ -32,7 +32,7 @@ export const orderFiles = (files) => {
   });
 };
 
-class FileBrowser extends React.Component<Props> {
+class FileBrowser extends React.Component<Props, any> {
   createFileLink = (file: any) => {
     return this.props.createLink(this.props.directory, file);
   };
@@ -41,7 +41,7 @@ class FileBrowser extends React.Component<Props> {
     const children = orderFiles(this.props.directory.children);
 
     return (
-      <ul className="list-unstyled">
+      <ul className="list-unstyled" style={{ borderTop: "1px solid #ddd" }}>
         {children.map((file) => {
           return (
             <li key={file.name}>
