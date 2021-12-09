@@ -8,26 +8,17 @@ import BranchDropdown from "./BranchDropdown";
 import { Branch } from "../../repository/types/repositoryDto";
 
 const styles = {
-  header: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  col: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%"
+  flexbox: {
+    justifyContent: "space-between",
+    flexDirection: "column"
   },
   actions: {
-    marginBottom: "1em",
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
     flexWrap: "wrap",
-    alignItems: "flex-start"
-  },
-  wikiActions: {
-    width: "100%"
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: "1em"
   }
 };
 
@@ -131,12 +122,12 @@ class ActionHeader extends React.Component<Props, State> {
     );
 
     return (
-      <div className={classes.header}>
-        <div className={classes.col}>
-          <div className={classNames(classes.actions, classes.wikiActions, classes.row)}>
-            {createButton}
-            {settingsButton}
-            {branchDropdown}
+      <div>
+        <div className={classNames(classes.flexbox)}>
+          <div className={classNames(classes.actions)}>
+            <div>{createButton}</div>
+            <div>{settingsButton}</div>
+            <div>{branchDropdown}</div>
           </div>
           {this.props.children}
         </div>

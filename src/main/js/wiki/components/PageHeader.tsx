@@ -8,19 +8,17 @@ import classNames from "classnames";
 import ConfirmModal from "./ConfirmModal";
 
 const styles = {
-  header: {
-    borderBottom: "1px solid #ddd",
+  flexbox: {
     display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between"
+    borderBottom: "1px solid #ddd"
   },
   actions: {
-    marginBottom: "1em",
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
     flexWrap: "wrap",
-    alignItems: "flex-start"
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: "1em"
   }
 };
 
@@ -157,8 +155,8 @@ class PageHeader extends React.Component<Props, State> {
     );
 
     return (
-      <div className={classes.header}>
-        <div className={classNames(classes.actions, classes.row)}>
+      <div className={classes.flexbox}>
+        <div className={classNames(classes.actions)}>
           {editButton}
           {moveButton}
           {historyButton}
