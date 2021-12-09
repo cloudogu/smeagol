@@ -243,7 +243,7 @@
                 <version>2.5.0</version>
                 <configuration>
                     <node>
-                        <version>10.23.0</version>
+                        <version>12.13.0</version>
                     </node>
                     <pkgManager>
                         <type>YARN</type>

@@ -14,6 +14,8 @@ const paths = require('./paths');
 const getClientEnvironment = require('./env');
 const TerserPlugin = require('terser-webpack-plugin-legacy');
 
+const purgecsss = require('@fullhuman/postcss-purgecss');
+
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
 const publicPath = paths.servedPath;
@@ -191,19 +193,24 @@ module.exports = {
                       options: {
                         // Necessary for external CSS imports to work
                         // https://github.com/facebookincubator/create-react-app/issues/2677
-                        ident: 'postcss',
-                        plugins: () => [
-                          require('postcss-flexbugs-fixes'),
-                          autoprefixer({
-                            browsers: [
-                              '>1%',
-                              'last 4 versions',
-                              'Firefox ESR',
-                              'not ie < 9', // React doesn't support IE8 anyway
-                            ],
-                            flexbox: 'no-2009',
-                          }),
-                        ],
+                        postcssOptions: {
+                          ident: 'postcss',
+                          plugins: () => [
+                            require('postcss-flexbugs-fixes'),
+                            autoprefixer({
+                              browsers: [
+                                '>1%',
+                                'last 4 versions',
+                                'Firefox ESR',
+                                'not ie < 9', // React doesn't support IE8 anyway
+                              ],
+                              flexbox: 'no-2009',
+                            }),
+                            purgecsss({
+                              content: ['./src/**/*.html', './src/**/*.tsx', './src/**/*.ts', '**/*.css'],
+                            }),
+                          ],
+                        },
                       },
                     },
                   ],
