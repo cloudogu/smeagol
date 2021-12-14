@@ -13,6 +13,7 @@ import WikiAlertPage from "../components/WikiAlertPage";
 import { useRepository } from "../../repository/hooks/useRepository";
 import { LOCAL_STORAGE_UNSAVED_CHANGES_KEY } from "../components/MarkdownEditor";
 import ActionHeader from "../components/ActionHeader";
+import PageHeader from "../components/PageHeader";
 
 type Params = {
   repository: string;
@@ -201,7 +202,7 @@ const Page: FC<Props> = (props) => {
     return (
       <div>
         {wikiHeader}
-        <ActionHeader wiki={wiki} inEdit={true} />
+        <PageHeader wiki={wiki} inEdit={true} />
         <PageEditor
           repository={repository}
           branch={branch}

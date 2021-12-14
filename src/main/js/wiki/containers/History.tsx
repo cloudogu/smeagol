@@ -11,6 +11,7 @@ import WikiAlertPage from "../components/WikiAlertPage";
 import ActionHeader from "../components/ActionHeader";
 import { usePage } from "../hooks/page";
 import { useRepository } from "../../repository/hooks/useRepository";
+import PageHeader from "../components/PageHeader";
 
 type Params = {
   repository: string;
@@ -60,16 +61,15 @@ const History: FC<Props> = (props) => {
     props.history.push(`/${repository}/${branchName}/history/${pagePath}`);
   };
   const wiki = { ...wikiQuery.data, branch, repository };
-
   return (
     <div>
       <hr />
       <div className="page-header">
         <h1>{props.t("history_heading") + page}</h1>
       </div>
-      <ActionHeader
+      <PageHeader
         wiki={wiki}
-        path={page}
+        page={page}
         branch={branch}
         branches={repositoryQuery.data._embedded.branches}
         pushBranchStateFunction={pushBranchState}

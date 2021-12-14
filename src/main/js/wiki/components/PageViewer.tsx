@@ -6,7 +6,6 @@ import { Branch } from "../../repository/types/repositoryDto";
 import injectSheet from "react-jss";
 import StickyBox from "react-sticky-box";
 import React from "react";
-import ActionHeader from "./ActionHeader";
 
 export const WIDTH_BOUNDARY = 900;
 
@@ -100,24 +99,20 @@ class PageViewer extends React.Component<Props> {
     const { width } = this.state;
     return (
       <div>
-        <ActionHeader
-          wiki={wiki}
+        <PageHeader
+          page={page}
           path={page.path}
           pushBranchStateFunction={pushBranchStateFunction}
           branch={branch}
           branches={branches}
-        >
-          <PageHeader
-            page={page}
-            wiki={wiki}
-            pagesLink={pagesLink}
-            historyLink={historyLink}
-            onDelete={onDelete}
-            onHomeClick={onHome}
-            onOkMoveClick={onMove}
-            onRestoreClick={onRestore}
-          />
-        </ActionHeader>
+          wiki={wiki}
+          pagesLink={pagesLink}
+          historyLink={historyLink}
+          onDelete={onDelete}
+          onHomeClick={onHome}
+          onOkMoveClick={onMove}
+          onRestoreClick={onRestore}
+        />
         <div className={classes.layout}>
           {PageViewer.hasMarkdownHeadings(page) && width >= WIDTH_BOUNDARY && (
             <StickyBox offsetTop={55} className={classes.stickyBox}>

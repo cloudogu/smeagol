@@ -6,6 +6,7 @@ import PageNameForm from "./PageNameForm";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import ConfirmModal from "./ConfirmModal";
+import BranchDropdown from "./BranchDropdown";
 
 const styles = {
   flexbox: {
@@ -65,12 +66,16 @@ class PageHeader extends React.Component<Props, State> {
     });
   };
 
-  getPathFromPagename = (name) => {
-    if (name.startsWith("/")) {
-      return name.substr(1);
-    } else {
-      return `${this.props.wiki.directory}/${name}`;
-    }
+  onCreateClick = () => {
+    this.setState({
+      showCreateForm: true
+    });
+  };
+
+  onAbortCreateClick = () => {
+    this.setState({
+      showCreateForm: false
+    });
   };
 
   onMoveClick = () => {
@@ -95,13 +100,21 @@ class PageHeader extends React.Component<Props, State> {
     if (page.path.indexOf(wiki.directory) === 0) {
       return page.path.substring(wiki.directory.length + 1);
     }
-
     return page.path;
   }
-
   render() {
-    const { page, wiki, classes, onDelete, historyLink } = this.props;
-
+    const {
+      page,
+      wiki,
+      classes,
+      onDelete,
+      historyLink,
+      inSettings,
+      inEdit,
+      pushBranchStateFunction,
+      branch,
+      branches
+    } = this.props;
     const pathWithoutRoot = this.getPagePathWithoutRootDirectory(page, wiki);
 
     const editButton = page._links.edit ? (
@@ -154,17 +167,67 @@ class PageHeader extends React.Component<Props, State> {
       />
     );
 
+    let settingsButton;
+    let branchDropdown;
+    if (!inSettings) {
+      settingsButton = (
+        <ActionButton
+          glyphicon="glyphicon-cog"
+          type="menu"
+          onClick={() => {
+            const { repository, branch } = wiki;
+            const wikiPath = `/${repository}/${branch}/`;
+            this.props.history.push(wikiPath + "settings");
+          }}
+          i18nKey="page-header_settings"
+        />
+      );
+    }
+
+    if (!inSettings && !inEdit) {
+      branchDropdown = (
+        <BranchDropdown
+          path={page.path}
+          repository={this.props.wiki.repository}
+          pushBranchStateFunction={pushBranchStateFunction}
+          branch={branch}
+          branches={branches}
+        />
+      );
+    }
+
+    const createForm = (
+      <PageNameForm
+        show={this.state.showCreateForm}
+        onOk={this.onOkCreate}
+        onAbortClick={this.onAbortCreateClick}
+        labelPrefix="create"
+        directory={wiki.directory}
+      />
+    );
+
+    const createButton = (
+      <ActionButton glyphicon="glyphicon-plus" type="menu" onClick={this.onCreateClick} i18nKey="page-header_create" />
+    );
+
     return (
-      <div className={classes.flexbox}>
-        <div className={classNames(classes.actions)}>
-          {editButton}
-          {moveButton}
-          {historyButton}
-          {deleteButton}
-          {restoreButton}
+      <div>
+        <div className={classes.flexbox}>
+          <div className={classNames(classes.actions)}>
+            {createButton}
+            {editButton}
+            {restoreButton}
+            {moveButton}
+            {historyButton}
+            {deleteButton}
+            {settingsButton}
+            {branchDropdown}
+          </div>
+          {this.props.children}
         </div>
         {moveForm}
         {deleteConfirmModal}
+        {createForm}
       </div>
     );
   }

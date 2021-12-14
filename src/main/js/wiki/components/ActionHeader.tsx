@@ -76,7 +76,7 @@ class ActionHeader extends React.Component<Props, State> {
   };
 
   render() {
-    const { path, wiki, classes, inSettings, inEdit, pushBranchStateFunction, branch, branches } = this.props;
+    const { page, wiki, classes, inSettings, inEdit, pushBranchStateFunction, branch, branches } = this.props;
 
     const createButton = (
       <ActionButton glyphicon="glyphicon-plus" type="menu" onClick={this.onCreateClick} i18nKey="page-header_create" />
@@ -102,7 +102,7 @@ class ActionHeader extends React.Component<Props, State> {
     if (!inSettings && !inEdit) {
       branchDropdown = (
         <BranchDropdown
-          path={path}
+          path={page.path}
           repository={this.props.wiki.repository}
           pushBranchStateFunction={pushBranchStateFunction}
           branch={branch}

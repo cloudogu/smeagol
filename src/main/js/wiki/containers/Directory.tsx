@@ -9,6 +9,7 @@ import WikiLoadingPage from "../components/WikiLoadingPage";
 import WikiAlertPage from "../components/WikiAlertPage";
 import ActionHeader from "../components/ActionHeader";
 import { useRepository } from "../../repository/hooks/useRepository";
+import PageHeader from "../components/PageHeader";
 
 type Params = {
   repository: string;
@@ -95,7 +96,7 @@ const Directory: FC<Props> = (props) => {
       <hr />
       <h1>{props.t("directory_heading")}</h1>
       <hr />
-      <ActionHeader
+      <PageHeader
         path={directoryQuery.data.path}
         wiki={wiki}
         branch={branch}
