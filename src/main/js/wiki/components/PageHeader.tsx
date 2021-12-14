@@ -49,6 +49,21 @@ class PageHeader extends React.Component<Props, State> {
     };
   }
 
+  onOkCreate = (name) => {
+    const { repository, branch } = this.props.wiki;
+    const wikiPath = `/${repository}/${branch}/`;
+    const pagePath = this.getPathFromPagename(name);
+    this.props.history.push(wikiPath + pagePath);
+  };
+
+  getPathFromPagename = (name) => {
+    if (name.startsWith("/")) {
+      return name.substr(1);
+    } else {
+      return `${this.props.wiki.directory}/${name}`;
+    }
+  };
+
   onOkMoveClick = (name) => {
     const path = this.getPathFromPagename(name);
     this.props.onOkMoveClick(path);
@@ -97,6 +112,13 @@ class PageHeader extends React.Component<Props, State> {
   };
 
   getPagePathWithoutRootDirectory(page, wiki) {
+    console.log(page);
+    if (page == undefined) {
+      return "";
+    }
+    if (page.path == undefined) {
+      return page;
+    }
     if (page.path.indexOf(wiki.directory) === 0) {
       return page.path.substring(wiki.directory.length + 1);
     }
@@ -116,38 +138,48 @@ class PageHeader extends React.Component<Props, State> {
       branches
     } = this.props;
     const pathWithoutRoot = this.getPagePathWithoutRootDirectory(page, wiki);
+    let editButton;
+    let historyButton;
+    let moveButton;
+    let deleteButton;
+    let restoreButton;
 
-    const editButton = page._links.edit ? (
-      <ActionLink glyphicon="glyphicon-edit" type="menu" to="?edit=true" i18nKey="page-header_edit" />
-    ) : (
-      ""
-    );
-
-    const historyButton = (
-      <ActionLink glyphicon="glyphicon-step-backward" type="menu" to={historyLink} i18nKey="page-header_history" />
-    );
-    const moveButton = page._links.move ? (
-      <ActionButton onClick={this.onMoveClick} glyphicon="glyphicon-pencil" type="menu" i18nKey="page-header_move" />
-    ) : (
-      ""
-    );
-    const deleteButton = page._links.delete ? (
-      <ActionButton glyphicon="glyphicon-trash" type="menu" onClick={this.onDeleteClick} i18nKey="page-header_delete" />
-    ) : (
-      ""
-    );
-
-    const restoreButton = page._links.restore ? (
-      <ActionButton
-        glyphicon="glyphicon-retweet"
-        type="menu"
-        onClick={this.onRestoreClick}
-        i18nKey="page-header_restore"
-      />
-    ) : (
-      ""
-    );
-
+    console.log(page._links);
+    if (page._links) {
+      editButton = page._links.edit ? (
+        <ActionLink glyphicon="glyphicon-edit" type="menu" to="?edit=true" i18nKey="page-header_edit" />
+      ) : (
+        ""
+      );
+      historyButton = (
+        <ActionLink glyphicon="glyphicon-step-backward" type="menu" to={historyLink} i18nKey="page-header_history" />
+      );
+      moveButton = page._links.move ? (
+        <ActionButton onClick={this.onMoveClick} glyphicon="glyphicon-pencil" type="menu" i18nKey="page-header_move" />
+      ) : (
+        ""
+      );
+      deleteButton = page._links.delete ? (
+        <ActionButton
+          glyphicon="glyphicon-trash"
+          type="menu"
+          onClick={this.onDeleteClick}
+          i18nKey="page-header_delete"
+        />
+      ) : (
+        ""
+      );
+      restoreButton = page._links.restore ? (
+        <ActionButton
+          glyphicon="glyphicon-retweet"
+          type="menu"
+          onClick={this.onRestoreClick}
+          i18nKey="page-header_restore"
+        />
+      ) : (
+        ""
+      );
+    }
     const moveForm = (
       <PageNameForm
         show={this.state.showMoveForm}
