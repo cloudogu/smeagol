@@ -60,6 +60,9 @@ For example, you can get all repositories from `http://192.168.56.1:8080/smeagol
 
 ### UI
 
+Make sure your SCM-Manager has the Smeagol Plugin installed!
+- https://192.168.56.2/scm/admin/plugins/available/
+
 To start the UI development server, you should use yarn. First install the required dependencies:
 
 ```bash
