@@ -8,7 +8,6 @@ import { useWiki } from "../hooks/wiki";
 import { getDirectoryFromPath, getPageNameFromPath } from "./Page";
 import WikiLoadingPage from "../components/WikiLoadingPage";
 import WikiAlertPage from "../components/WikiAlertPage";
-import ActionHeader from "../components/ActionHeader";
 import { usePage } from "../hooks/page";
 import { useRepository } from "../../repository/hooks/useRepository";
 import PageHeader from "../components/PageHeader";

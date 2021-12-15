@@ -7,7 +7,6 @@ import WikiHeader from "../components/WikiHeader";
 import { useWiki } from "../hooks/wiki";
 import WikiLoadingPage from "../components/WikiLoadingPage";
 import WikiAlertPage from "../components/WikiAlertPage";
-import ActionHeader from "../components/ActionHeader";
 import { useRepository } from "../../repository/hooks/useRepository";
 import PageHeader from "../components/PageHeader";
 
