@@ -112,8 +112,7 @@ class PageHeader extends React.Component<Props, State> {
   };
 
   getPagePathWithoutRootDirectory(page, wiki) {
-    console.log(page);
-    if (page == undefined) {
+    if (!page) {
       return "";
     }
     if (page.path == undefined) {
@@ -144,8 +143,7 @@ class PageHeader extends React.Component<Props, State> {
     let deleteButton;
     let restoreButton;
 
-    console.log(page._links);
-    if (page._links) {
+    if (page && page._links) {
       editButton = page._links.edit ? (
         <ActionLink glyphicon="glyphicon-edit" type="menu" to="?edit=true" i18nKey="page-header_edit" />
       ) : (
