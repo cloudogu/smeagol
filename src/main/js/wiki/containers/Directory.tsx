@@ -93,15 +93,15 @@ const Directory: FC<Props> = (props) => {
     <div>
       <WikiHeader branch={branch} repository={repository} wiki={wikiQuery.data} directory={path} />
       <hr />
-      <h1>{props.t("directory_heading")}</h1>
-      <hr />
       <PageHeader
-        path={directoryQuery.data.path}
         wiki={wiki}
+        path={directoryQuery.data.path}
         branch={branch}
         branches={repositoryQuery.data._embedded.branches}
         pushBranchStateFunction={pushBranchState}
       />
+      <h1>{props.t("directory_heading")}</h1>
+      <hr />
       <FileBrowser directory={directoryQuery.data} createLink={createLink} />
     </div>
   );

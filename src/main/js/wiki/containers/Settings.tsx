@@ -73,10 +73,11 @@ const Settings: FC<Props> = (props) => {
     <div>
       <WikiHeader branch={branch} repository={repository} wiki={wikiQuery.data} />
       <hr />
+      <PageHeader wiki={wiki} historyLink={historyLink} inSettings={true} />
+      <hr />
       <div className="page-header">
         <h1>{props.t("settings_heading")}</h1>
       </div>
-      <PageHeader wiki={wiki} historyLink={historyLink} inSettings={true} />
       <SettingsInputField
         prefix={"settings-rootDir"}
         setParentState={setRootDir}
