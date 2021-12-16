@@ -59,9 +59,9 @@ class PageHeader extends React.Component<Props, State> {
   getPathFromPagename = (name) => {
     if (name.startsWith("/")) {
       return name.substr(1);
-    } else {
-      return `${this.props.wiki.directory}/${name}`;
     }
+
+    return `${this.props.wiki.directory}/${name}`;
   };
 
   onOkMoveClick = (name) => {
