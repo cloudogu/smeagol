@@ -10,8 +10,8 @@ import BranchDropdown from "./BranchDropdown";
 
 const styles = {
   flexbox: {
-    display: "flex",
-    borderBottom: "1px solid #ddd"
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
   actions: {
     display: "flex",
