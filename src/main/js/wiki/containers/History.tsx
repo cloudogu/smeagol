@@ -60,19 +60,28 @@ const History: FC<Props> = (props) => {
     props.history.push(`/${repository}/${branchName}/history/${pagePath}`);
   };
   const wiki = { ...wikiQuery.data, branch, repository };
+  const pageObject = { path: directory + "/" + pageName };
+
   return (
     <div>
+      <WikiHeader
+        branch={branch}
+        repository={repository}
+        wiki={wikiQuery.data}
+        pageName={pageName}
+        directory={directory}
+      />
       <hr />
-      <div className="page-header">
-        <h1>{props.t("history_heading") + page}</h1>
-      </div>
       <PageHeader
         wiki={wiki}
-        page={page}
+        page={pageObject}
         branch={branch}
         branches={repositoryQuery.data._embedded.branches}
         pushBranchStateFunction={pushBranchState}
       />
+      <div className="page-header">
+        <h1>{props.t("history_heading") + page}</h1>
+      </div>
       <CommitsTable commits={pageHistoryQuery.data.commits} pagePath={pagePath} />
     </div>
   );
