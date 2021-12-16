@@ -214,7 +214,7 @@ class PageHeader extends React.Component<Props, State> {
       );
     }
 
-    if (!inSettings && !inEdit) {
+    if (page && !inSettings && !inEdit) {
       branchDropdown = (
         <BranchDropdown
           path={page.path}
