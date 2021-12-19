@@ -10,7 +10,7 @@ const styles = {
     "background-color": "white",
     border: "#777777",
     color: "#777777",
-    padding: "0px 12px",
+    padding: "6px 12px",
     fontSize: "14px",
     marginLeft: "auto",
     fontFamily: "sans-serif",
@@ -31,8 +31,7 @@ const styles = {
   label: {
     fontWeight: "400 !important",
     paddingLeft: "6px",
-    paddingRight: "3px",
-    verticalAlign: "top"
+    paddingRight: "3px"
   }
 };
 
