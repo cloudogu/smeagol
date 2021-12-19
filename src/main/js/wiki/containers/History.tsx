@@ -79,9 +79,7 @@ const History: FC<Props> = (props) => {
         branches={repositoryQuery.data._embedded.branches}
         pushBranchStateFunction={pushBranchState}
       />
-      <div className="page-header">
-        <h1>{props.t("history_heading") + page}</h1>
-      </div>
+      <h1>{props.t("history_heading") + page}</h1>
       <CommitsTable commits={pageHistoryQuery.data.commits} pagePath={pagePath} />
     </div>
   );

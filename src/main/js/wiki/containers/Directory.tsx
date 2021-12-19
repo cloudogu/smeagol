@@ -101,7 +101,7 @@ const Directory: FC<Props> = (props) => {
         pushBranchStateFunction={pushBranchState}
       />
       <h1>{props.t("directory_heading")}</h1>
-      <hr />
+
       <FileBrowser directory={directoryQuery.data} createLink={createLink} />
     </div>
   );

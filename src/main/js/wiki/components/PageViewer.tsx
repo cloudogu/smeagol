@@ -14,7 +14,6 @@ const styles = {
     "@media (min-width: 900px)": {
       display: "flex",
       alignItems: "flex-start",
-      "padding-top": "2rem",
       "padding-bottom": "2rem"
     }
   },

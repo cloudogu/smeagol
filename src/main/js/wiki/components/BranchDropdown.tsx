@@ -10,7 +10,7 @@ const styles = {
     "background-color": "white",
     border: "#777777",
     color: "#777777",
-    padding: "6px 12px",
+    padding: "0px 12px",
     fontSize: "14px",
     marginLeft: "auto",
     fontFamily: "sans-serif",
