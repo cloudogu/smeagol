@@ -63,7 +63,7 @@ For example, you can get all repositories from `http://192.168.56.1:8080/smeagol
 Make sure your SCM-Manager has the Smeagol Plugin installed!
 - https://192.168.56.2/scm/admin/plugins/available/
 
-If you use a local CES instance make sure the SCM-Manager CAS setting accept any proxy
+If Smeagol runs on your local host and you use CAS and SCM-Manger inside a CES instance please make sure the SCM-Manager CAS setting accepts any proxy like so:
 - Administration -> Settings -> CAS -> Accept any proxy (enabled)
 
 To start the UI development server, you should use yarn. First install the required dependencies:
