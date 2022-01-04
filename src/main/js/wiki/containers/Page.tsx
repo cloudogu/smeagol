@@ -186,17 +186,6 @@ const Page: FC<Props> = (props) => {
     return <WikiAlertPage i18nKey={"page_failed_to_modify"} />;
   }
 
-  let pagesLink = "#";
-  let historyLink = "#";
-  if (wiki.directory) {
-    pagesLink = `/${repository}/${branch}/pages/${wiki.directory}`;
-    historyLink = `/${repository}/${branch}/history/${path}`;
-    // TODO check for polyfill
-    if (!pagesLink.endsWith("/")) {
-      pagesLink += "/";
-    }
-  }
-
   if (isEditMode(props)) {
     return (
       <div>
@@ -214,6 +203,15 @@ const Page: FC<Props> = (props) => {
         />
       </div>
     );
+  }
+  let pagesLink = "#";
+  let historyLink = "#";
+  if (wiki.directory) {
+    pagesLink = `/${repository}/${branch}/pages/${wiki.directory}`;
+    historyLink = `/${repository}/${branch}/history/${path}`;
+    if (!pagesLink.endsWith("/")) {
+      pagesLink += "/";
+    }
   }
 
   if (repositoryQuery.isError) {
