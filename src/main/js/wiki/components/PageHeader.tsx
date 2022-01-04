@@ -149,6 +149,8 @@ class PageHeader extends React.Component<Props, State> {
     let moveButton;
     let deleteButton;
     let restoreButton;
+    let settingsButton;
+    let branchDropdown;
 
     if (page && page._links) {
       editButton = page._links.edit ? (
@@ -204,8 +206,6 @@ class PageHeader extends React.Component<Props, State> {
       />
     );
 
-    let settingsButton;
-    let branchDropdown;
     if (!inSettings) {
       settingsButton = (
         <ActionButton

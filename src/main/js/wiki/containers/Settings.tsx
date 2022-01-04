@@ -9,7 +9,7 @@ import WikiNotFoundError from "../components/WikiNotFoundError";
 import WikiAlertPage from "../components/WikiAlertPage";
 import SettingsInputField from "../components/SettingsInputField";
 import { isValidRelativePath } from "../../pathUtil";
-import ActionHeader from "../components/ActionHeader";
+import PageHeader from "../components/PageHeader";
 
 type Params = {
   repository: string;
@@ -67,7 +67,7 @@ const Settings: FC<Props> = (props) => {
     <div>
       <WikiHeader branch={branch} repository={repository} wiki={wikiQuery.data} />
       <hr />
-      <ActionHeader wiki={wiki} historyLink={historyLink} inSettings={true} />
+      <PageHeader wiki={wiki} historyLink={historyLink} inSettings={true} />
       <h1>{props.t("settings_heading")}</h1>
       <SettingsInputField
         prefix={"settings-rootDir"}
