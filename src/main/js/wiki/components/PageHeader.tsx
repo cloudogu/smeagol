@@ -25,6 +25,7 @@ const styles = {
 type Props = {
   page: any;
   wiki: any;
+  inSettings: any;
   historyLink: string;
   onDelete: () => void;
   onHomeClick: () => void;
