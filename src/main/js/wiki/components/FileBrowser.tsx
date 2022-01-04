@@ -32,7 +32,7 @@ export const orderFiles = (files) => {
   });
 };
 
-class FileBrowser extends React.Component<Props, any> {
+class FileBrowser extends React.Component<Props> {
   createFileLink = (file: any) => {
     return this.props.createLink(this.props.directory, file);
   };
