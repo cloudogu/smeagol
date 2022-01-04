@@ -23,6 +23,7 @@ const styles = {
 };
 
 type Props = {
+  page: any;
   wiki: any;
   path: any;
   history: any;
