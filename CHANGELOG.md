@@ -6,12 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Show interactive elements (new page, rename page, history, settings, branch dropdown) in the same place (#173)
+  - this renders a more continuous display of interaction elements
+- Update images in UI guide documentation
 
 ## [v1.6.1-1] - 2021-11-30
 
 ### Changed
 - Use word-break and hyphens in toc and pageviewer so that long words get wrapped #169
-- Update images in UI guide documentation 
 
 ## [v1.6.0-1] - 2021-08-17
 ### Changed
