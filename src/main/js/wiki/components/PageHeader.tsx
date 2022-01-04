@@ -255,7 +255,6 @@ class PageHeader extends React.Component<Props, State> {
             {settingsButton}
             {branchDropdown}
           </div>
-          {this.props.children}
         </div>
         {moveForm}
         {deleteConfirmModal}
