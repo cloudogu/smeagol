@@ -7,6 +7,7 @@ import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import ConfirmModal from "./ConfirmModal";
 import BranchDropdown from "./BranchDropdown";
+import { Branch } from "../../repository/types/repositoryDto";
 
 const styles = {
   flexbox: {
@@ -33,6 +34,10 @@ type Props = {
   onRestoreClick: () => void;
   history: any;
   classes: any;
+  inEdit: boolean;
+  pushBranchStateFunction: (branchName: string, pagePath: string) => void;
+  branch: string;
+  branches: Branch[];
 };
 
 type State = {
@@ -68,7 +73,7 @@ class PageHeader extends React.Component<Props, State> {
 
   onOkMoveClick = (name) => {
     const path = this.getPathFromPagename(name);
-    this.props.onOkMoveClick(path);
+    this.props.onOkMoveClick();
   };
 
   onDeleteClick = () => {
@@ -110,7 +115,7 @@ class PageHeader extends React.Component<Props, State> {
   onRestoreClick = () => {
     const pagePath = this.props.page.path;
     const commit = this.props.page.commit.commitId;
-    this.props.onRestoreClick(pagePath, commit);
+    this.props.onRestoreClick();
   };
 
   getPagePathWithoutRootDirectory(page, wiki) {
