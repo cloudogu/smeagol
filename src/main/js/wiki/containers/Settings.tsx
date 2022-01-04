@@ -56,13 +56,7 @@ const Settings: FC<Props> = (props) => {
   const allValid = rootDirValid && landingPageValid;
   let historyLink = "#";
 
-  function findDirectoryPath(props) {
-    const { pathname } = props.location;
-    const parts = pathname.split("/");
-    return parts.slice(4).join("/");
-  }
-
-  const path = findDirectoryPath(props);
+  const path = findDirectoryPath(props.location.pathname);
 
   if (wikiQuery.data.directory) {
     historyLink = `/${repository}/${branch}/history/${path}`;
@@ -104,3 +98,8 @@ const Settings: FC<Props> = (props) => {
 };
 
 export default translate()(Settings);
+
+export function findDirectoryPath(pathname) {
+  const parts = pathname.split("/");
+  return parts.slice(4).join("/");
+}

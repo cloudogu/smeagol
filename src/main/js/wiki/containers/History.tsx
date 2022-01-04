@@ -11,6 +11,7 @@ import WikiAlertPage from "../components/WikiAlertPage";
 import { usePage } from "../hooks/page";
 import { useRepository } from "../../repository/hooks/useRepository";
 import PageHeader from "../components/PageHeader";
+import { findDirectoryPath } from "./Settings";
 
 type Params = {
   repository: string;
@@ -26,7 +27,7 @@ type Props = {
 
 const History: FC<Props> = (props) => {
   const { repository, branch } = props.match.params;
-  const page = findDirectoryPath(props);
+  const page = findDirectoryPath(props.location.pathname);
   const pageName = getPageNameFromPath(page);
   const directory = getDirectoryFromPath(page);
   const pageHistoryQuery = usePageHistory(repository, branch, page);
@@ -84,11 +85,5 @@ const History: FC<Props> = (props) => {
     </div>
   );
 };
-
-function findDirectoryPath(props) {
-  const { pathname } = props.location;
-  const parts = pathname.split("/");
-  return parts.slice(4).join("/");
-}
 
 export default translate()(History);
