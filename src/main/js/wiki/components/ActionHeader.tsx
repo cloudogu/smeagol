@@ -36,8 +36,6 @@ type Props = {
 
 type State = {
   showCreateForm: boolean;
-  showMoveForm: boolean;
-  showDeleteConfirm: boolean;
 };
 
 class ActionHeader extends React.Component<Props, State> {
