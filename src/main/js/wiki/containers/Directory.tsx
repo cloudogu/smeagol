@@ -9,6 +9,7 @@ import WikiLoadingPage from "../components/WikiLoadingPage";
 import WikiAlertPage from "../components/WikiAlertPage";
 import { useRepository } from "../../repository/hooks/useRepository";
 import PageHeader from "../components/PageHeader";
+import { findDirectoryPath } from "./Settings";
 
 type Params = {
   repository: string;
@@ -25,7 +26,7 @@ type Props = {
 const Directory: FC<Props> = (props) => {
   const { repository, branch } = props.match.params;
 
-  const path = findDirectoryPath(props);
+  const path = findDirectoryPath(props.location.pathname);
   const directoryQuery = useDirectory(repository, branch, path);
   const wikiQuery = useWiki(repository, branch);
   const repositoryQuery = useRepository(repository, true);
@@ -106,11 +107,5 @@ const Directory: FC<Props> = (props) => {
     </div>
   );
 };
-
-function findDirectoryPath(props) {
-  const { pathname } = props.location;
-  const parts = pathname.split("/");
-  return parts.slice(4).join("/");
-}
 
 export default translate()(Directory);
