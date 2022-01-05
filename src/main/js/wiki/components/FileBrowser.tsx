@@ -39,9 +39,10 @@ class FileBrowser extends React.Component<Props> {
 
   render() {
     const children = orderFiles(this.props.directory.children);
+    const { classes } = this.props;
 
     return (
-      <ul className="list-unstyled">
+      <ul className={[classes.files, "list-unstyled"].join(" ")}>
         {children.map((file) => {
           return (
             <li key={file.name}>

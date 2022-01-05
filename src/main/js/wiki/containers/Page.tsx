@@ -12,6 +12,7 @@ import WikiLoadingPage from "../components/WikiLoadingPage";
 import WikiAlertPage from "../components/WikiAlertPage";
 import { useRepository } from "../../repository/hooks/useRepository";
 import { LOCAL_STORAGE_UNSAVED_CHANGES_KEY } from "../components/MarkdownEditor";
+import PageHeader from "../components/PageHeader";
 
 type Params = {
   repository: string;
@@ -189,6 +190,7 @@ const Page: FC<Props> = (props) => {
     return (
       <div>
         {wikiHeader}
+        <PageHeader wiki={wiki} inEdit={true} />
         <PageEditor
           repository={repository}
           branch={branch}
@@ -207,7 +209,6 @@ const Page: FC<Props> = (props) => {
   if (wiki.directory) {
     pagesLink = `/${repository}/${branch}/pages/${wiki.directory}`;
     historyLink = `/${repository}/${branch}/history/${path}`;
-    // TODO check for polyfill
     if (!pagesLink.endsWith("/")) {
       pagesLink += "/";
     }

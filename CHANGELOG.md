@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.6.2-1] - 2022-01-05
+### Changed
+- Show interactive elements (new page, rename page, history, settings, branch dropdown) in the same place (#173)
+  - this renders a more continuous display of interaction elements
+- Update images in UI guide documentation
+
 ## [v1.6.1-1] - 2021-11-30
 
 ### Changed
-- use word-break and hyphens in toc and pageviewer so that long words get wrapped #169 
+- Use word-break and hyphens in toc and pageviewer so that long words get wrapped #169
 
 ## [v1.6.0-1] - 2021-08-17
 ### Changed
