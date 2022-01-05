@@ -10,37 +10,34 @@ import BranchDropdown from "./BranchDropdown";
 import { Branch } from "../../repository/types/repositoryDto";
 
 const styles = {
-  header: {
-    borderBottom: "1px solid #ddd",
-    display: "flex",
+  flexbox: {
     flexDirection: "row",
     justifyContent: "space-between"
   },
   actions: {
-    marginBottom: "1em",
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
     flexWrap: "wrap",
-    alignItems: "flex-start"
+    alignItems: "flex-start",
+    marginBottom: "1em"
   }
 };
 
 type Props = {
   page: any;
   wiki: any;
+  inSettings: any;
   historyLink: string;
   onDelete: () => void;
   onHomeClick: () => void;
   onOkMoveClick: () => void;
   onRestoreClick: () => void;
-  search: (arg0: string) => void;
   history: any;
   classes: any;
+  inEdit: boolean;
+  pushBranchStateFunction: (branchName: string, pagePath: string) => void;
   branch: string;
   branches: Branch[];
-  pushBranchStateFunction: (branchName: string, pagePath: string) => void;
 };
 
 type State = {
@@ -53,25 +50,30 @@ class PageHeader extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
-      showCreateForm: false
+      showCreateForm: false,
+      showMoveForm: false,
+      showDeleteConfirm: false
     };
   }
 
-  onCreateClick = () => {
-    this.setState({
-      showCreateForm: true
-    });
+  onOkCreate = (name) => {
+    const { repository, branch } = this.props.wiki;
+    const wikiPath = `/${repository}/${branch}/`;
+    const pagePath = this.getPathFromPagename(name);
+    this.props.history.push(wikiPath + pagePath);
   };
 
-  onAbortCreateClick = () => {
-    this.setState({
-      showCreateForm: false
-    });
+  getPathFromPagename = (name) => {
+    if (name.startsWith("/")) {
+      return name.substr(1);
+    }
+
+    return `${this.props.wiki.directory}/${name}`;
   };
 
   onOkMoveClick = (name) => {
     const path = this.getPathFromPagename(name);
-    this.props.onOkMoveClick(path);
+    this.props.onOkMoveClick();
   };
 
   onDeleteClick = () => {
@@ -86,20 +88,16 @@ class PageHeader extends React.Component<Props, State> {
     });
   };
 
-  onOkCreate = (name) => {
-    const { repository, branch } = this.props.wiki;
-    const wikiPath = `/${repository}/${branch}/`;
-    const pagePath = this.getPathFromPagename(name);
-
-    this.props.history.push(wikiPath + pagePath);
+  onCreateClick = () => {
+    this.setState({
+      showCreateForm: true
+    });
   };
 
-  getPathFromPagename = (name) => {
-    if (name.startsWith("/")) {
-      return name.substr(1);
-    } else {
-      return `${this.props.wiki.directory}/${name}`;
-    }
+  onAbortCreateClick = () => {
+    this.setState({
+      showCreateForm: false
+    });
   };
 
   onMoveClick = () => {
@@ -117,76 +115,78 @@ class PageHeader extends React.Component<Props, State> {
   onRestoreClick = () => {
     const pagePath = this.props.page.path;
     const commit = this.props.page.commit.commitId;
-    this.props.onRestoreClick(pagePath, commit);
+    this.props.onRestoreClick();
   };
 
   getPagePathWithoutRootDirectory(page, wiki) {
+    if (!page) {
+      return "";
+    }
+    if (page.path == undefined) {
+      return page;
+    }
     if (page.path.indexOf(wiki.directory) === 0) {
       return page.path.substring(wiki.directory.length + 1);
     }
-
     return page.path;
   }
-
   render() {
-    const { page, wiki, classes, onDelete, historyLink, branch, branches, pushBranchStateFunction } = this.props;
-
+    const {
+      page,
+      wiki,
+      classes,
+      onDelete,
+      historyLink,
+      inSettings,
+      inEdit,
+      pushBranchStateFunction,
+      branch,
+      branches
+    } = this.props;
     const pathWithoutRoot = this.getPagePathWithoutRootDirectory(page, wiki);
+    let editButton;
+    let historyButton;
+    let moveButton;
+    let deleteButton;
+    let restoreButton;
+    let settingsButton;
+    let branchDropdown;
 
-    const editButton = page._links.edit ? (
-      <ActionLink glyphicon="glyphicon-edit" type="menu" to="?edit=true" i18nKey="page-header_edit" />
-    ) : (
-      ""
-    );
-    const createButton = (
-      <ActionButton glyphicon="glyphicon-plus" type="menu" onClick={this.onCreateClick} i18nKey="page-header_create" />
-    );
-    const historyButton = (
-      <ActionLink glyphicon="glyphicon-step-backward" type="menu" to={historyLink} i18nKey="page-header_history" />
-    );
-    const moveButton = page._links.move ? (
-      <ActionButton onClick={this.onMoveClick} glyphicon="glyphicon-pencil" type="menu" i18nKey="page-header_move" />
-    ) : (
-      ""
-    );
-    const deleteButton = page._links.delete ? (
-      <ActionButton glyphicon="glyphicon-trash" type="menu" onClick={this.onDeleteClick} i18nKey="page-header_delete" />
-    ) : (
-      ""
-    );
-    const settingsButton = page._links.edit ? (
-      <ActionButton
-        glyphicon="glyphicon-cog"
-        type="menu"
-        onClick={() => {
-          const { repository, branch } = this.props.wiki;
-          const wikiPath = `/${repository}/${branch}/`;
-          this.props.history.push(wikiPath + "settings");
-        }}
-        i18nKey="page-header_settings"
-      />
-    ) : (
-      ""
-    );
-    const restoreButton = page._links.restore ? (
-      <ActionButton
-        glyphicon="glyphicon-retweet"
-        type="menu"
-        onClick={this.onRestoreClick}
-        i18nKey="page-header_restore"
-      />
-    ) : (
-      ""
-    );
-    const createForm = (
-      <PageNameForm
-        show={this.state.showCreateForm}
-        onOk={this.onOkCreate}
-        onAbortClick={this.onAbortCreateClick}
-        labelPrefix="create"
-        directory={wiki.directory}
-      />
-    );
+    if (page && page._links) {
+      editButton = page._links.edit ? (
+        <ActionLink glyphicon="glyphicon-edit" type="menu" to="?edit=true" i18nKey="page-header_edit" />
+      ) : (
+        ""
+      );
+      historyButton = (
+        <ActionLink glyphicon="glyphicon-step-backward" type="menu" to={historyLink} i18nKey="page-header_history" />
+      );
+      moveButton = page._links.move ? (
+        <ActionButton onClick={this.onMoveClick} glyphicon="glyphicon-pencil" type="menu" i18nKey="page-header_move" />
+      ) : (
+        ""
+      );
+      deleteButton = page._links.delete ? (
+        <ActionButton
+          glyphicon="glyphicon-trash"
+          type="menu"
+          onClick={this.onDeleteClick}
+          i18nKey="page-header_delete"
+        />
+      ) : (
+        ""
+      );
+      restoreButton = page._links.restore ? (
+        <ActionButton
+          glyphicon="glyphicon-retweet"
+          type="menu"
+          onClick={this.onRestoreClick}
+          i18nKey="page-header_restore"
+        />
+      ) : (
+        ""
+      );
+    }
     const moveForm = (
       <PageNameForm
         show={this.state.showMoveForm}
@@ -206,31 +206,64 @@ class PageHeader extends React.Component<Props, State> {
       />
     );
 
-    const branchDropdown = (
-      <BranchDropdown
-        page={page}
-        repository={this.props.wiki.repository}
-        pushBranchStateFunction={pushBranchStateFunction}
-        branch={branch}
-        branches={branches}
+    if (!inSettings) {
+      settingsButton = (
+        <ActionButton
+          glyphicon="glyphicon-cog"
+          type="menu"
+          onClick={() => {
+            const { repository, branch } = wiki;
+            const wikiPath = `/${repository}/${branch}/`;
+            this.props.history.push(wikiPath + "settings");
+          }}
+          i18nKey="page-header_settings"
+        />
+      );
+    }
+
+    if (page && !inSettings && !inEdit) {
+      branchDropdown = (
+        <BranchDropdown
+          path={page.path}
+          repository={this.props.wiki.repository}
+          pushBranchStateFunction={pushBranchStateFunction}
+          branch={branch}
+          branches={branches}
+        />
+      );
+    }
+
+    const createForm = (
+      <PageNameForm
+        show={this.state.showCreateForm}
+        onOk={this.onOkCreate}
+        onAbortClick={this.onAbortCreateClick}
+        labelPrefix="create"
+        directory={wiki.directory}
       />
     );
 
+    const createButton = (
+      <ActionButton glyphicon="glyphicon-plus" type="menu" onClick={this.onCreateClick} i18nKey="page-header_create" />
+    );
+
     return (
-      <div className={classes.header}>
-        <div className={classNames(classes.actions, classes.row)}>
-          {createButton}
-          {editButton}
-          {moveButton}
-          {historyButton}
-          {deleteButton}
-          {restoreButton}
-          {settingsButton}
-          {branchDropdown}
+      <div>
+        <div className={classes.flexbox}>
+          <div className={classNames(classes.actions)}>
+            {createButton}
+            {editButton}
+            {restoreButton}
+            {moveButton}
+            {historyButton}
+            {deleteButton}
+            {settingsButton}
+            {branchDropdown}
+          </div>
         </div>
-        {createForm}
         {moveForm}
         {deleteConfirmModal}
+        {createForm}
       </div>
     );
   }

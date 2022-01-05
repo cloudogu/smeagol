@@ -56,7 +56,7 @@ const styles = {
     color: "inherit",
     "font-size": "1.4rem",
     "padding-top": "0.75rem",
-    display: "inline-block",
+    display: "block",
     "word-break": "break-word",
     "-ms-hyphens": "auto",
     "-webkit-hyphens": "auto",

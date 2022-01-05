@@ -12,7 +12,7 @@ This repository contains smeagol, an wiki server which stores its files in a git
 
 ### Environment
 > **Note**: If you intend to use your local ecosystem, which will also reside on `192.168.56.2` by default, you have to set an etcd key first.
-> This can be done in vagrant with the command `etcdctl set/config/_global/stage "development"` and restarting CAS in vagrant via `docker restart cas`.
+> This can be done in vagrant with the command `etcdctl set /config/_global/stage "development"` and restarting CAS in vagrant via `docker restart cas`.
 
 #### Setting up a development ecosystem via groovy
 Smeagol requires a proper configured Cloudogu EcoSystem in order to work properly.
@@ -59,6 +59,12 @@ To access the development instance open `http://192.168.56.1:8080` in your brows
 For example, you can get all repositories from `http://192.168.56.1:8080/smeagol/api/v1/repositories`.
 
 ### UI
+
+Make sure your SCM-Manager has the Smeagol Plugin installed!
+- https://192.168.56.2/scm/admin/plugins/available/
+
+If Smeagol runs on your local host and you use CAS and SCM-Manger inside a CES instance please make sure the SCM-Manager CAS setting accepts any proxy like so:
+- Administration -> Settings -> CAS -> Accept any proxy (enabled)
 
 To start the UI development server, you should use yarn. First install the required dependencies:
 

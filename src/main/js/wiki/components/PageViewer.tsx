@@ -14,7 +14,6 @@ const styles = {
     "@media (min-width: 900px)": {
       display: "flex",
       alignItems: "flex-start",
-      "padding-top": "2rem",
       "padding-bottom": "2rem"
     }
   },
@@ -101,6 +100,10 @@ class PageViewer extends React.Component<Props> {
       <div>
         <PageHeader
           page={page}
+          path={page.path}
+          pushBranchStateFunction={pushBranchStateFunction}
+          branch={branch}
+          branches={branches}
           wiki={wiki}
           pagesLink={pagesLink}
           historyLink={historyLink}
@@ -108,9 +111,6 @@ class PageViewer extends React.Component<Props> {
           onHomeClick={onHome}
           onOkMoveClick={onMove}
           onRestoreClick={onRestore}
-          pushBranchStateFunction={pushBranchStateFunction}
-          branch={branch}
-          branches={branches}
         />
         <div className={classes.layout}>
           {PageViewer.hasMarkdownHeadings(page) && width >= WIDTH_BOUNDARY && (

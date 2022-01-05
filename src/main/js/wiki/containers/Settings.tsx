@@ -9,6 +9,7 @@ import WikiNotFoundError from "../components/WikiNotFoundError";
 import WikiAlertPage from "../components/WikiAlertPage";
 import SettingsInputField from "../components/SettingsInputField";
 import { isValidRelativePath } from "../../pathUtil";
+import PageHeader from "../components/PageHeader";
 
 type Params = {
   repository: string;
@@ -53,14 +54,21 @@ const Settings: FC<Props> = (props) => {
   const rootDirValid = isValidRelativePath(rootDir);
   const landingPageValid = isValidRelativePath(landingPage);
   const allValid = rootDirValid && landingPageValid;
+  let historyLink = "#";
+
+  const path = findDirectoryPath(props.location.pathname);
+
+  if (wikiQuery.data.directory) {
+    historyLink = `/${repository}/${branch}/history/${path}`;
+  }
+  const wiki = { ...wikiQuery.data, branch, repository };
 
   return (
     <div>
       <WikiHeader branch={branch} repository={repository} wiki={wikiQuery.data} />
       <hr />
-      <div className="page-header">
-        <h1>{props.t("settings_heading")}</h1>
-      </div>
+      <PageHeader wiki={wiki} historyLink={historyLink} inSettings={true} />
+      <h1>{props.t("settings_heading")}</h1>
       <SettingsInputField
         prefix={"settings-rootDir"}
         setParentState={setRootDir}
@@ -90,3 +98,8 @@ const Settings: FC<Props> = (props) => {
 };
 
 export default translate()(Settings);
+
+export function findDirectoryPath(pathname) {
+  const parts = pathname.split("/");
+  return parts.slice(4).join("/");
+}
