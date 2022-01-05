@@ -1,6 +1,6 @@
 {
   "name": "smeagol",
-  "version": "1.6.1-1",
+  "version": "1.6.2-1",
   "private": true,
   "dependencies": {
     "ces-theme": "https://github.com/cloudogu/ces-theme.git#39ad0799afc9e3f4a888192c6cd27b16f7161a84",
