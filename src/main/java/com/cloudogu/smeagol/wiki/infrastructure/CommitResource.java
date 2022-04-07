@@ -1,10 +1,10 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 
-public class CommitResource extends ResourceSupport {
+public class CommitResource extends RepresentationModel<CommitResource> {
 
     private final String commitId;
     private final AuthorResource author;

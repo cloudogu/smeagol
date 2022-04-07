@@ -6,13 +6,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CustomErrorControllerTest {
@@ -27,7 +27,7 @@ public class CustomErrorControllerTest {
 
     @Before
     public void init() {
-        MockitoAnnotations.initMocks(this);
+        openMocks(this);
     }
 
     @Test

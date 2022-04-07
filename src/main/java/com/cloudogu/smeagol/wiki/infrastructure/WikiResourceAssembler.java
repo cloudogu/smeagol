@@ -2,21 +2,22 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.Wiki;
 import com.cloudogu.smeagol.wiki.domain.WikiId;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-public class WikiResourceAssembler extends ResourceAssemblerSupport<Wiki, WikiResource> {
+public class WikiResourceAssembler extends RepresentationModelAssemblerSupport<Wiki, WikiResource> {
 
     public WikiResourceAssembler() {
         super(WikiController.class, WikiResource.class);
     }
 
     @Override
-    public WikiResource toResource(Wiki wiki) {
+    public @NotNull WikiResource toModel(Wiki wiki) {
         String displayName = wiki.getDisplayName().getValue();
         String repositoryName = wiki.getRepositoryName().getValue();
         String directory = wiki.getDirectory().getValue();
@@ -34,14 +35,14 @@ public class WikiResourceAssembler extends ResourceAssemblerSupport<Wiki, WikiRe
     }
 
     private Link gitLink(Wiki wiki) {
-        return new Link(wiki.getRepositoryUrl().toExternalForm(), "repository");
+        return Link.of(wiki.getRepositoryUrl().toExternalForm(), "repository");
     }
 
     private Link selfLink(Wiki wiki) {
         return baseLink(wiki.getId()).withSelfRel();
     }
 
-    private ControllerLinkBuilder baseLink(WikiId id) {
+    private WebMvcLinkBuilder baseLink(WikiId id) {
         return linkTo(
                 methodOn(WikiController.class).wiki(id.getRepositoryID(), id.getBranch())
         );

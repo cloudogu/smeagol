@@ -1,13 +1,13 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 
-public class DirectoryResource extends ResourceSupport {
+public class DirectoryResource extends RepresentationModel<DirectoryResource> {
 
-    private String path;
-    private Iterable<DirectoryEntryResource> children;
+    private final String path;
+    private final Iterable<DirectoryEntryResource> children;
 
     public DirectoryResource(String path, Iterable<DirectoryEntryResource> children) {
         this.path = path;

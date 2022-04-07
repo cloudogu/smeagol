@@ -2,22 +2,22 @@ package com.cloudogu.smeagol.repository.infrastructure;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.hateoas.ResourceSupport;
-import org.springframework.hateoas.core.Relation;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 @Relation(collectionRelation = "repositories")
-public class RepositoryResource extends ResourceSupport {
+public class RepositoryResource extends RepresentationModel<RepositoryResource> {
 
     @JsonProperty("id")
     private String id;
-    private String name;
-    private String description;
-    private String lastModified;
-    private Map<String, Object> embedded;
+    private final String name;
+    private final String description;
+    private final String lastModified;
+    private final Map<String, Object> embedded;
 
     public RepositoryResource(String id, String name, String description, String lastModified) {
         this.id = id;

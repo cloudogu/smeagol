@@ -3,15 +3,12 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 import com.cloudogu.smeagol.wiki.domain.Directory;
 import com.cloudogu.smeagol.wiki.domain.Path;
 import com.google.common.collect.Iterables;
-import org.eclipse.jgit.api.Git;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +18,6 @@ import static com.cloudogu.smeagol.wiki.DomainTestData.WIKI_ID_42;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class ScmGitDirectoryRepositoryTest {
 
     @Rule

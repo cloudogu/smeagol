@@ -1,15 +1,15 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 
-public class PageResource extends ResourceSupport {
+public class PageResource extends RepresentationModel<PageResource> {
 
-    private String path;
-    private String content;
+    private final String path;
+    private final String content;
 
-    private CommitResource commit;
+    private final CommitResource commit;
 
     public PageResource(String path, String content, CommitResource commit) {
         this.path = path;

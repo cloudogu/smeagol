@@ -233,7 +233,7 @@ const Page: FC<Props> = (props) => {
           onRestore={onRestore}
           pushBranchStateFunction={pushBranchState}
           branch={branch}
-          branches={repositoryQuery.data._embedded.branches}
+          branches={repositoryQuery.data._embedded.branches._embedded.branchResourceList}
         />
       </div>
     </>

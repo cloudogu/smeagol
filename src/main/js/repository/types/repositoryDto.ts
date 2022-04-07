@@ -12,7 +12,11 @@ export type RepositoryDto = {
   id: string;
   name: string;
   _embedded: {
-    branches: Branch[];
+    branches: {
+      _embedded: {
+        branchResourceList: Branch[]
+      }
+    };
   };
   _links: {
     self: {

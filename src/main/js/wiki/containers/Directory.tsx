@@ -98,7 +98,7 @@ const Directory: FC<Props> = (props) => {
         wiki={wiki}
         path={directoryQuery.data.path}
         branch={branch}
-        branches={repositoryQuery.data._embedded.branches}
+        branches={repositoryQuery.data._embedded.branches._embedded.branchResourceList}
         pushBranchStateFunction={pushBranchState}
       />
       <h1>{props.t("directory_heading")}</h1>

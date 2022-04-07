@@ -46,7 +46,7 @@ public class DirectoryController {
 
         Optional<Directory> directory = directoryRepository.findByWikiIdAndPath(id, path);
         if (directory.isPresent()) {
-            return ResponseEntity.ok(assembler.toResource(directory.get()));
+            return ResponseEntity.ok(assembler.toModel(directory.get()));
         }
 
         return ResponseEntity.notFound().build();
