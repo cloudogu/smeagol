@@ -35,7 +35,6 @@ parallel(
           // Replace git:// with https:// for github dependencies because the unauthenticated protocol is no longer
           // supported.
           sh 'sed -i "s/git:\\/\\/github/https:\\/\\/github/g" yarn.lock'
-          sh 'git config --global url."https://github".insteadOf git://github'
           mvn 'clean install -DskipTests -Dmaven.wagon.http.pool=false'
           archive '**/target/*.*ar,**/target/*.zip'
         }
