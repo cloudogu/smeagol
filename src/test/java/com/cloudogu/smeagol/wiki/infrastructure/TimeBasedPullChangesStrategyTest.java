@@ -11,11 +11,11 @@ public class TimeBasedPullChangesStrategyTest {
     @Test
     @SuppressWarnings("squid:S2925") // ignore thread sleep warning
     public void shouldPull() throws InterruptedException {
-        TimeBasedPullChangesStrategy strategy = new TimeBasedPullChangesStrategy(100L);
+        TimeBasedPullChangesStrategy strategy = new TimeBasedPullChangesStrategy(1000L);
         assertThat(strategy.shouldPull(WIKI_ID_42)).isTrue();
         assertThat(strategy.shouldPull(WIKI_ID_42)).isFalse();
         assertThat(strategy.shouldPull(new WikiId("42", "develop"))).isTrue();
-        Thread.sleep(101L);
+        Thread.sleep(1001L);
         assertThat(strategy.shouldPull(WIKI_ID_42)).isTrue();
     }
 }
