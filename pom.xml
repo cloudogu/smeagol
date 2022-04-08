@@ -259,7 +259,7 @@
                     </node>
                     <pkgManager>
                         <type>YARN</type>
-                        <version>1.22.5</version>
+                        <version>1.22.12</version>
                     </pkgManager>
                     <pkg/>
                     <script/>

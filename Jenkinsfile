@@ -31,7 +31,7 @@ parallel(
 
         stage('Build') {
           setupMaven(mvn)
-          sh 'git config --global url."https://github.com/".insteadOf git://github.com/'
+          sh 'git config --global url."https://github".insteadOf git://github'
           mvn 'clean install -DskipTests -Dmaven.wagon.http.pool=false'
           archive '**/target/*.*ar,**/target/*.zip'
         }
