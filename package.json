@@ -11,7 +11,7 @@
     "i18next-browser-languagedetector": "^2.1.0",
     "i18next-fetch-backend": "^0.1.0",
     "i18next-resource-store-loader": "^0.1.2",
-    "moment": "^2.20.1",
+    "moment": "^2.29.2",
     "object-assign": "4.1.1",
     "promise": "8.0.1",
     "query-string": "^5.0.1",
