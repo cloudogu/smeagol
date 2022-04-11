@@ -77,7 +77,7 @@ const History: FC<Props> = (props) => {
         wiki={wiki}
         page={pageObject}
         branch={branch}
-        branches={repositoryQuery.data._embedded.branches}
+        branches={repositoryQuery.data._embedded.branches._embedded.branchResourceList}
         pushBranchStateFunction={pushBranchState}
       />
       <h1>{props.t("history_heading") + page}</h1>

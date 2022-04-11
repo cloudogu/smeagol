@@ -6,7 +6,7 @@ import com.cloudogu.smeagol.wiki.domain.WikiId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,7 +18,7 @@ public class WildcardPathExtractorTest {
 
     @Mock
     private HttpServletRequest request;
-    private WildcardPathExtractor pathExtractor = new WildcardPathExtractor();
+    private final WildcardPathExtractor pathExtractor = new WildcardPathExtractor();
 
     @Test
     public void testExtractPathFromRequest() {

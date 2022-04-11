@@ -21,7 +21,7 @@ public class WikiController {
 
     private final WikiResourceAssembler assembler = new WikiResourceAssembler();
 
-    private WikiRepository repository;
+    private final WikiRepository repository;
     private final CommandBus commandBus;
 
     @Autowired
@@ -38,7 +38,7 @@ public class WikiController {
         WikiId id = new WikiId(repositoryId, branch);
 
         Optional<Wiki> wiki = repository.findById(id);
-        return wiki.map(value -> ResponseEntity.ok(assembler.toResource(value))).
+        return wiki.map(value -> ResponseEntity.ok(assembler.toModel(value))).
             orElseGet(() -> ResponseEntity.notFound().build());
     }
 

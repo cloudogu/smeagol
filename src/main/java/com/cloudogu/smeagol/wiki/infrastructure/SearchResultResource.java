@@ -1,16 +1,16 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import org.springframework.hateoas.ResourceSupport;
-import org.springframework.hateoas.core.Relation;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.util.Objects;
 
 @Relation(collectionRelation = "searchResults")
-public class SearchResultResource extends ResourceSupport {
+public class SearchResultResource extends RepresentationModel<SearchResultResource> {
 
-    private String path;
-    private float score;
-    private String contentFragment;
+    private final String path;
+    private final float score;
+    private final String contentFragment;
 
     public SearchResultResource(String path, float score, String contentFragment) {
         this.path = path;

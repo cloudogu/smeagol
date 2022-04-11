@@ -42,11 +42,11 @@ async function handleStatusCode(response: Response) {
 }
 
 function createRedirectUrl() {
-  return createUrl("authc?location=" + encodeURIComponent(window.location.href));
+  return createUrl("/authc?location=" + encodeURIComponent(window.location.href));
 }
 
 function createUrl(url: string) {
-  return `${apiUrl}/api/v1/${url}`;
+  return `${apiUrl}/api/v1${url}`;
 }
 
 function redirect(redirectUrl: string) {

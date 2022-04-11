@@ -35,7 +35,6 @@ public class CustomErrorController implements ErrorController {
         return "";
     }
 
-    @Override
     public String getErrorPath() {
         return "/error";
     }

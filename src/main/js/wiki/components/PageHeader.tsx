@@ -30,7 +30,7 @@ type Props = {
   historyLink: string;
   onDelete: () => void;
   onHomeClick: () => void;
-  onOkMoveClick: () => void;
+  onOkMoveClick: (path: string) => void;
   onRestoreClick: () => void;
   history: any;
   classes: any;
@@ -73,7 +73,7 @@ class PageHeader extends React.Component<Props, State> {
 
   onOkMoveClick = (name) => {
     const path = this.getPathFromPagename(name);
-    this.props.onOkMoveClick();
+    this.props.onOkMoveClick(path);
   };
 
   onDeleteClick = () => {

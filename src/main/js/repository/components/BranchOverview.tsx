@@ -43,7 +43,7 @@ class BranchOverview extends React.Component<Props> {
       return <div />;
     }
 
-    let branches = repository._embedded.branches;
+    let branches = repository._embedded.branches._embedded.branchResourceList;
     if (!branches) {
       branches = [];
     }

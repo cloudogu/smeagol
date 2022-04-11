@@ -84,7 +84,7 @@ public class PageController {
 
     private Optional<ResponseEntity<PageResource>> createResponse(WikiId id, Path path) {
         Optional<Page> byWikiIdAndPath = repository.findByWikiIdAndPath(id, path);
-        return byWikiIdAndPath.map(page -> ResponseEntity.ok(assembler.toResource(page)));
+        return byWikiIdAndPath.map(page -> ResponseEntity.ok(assembler.toModel(page)));
     }
 
 

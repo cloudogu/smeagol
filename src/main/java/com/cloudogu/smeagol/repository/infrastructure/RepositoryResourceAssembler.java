@@ -1,20 +1,21 @@
 package com.cloudogu.smeagol.repository.infrastructure;
 
 import com.cloudogu.smeagol.repository.domain.Repository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.hateoas.Link;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
 import java.time.format.DateTimeFormatter;
 
-public class RepositoryResourceAssembler extends ResourceAssemblerSupport<Repository, RepositoryResource> {
+public class RepositoryResourceAssembler extends RepresentationModelAssemblerSupport<Repository, RepositoryResource> {
 
     public RepositoryResourceAssembler() {
         super(RepositoryController.class, RepositoryResource.class);
     }
 
     @Override
-    public RepositoryResource toResource(Repository repository) {
+    public @NotNull RepositoryResource toModel(Repository repository) {
         RepositoryResource resource = new RepositoryResource(
                 repository.getId().getValue(),
                 repository.getName().getValue(),
@@ -25,8 +26,8 @@ public class RepositoryResourceAssembler extends ResourceAssemblerSupport<Reposi
         return resource;
     }
 
-    public RepositoryResource toResource(Repository repository, Iterable<BranchResource> branches) {
-        RepositoryResource resource = toResource(repository);
+    public RepositoryResource toModel(Repository repository, Iterable<BranchResource> branches) {
+        RepositoryResource resource = toModel(repository);
         resource.embed("branches", branches);
         return resource;
     }
