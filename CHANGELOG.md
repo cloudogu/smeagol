@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.6.2-2] - 2022-04-11
 ### Changed
 - Upgrade spring boot to version 2.6.5 to fix CVE-2022-22950 (#186)
 - Upgrade packages to fix CVE-2018-25032; #185
