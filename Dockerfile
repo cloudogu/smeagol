@@ -13,6 +13,8 @@ RUN set -x \
  && cd ${SMEAGOL_DIR} \
  && ./mvnw package -Dmaven.wagon.http.pool=false
 
+
+
 FROM registry.cloudogu.com/official/java:11.0.14-3
 LABEL NAME="official/smeagol" \
       VERSION="1.6.2-1" \
@@ -23,6 +25,12 @@ ENV SERVICE_TAGS=webapp \
 
 COPY --from=builder /usr/src/smeagol/target/smeagol.war /app/smeagol.war
 COPY resources/ /
+
+RUN set -o errexit \
+ && set -o nounset \
+ && set -o pipefail \
+ && apk update \
+ && apk upgrade
 
 VOLUME ${SMEAGOL_HOME}
 EXPOSE 8080
