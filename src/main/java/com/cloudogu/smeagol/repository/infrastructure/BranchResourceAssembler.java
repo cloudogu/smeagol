@@ -1,18 +1,19 @@
 package com.cloudogu.smeagol.repository.infrastructure;
 
 import com.cloudogu.smeagol.repository.domain.Branch;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.hateoas.Link;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
-public class BranchResourceAssembler extends ResourceAssemblerSupport<Branch, BranchResource> {
+public class BranchResourceAssembler extends RepresentationModelAssemblerSupport<Branch, BranchResource> {
 
     public BranchResourceAssembler() {
         super(RepositoryController.class, BranchResource.class);
     }
 
     @Override
-    public BranchResource toResource(Branch branch) {
+    public @NotNull BranchResource toModel(Branch branch) {
         BranchResource resource = new BranchResource(branch.getName().toString());
         resource.add(selfLink(branch));
         return resource;

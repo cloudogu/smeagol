@@ -3,7 +3,7 @@ package com.cloudogu.smeagol;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -28,7 +28,7 @@ public class ProductionDispatcherTest {
     @Mock
     private RequestDispatcher servletDispatcher;
 
-    private ProductionDispatcher dispatcher = new ProductionDispatcher();
+    private final ProductionDispatcher dispatcher = new ProductionDispatcher();
 
     @Test
     public void testNeedsToBeDispatched() {

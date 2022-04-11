@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.6.2-2] - 2022-04-11
+### Changed
+- Upgrade spring boot to version 2.6.5 to fix CVE-2022-22950 (#186)
+- Upgrade packages to fix CVE-2018-25032; #185
+
 ## [v1.6.2-1] - 2022-01-05
 ### Changed
 - Show interactive elements (new page, rename page, history, settings, branch dropdown) in the same place (#173)
@@ -14,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update images in UI guide documentation
 
 ## [v1.6.1-1] - 2021-11-30
-
 ### Changed
 - Use word-break and hyphens in toc and pageviewer so that long words get wrapped #169
 

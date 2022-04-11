@@ -4,16 +4,17 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 import com.cloudogu.smeagol.wiki.domain.Commit;
 import com.cloudogu.smeagol.wiki.domain.History;
 import com.cloudogu.smeagol.wiki.domain.WikiId;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-public class HistoryResourceAssembler extends ResourceAssemblerSupport<History, HistoryResource> {
+public class HistoryResourceAssembler extends RepresentationModelAssemblerSupport<History, HistoryResource> {
 
     private final CommitResourceAssembler assembler = new CommitResourceAssembler();
 
@@ -22,10 +23,10 @@ public class HistoryResourceAssembler extends ResourceAssemblerSupport<History, 
     }
 
     @Override
-    public HistoryResource toResource(History history) {
+    public @NotNull HistoryResource toModel(History history) {
         List<CommitResource> commitsAsResources = new ArrayList<>(history.getCommits().size());
         for (Commit commit : history.getCommits()) {
-            CommitResource commitResource = assembler.toResource(commit);
+            CommitResource commitResource = assembler.toModel(commit);
             commitResource.add(linkToPageAtCommit(history, commit));
             commitResource.add(linkToRestorePage(history));
 
@@ -48,16 +49,16 @@ public class HistoryResourceAssembler extends ResourceAssemblerSupport<History, 
     private Link linkToPageAtCommit(History history, Commit commit) {
         Link pageLink = pageLink(history).withRel("page");
         String href = pageLink.getHref() + "?commit=" + commit.getId().get().getValue();
-        return new Link(href, pageLink.getRel());
+        return Link.of(href, pageLink.getRel());
     }
 
-    private ControllerLinkBuilder baseLink(History history) {
+    private WebMvcLinkBuilder baseLink(History history) {
         WikiId id = history.getWikiId();
         return linkTo(HistoryController.class, id.getRepositoryID(), id.getBranch())
                 .slash(history.getPath().toString());
     }
 
-    private ControllerLinkBuilder pageLink(History history) {
+    private WebMvcLinkBuilder pageLink(History history) {
         WikiId id = history.getWikiId();
         return linkTo(PageController.class, id.getRepositoryID(), id.getBranch())
                 .slash(history.getPath().toString());

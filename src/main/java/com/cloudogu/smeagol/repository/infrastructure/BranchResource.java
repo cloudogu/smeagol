@@ -1,12 +1,12 @@
 package com.cloudogu.smeagol.repository.infrastructure;
 
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 
-public class BranchResource extends ResourceSupport {
+public class BranchResource extends RepresentationModel<BranchResource> {
 
-    private String name;
+    private final String name;
 
     public BranchResource(String name) {
         this.name = name;
@@ -33,7 +33,6 @@ public class BranchResource extends ResourceSupport {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(super.hashCode(), name);
     }
 }

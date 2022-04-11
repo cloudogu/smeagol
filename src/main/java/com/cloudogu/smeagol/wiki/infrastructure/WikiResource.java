@@ -1,10 +1,10 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 
-public class WikiResource extends ResourceSupport {
+public class WikiResource extends RepresentationModel<WikiResource> {
 
     private final String displayName;
     private final String repositoryName;

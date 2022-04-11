@@ -1,25 +1,26 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 
-public class PageResourceAssembler extends ResourceAssemblerSupport<Page, PageResource> {
+public class PageResourceAssembler extends RepresentationModelAssemblerSupport<Page, PageResource> {
 
     public PageResourceAssembler() {
         super(PageController.class, PageResource.class);
     }
 
     @Override
-    public PageResource toResource(Page page) {
+    public @NotNull PageResource toModel(Page page) {
         PageResource resource = new PageResource(
                 page.getPath().getValue(),
                 page.getContent().getValue(),
@@ -41,7 +42,7 @@ public class PageResourceAssembler extends ResourceAssemblerSupport<Page, PageRe
         );
         Link linkToPage = selfLink(page);
         String href = linkToPage.getHref() + "?commit=" + page.getCommit().get().getId().get().getValue();
-        Link linkToPageCommitFixed = new Link(href, linkToPage.getRel());
+        Link linkToPageCommitFixed = Link.of(href, linkToPage.getRel());
         resource.add(linkToPageCommitFixed);
         resource.add(restoreLink(page));
 
@@ -49,7 +50,7 @@ public class PageResourceAssembler extends ResourceAssemblerSupport<Page, PageRe
     }
 
     private CommitResource createCommitResource(Optional<Commit> optionalCommit) {
-        if (!optionalCommit.isPresent()) {
+        if (optionalCommit.isEmpty()) {
             return null;
         }
 
@@ -91,7 +92,7 @@ public class PageResourceAssembler extends ResourceAssemblerSupport<Page, PageRe
         return baseLink(page).withRel("restore");
     }
 
-    private ControllerLinkBuilder baseLink(Page page) {
+    private WebMvcLinkBuilder baseLink(Page page) {
         WikiId id = page.getWikiId();
         return linkTo(PageController.class, id.getRepositoryID(), id.getBranch())
                 .slash(page.getPath().toString());

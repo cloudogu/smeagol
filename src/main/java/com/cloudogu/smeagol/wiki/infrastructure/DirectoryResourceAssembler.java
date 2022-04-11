@@ -2,21 +2,22 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.*;
 import com.google.common.collect.Lists;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
 import java.util.List;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-public class DirectoryResourceAssembler extends ResourceAssemblerSupport<Directory, DirectoryResource> {
+public class DirectoryResourceAssembler extends RepresentationModelAssemblerSupport<Directory, DirectoryResource> {
 
     public DirectoryResourceAssembler() {
         super(DirectoryController.class, DirectoryResource.class);
     }
 
     @Override
-    public DirectoryResource toResource(Directory directory) {
+    public @NotNull DirectoryResource toModel(Directory directory) {
         List<DirectoryEntryResource> entries = Lists.newArrayList();
         for (Path path : directory.getChildDirectories()) {
             DirectoryEntryResource entry = new DirectoryEntryResource(path.getName(), "directory");

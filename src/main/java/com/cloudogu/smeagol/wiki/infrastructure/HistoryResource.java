@@ -1,12 +1,12 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.List;
 import java.util.Objects;
 
-public class HistoryResource extends ResourceSupport {
+public class HistoryResource extends RepresentationModel<HistoryResource> {
 
     private final String path;
     private final List<CommitResource> commits;

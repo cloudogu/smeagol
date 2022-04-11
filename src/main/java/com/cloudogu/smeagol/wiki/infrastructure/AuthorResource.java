@@ -1,13 +1,13 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 
-public class AuthorResource extends ResourceSupport {
+public class AuthorResource extends RepresentationModel<AuthorResource> {
 
-    private String displayName;
-    private String email;
+    private final String displayName;
+    private final String email;
 
     public AuthorResource(String displayName, String email) {
         this.displayName = displayName;
