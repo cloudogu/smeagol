@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- upgrade spring boot to version 2.6.5 to fix CVE-2022-22950 #186
+- Upgrade spring boot to version 2.6.5 to fix CVE-2022-22950 (#186)
 
 ## [v1.6.2-1] - 2022-01-05
 ### Changed
