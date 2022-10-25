@@ -48,7 +48,6 @@ fi
 if [[ "$(doguctl config "container_config/memory_limit" -d "empty")" == "empty" ]];  then
   echo "Starting Smeagol without memory limits..."
   java -Djava.awt.headless=true \
-       -Djava.net.preferIPv4Stack=true \
        -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
        -Djavax.net.ssl.trustStorePassword=changeit \
        -Dlogging.config=/app/logback.xml \
@@ -60,7 +59,6 @@ else
   echo "Starting Smeagol with memory limits: MaxRAMPercentage=${MEMORY_LIMIT_MAX_PERCENTAGE}, MinRAMPercentage=${MEMORY_LIMIT_MIN_PERCENTAGE} ..."
 
   java -Djava.awt.headless=true \
-       -Djava.net.preferIPv4Stack=true \
        -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
        -Djavax.net.ssl.trustStorePassword=changeit \
        -Dlogging.config=/app/logback.xml \
