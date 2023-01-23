@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.6.2-3] - 2023-01-23
+### Changed
+- Move to development apps in warp menu (#203)
+
 ## [v1.6.2-2] - 2022-04-11
 ### Changed
 - Upgrade spring boot to version 2.6.5 to fix CVE-2022-22950 (#186)
