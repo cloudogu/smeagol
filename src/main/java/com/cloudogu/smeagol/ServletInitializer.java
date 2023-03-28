@@ -12,4 +12,7 @@ public class ServletInitializer extends SpringBootServletInitializer {
         return application.sources(Smeagol.class);
     }
 
+    @Override
+    public void onStartup(jakarta.servlet.ServletContext servletContext){
+    }
 }
