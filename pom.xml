@@ -105,7 +105,7 @@
         <!-- cas authentication -->
 
         <dependency>
-            <groupId>org.jasig.cas.client</groupId>
+            <groupId>org.apereo.cas.client</groupId>
             <artifactId>cas-client-core</artifactId>
             <version>${cas-client.version}</version>
         </dependency>
@@ -382,7 +382,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cas-client.version>3.4.1</cas-client.version>
+        <cas-client.version>4.0.1</cas-client.version>
         <java.version>11</java.version>
         <jaxb.version>2.3.0</jaxb.version>
 <!--        <tomcat.version>9.0.69</tomcat.version>-->
