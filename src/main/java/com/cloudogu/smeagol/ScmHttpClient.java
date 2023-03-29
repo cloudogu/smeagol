@@ -7,11 +7,10 @@ import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,8 +61,7 @@ public class ScmHttpClient {
             .disableCookieManagement();
 
         if (stage == Stage.DEVELOPMENT) {
-            throw new RuntimeException("IMPLEMENT ME: TODO");
-//            httpClientBuilder = disableSSLVerification(httpClientBuilder);
+            httpClientBuilder = disableSSLVerification(httpClientBuilder);
         }
 
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
@@ -73,14 +71,14 @@ public class ScmHttpClient {
             .build();
     }
 
-//    private static HttpClientBuilder disableSSLVerification(HttpClientBuilder httpClientBuilder) {
-//        LOG.warn("disable ssl verification for scm-manager communication, because we are in development stage");
-//        TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
-//        SSLContext sslContext = createSSLContext(acceptingTrustStrategy);
-//
-//        SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-//        return httpClientBuilder .setSSLSocketFactory(csf);
-//    }
+    private static HttpClientBuilder disableSSLVerification(HttpClientBuilder httpClientBuilder) {
+        LOG.warn("disable ssl verification for scm-manager communication, because we are in development stage");
+        TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+        SSLContext sslContext = createSSLContext(acceptingTrustStrategy);
+
+        SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
+        return httpClientBuilder.setSSLSocketFactory(csf);
+    }
 
     private static SSLContext createSSLContext(TrustStrategy acceptingTrustStrategy) {
         try {
@@ -155,10 +153,10 @@ public class ScmHttpClient {
                     key.urlVariables
                 );
 
-                return ScmHttpClientResponse.of((HttpStatus) response.getStatusCode(), response.getBody());
+                return ScmHttpClientResponse.of(response.getStatusCode(), response.getBody());
             } catch (HttpClientErrorException ex) {
                 if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
-                    return ScmHttpClientResponse.of((HttpStatus) ex.getStatusCode());
+                    return ScmHttpClientResponse.of(ex.getStatusCode());
                 }
                 throw ex;
             } finally {

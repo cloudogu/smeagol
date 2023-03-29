@@ -1,7 +1,17 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
-import com.cloudogu.smeagol.wiki.domain.*;
-import com.cloudogu.smeagol.wiki.usecase.*;
+import com.cloudogu.smeagol.wiki.domain.CommitId;
+import com.cloudogu.smeagol.wiki.domain.Content;
+import com.cloudogu.smeagol.wiki.domain.Message;
+import com.cloudogu.smeagol.wiki.domain.Page;
+import com.cloudogu.smeagol.wiki.domain.PageRepository;
+import com.cloudogu.smeagol.wiki.domain.Path;
+import com.cloudogu.smeagol.wiki.domain.WikiId;
+import com.cloudogu.smeagol.wiki.usecase.CreatePageCommand;
+import com.cloudogu.smeagol.wiki.usecase.DeletePageCommand;
+import com.cloudogu.smeagol.wiki.usecase.EditPageCommand;
+import com.cloudogu.smeagol.wiki.usecase.MovePageCommand;
+import com.cloudogu.smeagol.wiki.usecase.RestorePageCommand;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.google.common.base.Strings;
 import de.triology.cb.CommandBus;
@@ -9,7 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -91,7 +106,7 @@ public class PageController {
             return restore(id, path, payload);
         }
 
-        if (repository.exists(id, path)) {
+        if ( repository.exists(id, path) ) {
             return edit(id, path, payload);
         }
         return create(request, id, path, payload);
@@ -127,7 +142,7 @@ public class PageController {
         @PathVariable("repositoryId") String repositoryId,
         @PathVariable("branch") String branch,
         @RequestBody DeleteRequestPayload payload
-    ) {
+    )  {
         WikiId id = new WikiId(repositoryId, branch);
         Path path = pathExtractor.extractPathFromRequest(request, MAPPING, id);
 
@@ -138,7 +153,6 @@ public class PageController {
 
     public abstract static class RequestPayload {
         private String message;
-
         protected Message getMessage() {
             return Message.valueOf(message);
         }
@@ -149,18 +163,15 @@ public class PageController {
         private String content;
         private String moveTo;
         private String restore;
-
         private Content getContent() {
             return Content.valueOf(content);
         }
-
         private Path getMoveTo() {
             if (Strings.isNullOrEmpty(moveTo)) {
                 return null;
             }
             return Path.valueOf(moveTo);
         }
-
         private CommitId getRestore() {
             if (Strings.isNullOrEmpty(restore)) {
                 return null;
@@ -170,7 +181,6 @@ public class PageController {
     }
 
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-    public static class DeleteRequestPayload extends RequestPayload {
-    }
+    public static class DeleteRequestPayload extends RequestPayload {}
 
 }
