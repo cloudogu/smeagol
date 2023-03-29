@@ -1,5 +1,7 @@
 package com.cloudogu.smeagol.authc.infrastructure;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -7,14 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 /**
  * Destroy the user session and redirects to the cas server.
  */
-@RestController
-@RequestMapping("/api/v1/logout")
+//@RestController
+//@RequestMapping("/api/v1/logout")
 public class SignOutController {
 
     private CasConfiguration casConfiguration;

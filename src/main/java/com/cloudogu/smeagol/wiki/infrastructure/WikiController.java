@@ -6,11 +6,11 @@ import com.cloudogu.smeagol.wiki.usecase.InitWikiCommand;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.google.common.base.Strings;
 import de.triology.cb.CommandBus;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;

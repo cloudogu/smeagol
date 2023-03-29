@@ -1,6 +1,9 @@
 package com.cloudogu.smeagol.authc.infrastructure;
 
 import com.cloudogu.smeagol.Stage;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpSessionEvent;
+import jakarta.servlet.http.HttpSessionListener;
 import org.jasig.cas.client.authentication.AuthenticationFilter;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
@@ -14,8 +17,7 @@ import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.Filter;
-import javax.servlet.http.HttpSessionListener;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
@@ -23,14 +25,14 @@ import java.util.Map;
  * CasInfrastructureRegistration will take the configuration parameters from the application configuration and will
  * construct the required infrastructure for cas authentication.
  */
-@Configuration
+//@Configuration
 public class CasInfrastructureRegistration {
 
     private static final Logger LOG = LoggerFactory.getLogger(CasInfrastructureRegistration.class);
 
     private Map<String,String> casSettings;
 
-    @Autowired
+//    @Autowired
     public CasInfrastructureRegistration(CasConfiguration configuration, Stage stage) {
         this.casSettings = configuration.createCasSettings();
         if (stage == Stage.DEVELOPMENT) {
@@ -47,9 +49,22 @@ public class CasInfrastructureRegistration {
      */
     @Bean
     public ServletListenerRegistrationBean<HttpSessionListener> singleSignOutListener() {
-        ServletListenerRegistrationBean<HttpSessionListener> listener = new ServletListenerRegistrationBean<>();
-        listener.setListener(new SingleSignOutHttpSessionListener());
-        return listener;
+        throw new RuntimeException("asdasdasd");
+//        ServletListenerRegistrationBean<HttpSessionListener> listener = new ServletListenerRegistrationBean<>();
+//        // TODO
+////        listener.setListener(new SingleSignOutHttpSessionListener());
+//        listener.setListener(new HttpSessionListener() {
+//            @Override
+//            public void sessionCreated(HttpSessionEvent se) {
+//                HttpSessionListener.super.sessionCreated(se);
+//            }
+//
+//            @Override
+//            public void sessionDestroyed(HttpSessionEvent se) {
+//                HttpSessionListener.super.sessionDestroyed(se);
+//            }
+//        });
+//        return listener;
     }
 
     /**
@@ -57,9 +72,17 @@ public class CasInfrastructureRegistration {
      *
      * @return filter registration
      */
-    @Bean
+//    @Bean
     public FilterRegistrationBean singleSignOutFilter() {
-        return casFilterRegistration(new SingleSignOutFilter(), 0);
+        throw new RuntimeException("asdasdasd");
+//        // TODO
+////        return casFilterRegistration(new SingleSignOutFilter(), 0);
+//        return casFilterRegistration(new Filter() {
+//            @Override
+//            public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+//
+//            }
+//        }, 0);
     }
 
     /**
@@ -67,9 +90,18 @@ public class CasInfrastructureRegistration {
      *
      * @return filter registration
      */
-    @Bean
+//    @Bean
     public FilterRegistrationBean proxyReceivingTicketValidationFilter() {
-        return casFilterRegistration(new Cas30ProxyReceivingTicketValidationFilter(), 1);
+        throw new RuntimeException("asdasdasd");
+
+        // TODO
+////        return casFilterRegistration(new Cas30ProxyReceivingTicketValidationFilter(), 1);
+//        return casFilterRegistration(new Filter() {
+//            @Override
+//            public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+//
+//            }
+//        }, 1);
     }
 
     /**
@@ -77,9 +109,18 @@ public class CasInfrastructureRegistration {
      *
      * @return filter registration
      */
-    @Bean
+//    @Bean
     public FilterRegistrationBean authenticationFilter() {
-        return casFilterRegistration(new AuthenticationFilter(), 2);
+        throw new RuntimeException("asdasdasd");
+//
+//        // TODO
+////        return casFilterRegistration(new AuthenticationFilter(), 2);
+//        return casFilterRegistration(new Filter() {
+//            @Override
+//            public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+//
+//            }
+//        }, 2);
     }
 
     /**
@@ -88,9 +129,18 @@ public class CasInfrastructureRegistration {
      *
      * @return filter registration
      */
-    @Bean
+//    @Bean
     public FilterRegistrationBean requestWrapperFilter() {
-        return casFilterRegistration(new HttpServletRequestWrapperFilter(), 3);
+        throw new RuntimeException("asdasdasd");
+//
+//        // TODO
+////        return casFilterRegistration(new HttpServletRequestWrapperFilter(), 3);
+//        return casFilterRegistration(new Filter() {
+//            @Override
+//            public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+//
+//            }
+//        }, 3);
     }
 
     private FilterRegistrationBean casFilterRegistration(Filter filter, int order){

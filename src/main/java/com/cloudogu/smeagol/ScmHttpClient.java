@@ -62,7 +62,7 @@ public class ScmHttpClient {
             .disableCookieManagement();
 
         if (stage == Stage.DEVELOPMENT) {
-            throw new RuntimeException("IMPLEMENT ME: TODO");
+            // TODO
 //            httpClientBuilder = disableSSLVerification(httpClientBuilder);
         }
 

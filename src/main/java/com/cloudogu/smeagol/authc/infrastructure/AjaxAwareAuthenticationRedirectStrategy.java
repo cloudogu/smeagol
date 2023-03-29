@@ -1,12 +1,12 @@
 package com.cloudogu.smeagol.authc.infrastructure;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.jasig.cas.client.authentication.AuthenticationRedirectStrategy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -21,13 +21,19 @@ public class AjaxAwareAuthenticationRedirectStrategy implements AuthenticationRe
     @VisibleForTesting
     static final String AJAX_HEADER_VALUE = "XMLHttpRequest";
 
+//    @Override
+//    public void redirect(HttpServletRequest request, HttpServletResponse response, String potentialRedirectUrl) throws IOException {
+//        if (isAjaxRequest(request)) {
+//            sendAjaxResponse(response, potentialRedirectUrl);
+//        } else {
+//            sendNormalResponse(response, potentialRedirectUrl);
+//        }
+//    }
+
+
     @Override
-    public void redirect(HttpServletRequest request, HttpServletResponse response, String potentialRedirectUrl) throws IOException {
-        if (isAjaxRequest(request)) {
-            sendAjaxResponse(response, potentialRedirectUrl);
-        } else {
-            sendNormalResponse(response, potentialRedirectUrl);
-        }
+    public void redirect(javax.servlet.http.HttpServletRequest httpServletRequest, javax.servlet.http.HttpServletResponse httpServletResponse, String s) throws IOException {
+        // TODO
     }
 
     private boolean isAjaxRequest(HttpServletRequest request) {

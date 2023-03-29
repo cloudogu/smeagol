@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.14</version>
+        <version>3.0.5</version>
         <relativePath/>
     </parent>
 
@@ -195,6 +195,14 @@
             <artifactId>httpclient5</artifactId>
             <version>5.2.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+
 
     </dependencies>
 
@@ -395,7 +403,7 @@
         <cas-client.version>3.4.1</cas-client.version>
         <java.version>11</java.version>
         <jaxb.version>2.3.0</jaxb.version>
-        <tomcat.version>9.0.69</tomcat.version>
-        <groovy.version>2.5.14</groovy.version>
+<!--        <tomcat.version>9.0.69</tomcat.version>-->
+<!--        <groovy.version>2.5.14</groovy.version>-->
     </properties>
 </project>
