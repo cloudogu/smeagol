@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
  * - cas redirects back to /api/v1/authc ({@link UICasAuthenticationController})
  * - {@link UICasAuthenticationController} extracts the location parameter and redirects back to ui
  */
-//@RestController
-//@RequestMapping("/api/v1/authc")
+@RestController
+@RequestMapping("/api/v1/authc")
 public class UICasAuthenticationController {
 
     @RequestMapping

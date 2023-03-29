@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Destroy the user session and redirects to the cas server.
  */
-//@RestController
-//@RequestMapping("/api/v1/logout")
+@RestController
+@RequestMapping("/api/v1/logout")
 public class SignOutController {
 
     private CasConfiguration casConfiguration;

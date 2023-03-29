@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Provides configuration details for cas authentication.
  */
-//@Component
+@Component
 public class CasConfiguration {
 
     private final String contextPath;
