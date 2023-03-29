@@ -245,7 +245,7 @@
                     <dependency>
                         <groupId>org.eclipse.jgit</groupId>
                         <artifactId>org.eclipse.jgit</artifactId>
-                        <version>4.5.0.201609210915-r</version>
+                        <version>6.5.0.202303070854-r</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -376,7 +376,5 @@
         <cas-client.version>4.0.1</cas-client.version>
         <java.version>11</java.version>
         <jaxb.version>2.3.0</jaxb.version>
-<!--        <tomcat.version>9.0.69</tomcat.version>-->
-<!--        <groovy.version>2.5.14</groovy.version>-->
     </properties>
 </project>

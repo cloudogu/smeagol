@@ -11,7 +11,6 @@ import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.http.ssl.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,10 +60,9 @@ public class ScmHttpClient {
             // disable cookie management to avoid scm-manager sessions
             .disableCookieManagement();
 
-        if (stage == Stage.DEVELOPMENT) {
-            // TODO
+//        if (stage == Stage.DEVELOPMENT) {
 //            httpClientBuilder = disableSSLVerification(httpClientBuilder);
-        }
+//        }
 
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         requestFactory.setHttpClient(httpClientBuilder.build());
@@ -79,7 +77,7 @@ public class ScmHttpClient {
 //        SSLContext sslContext = createSSLContext(acceptingTrustStrategy);
 //
 //        SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-//        return httpClientBuilder .setSSLSocketFactory(csf);
+//        return httpClientBuilder.setSSLSocketFactory(csf);
 //    }
 
     private static SSLContext createSSLContext(TrustStrategy acceptingTrustStrategy) {

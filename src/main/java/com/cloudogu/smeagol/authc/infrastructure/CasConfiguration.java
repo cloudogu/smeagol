@@ -42,7 +42,7 @@ public class CasConfiguration {
                 .put("casServerLoginUrl", casUrl + "/login")
                 .put("serverName", serviceUrl)
                 .put("casServerUrlPrefix", casUrl)
-                .put("proxyCallbackUrl", serviceUrl.replaceAll("/$", "") + "/proxyCallbackUrl")
+                .put("proxyCallbackUrl", serviceUrl.replaceAll("/$", "") + "/smeagol/proxyCallbackUrl")
                 .put("proxyReceptorUrl", contextPath.replaceAll("/$", "") + "/proxyCallbackUrl")
                 .put("acceptAnyProxy", "true")
                 .put("authenticationRedirectStrategyClass", AjaxAwareAuthenticationRedirectStrategy.class.getName())

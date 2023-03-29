@@ -36,7 +36,7 @@ RUN set -o errexit \
 VOLUME ${SMEAGOL_HOME}
 EXPOSE 8080
 
-HEALTHCHECK CMD doguctl healthy smeagol || exit 1
+HEALTHCHECK --interval=5s CMD doguctl healthy smeagol || exit 1
 
 WORKDIR /app
 CMD /startup.sh
