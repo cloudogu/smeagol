@@ -155,16 +155,6 @@
             <version>1.2.3</version>
         </dependency>
 
-        <dependency>
-            <!-- Dependency used in Jenkinsfile. Including this in maven provides code completion in Jenkinsfile. -->
-            <groupId>com.github.cloudogu</groupId>
-            <artifactId>ces-build-lib</artifactId>
-            <!-- Keep this version in sync with the one used in Jenkinsfile -->
-            <version>888733b</version>
-            <!-- Don't ship this dependency with the app -->
-            <optional>true</optional>
-        </dependency>
-
         <!-- Used to extract the version at runtime -->
         <dependency>
             <groupId>com.cloudogu.versionName</groupId>
@@ -389,14 +379,6 @@
             </build>
         </profile>
     </profiles>
-
-    <repositories>
-        <repository>
-            <!-- Necessary for ces-build-lib -->
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
