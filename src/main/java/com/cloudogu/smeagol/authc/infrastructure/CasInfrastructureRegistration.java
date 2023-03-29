@@ -83,7 +83,7 @@ public class CasInfrastructureRegistration {
     }
 
     /**
-     * Registers a servlet filter that wraps the {@link javax.servlet.http.HttpServletRequest} and overrides the
+     * Registers a servlet filter that wraps the {@link jakarta.servlet.http.HttpServletRequest} and overrides the
      * authentication related methods.
      *
      * @return filter registration
