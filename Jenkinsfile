@@ -29,6 +29,19 @@ parallel(
           git.clean("")
         }
 
+        stage('Check Markdown Links') {
+            Markdown markdown = new Markdown(this)
+            markdown.check()
+        }
+
+        stage('Lint') {
+          lintDockerfile()
+        }
+
+        stage('Shellcheck') {
+          shellCheck("resources/startup.sh")
+        }
+
         stage('Build') {
           setupMaven(mvn)
           // Tui-Editor 1.4.10 has git:// dependencies.
@@ -103,14 +116,6 @@ parallel(
           stage('Checkout') {
             checkout scm
             git.clean("")
-          }
-
-          stage('Lint') {
-            lintDockerfile()
-          }
-
-          stage('Shellcheck') {
-            shellCheck("resources/startup.sh")
           }
 
           try {
