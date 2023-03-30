@@ -59,6 +59,4 @@ else
        -XX:MaxRAMPercentage="${MEMORY_LIMIT_MAX_PERCENTAGE}" \
        -XX:MinRAMPercentage="${MEMORY_LIMIT_MIN_PERCENTAGE}" \
        -jar /app/smeagol.war
-
-       # TODO
 fi
