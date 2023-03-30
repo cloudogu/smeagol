@@ -16,6 +16,8 @@ ui:
 
 scm:
   url: https://192.168.56.2/scm
+  accessKey: eyJhcGlLZXlJZCI6IjVFVFp5ZUNlckEiLCJ1c2VyIjoiYWRtaW4iLCJwYXNzcGhyYXNlIjoieDFodXliWkhIaWpuTnNoNFlqQngifQ
+
 
 cas:
   url: https://192.168.56.2/cas

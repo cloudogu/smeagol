@@ -39,14 +39,20 @@ public class AccountService {
     private final String scmUrl;
     private final RestTemplate scmRestTemplate;
 
+    // For local development purposes only
+    private final String accessKey;
+
     private static final String ACCESS_TOKEN_ENDPOINT = "/api/v2/cas/auth/";
 
     @Autowired
     public AccountService(ObjectFactory<HttpServletRequest> requestFactory, RestTemplateBuilder restTemplateBuilder,
+                          @Value("${scm.accessKey:#{null}}") String accessKey,
                           @Value("${scm.url}") String scmUrl, Stage stage) {
         this.scmRestTemplate = createRestTemplate(restTemplateBuilder, stage, scmUrl);
         this.requestFactory = requestFactory;
         this.scmUrl = scmUrl;
+        // For local development purposes only
+        this.accessKey = accessKey;
     }
 
     /**
@@ -98,6 +104,12 @@ public class AccountService {
     }
 
     private String getAccessToken(AttributePrincipal principal) {
+        // Should be used in local development only
+        if (this.accessKey != null){
+            String accessKey = this.accessKey;
+            return accessKey;
+        }
+
         String accessTokenEndpointURL = getAccessTokenEndpoint();
         String pt = principal.getProxyTicketFor(accessTokenEndpointURL);
         if (Strings.isNullOrEmpty(pt)) {
