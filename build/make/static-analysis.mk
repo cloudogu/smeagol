@@ -1,15 +1,19 @@
+##@ Static analysis
+
 STATIC_ANALYSIS_DIR=$(TARGET_DIR)/static-analysis
 GOIMAGE?=golang
-GOTAG?=1.14.13
+GOTAG?=1.18
 CUSTOM_GO_MOUNT?=-v /tmp:/tmp
 
 REVIEW_DOG=$(TMP_DIR)/bin/reviewdog
 LINT=$(TMP_DIR)/bin/golangci-lint
+LINT_VERSION?=v1.49.0
 # ignore tests and mocks
-LINTFLAGS=--tests=false --skip-files="^.*_mock.go$$" --skip-files="^.*/mock.*.go$$"
+LINTFLAGS=--tests=false --skip-files="^.*_mock.go$$" --skip-files="^.*/mock.*.go$$" --timeout 10m --issues-exit-code 0
+ADDITIONAL_LINTER=-E bodyclose -E containedctx -E contextcheck -E decorder -E dupl -E errname -E forcetypeassert -E funlen -E unparam
 
 .PHONY: static-analysis
-static-analysis: static-analysis-$(ENVIRONMENT)
+static-analysis: static-analysis-$(ENVIRONMENT) ## Start a static analysis of the code
 
 .PHONY: static-analysis-ci
 static-analysis-ci:
@@ -39,11 +43,11 @@ $(STATIC_ANALYSIS_DIR)/static-analysis.log: $(STATIC_ANALYSIS_DIR)
 	@echo ""
 	@echo "complete static analysis:"
 	@echo ""
-	@$(LINT) $(LINTFLAGS) run ./... | tee $@
+	@$(LINT) $(LINTFLAGS) run ./... $(ADDITIONAL_LINTER) > $@
 
 $(STATIC_ANALYSIS_DIR)/static-analysis-cs.log: $(STATIC_ANALYSIS_DIR)
 	@echo "run static analysis with export to checkstyle format"
-	@$(LINT) $(LINTFLAGS) run --out-format=checkstyle ./... > $@ | true
+	@$(LINT) $(LINTFLAGS) run --out-format=checkstyle ./... $(ADDITIONAL_LINTER) > $@
 
 $(STATIC_ANALYSIS_DIR): $(LINT)
 	@mkdir -p $(STATIC_ANALYSIS_DIR)
@@ -55,7 +59,8 @@ static-analysis-ci-report-local: $(STATIC_ANALYSIS_DIR)/static-analysis-cs.log $
 	@cat $(STATIC_ANALYSIS_DIR)/static-analysis-cs.log | $(REVIEW_DOG) -f checkstyle -diff "git diff develop"
 
 $(LINT): $(TMP_DIR)
-	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(TMP_DIR)/bin v1.33.0
+	@echo "Download golangci-lint $(LINT_VERSION)..."
+	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(TMP_DIR)/bin $(LINT_VERSION)
 
 $(REVIEW_DOG): $(TMP_DIR)
 	@curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b $(TMP_DIR)/bin
