@@ -376,7 +376,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <cas-client.version>4.0.1</cas-client.version>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <jaxb.version>2.3.0</jaxb.version>
         <jgit.version>5.1.16.202106041830-r</jgit.version>
     </properties>
