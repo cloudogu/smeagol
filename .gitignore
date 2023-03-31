@@ -28,7 +28,6 @@ buildNumber.properties
 
 ### NetBeans ###
 nbproject/
-build/
 nbbuild/
 dist/
 nbdist/
@@ -103,9 +102,6 @@ Temporary Items
 
 # testing
 /coverage
-
-# production
-/build
 
 # misc
 .DS_Store
