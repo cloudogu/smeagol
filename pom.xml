@@ -100,7 +100,7 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>5.1.16.202106041830-r</version>
+            <version>${jgit.version}</version>
         </dependency>
 
         <!-- cas authentication -->
@@ -247,7 +247,7 @@
                     <dependency>
                         <groupId>org.eclipse.jgit</groupId>
                         <artifactId>org.eclipse.jgit</artifactId>
-                        <version>5.1.16.202106041830-r</version>
+                        <version>${jgit.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -378,5 +378,6 @@
         <cas-client.version>4.0.1</cas-client.version>
         <java.version>11</java.version>
         <jaxb.version>2.3.0</jaxb.version>
+        <jgit.version>5.1.16.202106041830-r</jgit.version>
     </properties>
 </project>
