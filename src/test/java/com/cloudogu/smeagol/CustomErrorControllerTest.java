@@ -1,5 +1,7 @@
 package com.cloudogu.smeagol;
 
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,8 +11,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.MockitoAnnotations.openMocks;
 

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.7.0-1] - 2023-03-31
+### Fixed
+- [#207] Eliminate CVEs by upgrading various packages:
+  - Update to Java 17
+  - Spring Boot Starter to 3.0.5
+  - Snakeyaml to 2.0.0
+  - JGit to 5.1.16
+  - Jasig (now Apereo) CAS Client to 4.0.1
+  - SLF4J to 2.0.5
+  - logback-classic to 1.4.6
+
 ## [v1.6.2-3] - 2023-01-23
 ### Changed
 - Move to development apps in warp menu (#203)

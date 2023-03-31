@@ -4,6 +4,7 @@ import de.triology.cb.CommandBus;
 import de.triology.cb.decorator.LoggingCommandBus;
 import de.triology.cb.spring.Registry;
 import de.triology.cb.spring.SpringCommandBus;
+import jakarta.servlet.DispatcherType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,10 +15,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.util.UrlPathHelper;
 
-import javax.servlet.DispatcherType;
 import java.util.Collections;
 
 /**
@@ -25,7 +25,7 @@ import java.util.Collections;
  */
 @SpringBootApplication
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
-public class Smeagol extends WebMvcConfigurerAdapter {
+public class Smeagol implements WebMvcConfigurer {
 
     private static final Logger LOG = LoggerFactory.getLogger(Smeagol.class);
 

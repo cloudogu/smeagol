@@ -7,11 +7,13 @@ import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContexts;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
+import org.apache.hc.client5.http.ssl.TrustAllStrategy;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import javax.net.ssl.SSLContext;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -50,44 +50,32 @@ public class ScmHttpClient {
         RestTemplate restTemplate = createRestTemplate(restTemplateBuilder, stage, scmUrl);
         // cache request for 10 seconds,
         // because some operations requesting the same resource multiple times (e.g. creating the initial search index)
-        this.cache = CacheBuilder.newBuilder()
-            .expireAfterWrite(10, TimeUnit.SECONDS)
-            .build(new ScmRequestCacheLoader(restTemplate));
+        this.cache = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).build(new ScmRequestCacheLoader(restTemplate));
     }
 
     protected static RestTemplate createRestTemplate(RestTemplateBuilder restTemplateBuilder, Stage stage, String scmUrl) {
-        HttpClientBuilder httpClientBuilder = HttpClients.custom()
+        final HttpClientBuilder httpClientBuilder = HttpClients.custom()
             // disable cookie management to avoid scm-manager sessions
             .disableCookieManagement();
 
         if (stage == Stage.DEVELOPMENT) {
-            httpClientBuilder = disableSSLVerification(httpClientBuilder);
+            disableSSLVerification(httpClientBuilder);
         }
 
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        final HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         requestFactory.setHttpClient(httpClientBuilder.build());
-        return restTemplateBuilder.requestFactory(() -> requestFactory)
-            .rootUri(scmUrl)
-            .build();
+        return restTemplateBuilder.requestFactory(() -> requestFactory).rootUri(scmUrl).build();
     }
 
-    private static HttpClientBuilder disableSSLVerification(HttpClientBuilder httpClientBuilder) {
+    private static HttpClientBuilder disableSSLVerification(final HttpClientBuilder httpClientBuilder) {
         LOG.warn("disable ssl verification for scm-manager communication, because we are in development stage");
-        TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
-        SSLContext sslContext = createSSLContext(acceptingTrustStrategy);
-
-        SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-        return httpClientBuilder.setSSLSocketFactory(csf);
-    }
-
-    private static SSLContext createSSLContext(TrustStrategy acceptingTrustStrategy) {
         try {
-            return SSLContexts.custom()
-                .loadTrustMaterial(null, acceptingTrustStrategy)
-                .build();
-        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException ex) {
-            throw Throwables.propagate(ex);
+            httpClientBuilder.setConnectionManager(PoolingHttpClientConnectionManagerBuilder.create().setSSLSocketFactory(SSLConnectionSocketFactoryBuilder.create().setSslContext(SSLContextBuilder.create().loadTrustMaterial(TrustAllStrategy.INSTANCE).build()).setHostnameVerifier(NoopHostnameVerifier.INSTANCE).build()).build());
+        } catch (KeyStoreException | NoSuchAlgorithmException | KeyManagementException e) {
+            throw new RuntimeException(e);
         }
+
+        return httpClientBuilder;
     }
 
     public <T> Optional<T> get(String url, Class<T> type, Object... urlVariables) {
@@ -112,7 +100,7 @@ public class ScmHttpClient {
         LOG.debug("create headers for account {}", account.getUsername());
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(BEARER_TOKEN_IDENTIFIER, account.getAccessToken(), Charsets.UTF_8);
-        String smeagolAppVersion =  VersionNames.getVersionNameFromManifest("META-INF/MANIFEST.MF", "Implementation-Version");
+        String smeagolAppVersion = VersionNames.getVersionNameFromManifest("META-INF/MANIFEST.MF", "Implementation-Version");
         if (smeagolAppVersion.equals("")) {
             // happens only in the dev environment -> set version to dev
             smeagolAppVersion = "dev";
@@ -145,18 +133,12 @@ public class ScmHttpClient {
 
             HttpEntity<?> entity = new HttpEntity<>(key.headers);
             try {
-                ResponseEntity response = this.restTemplate.exchange(
-                    key.url,
-                    HttpMethod.GET,
-                    entity,
-                    key.type,
-                    key.urlVariables
-                );
+                ResponseEntity response = this.restTemplate.exchange(key.url, HttpMethod.GET, entity, key.type, key.urlVariables);
 
-                return ScmHttpClientResponse.of(response.getStatusCode(), response.getBody());
+                return ScmHttpClientResponse.of((HttpStatus) response.getStatusCode(), response.getBody());
             } catch (HttpClientErrorException ex) {
                 if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
-                    return ScmHttpClientResponse.of(ex.getStatusCode());
+                    return ScmHttpClientResponse.of((HttpStatus) ex.getStatusCode());
                 }
                 throw ex;
             } finally {
@@ -187,10 +169,7 @@ public class ScmHttpClient {
                 return false;
             }
             CacheKey<?> cacheKey = (CacheKey<?>) o;
-            return Objects.equals(url, cacheKey.url)
-                && Objects.equals(type, cacheKey.type)
-                && Arrays.equals(urlVariables, cacheKey.urlVariables)
-                && Objects.equals(headers, cacheKey.headers);
+            return Objects.equals(url, cacheKey.url) && Objects.equals(type, cacheKey.type) && Arrays.equals(urlVariables, cacheKey.urlVariables) && Objects.equals(headers, cacheKey.headers);
         }
 
         @Override

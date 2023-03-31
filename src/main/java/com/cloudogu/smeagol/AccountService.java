@@ -3,7 +3,9 @@ package com.cloudogu.smeagol;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
-import org.jasig.cas.client.authentication.AttributePrincipal;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.apereo.cas.client.authentication.AttributePrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
@@ -16,8 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Map;
@@ -39,14 +39,20 @@ public class AccountService {
     private final String scmUrl;
     private final RestTemplate scmRestTemplate;
 
+    // For local development purposes only
+    private final String accessKey;
+
     private static final String ACCESS_TOKEN_ENDPOINT = "/api/v2/cas/auth/";
 
     @Autowired
     public AccountService(ObjectFactory<HttpServletRequest> requestFactory, RestTemplateBuilder restTemplateBuilder,
+                          @Value("${scm.accessKey:#{null}}") String accessKey,
                           @Value("${scm.url}") String scmUrl, Stage stage) {
         this.scmRestTemplate = createRestTemplate(restTemplateBuilder, stage, scmUrl);
         this.requestFactory = requestFactory;
         this.scmUrl = scmUrl;
+        // For local development purposes only
+        this.accessKey = accessKey;
     }
 
     /**
@@ -98,6 +104,11 @@ public class AccountService {
     }
 
     private String getAccessToken(AttributePrincipal principal) {
+        // Should be used in local development only
+        if (this.accessKey != null){
+            return this.accessKey;
+        }
+
         String accessTokenEndpointURL = getAccessTokenEndpoint();
         String pt = principal.getProxyTicketFor(accessTokenEndpointURL);
         if (Strings.isNullOrEmpty(pt)) {

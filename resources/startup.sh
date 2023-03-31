@@ -18,18 +18,9 @@ create_truststore.sh "${TRUSTSTORE}" > /dev/null
 
 # override setting from src/main/resources/application.yml
 FQDN=$(doguctl config --global fqdn)
-cat > /app/application.yml <<EOF
-stage: production
-server:
-  servlet:
-    contextPath: /smeagol
-homeDirectory: ${SMEAGOL_HOME}
-scm:
-  url: https://${FQDN}/scm
-cas:
-  url: https://${FQDN}/cas
-  serviceUrl: https://${FQDN}/smeagol
-EOF
+export FQDN
+export SMEAGOL_HOME
+doguctl template /app/application.yml.tpl /app/application.yml
 
 # configure logging behaviour using the etcd property logging/root <ERROR,WARN,INFO,DEBUG>
 
@@ -50,9 +41,10 @@ if [[ "$(doguctl config "container_config/memory_limit" -d "empty")" == "empty" 
   java -Djava.awt.headless=true \
        -Djava.net.preferIPv4Stack=true \
        -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
-       -Djavax.net.ssl.trustStorePassword=changeit \
        -Dlogging.config=/app/logback.xml \
+       -Djavax.net.ssl.trustStorePassword=changeit \
        -jar /app/smeagol.war
+
 else
   # Retrieve configurable java limits from etcd, valid default values exist
   MEMORY_LIMIT_MAX_PERCENTAGE=$(doguctl config "container_config/java_max_ram_percentage")

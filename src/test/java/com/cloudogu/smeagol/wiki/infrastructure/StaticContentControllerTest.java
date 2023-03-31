@@ -4,6 +4,7 @@ import com.cloudogu.smeagol.wiki.domain.Path;
 import com.cloudogu.smeagol.wiki.domain.WikiId;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,7 +20,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 
 import static org.junit.Assert.assertTrue;
