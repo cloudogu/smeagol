@@ -17,7 +17,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -91,10 +90,10 @@ public class RepositoryControllerTest {
                 .andExpect(jsonPath("$.id", is("4xQfahsId3")))
                 .andExpect(jsonPath("$.name", is("hitchhiker/heartOfGold")))
                 .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/v1/repositories/4xQfahsId3")))
-                .andExpect(jsonPath("$._embedded.branches.[0].name", is("develop")))
-                .andExpect(jsonPath("$._embedded.branches.[0]._links.self.href", is("http://localhost/api/v1/repositories/4xQfahsId3/branches/develop")))
-                .andExpect(jsonPath("$._embedded.branches.[1].name", is("master")))
-                .andExpect(jsonPath("$._embedded.branches.[1]._links.self.href", is("http://localhost/api/v1/repositories/4xQfahsId3/branches/master")));
+                .andExpect(jsonPath("$._embedded.branches._embedded.branchResourceList[0].name", is("develop")))
+                .andExpect(jsonPath("$._embedded.branches._embedded.branchResourceList[0]._links.self.href", is("http://localhost/api/v1/repositories/4xQfahsId3/branches/develop")))
+                .andExpect(jsonPath("$._embedded.branches._embedded.branchResourceList[1].name", is("master")))
+                .andExpect(jsonPath("$._embedded.branches._embedded.branchResourceList[1]._links.self.href", is("http://localhost/api/v1/repositories/4xQfahsId3/branches/master")));
     }
 
     @Test

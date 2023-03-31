@@ -7,8 +7,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +20,7 @@ import static com.cloudogu.smeagol.wiki.DomainTestData.WIKI_ID_42;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ScmGitDirectoryRepositoryTest {
 
     @Rule

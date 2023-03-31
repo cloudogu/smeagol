@@ -1,7 +1,7 @@
 package com.cloudogu.smeagol.wiki.infrastructure;
 
 import com.cloudogu.smeagol.wiki.domain.WikiId;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import static com.cloudogu.smeagol.wiki.DomainTestData.WIKI_ID_42;
 import static org.assertj.core.api.Assertions.assertThat;
