@@ -6,8 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.7.0-1] - 2023-03-31
 ### Fixed
 - [#207] Eliminate CVEs by upgrading various packages:
+  - Update to Java 17
   - Spring Boot Starter to 3.0.5
   - Snakeyaml to 2.0.0
   - JGit to 5.1.16
