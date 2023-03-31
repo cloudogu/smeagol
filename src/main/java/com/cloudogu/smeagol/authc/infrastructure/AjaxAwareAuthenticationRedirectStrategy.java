@@ -1,12 +1,12 @@
 package com.cloudogu.smeagol.authc.infrastructure;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.jasig.cas.client.authentication.AuthenticationRedirectStrategy;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apereo.cas.client.authentication.AuthenticationRedirectStrategy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**

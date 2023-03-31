@@ -1,3 +1,5 @@
+##@ Debian package deployment
+
 # This Makefile holds all targets for deploying and undeploying
 # Uses the variable APT_REPO to determine which apt repos should be used to deploy
 
@@ -21,11 +23,8 @@ ifeq ($(APT_REPO), ces-premium)
 	@echo "... add package to ces-premium repository"
 	@$(APTLY) -X POST "${APT_API_BASE_URL}/repos/ces-premium/file/$$(basename ${DEBIAN_PACKAGE})"
 else
-	@echo "... add package to ces and xenial repositories"
-	# heads up: For migration to a new repo structure we use two repos, new (ces) and old (xenial)
-	# '?noRemove=1': aptly removes the file on success. This leads to an error on the second package add. Keep it this round
-	@$(APTLY) -X POST "${APT_API_BASE_URL}/repos/ces/file/$$(basename ${DEBIAN_PACKAGE})?noRemove=1"
-	@$(APTLY) -X POST "${APT_API_BASE_URL}/repos/xenial/file/$$(basename ${DEBIAN_PACKAGE})"
+	@echo "\n... add package to ces repository"
+	@$(APTLY) -X POST "${APT_API_BASE_URL}/repos/ces/file/$$(basename ${DEBIAN_PACKAGE})"
 endif
 
 define aptly_publish
@@ -34,17 +33,16 @@ endef
 
 .PHONY: publish
 publish:
-	@echo "... publish packages"
+	@echo "\n... publish packages"
 ifeq ($(APT_REPO), ces-premium)
 	@$(call aptly_publish,ces-premium,bionic)
 else
-	@$(call aptly_publish,xenial,xenial)
-	@$(call aptly_publish,ces,xenial)
+	@$(call aptly_publish,ces,focal)
 	@$(call aptly_publish,ces,bionic)
 endif
 
 .PHONY: deploy
-deploy: add-package-to-repo publish
+deploy: add-package-to-repo publish ## Deploy package to apt repository
 
 define aptly_undeploy
 	PREF=$$(${APTLY} "${APT_API_BASE_URL}/repos/$(1)/packages?q=${ARTIFACT_ID}%20(${VERSION})"); \
@@ -56,13 +54,12 @@ remove-package-from-repo:
 ifeq ($(APT_REPO), ces-premium)
 	@$(call aptly_undeploy,ces-premium)
 else
-	@$(call aptly_undeploy,xenial)
 	@$(call aptly_undeploy,ces)
 endif
 
 .PHONY: undeploy
-undeploy: deploy-check remove-package-from-repo publish
+undeploy: deploy-check remove-package-from-repo publish ## Undeploy package from apt repository
 
 .PHONE: lint-deb-package
-lint-deb-package: debian
+lint-deb-package: debian ## Lint debian package
 	@lintian -i $(DEBIAN_PACKAGE)

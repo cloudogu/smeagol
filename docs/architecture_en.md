@@ -39,7 +39,7 @@ Access is only allowed in the following direction: Infrastructure -> Use cases -
 
 ## UI Architecture
 
-The UI uses a [Flux based architecture](https://facebook.github.io/flux), which is build with [Redux](https://redux.js.org/).
+The UI uses a [Flux based architecture](https://facebookarchive.github.io/flux/), which is build with [Redux](https://redux.js.org/).
 The code is separated in a shared kernel and the BC's analog to the REST API. The shared kernel consists only of 
 components which are required in each BC, some infrastructure and bootstrap logic. Each BC is divided into components,
 containers and modules. 

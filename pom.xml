@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.5</version>
+        <version>3.0.5</version>
         <relativePath/>
     </parent>
 
@@ -39,6 +39,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
+            <version>6.0.7</version>
         </dependency>
 
         <dependency>
@@ -61,6 +62,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
+            <version>2.0</version>
         </dependency>
 
         <dependency>
@@ -98,13 +100,13 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>4.5.0.201609210915-r</version>
+            <version>${jgit.version}</version>
         </dependency>
 
         <!-- cas authentication -->
 
         <dependency>
-            <groupId>org.jasig.cas.client</groupId>
+            <groupId>org.apereo.cas.client</groupId>
             <artifactId>cas-client-core</artifactId>
             <version>${cas-client.version}</version>
         </dependency>
@@ -145,23 +147,13 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.20</version>
+            <version>2.0.5</version>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
-        </dependency>
-
-        <dependency>
-            <!-- Dependency used in Jenkinsfile. Including this in maven provides code completion in Jenkinsfile. -->
-            <groupId>com.github.cloudogu</groupId>
-            <artifactId>ces-build-lib</artifactId>
-            <!-- Keep this version in sync with the one used in Jenkinsfile -->
-            <version>888733b</version>
-            <!-- Don't ship this dependency with the app -->
-            <optional>true</optional>
+            <version>1.4.6</version>
         </dependency>
 
         <!-- Used to extract the version at runtime -->
@@ -173,7 +165,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -181,6 +173,18 @@
             <artifactId>annotations</artifactId>
             <version>RELEASE</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.2.1</version>
         </dependency>
 
     </dependencies>
@@ -243,7 +247,7 @@
                     <dependency>
                         <groupId>org.eclipse.jgit</groupId>
                         <artifactId>org.eclipse.jgit</artifactId>
-                        <version>4.5.0.201609210915-r</version>
+                        <version>${jgit.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -369,18 +373,11 @@
         </profile>
     </profiles>
 
-    <repositories>
-        <repository>
-            <!-- Necessary for ces-build-lib -->
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cas-client.version>3.4.1</cas-client.version>
-        <java.version>11</java.version>
+        <cas-client.version>4.0.1</cas-client.version>
+        <java.version>17</java.version>
         <jaxb.version>2.3.0</jaxb.version>
+        <jgit.version>5.1.16.202106041830-r</jgit.version>
     </properties>
 </project>

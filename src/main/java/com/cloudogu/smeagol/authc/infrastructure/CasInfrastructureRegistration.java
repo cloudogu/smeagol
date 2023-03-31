@@ -1,11 +1,13 @@
 package com.cloudogu.smeagol.authc.infrastructure;
 
 import com.cloudogu.smeagol.Stage;
-import org.jasig.cas.client.authentication.AuthenticationFilter;
-import org.jasig.cas.client.session.SingleSignOutFilter;
-import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
-import org.jasig.cas.client.util.HttpServletRequestWrapperFilter;
-import org.jasig.cas.client.validation.Cas30ProxyReceivingTicketValidationFilter;
+import jakarta.servlet.Filter;
+import jakarta.servlet.http.HttpSessionListener;
+import org.apereo.cas.client.authentication.AuthenticationFilter;
+import org.apereo.cas.client.session.SingleSignOutFilter;
+import org.apereo.cas.client.session.SingleSignOutHttpSessionListener;
+import org.apereo.cas.client.util.HttpServletRequestWrapperFilter;
+import org.apereo.cas.client.validation.Cas30ProxyReceivingTicketValidationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +16,6 @@ import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.Filter;
-import javax.servlet.http.HttpSessionListener;
 import java.util.Collections;
 import java.util.Map;
 
@@ -83,7 +83,7 @@ public class CasInfrastructureRegistration {
     }
 
     /**
-     * Registers a servlet filter that wraps the {@link javax.servlet.http.HttpServletRequest} and overrides the
+     * Registers a servlet filter that wraps the {@link jakarta.servlet.http.HttpServletRequest} and overrides the
      * authentication related methods.
      *
      * @return filter registration

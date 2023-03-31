@@ -1,8 +1,9 @@
-FROM openjdk:11.0.10-jdk as builder
+FROM eclipse-temurin:17.0.6_10-jdk as builder
 
 ENV SMEAGOL_DIR=/usr/src/smeagol
 COPY mvnw pom.xml package.json yarn.lock .prettierrc ${SMEAGOL_DIR}/
 COPY .mvn ${SMEAGOL_DIR}/.mvn
+RUN apt-get update && apt install -y git
 RUN git config --global url."https://github.com/".insteadOf git://github.com/
 # We resolve dependencies before copying src so we profit from dockers caching behavior
 RUN set -x \
@@ -15,7 +16,7 @@ RUN set -x \
 
 
 
-FROM registry.cloudogu.com/official/java:11.0.14-3
+FROM registry.cloudogu.com/official/java:17.0.6-1
 LABEL NAME="official/smeagol" \
       VERSION="1.6.2-3" \
       maintainer="Sebastian Sdorra <sebastian.sdorra@cloudogu.com>"
@@ -35,7 +36,7 @@ RUN set -o errexit \
 VOLUME ${SMEAGOL_HOME}
 EXPOSE 8080
 
-HEALTHCHECK CMD doguctl healthy smeagol || exit 1
+HEALTHCHECK --interval=5s CMD doguctl healthy smeagol || exit 1
 
 WORKDIR /app
 CMD /startup.sh

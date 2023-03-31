@@ -1,7 +1,9 @@
 package com.cloudogu.smeagol;
 
 import com.google.common.collect.ImmutableMap;
-import org.jasig.cas.client.authentication.AttributePrincipal;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.apereo.cas.client.authentication.AttributePrincipal;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,8 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 

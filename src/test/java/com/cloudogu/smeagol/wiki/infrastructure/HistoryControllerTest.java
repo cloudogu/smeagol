@@ -3,6 +3,7 @@ package com.cloudogu.smeagol.wiki.infrastructure;
 import com.cloudogu.smeagol.wiki.domain.CommitRepository;
 import com.cloudogu.smeagol.wiki.domain.History;
 import com.cloudogu.smeagol.wiki.domain.WikiId;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 import static com.cloudogu.smeagol.wiki.DomainTestData.COMMIT;
