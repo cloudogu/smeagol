@@ -12,7 +12,7 @@
 
     <groupId>com.cloudogu.wiki</groupId>
     <artifactId>smeagol</artifactId>
-    <version>1.7.0-1</version>
+    <version>1.7.1-1</version>
     <name>smeagol</name>
     <packaging>war</packaging>
 
@@ -93,6 +93,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter-engine</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- git client -->
@@ -315,13 +325,11 @@
 
         <pluginManagement>
             <plugins>
-
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.4</version>
+                    <version>0.8.8</version>
                 </plugin>
-
             </plugins>
         </pluginManagement>
 

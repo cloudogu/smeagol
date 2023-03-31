@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.7.1-1] - 2023-03-31
+### Fixed
+- [#209] Fix execution of tests in build process
+
 ## [v1.7.0-1] - 2023-03-31
 ### Fixed
 - [#207] Eliminate CVEs by upgrading various packages:
