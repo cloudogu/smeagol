@@ -106,8 +106,7 @@ public class AccountService {
     private String getAccessToken(AttributePrincipal principal) {
         // Should be used in local development only
         if (this.accessKey != null){
-            String accessKey = this.accessKey;
-            return accessKey;
+            return this.accessKey;
         }
 
         String accessTokenEndpointURL = getAccessTokenEndpoint();
