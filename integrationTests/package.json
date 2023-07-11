@@ -1,10 +1,12 @@
 {
   "dependencies": {
-    "@cloudogu/dogu-integration-test-library": "2.0.0",
-    "cypress": "8.6.0",
-    "cypress-cucumber-preprocessor": "4.1.0"
+    "@badeball/cypress-cucumber-preprocessor": "^16.0.0",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.0",
+    "@cloudogu/dogu-integration-test-library": "6.0.1",
+    "cypress": "^12.9.0",
+    "@bahmutov/cy-api": "^2.2.4"
   },
   "scripts": {
-    "updateTests": "mkdir -p cypress/integration/dogu_integration_test_lib && cp -r node_modules/@cloudogu/dogu-integration-test-library/lib/integration/* cypress/integration/dogu_integration_test_lib"
+    "updateTests": "mkdir -p cypress/e2e/dogu_integration_test_lib && cp -r node_modules/@cloudogu/dogu-integration-test-library/lib/integration/* cypress/e2e/dogu_integration_test_lib"
   }
 }
