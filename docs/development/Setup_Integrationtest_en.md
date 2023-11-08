@@ -10,6 +10,7 @@ This section describes the steps required to properly run the integration tests.
 
 In order for all integration tests to work properly, some data must be configured beforehand.
 
+<!-- markdown-link-check-disable-next-line -->
 **integrationTests/cypress.config.json** [[Link to file](../../integrationTests/cypress.config.js)]
 
 1) The base URL must be adapted to the host system.
