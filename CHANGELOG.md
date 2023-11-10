@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#211] Target javascript version to es6
 - Update used version of nodejs to 18.7.0
 - Update used version of yarn to 1.22.19
-- Update java base image to v17.0.8-1
+- Update java base image to v17.0.9-1
 
 ### Fixed
 - [#211] Fix integration tests after upgrading CAS
