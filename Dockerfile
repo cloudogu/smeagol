@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17.0.8.1_1-jdk as builder
+FROM eclipse-temurin:17.0.9_9-jdk as builder
 
 ENV SMEAGOL_DIR=/usr/src/smeagol
 COPY mvnw pom.xml package.json yarn.lock .prettierrc ${SMEAGOL_DIR}/
