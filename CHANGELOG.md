@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.7.2-1] - 2023-11-10
 ### Changed
 - [#211] Target javascript version to es6
 - Update used version of nodejs to 18.7.0
