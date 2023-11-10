@@ -1,16 +1,19 @@
 import React from "react";
-import moment from "moment";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { translate } from "react-i18next";
 
 type Props = {
   date?: string;
 };
 
+dayjs.extend(relativeTime);
+
 class DateFromNow extends React.Component<Props> {
   static format(locale: string, date?: string) {
     let fromNow = "";
     if (date) {
-      fromNow = moment(date).locale(locale).fromNow();
+      fromNow = dayjs(date).locale(locale).fromNow();
     }
     return fromNow;
   }

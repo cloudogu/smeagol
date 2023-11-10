@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.7.2-1] - 2023-11-10
+### Changed
+- [#211] Target javascript version to es6
+- Update used version of nodejs to 18.7.0
+- Update used version of yarn to 1.22.19
+- Update java base image to v17.0.9-1
+
+### Fixed
+- [#211] Fix integration tests after upgrading CAS
+- [#213] Eliminate CVEs by switching from the deprecated lib momentjs to dayjs
+
 ## [v1.7.1-1] - 2023-03-31
 ### Fixed
 - [#209] Fix execution of tests in build process

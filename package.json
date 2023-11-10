@@ -1,9 +1,9 @@
 {
   "name": "smeagol",
-  "version": "1.7.1-1",
+  "version": "1.7.2-1",
   "private": true,
   "dependencies": {
-    "ces-theme": "https://github.com/cloudogu/ces-theme.git#39ad0799afc9e3f4a888192c6cd27b16f7161a84",
+    "ces-theme": "https://github.com/cloudogu/ces-theme.git#v0.7.2",
     "classnames": "^2.2.5",
     "highlight.js": "^10.4.1",
     "history": "^4.7.2",
@@ -11,7 +11,7 @@
     "i18next-browser-languagedetector": "^2.1.0",
     "i18next-fetch-backend": "^0.1.0",
     "i18next-resource-store-loader": "^0.1.2",
-    "moment": "^2.20.1",
+    "dayjs": "^1.11.10",
     "object-assign": "4.1.1",
     "promise": "8.0.1",
     "query-string": "^5.0.1",
