@@ -10,12 +10,13 @@ This section describes the steps required to properly run the integration tests.
 
 In order for all integration tests to work properly, some data must be configured beforehand.
 
-**integrationTests/cypress.json** [[Link to file](https://github.com/cloudogu/smeagol/blob/develop/integrationTests/cypress.json)]
+<!-- markdown-link-check-disable-next-line -->
+**integrationTests/cypress.config.json** [[Link to file](../../integrationTests/cypress.config.js)]
 
 1) The base URL must be adapted to the host system.
    For this the field `baseUrl` has to be adjusted to the host FQDN (`https://local.cloudogu.com`).
 2) Other aspects must be configured.
-   These are set as environment variables in the `cypress.json`:
+   These are set as environment variables in the `cypress.config.json`:
 - `DoguName` - Determines the name of the current dogu and will be used in routing.
 - `MaxLoginRetries` - Determines the number of login attempts before a test fails.
 - `AdminUsername` - The username of the CES admin.

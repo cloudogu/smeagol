@@ -2,7 +2,7 @@ import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { reactI18nextModule } from "react-i18next";
 
-import "moment/locale/de";
+import "dayjs/locale/de.js";
 
 // The import is essential for webpack to detect the translations and to pack them together with the bundle.js
 import resBundle from "i18next-resource-store-loader!./assets/locales/DoNotDelete";
