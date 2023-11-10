@@ -16,7 +16,7 @@ Damit alle Integrationstests auch einwandfrei funktionieren, müssen vorher eini
 1) Es muss die base-URL auf das Hostsystem angepasst werden.
    Dafür muss das Feld `baseUrl` auf die Host-FQDN angepasst werden (`https://local.cloudogu.com`)
 2) Es müssen noch weitere Aspekte konfiguriert werden.
-   Diese werdeb als Umgebungsvariablen in der `cypress.config.json` gesetzt:
+   Diese werden als Umgebungsvariablen in der `cypress.config.json` gesetzt:
 - `DoguName` - Bestimmt den Namen des jetzigen Dogus und wir beim Routing benutzt.
 - `MaxLoginRetries` - Bestimmt die Anzahl der Loginversuche, bevor ein Test fehlschlägt.
 - `AdminUsername` - Der Benutzername des CES-Admins.
