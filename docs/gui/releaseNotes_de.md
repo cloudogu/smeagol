@@ -8,4 +8,4 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 > Das Release behebt eine kritische Sicherheitslücke ([CVE-2022-31129](https://nvd.nist.gov/vuln/detail/CVE-2022-31129)). Ein Update ist daher empfohlen.
 
-Es sind keine Änderungen durchgeführt worden, die das Nutzungsverhalten betreffen. Technische Änderungen finden Sie in den Changelogs.
+Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
