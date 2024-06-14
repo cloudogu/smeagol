@@ -1,6 +1,4 @@
-# Smeagol
-
-Translated with www.DeepL.com/Translator
+# Documentation
 
 Smeagol is a wiki system based on a Git repository. This means that not only the source code of the software product, but also the corresponding documentation is versioned in the Git repository. This way the documentation is exactly where it belongs - right next to the source code.  
 
