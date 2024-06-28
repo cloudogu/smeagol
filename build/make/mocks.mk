@@ -1,14 +1,14 @@
 ##@ Mocking
 
 MOCKERY_BIN=${UTILITY_BIN_PATH}/mockery
-MOCKERY_VERSION=v2.20.0
+MOCKERY_VERSION?=v2.42.1
 MOCKERY_YAML=${WORKDIR}/.mockery.yaml
 
 ${MOCKERY_BIN}: ${UTILITY_BIN_PATH}
 	$(call go-get-tool,$(MOCKERY_BIN),github.com/vektra/mockery/v2@$(MOCKERY_VERSION))
 
 ${MOCKERY_YAML}:
-	@cp ${WORKDIR}/build/make/mockery.yaml ${WORKDIR}/.mockery.yaml
+	@cp ${BUILD_DIR}/make/mockery.yaml ${WORKDIR}/.mockery.yaml
 
 .PHONY: mocks
 mocks: ${MOCKERY_BIN} ${MOCKERY_YAML} ## This target is used to generate mocks for all interfaces in a project.
