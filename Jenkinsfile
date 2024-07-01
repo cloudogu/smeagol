@@ -1,5 +1,5 @@
 #!groovy
-@Library(['github.com/cloudogu/ces-build-lib@1.62.0', 'github.com/cloudogu/dogu-build-lib@v2.0.0'])
+@Library(['github.com/cloudogu/ces-build-lib@2.2.1', 'github.com/cloudogu/dogu-build-lib@v2.3.1'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
@@ -15,6 +15,7 @@ GitHub github = new GitHub(this, git)
 Changelog changelog = new Changelog(this)
 
 EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer", "jenkins-gcloud-ces-operations-internal")
+Trivy trivy = new Trivy(this, ecoSystem)
 
 parallel(
   "source code": {
@@ -136,6 +137,12 @@ parallel(
 
             stage('Build') {
               ecoSystem.build("/dogu")
+            }
+
+            stage('Trivy scan') {
+              trivy.scanDogu("/dogu", TrivyScanFormat.HTML, TrivyScanLevel.CRITICAL, TrivyScanStrategy.UNSTABLE)
+              trivy.scanDogu("/dogu", TrivyScanFormat.JSON, TrivyScanLevel.CRITICAL, TrivyScanStrategy.UNSTABLE)
+              trivy.scanDogu("/dogu", TrivyScanFormat.PLAIN, TrivyScanLevel.CRITICAL, TrivyScanStrategy.UNSTABLE)
             }
 
             stage('Verify') {

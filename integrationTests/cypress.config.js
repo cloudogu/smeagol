@@ -27,7 +27,7 @@ module.exports = defineConfig({
             "DoguName": "smeagol",
             "MaxLoginRetries": 3,
             "AdminUsername": "ces-admin",
-            "AdminPassword": "ecosystem2016",
+            "AdminPassword": "Ecosystem2016!",
             "AdminGroup": "CesAdministrators"
         },
         videoCompression: false,
