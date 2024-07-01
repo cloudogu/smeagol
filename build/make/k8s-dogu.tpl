@@ -3,7 +3,7 @@ kind: Dogu
 metadata:
   name: NAME
   labels:
-    dogu: NAME
+    app: ces
 spec:
   name: NAMESPACE/NAME
   version: VERSION

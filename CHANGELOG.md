@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.7.2-2] - 2024-07-01
+### Changed
+- Update base image to java:17.0.11-3 to use doguctl v0.12.0 (#92)
+
 ## [v1.7.2-1] - 2023-11-10
 ### Changed
 - [#211] Target javascript version to es6
