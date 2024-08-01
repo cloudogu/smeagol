@@ -10,6 +10,6 @@ We have only made technical changes. You can find more details in the changelogs
 
 ## Release 1.7.2-1
 
-> The release fixes a critical security vulnerability ([CVE-2022-31129](https://nvd.nist.gov/vuln/detail/CVE-2022-31129)). An update is therefore recommended.
+**The release fixes a critical security vulnerability ([CVE-2022-31129](https://nvd.nist.gov/vuln/detail/CVE-2022-31129)). An update is therefore recommended.**
 
 We have only made technical changes. You can find more details in the changelogs.
