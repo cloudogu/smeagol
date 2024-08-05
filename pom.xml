@@ -6,13 +6,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.5</version>
+        <version>3.3.2</version>
         <relativePath/>
     </parent>
 
     <groupId>com.cloudogu.wiki</groupId>
     <artifactId>smeagol</artifactId>
-    <version>1.7.2-2</version>
+    <version>1.7.3-1</version>
     <name>smeagol</name>
     <packaging>war</packaging>
 
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>6.0.7</version>
+            <version>6.1.11</version>
         </dependency>
 
         <dependency>
@@ -62,7 +62,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>2.0</version>
+            <version>2.2</version>
         </dependency>
 
         <dependency>
@@ -149,7 +149,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>30.1-jre</version>
+            <version>33.2.1-jre</version>
         </dependency>
 
         <!-- logging -->
@@ -157,20 +157,20 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.5</version>
+            <version>2.0.13</version>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.4.6</version>
+            <version>1.5.6</version>
         </dependency>
 
         <!-- Used to extract the version at runtime -->
         <dependency>
             <groupId>com.cloudogu.versionName</groupId>
             <artifactId>versionName</artifactId>
-            <version>2.0.0</version>
+            <version>2.1.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -181,20 +181,20 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
+            <version>24.1.0</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.0.0</version>
+            <version>6.1.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
-            <version>5.2.1</version>
+            <version>5.3.1</version>
         </dependency>
 
     </dependencies>
@@ -269,11 +269,11 @@
                 <version>2.5.0</version>
                 <configuration>
                     <node>
-                        <version>18.7.0</version>
+                        <version>22.5.1</version>
                     </node>
                     <pkgManager>
                         <type>YARN</type>
-                        <version>1.22.19</version>
+                        <version>1.22.22</version>
                     </pkgManager>
                     <pkg/>
                     <script/>
@@ -288,7 +288,7 @@
                     </execution>
                     <execution>
                         <id>run-test</id>
-                        <!-- use prepare-package to avoid installing durring spring-boot:run -->
+                        <!-- use prepare-package to avoid installing during spring-boot:run -->
                         <phase>test</phase>
                         <goals>
                             <goal>run</goal>
@@ -299,7 +299,7 @@
                     </execution>
                     <execution>
                         <id>run-build</id>
-                        <!-- use prepare-package to avoid installing durring spring-boot:run -->
+                        <!-- use prepare-package to avoid installing during spring-boot:run -->
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>run</goal>
@@ -314,7 +314,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -328,7 +328,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.8</version>
+                    <version>0.8.12</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -383,9 +383,16 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cas-client.version>4.0.1</cas-client.version>
-        <java.version>17</java.version>
-        <jaxb.version>2.3.0</jaxb.version>
+        <cas-client.version>4.0.4</cas-client.version>
+        <java.version>21</java.version>
+        <jaxb.version>2.3.1</jaxb.version>
         <jgit.version>5.1.16.202106041830-r</jgit.version>
     </properties>
+    <repositories>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
+    </repositories>
 </project>
