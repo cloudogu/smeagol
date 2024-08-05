@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- [#220] Update base image to java:21.0.3-4
+- [#220] Update Sprint Boot Starter to 3.3.2
+- [#220] Update Spring to 6.1.11
+- [#220] Update CAS-Client to 4.0.4
+- [#220] Update Maven to 3.9.8
+- [#220] Update JAXB to 2.3.1
+- [#220] Update Snakeyaml to 2.2
+- [#220] Update Guava to 33.2.1-jre
+- [#220] Update slf4j to 2.0.13
+- [#220] Update Logback to 1.5.6
+- [#220] Update cloudogu/VersionName to 2.1.0
+- [#220] Update jakarta.servlet-api to 6.1.0
+- [#220] Update httpclient5 to 5.3.1
+- [#220] Update NodeJs dev-server to 22.5.1
+- [#220] Update Yarn to 1.22.22
+- [#220] Update Jacoco to 0.8.12
+
+### Fixed
+- [#220] use pinned version of jetbrains annotations 24.1.0
+- [#220] fix [Fasterxml DoS vulnerability](https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-7569538)
+
 ## [v1.7.2-2] - 2024-07-01
 ### Changed
 - Update base image to java:17.0.11-3 to use doguctl v0.12.0 (#92)
