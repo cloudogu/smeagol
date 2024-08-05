@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.7.3-1] - 2024-08-05
+
 ### Changed
 - [#220] Update base image to java:21.0.3-4
 - [#220] Update Sprint Boot Starter to 3.3.2
