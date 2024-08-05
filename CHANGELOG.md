@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#220] Update httpclient5 to 5.3.1
 - [#220] Update NodeJs dev-server to 22.5.1
 - [#220] Update Yarn to 1.22.22
+- [#220] Update Jacoco to 0.8.12
 
 ### Fixed
 - [#220] use pinned version of jetbrains annotations 24.1.0
