@@ -269,11 +269,11 @@
                 <version>2.5.0</version>
                 <configuration>
                     <node>
-                        <version>18.7.0</version>
+                        <version>22.5.1</version>
                     </node>
                     <pkgManager>
                         <type>YARN</type>
-                        <version>1.22.19</version>
+                        <version>1.22.22</version>
                     </pkgManager>
                     <pkg/>
                     <script/>
