@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- update OpenJDK to 21.0.4
+- update Alpine base image to 3.20.2-1
+
+### Security
+- fix CVE-2024-41110 (#222)
 
 ## [v1.7.3-1] - 2024-08-05
 
