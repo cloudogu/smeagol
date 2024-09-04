@@ -16,7 +16,8 @@
   "Dependencies": [
     {
       "type": "dogu",
-      "name": "cas"
+      "name": "cas",
+      "version": ">=7.0.5.1-6"
     },
     {
       "type": "dogu",
@@ -26,6 +27,12 @@
       "type": "dogu",
       "name": "scm",
       "version": ">=2.20.0-1"
+    }
+  ],
+  "ServiceAccounts": [
+    {
+      "Type": "cas",
+      "Params": ["cas"]
     }
   ],
   "Configuration": [
