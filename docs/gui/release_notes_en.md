@@ -4,6 +4,9 @@ Below you will find the release notes for Smeagol.
 
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/smeagol/CHANGELOG/).
 
+## Release 1.7.3-3
+- Relicense own code to AGPL-3-only
+
 ## Release 1.7.3-2
 * Fix of critical CVE CVE-2024-41110 in library dependencies. This vulnerability could not be actively exploited in Smeagol, though.
 
