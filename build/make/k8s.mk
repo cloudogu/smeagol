@@ -138,7 +138,7 @@ ${K8S_RESOURCE_TEMP_FOLDER}:
 ##@ K8s - Docker
 
 .PHONY: docker-build
-docker-build: check-docker-credentials check-k8s-image-env-var ## Builds the docker image of the K8s app.
+docker-build: check-docker-credentials check-k8s-image-env-var ${BINARY_YQ} ## Builds the docker image of the K8s app.
 	@echo "Building docker image $(IMAGE)..."
 	@DOCKER_BUILDKIT=1 docker build . -t $(IMAGE)
 
