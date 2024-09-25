@@ -9,7 +9,7 @@ BATS_SUPPORT=$(BATS_LIBRARY_DIR)/bats-support
 BATS_FILE=$(BATS_LIBRARY_DIR)/bats-file
 BATS_BASE_IMAGE?=bats/bats
 BATS_CUSTOM_IMAGE?=cloudogu/bats
-BATS_TAG?=1.2.1
+BATS_TAG?=1.11.0
 BATS_DIR=build/make/bats
 BATS_WORKDIR="${WORKDIR}"/"${BATS_DIR}"
 
