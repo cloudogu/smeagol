@@ -61,6 +61,7 @@ class Markdown extends React.Component<Props> {
       viewer: true,
       initialEditType: "markdown",
       initialValue: this.props.content,
+      usageStatistics: false,
       exts: [
         "colorSyntax",
         { name: "uml", rendererURL: "/plantuml/png/" },
