@@ -74,6 +74,7 @@ class MarkdownEditor extends Component<Props, State> {
       previewStyle: "vertical",
       initialEditType: "markdown",
       initialValue: this.props.content,
+      usageStatistics: false,
       exts: [
         "scrollSync",
         "colorSyntax",
