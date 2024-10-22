@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.7.4-1] - 2024-10-22
+### Fixed
+- [#229] Disable Google Analytics in Markdown-Editor
+
 ## [v1.7.3-4] - 2024-09-25
 ### Changed
 - Switch to new CAS service account structure in dogu.json

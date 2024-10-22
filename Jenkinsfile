@@ -78,6 +78,9 @@ parallel(
             } else if (branch.startsWith("bugfix/")) {
               echo "This branch has been detected as a bugfix branch."
               sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=develop"
+            } else {
+              echo "This branch has been detected as a miscellaneous branch."
+              sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.branch.target=develop"
             }
           }
           timeout(time: 2, unit: 'MINUTES') { // Needed when there is no webhook for example

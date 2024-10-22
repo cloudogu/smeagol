@@ -18,7 +18,7 @@ RUN set -x \
 
 FROM registry.cloudogu.com/official/java:21.0.4-3
 LABEL NAME="official/smeagol" \
-      VERSION="1.7.3-4" \
+      VERSION="1.7.4-1" \
       maintainer="hello@cloudogu.com"
 
 ENV SERVICE_TAGS=webapp \
