@@ -4,6 +4,10 @@ Below you will find the release notes for Smeagol.
 
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/smeagol/CHANGELOG/).
 
+## 1.7.4-1
+Parts of the application have sent requests to Google Analytics. These requests have been permanently removed.
+Further information can be found on the page of the library that previously sent these requests: https://github.com/nhn/tui.editor/tree/v1.4.0?tab=readme-ov-file#collect-statistics-on-the-use-of-open-source
+
 ## 1.7.3-4
 We have only made technical changes. You can find more details in the changelogs.
 
