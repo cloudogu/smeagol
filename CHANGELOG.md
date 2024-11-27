@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.7.5-1] - 2024-11-27
+### Changed
+- [#231] Update spring-boot-starter-parent to 3.3.5 to prevent CVE-2024-52316
+
 ## [v1.7.4-1] - 2024-10-22
 ### Fixed
 - [#229] Disable Google Analytics in Markdown-Editor
