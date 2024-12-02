@@ -7,6 +7,12 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 ## Unreleased
 We have only made technical changes. You can find more details in the changelogs.
 
+## 1.7.5-1
+
+**The release fixes a critical security vulnerability ([CVE-2024-52316](https://github.com/advisories/GHSA-xcpr-7mr4-h4xq)). An update is therefore recommended.**
+
+We have only made technical changes. You can find more details in the changelogs.
+
 ## 1.7.4-1
 Parts of the application have sent requests to Google Analytics. These requests have been permanently removed.
 Further information can be found on the page of the library that previously sent these requests: https://github.com/nhn/tui.editor/tree/v1.4.0?tab=readme-ov-file#collect-statistics-on-the-use-of-open-source

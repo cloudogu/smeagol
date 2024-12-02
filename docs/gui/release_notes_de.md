@@ -7,6 +7,13 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 ## Unreleased
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
 
+## 1.7.5-1
+
+**Das Release behebt eine kritische Sicherheitslücke ([CVE-2024-52316](https://github.com/advisories/GHSA-xcpr-7mr4-h4xq)). Ein Update ist daher empfohlen.**
+
+Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
+
+
 ## 1.7.4-1
 Teile der Applikation haben Anfragen an Google-Analytics geschickt. Diese Anfragen wurden dauerhaft entfernt.
 Weitere Informationen dazu sind auf der Seite der Bibliothek zu finden, die bisher diese Anfragen verschickt hat: https://github.com/nhn/tui.editor/tree/v1.4.0?tab=readme-ov-file#collect-statistics-on-the-use-of-open-source
