@@ -56,6 +56,7 @@ fi
 
 update_versions "${NEW_RELEASE_VERSION}"
 update_changelog "${NEW_RELEASE_VERSION}" "${FIXED_CVE_LIST}"
+update_releasenotes "${NEW_RELEASE_VERSION}"
 show_diff
 
 if [[ -n "${DRY_RUN}" ]]; then

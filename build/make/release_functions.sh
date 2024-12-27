@@ -207,6 +207,50 @@ update_changelog() {
   git commit -m "Update changelog"
 }
 
+update_releasenotes() {
+  local NEW_RELEASE_VERSION="${1}"
+
+  # ReleaseNotes update
+  local CURRENT_DATE
+  CURRENT_DATE=$(date --rfc-3339=date)
+  local NEW_RELEASENOTE_TITLE="## [v${NEW_RELEASE_VERSION}] - ${CURRENT_DATE}"
+  rm -rf ".rn_changed"
+  find . -name "*release_notes*.md" -print0 | while read -d $'\0' file
+  do
+     # Check if "Unreleased" tag exists
+     while ! grep --silent "## \[Unreleased\]" "${file}"; do
+       echo ""
+       echo -e "\e[31mYour ${file} does not contain a \"## [Unreleased]\" line!\e[0m"
+       echo "Please add one to make it comply to https://keepachangelog.com/en/1.0.0/"
+       wait_for_ok "Please insert a \"## [Unreleased]\" line into ${file} now."
+     done
+
+     # Add new title line to changelog
+     sed -i "s|## \[Unreleased\]|## \[Unreleased\]\n\n${NEW_RELEASENOTE_TITLE}|g" "${file}"
+     echo "Processed ${file}"
+     echo true > ".rn_changed"
+  done
+
+  if test -f ".rn_changed" ; then
+    # Wait for user to validate changelog changes
+    wait_for_ok "Please make sure your release notes looks as desired."
+
+    find . -name "*release_notes*.md" -print0 | while read -d $'\0' file
+    do
+      # Check if new version tag still exists
+      while ! grep --silent "$(echo $NEW_RELEASENOTE_TITLE | sed -e 's/[]\/$*.^[]/\\&/g')" "${file}"; do
+        echo ""
+        echo -e "\e[31mYour ${file} does not contain \"${NEW_RELEASENOTE_TITLE}\"!\e[0m"
+        wait_for_ok "Please update your ${file} now."
+      done
+      git add "${file}"
+    done
+
+    git commit -m "Update ReleaseNotes"
+  fi
+  rm -rf ".rn_changed"
+}
+
 # addFixedCVEListFromReRelease is used in dogu cve releases. The method adds the fixed CVEs under the ### Fixed header
 # in the unreleased section.
 addFixedCVEListFromReRelease() {
