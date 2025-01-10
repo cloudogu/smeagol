@@ -138,10 +138,13 @@ public class AccountServiceTest {
 
         assertEquals("admin", account.getUsername());
         assertEquals("jwtadmin", account.getAccessToken());
+        // calling two time to check if value is stored in member
+        assertEquals("jwtadmin", account.getAccessToken());
         assertEquals("Administrator", account.getDisplayName());
         assertEquals("super@admin.org", account.getMail());
 
         verify(session).setAttribute(Account.class.getName(), account);
+
     }
 
     /**
