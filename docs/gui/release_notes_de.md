@@ -5,6 +5,9 @@ Im Folgenden finden Sie die Release Notes für Smeagol.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/smeagol/CHANGELOG/).
 
 ## [Unreleased]
+
+**Das Release behebt eine kritische Sicherheitslücke ([CVE-2024-56337](https://github.com/advisories/GHSA-27hp-xhwr-wr2m)). Ein Update ist daher empfohlen.**
+
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
 
 ## 1.7.5-1
