@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.7.6-1] - 2025-01-10
+### Changed
+- [#233] Update Makefiles to 9.5.0
+- [#233] Update Baseimage to 21.0.5-1
+
+### Security
+- [#235] Update spring-boot-starter-parent to 3.3.7 to prevent CVE-2024-56337
+
 ## [v1.7.5-1] - 2024-11-27
 ### Changed
 - [#231] Update spring-boot-starter-parent to 3.3.5 to prevent CVE-2024-52316

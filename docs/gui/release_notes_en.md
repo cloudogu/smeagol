@@ -4,7 +4,11 @@ Below you will find the release notes for Smeagol.
 
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/smeagol/CHANGELOG/).
 
-## Unreleased
+## [Unreleased]
+
+## [v1.7.6-1] - 2025-01-10
+**The release fixes a critical security vulnerability ([CVE-2024-56337](https://github.com/advisories/GHSA-27hp-xhwr-wr2m)). An update is therefore recommended.**
+
 We have only made technical changes. You can find more details in the changelogs.
 
 ## 1.7.5-1
