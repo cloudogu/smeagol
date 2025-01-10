@@ -6,6 +6,8 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.7.6-1] - 2025-01-10
+
 **Das Release behebt eine kritische Sicherheitslücke ([CVE-2024-56337](https://github.com/advisories/GHSA-27hp-xhwr-wr2m)). Ein Update ist daher empfohlen.**
 
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
