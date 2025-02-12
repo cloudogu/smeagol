@@ -6,6 +6,11 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.7.6-2] - 2025-02-12
+
+We have only made technical changes. You can find more details in the changelogs.
+
+
 ## [v1.7.6-1] - 2025-01-10
 **The release fixes a critical security vulnerability ([CVE-2024-56337](https://github.com/advisories/GHSA-27hp-xhwr-wr2m)). An update is therefore recommended.**
 
