@@ -1,7 +1,9 @@
 package com.cloudogu.smeagol.authc.infrastructure;
 
 import com.cloudogu.smeagol.Stage;
-import jakarta.servlet.Filter;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSessionListener;
 import org.apereo.cas.client.authentication.AuthenticationFilter;
 import org.apereo.cas.client.session.SingleSignOutFilter;
@@ -28,7 +30,7 @@ public class CasInfrastructureRegistration {
 
     private static final Logger LOG = LoggerFactory.getLogger(CasInfrastructureRegistration.class);
 
-    private Map<String,String> casSettings;
+    private Map<String, String> casSettings;
 
     @Autowired
     public CasInfrastructureRegistration(CasConfiguration configuration, Stage stage) {
@@ -69,7 +71,19 @@ public class CasInfrastructureRegistration {
      */
     @Bean
     public FilterRegistrationBean proxyReceivingTicketValidationFilter() {
-        return casFilterRegistration(new Cas30ProxyReceivingTicketValidationFilter(), 1);
+        return casFilterRegistration(new Cas30ProxyReceivingTicketValidationFilterWithoutException(), 1);
+    }
+
+    public static class Cas30ProxyReceivingTicketValidationFilterWithoutException extends Cas30ProxyReceivingTicketValidationFilter {
+        public Cas30ProxyReceivingTicketValidationFilterWithoutException() {
+            super();
+        }
+
+        @Override
+        protected void onFailedValidation(HttpServletRequest request, HttpServletResponse response) {
+            super.onFailedValidation(request, response);
+            this.setExceptionOnValidationFailure(false);
+        }
     }
 
     /**
@@ -93,7 +107,7 @@ public class CasInfrastructureRegistration {
         return casFilterRegistration(new HttpServletRequestWrapperFilter(), 3);
     }
 
-    private FilterRegistrationBean casFilterRegistration(Filter filter, int order){
+    private FilterRegistrationBean casFilterRegistration(Filter filter, int order) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setInitParameters(casSettings);
         registration.setFilter(filter);
