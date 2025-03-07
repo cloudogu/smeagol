@@ -1,18 +1,12 @@
 package com.cloudogu.smeagol.authc.infrastructure;
 
 import com.cloudogu.smeagol.Stage;
-import jakarta.servlet.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.Filter;
 import jakarta.servlet.http.HttpSessionListener;
 import org.apereo.cas.client.authentication.AuthenticationFilter;
 import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.apereo.cas.client.session.SingleSignOutHttpSessionListener;
 import org.apereo.cas.client.util.HttpServletRequestWrapperFilter;
-import org.apereo.cas.client.validation.Assertion;
-import org.apereo.cas.client.validation.Cas30ProxyReceivingTicketValidationFilter;
-import org.apereo.cas.client.validation.TicketValidationException;
-import org.apereo.cas.client.validation.TicketValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +14,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import java.util.Collections;
 import java.util.Map;
