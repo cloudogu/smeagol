@@ -3,4 +3,4 @@
 
 .PHONY: prerelease_namespace
 prerelease_namespace:
-	build/make/stagex.sh prerelease_namespace
+	build/make/prerelease.sh prerelease_namespace

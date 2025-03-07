@@ -3,6 +3,10 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+
+# shellcheck disable=SC1090
+source "$(pwd)/build/make/release_functions.sh"
+
 TYPE="${1}"
 
 update_build_libs() {
@@ -34,12 +38,23 @@ get_highest_version() {
 # Patch Jenkinsfile
 update_jenkinsfile() {
   sed -i "s/ces-build-lib@[[:digit:]].[[:digit:]].[[:digit:]]/ces-build-lib@$(get_highest_version ces)/g" Jenkinsfile
-  sed -i "s/dugu-build-lib@[[:digit:]].[[:digit:]].[[:digit:]]/dogu-build-lib@$(get_highest_version dogu)/g" Jenkinsfile
+  sed -i "s/dogu-build-lib@v[[:digit:]].[[:digit:]].[[:digit:]]/dogu-build-lib@v$(get_highest_version dogu)/g" Jenkinsfile
+}
+
+# Patch Dogu Version without Release
+set_dogu_version() {
+  CURRENT_TOOL_VERSION=$(get_current_version_by_dogu_json)
+  echo "$(tput setaf 1)ATTENTION: Make sure that the new version corresponds to the current software version$(tput sgr0)"
+  NEW_RELEASE_VERSION="$(read_new_version)"
+  validate_new_version "${NEW_RELEASE_VERSION}"
+  update_versions "${NEW_RELEASE_VERSION}"
 }
 
 # switch for script entrypoint
 if [[ "${TYPE}" == "buildlibs" ]];then
   update_build_libs
+elif [[ "${TYPE}" == "versions" ]];then
+  set_dogu_version
 else
   echo "Unknown target ${TYPE}"
 fi

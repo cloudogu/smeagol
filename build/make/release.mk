@@ -4,7 +4,7 @@
 
 .PHONY: dogu-release
 dogu-release: ## Start a dogu release
-	build/make/release.sh dogu
+	build/make/release.sh dogu "${FIXED_CVE_LIST}" $(DRY_RUN)
 
 .PHONY: node-release
 node-release: ## Start a node package release

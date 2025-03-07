@@ -25,3 +25,8 @@ copy-new-files:
 update-build-libs:
 	@echo "Check for newer Build-Lib versions"
 	build/make/self-update.sh buildlibs
+
+.PHONY: set-dogu-version
+set-dogu-version:
+	@echo "Set Version of Dogu without Release"
+	build/make/self-update.sh versions
