@@ -12,7 +12,7 @@ RUN set -x \
 COPY src ${SMEAGOL_DIR}/src
 RUN set -x \
  && cd ${SMEAGOL_DIR} \
- && ./mvnw package -DskipTests -Dmaven.wagon.http.pool=false
+ && ./mvnw package -Dmaven.wagon.http.pool=false
 
 
 

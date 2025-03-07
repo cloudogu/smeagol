@@ -12,19 +12,41 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 
 @Controller
 public class CustomErrorController implements ErrorController {
 
+    public static class HttpClientHelper {
+        public HttpURLConnection createConnection(String urlString) throws IOException, URISyntaxException {
+            final URL url = new URI(urlString).toURL();
+            return (HttpURLConnection) url.openConnection();
+        }
+    }
+
     private final String errorsUrl;
+    private final HttpClientHelper helper;
+
+    CustomErrorController() {
+        this("");
+    }
 
     @Autowired
     public CustomErrorController(
         @Value("${errors.url}") String errorsUrl
     ) {
+        this(errorsUrl, new HttpClientHelper());
+    }
+
+    CustomErrorController(
+        String errorsUrl,
+        HttpClientHelper helper
+    ) {
         this.errorsUrl = errorsUrl;
+        this.helper = helper;
     }
 
     /**
@@ -56,8 +78,7 @@ public class CustomErrorController implements ErrorController {
         final String urlString = errorsUrl + statusCode + ".html";
 
         try {
-            final URL url = new URL(urlString);
-            final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            final HttpURLConnection connection = this.helper.createConnection(urlString);
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
@@ -75,7 +96,7 @@ public class CustomErrorController implements ErrorController {
             } else {
                 return "<html><body><h1>Error " + statusCode + "</h1><p>" + reasonPhrase + "</p><p>" + message + "</p></body></html>";
             }
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             return "<html><body><h1>Error " + statusCode + "</h1><p>" + reasonPhrase + "</p><p>" + message + "</p></body></html>";
         }
     }
