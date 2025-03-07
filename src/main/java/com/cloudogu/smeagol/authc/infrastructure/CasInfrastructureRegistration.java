@@ -9,7 +9,10 @@ import org.apereo.cas.client.authentication.AuthenticationFilter;
 import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.apereo.cas.client.session.SingleSignOutHttpSessionListener;
 import org.apereo.cas.client.util.HttpServletRequestWrapperFilter;
+import org.apereo.cas.client.validation.Assertion;
 import org.apereo.cas.client.validation.Cas30ProxyReceivingTicketValidationFilter;
+import org.apereo.cas.client.validation.TicketValidationException;
+import org.apereo.cas.client.validation.TicketValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,10 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import java.util.Collections;
 import java.util.Map;
@@ -81,8 +88,26 @@ public class CasInfrastructureRegistration {
 
         @Override
         protected void onFailedValidation(HttpServletRequest request, HttpServletResponse response) {
-            super.onFailedValidation(request, response);
-            this.setExceptionOnValidationFailure(false);
+            try {
+                final String requestUrl = request.getRequestURL().toString();
+                final String queryString = request.getQueryString();
+
+                String newQuery = "";
+                if (queryString != null) {
+                    newQuery = Arrays.stream(queryString.split("&"))
+                        .filter(param -> !param.startsWith("ticket="))
+                        .collect(Collectors.joining("&"));
+                }
+
+                final String newUrl = requestUrl + (newQuery.isEmpty() ? "" : "?" + newQuery);
+                System.out.println("=================>>");
+                System.out.println("!=================>>");
+                System.out.println("=================>>");
+                System.out.println(newUrl);
+                response.sendRedirect(newUrl);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
