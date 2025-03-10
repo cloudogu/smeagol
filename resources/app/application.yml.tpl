@@ -8,3 +8,5 @@ scm:
 cas:
   url: https://{{ .Env.Get "FQDN" }}/cas
   serviceUrl: https://{{ .Env.Get "FQDN" }}
+errors:
+  url: https://{{ .Env.Get "FQDN" }}/errors/

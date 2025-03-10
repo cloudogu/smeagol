@@ -7,7 +7,6 @@ import org.apereo.cas.client.authentication.AuthenticationFilter;
 import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.apereo.cas.client.session.SingleSignOutHttpSessionListener;
 import org.apereo.cas.client.util.HttpServletRequestWrapperFilter;
-import org.apereo.cas.client.validation.Cas30ProxyReceivingTicketValidationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class CasInfrastructureRegistration {
 
     private static final Logger LOG = LoggerFactory.getLogger(CasInfrastructureRegistration.class);
 
-    private Map<String,String> casSettings;
+    private Map<String, String> casSettings;
 
     @Autowired
     public CasInfrastructureRegistration(CasConfiguration configuration, Stage stage) {
@@ -69,7 +68,7 @@ public class CasInfrastructureRegistration {
      */
     @Bean
     public FilterRegistrationBean proxyReceivingTicketValidationFilter() {
-        return casFilterRegistration(new Cas30ProxyReceivingTicketValidationFilter(), 1);
+        return casFilterRegistration(new CESCas30ProxyReceivingTicketValidationFilter(), 1);
     }
 
     /**
@@ -93,7 +92,7 @@ public class CasInfrastructureRegistration {
         return casFilterRegistration(new HttpServletRequestWrapperFilter(), 3);
     }
 
-    private FilterRegistrationBean casFilterRegistration(Filter filter, int order){
+    private FilterRegistrationBean casFilterRegistration(Filter filter, int order) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setInitParameters(casSettings);
         registration.setFilter(filter);

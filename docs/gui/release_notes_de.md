@@ -6,6 +6,9 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+- Das Design der Fehlerseiten wurde überarbeitet
+- Es wurde ein Fehler behoben, der aufgetreten ist, wenn ein ungültiges CAS-Service-Ticket verwendet wurde
+
 ## [v1.7.6-2] - 2025-02-12
 
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.

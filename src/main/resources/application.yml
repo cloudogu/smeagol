@@ -17,6 +17,8 @@ ui:
 scm:
   url: https://192.168.56.2/scm
 
+errors:
+  url: https://192.168.56.2/errors/
 
 cas:
   url: https://192.168.56.2/cas
