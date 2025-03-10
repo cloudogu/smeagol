@@ -1,5 +1,6 @@
 package com.cloudogu.smeagol;
 
+import com.cloudogu.smeagol.authc.infrastructure.NginxErrorPageNotFoundException;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,10 +94,8 @@ public class CustomErrorController implements ErrorController {
                     }
                     return response.toString();
                 }
-            } else {
-                return "<html><body><h1>Error " + statusCode + "</h1><p>" + reasonPhrase + "</p><p>" + message + "</p></body></html>";
-            }
-        } catch (IOException | URISyntaxException e) {
+            } else throw new NginxErrorPageNotFoundException();
+        } catch (IOException | URISyntaxException | NginxErrorPageNotFoundException e) {
             return "<html><body><h1>Error " + statusCode + "</h1><p>" + reasonPhrase + "</p><p>" + message + "</p></body></html>";
         }
     }
