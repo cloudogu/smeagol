@@ -15,7 +15,6 @@ GitHub github = new GitHub(this, git)
 Changelog changelog = new Changelog(this)
 
 EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer", "jenkins-gcloud-ces-operations-internal")
-Trivy trivy = new Trivy(this, ecoSystem)
 
 parallel(
   "source code": {
@@ -143,9 +142,12 @@ parallel(
             }
 
             stage('Trivy scan') {
-              trivy.scanDogu("/dogu", TrivyScanFormat.HTML, TrivyScanLevel.CRITICAL, TrivyScanStrategy.UNSTABLE)
-              trivy.scanDogu("/dogu", TrivyScanFormat.JSON, TrivyScanLevel.CRITICAL, TrivyScanStrategy.UNSTABLE)
-              trivy.scanDogu("/dogu", TrivyScanFormat.PLAIN, TrivyScanLevel.CRITICAL, TrivyScanStrategy.UNSTABLE)
+              ecoSystem.copyDoguImageToJenkinsWorker("/dogu")
+              Trivy trivy = new Trivy(this)
+              trivy.scanDogu(".", params.TrivySeverityLevels, params.TrivyStrategy)
+              trivy.saveFormattedTrivyReport(TrivyScanFormat.TABLE)
+              trivy.saveFormattedTrivyReport(TrivyScanFormat.JSON)
+              trivy.saveFormattedTrivyReport(TrivyScanFormat.HTML)
             }
 
             stage('Verify') {
