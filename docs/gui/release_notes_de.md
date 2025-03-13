@@ -6,6 +6,8 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.7.7-1] - 2025-03-13
+
 - Das Design der Fehlerseiten wurde überarbeitet
 - Es wurde ein Fehler behoben, der aufgetreten ist, wenn ein ungültiges CAS-Service-Ticket verwendet wurde
 
