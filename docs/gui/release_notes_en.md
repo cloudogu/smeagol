@@ -6,6 +6,8 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.7.7-1] - 2025-03-13
+
 - The design of the error pages has been revised
 - Fixed an error that occurred when an invalid CAS service ticket was used
 
