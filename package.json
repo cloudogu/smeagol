@@ -1,6 +1,6 @@
 {
   "name": "smeagol",
-  "version": "1.7.6-2",
+  "version": "1.7.7-1",
   "private": true,
   "license": "AGPL-3.0-only",
   "dependencies": {

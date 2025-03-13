@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.7.7-1] - 2025-03-13
+### Changed
+- [#240] Change error pages to show the new design
+- [#240] Remove ticket query param if invalid instead of showing an error page
+- Update makefiles to 9.6.0
+- Update ces-build-lib to 4.1.0
+- Update dogu-build-lib to 3.1.0
+
 ## [v1.7.6-2] - 2025-02-12
 ### Changed
 - [#238] Add missing keys to dogu.json

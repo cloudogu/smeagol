@@ -1,15 +1,54 @@
 package com.cloudogu.smeagol;
 
+import com.cloudogu.smeagol.authc.infrastructure.NginxErrorPageNotFoundException;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 
 @Controller
 public class CustomErrorController implements ErrorController {
+
+    public static class HttpClientHelper {
+        public HttpURLConnection createConnection(String urlString) throws IOException, URISyntaxException {
+            final URL url = new URI(urlString).toURL();
+            return (HttpURLConnection) url.openConnection();
+        }
+    }
+
+    private final String errorsUrl;
+    private final HttpClientHelper helper;
+
+    CustomErrorController() {
+        this("");
+    }
+
+    @Autowired
+    public CustomErrorController(
+        @Value("${errors.url}") String errorsUrl
+    ) {
+        this(errorsUrl, new HttpClientHelper());
+    }
+
+    CustomErrorController(
+        String errorsUrl,
+        HttpClientHelper helper
+    ) {
+        this.errorsUrl = errorsUrl;
+        this.helper = helper;
+    }
 
     /**
      * Mapping for errors which are not properly handled with in the application
@@ -30,48 +69,34 @@ public class CustomErrorController implements ErrorController {
             if (message != null) {
                 errorMessage = message.toString();
             }
-            return renderErrorTemplate(statusCode, reasonPhrase, errorMessage, request.getContextPath());
+            return renderErrorTemplate(statusCode, reasonPhrase, errorMessage);
         }
         return "";
     }
 
-    public String getErrorPath() {
-        return "/error";
-    }
-
     @SuppressWarnings("squid:S1192") // sonar issue not relevant for this template
-    private String renderErrorTemplate(int statusCode, String reasonPhrase, String message, String contextPath) {
-        return String.format("<html>\n" +
-                "<head>\n" +
-                "    <meta charset='utf-8'>\n" +
-                "    <title>Error</title>\n" +
-                "    <meta name='viewport' content='width=device-width, initial-scale=1'>\n" +
-                "    <meta http-equiv='X-UA-Compatible' content='IE=edge' />\n" +
-                "    <link rel='stylesheet' href='%4$s/static/error/errors.css'>\n" +
-                "    <!-- favicons -->\n" +
-                "    <link rel='icon' type='image/png' href='%4$s/favicon-64px.png' sizes='64x64' />\n" +
-                "    <link rel='icon' type='image/png' href='%4$s/favicon-32px.png' sizes='32x32' />\n" +
-                "    <link rel='icon' type='image/png' href='%4$s/favicon-16px.png' sizes='16x16' />\n" +
-                "</head>\n" +
-                "<body>\n" +
-                "    <div class='logo'>\n" +
-                "        <img src='%4$s/static/logo-white.png'>\n" +
-                "    </div>\n" +
-                "    <div class='message'>\n" +
-                "        <div class='code'>\n" +
-                "            %1$s\n" +
-                "        </div>\n" +
-                "        <div class='description'>\n" +
-                "            %2$s\n" +
-                "        </div>\n" +
-                "        <div class='error'>\n" +
-                "            %3$s\n " +
-                "        </div>\n" +
-                "    </div>\n" +
-                "    <div class='background'>\n" +
-                "        <img src='%4$s/static/clockwork.png'>\n" +
-                "    </div>\n" +
-                "</body>\n" +
-                "</html>", statusCode, reasonPhrase, message, contextPath);
+    private String renderErrorTemplate(int statusCode, String reasonPhrase, String message) {
+        final String urlString = errorsUrl + statusCode + ".html";
+
+        try {
+            final HttpURLConnection connection = this.helper.createConnection(urlString);
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+
+            final int responseCode = connection.getResponseCode();
+            if (responseCode == 200) {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                    final StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line).append("\n");
+                    }
+                    return response.toString();
+                }
+            } else throw new NginxErrorPageNotFoundException();
+        } catch (IOException | URISyntaxException | NginxErrorPageNotFoundException e) {
+            return "<html><body><h1>Error " + statusCode + "</h1><p>" + reasonPhrase + "</p><p>" + message + "</p></body></html>";
+        }
     }
 }
