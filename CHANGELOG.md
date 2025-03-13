@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.7.7-1] - 2025-03-13
 ### Changed
 - [#240] Change error pages to show the new design
 - [#240] Remove ticket query param if invalid instead of showing an error page
