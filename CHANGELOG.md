@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - [#243] Update spring-boot-starter-parent to 3.4.4
 - [#243] Update spring-web to 6.2.5
+- [#243] Update jgit to 5.13.3.202401111512-r
 - [#243] Update httpclient5 to 5.4.2
 - [#243] Update snakeyaml to 2.4
 - [#243] Update logback-classic to 1.5.16
