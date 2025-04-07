@@ -13,8 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#243] Update httpclient5 to 5.4.2
 - [#243] Update snakeyaml to 2.4
 - [#243] Update logback-classic to 1.5.16
-- [#243] Update ces-build-lib to 4.1.1
-- [#243] Update makefiles to 9.8.0
+- [#243] Update ces-build-lib to 4.2.0
 - [#243] Update makefiles to 9.9.0
 
 ## [v1.7.7-1] - 2025-03-13
