@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#243] Update logback-classic to 1.5.16
 - [#243] Update ces-build-lib to 4.2.0
 - [#243] Update makefiles to 9.9.0
+### Security
+- [#243] Fix [CVE-2025-24813](https://nvd.nist.gov/vuln/detail/CVE-2025-24813)
 
 ## [v1.7.7-1] - 2025-03-13
 ### Changed
