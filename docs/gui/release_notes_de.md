@@ -6,6 +6,17 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.7.8-1] - 2025-04-08
+
+### Security
+
+* Das Release behebt die kritische Sicherheitslücke [CVE-2025-24813](https://nvd.nist.gov/vuln/detail/CVE-2025-24813).
+  Ein Update ist daher empfohlen.
+
+### Changed
+
+* Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
+
 ## [v1.7.7-1] - 2025-03-13
 
 - Das Design der Fehlerseiten wurde überarbeitet

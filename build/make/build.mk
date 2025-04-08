@@ -3,7 +3,7 @@
 ADDITIONAL_LDFLAGS?=-extldflags -static
 LDFLAGS?=-ldflags "$(ADDITIONAL_LDFLAGS) -X main.Version=$(VERSION) -X main.CommitID=$(COMMIT_ID)"
 GOIMAGE?=golang
-GOTAG?=1.23
+GOTAG?=1.24
 GOOS?=linux
 GOARCH?=amd64
 PRE_COMPILE?=

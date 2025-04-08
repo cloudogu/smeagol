@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.7.8-1] - 2025-04-08
+### Changed
+- [#243] Update spring-boot-starter-parent to 3.4.4
+- [#243] Update spring-web to 6.2.5
+- [#243] Update httpclient5 to 5.4.2
+- [#243] Update snakeyaml to 2.4
+- [#243] Update logback-classic to 1.5.16
+- [#243] Update ces-build-lib to 4.2.0
+- [#243] Update makefiles to 9.9.0
+
 ## [v1.7.7-1] - 2025-03-13
 ### Changed
 - [#240] Change error pages to show the new design
