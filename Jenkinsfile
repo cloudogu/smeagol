@@ -125,6 +125,10 @@ parallel(
 
           try {
             stage('Provision') {
+              // change namespace to prerelease_namespace if in develop-branch
+              if (gitflow.isPreReleaseBranch()) {
+                sh "make prerelease_namespace"
+              }
               ecoSystem.provision("/dogu")
             }
 
@@ -196,6 +200,11 @@ parallel(
 
               stage('Add Github-Release') {
                 github.createReleaseWithChangelog(releaseVersion, changelog)
+              }
+            } else if (gitflow.isPreReleaseBranch()) {
+              // push to registry in prerelease_namespace
+              stage('Push Prerelease Dogu to registry') {
+                ecoSystem.pushPreRelease("/dogu")
               }
             }
           } finally {
