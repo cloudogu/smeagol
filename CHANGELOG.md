@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.7.8.0-1] - 2025-04-22
+> [!CAUTION]
+> **Hotfix-Release**
+> This is a Hotfix-Release for Smeagol 1.17.8 for Ecosystems with CAS < v7.0.5.1-6
+> This release includes the fix for the encoding bug and does not use cas-service-accounts.
+> This release will not work in CES Multinode environments
+### Removed
+- CAS service-accounts to be compatible with CAS < v7.0.5.1-6
 ### Changed
 - Update Makefiles to v9.9.1 (#245)
 - Update ces-build-lib to v4.2.0 (#245)
