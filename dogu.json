@@ -1,6 +1,6 @@
 {
   "Name": "official/smeagol",
-  "Version": "1.7.8-1",
+  "Version": "1.7.8.0-1",
   "DisplayName": "Smeagol",
   "Description": "Store your technical documentation with in your git repositories",
   "Category": "Development Apps",
@@ -16,8 +16,7 @@
   "Dependencies": [
     {
       "type": "dogu",
-      "name": "cas",
-      "Version": ">=7.0.5.1-6"
+      "name": "cas"
     },
     {
       "type": "dogu",
@@ -29,14 +28,7 @@
       "version": ">=2.20.0-1"
     }
   ],
-  "ServiceAccounts": [
-    {
-      "Type": "cas",
-      "Params": [
-        "cas"
-      ]
-    }
-  ],
+  "ServiceAccounts": [],
   "Configuration": [
     {
       "Name": "logging/root",
