@@ -1,11 +1,18 @@
-# Smeagol Changelog
+# Changelog
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.7.8-2] - 2025-04-28
+### Changed
+- Set sensible resource requests and limits (#247)
+- Update Makefiles to v9.9.1 (#245)
+- Update ces-build-lib to v4.2.0 (#245)
+- Update dogu-build-lib to v3.2.0 (#245)
 
 ## [v1.7.8-1] - 2025-04-08
 ### Changed
@@ -16,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#243] Update logback-classic to 1.5.16
 - [#243] Update ces-build-lib to 4.2.0
 - [#243] Update makefiles to 9.9.0
+### Security
+- [#243] Fix [CVE-2025-24813](https://nvd.nist.gov/vuln/detail/CVE-2025-24813)
 
 ## [v1.7.7-1] - 2025-03-13
 ### Changed

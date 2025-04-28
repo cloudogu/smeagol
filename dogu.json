@@ -1,6 +1,6 @@
 {
   "Name": "official/smeagol",
-  "Version": "1.7.8-1",
+  "Version": "1.7.8-2",
   "DisplayName": "Smeagol",
   "Description": "Store your technical documentation with in your git repositories",
   "Category": "Development Apps",
@@ -59,7 +59,8 @@
       "Optional": true,
       "Validation": {
         "Type": "BINARY_MEASUREMENT"
-      }
+      },
+      "Default": "300m"
     },
     {
       "Name": "container_config/memory_request",
@@ -67,7 +68,8 @@
       "Optional": true,
       "Validation": {
         "Type": "BINARY_MEASUREMENT"
-      }
+      },
+      "Default": "300m"
     },
     {
       "Name": "container_config/swap_limit",
@@ -85,7 +87,8 @@
     {
       "Name": "container_config/cpu_core_request",
       "Description": "Requests the container's minimal CPU core requirement. Use a positive floating value describing a fraction of 1 CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU. This configuration is only applicable to the Multinode-EcoSystem.",
-      "Optional": true
+      "Optional": true,
+      "Default": "0.063"
     },
     {
       "Name": "container_config/storage_limit",

@@ -22,14 +22,32 @@ prerelease_namespace() {
   # Update version in Dockerfile
   if [ -f "Dockerfile" ]; then
     echo "Updating version in Dockerfile..."
-    ORIG_NAME="$(grep -oP ".*[ ]*NAME=\"([^\"]*)" Dockerfile | awk -F "\"" '{print $2}')"
-    ORIG_VERSION="$(grep -oP ".*[ ]*VERSION=\"([^\"]*)" Dockerfile | awk -F "\"" '{print $2}')"
-    PRERELEASE_NAME="prerelease_$( echo -e "$ORIG_NAME" | sed 's/\//\\\//g' )"
-    PRERELEASE_VERSION="${ORIG_VERSION}${TIMESTAMP}"
-    sed -i "s/\(.*[ ]*NAME=\"\)\([^\"]*\)\(.*$\)/\1${PRERELEASE_NAME}\3/" Dockerfile
-    sed -i "s/\(.*[ ]*VERSION=\"\)\([^\"]*\)\(.*$\)/\1${PRERELEASE_VERSION}\3/" Dockerfile
-  fi
+    LABEL_BLOCK=$(sed -n '/^LABEL[[:space:]]/ {N; /NAME=".*"/ {N; /VERSION=".*"/ {p}}}' Dockerfile)
 
+    # Extract NAME and VERSION from the LABEL block
+    ORIG_NAME=$(echo "$LABEL_BLOCK" | sed -n 's/.*NAME="\([^"]*\)".*/\1/p')
+    ORIG_VERSION=$(echo "$LABEL_BLOCK" | sed -n 's/.*VERSION="\([^"]*\)".*/\1/p')
+
+    # Output the extracted values for debugging
+    echo "ORIG_NAME Dockerfile: ${ORIG_NAME}"
+    echo "ORIG_VERSION Dockerfile: ${ORIG_VERSION}"
+
+    # Prepare prerelease name and version
+    PRERELEASE_NAME="prerelease_$(echo -e "$ORIG_NAME" | sed 's/\//\\\//g')"
+    PRERELEASE_VERSION="${ORIG_VERSION}${TIMESTAMP}"
+
+    # Output the new values for debugging
+    echo "PRERELEASE_NAME Dockerfile: ${PRERELEASE_NAME}"
+    echo "PRERELEASE_VERSION Dockerfile: ${PRERELEASE_VERSION}"
+    
+    # Only replace NAME= and VERSION= and only inside the LABEL block
+    # This assumes LABEL block is between 'LABEL' and first non-indented line
+    sed -i '/^LABEL/,/^[^[:space:]]/ {
+      s/\(NAME="\)[^"]*\("\)/\1'"${PRERELEASE_NAME}"'\2/
+      s/\(VERSION="\)[^"]*\("\)/\1'"${PRERELEASE_VERSION}"'\2/
+    }' Dockerfile
+  fi
+  
 }
 
 
