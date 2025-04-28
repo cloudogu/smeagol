@@ -60,7 +60,7 @@
       "Validation": {
         "Type": "BINARY_MEASUREMENT"
       },
-      "Default": "238m"
+      "Default": "300m"
     },
     {
       "Name": "container_config/memory_request",
@@ -69,7 +69,7 @@
       "Validation": {
         "Type": "BINARY_MEASUREMENT"
       },
-      "Default": "238m"
+      "Default": "300m"
     },
     {
       "Name": "container_config/swap_limit",
