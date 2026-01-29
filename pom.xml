@@ -341,13 +341,13 @@
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>0.8.12</version>
                 </plugin>
-            </plugins>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
-            </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.2.5</version>
+                </plugin>
+            </plugins>
         </pluginManagement>
 
         <finalName>smeagol</finalName>
