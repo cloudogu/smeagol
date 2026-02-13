@@ -45,13 +45,15 @@ else
   CURRENT_TOOL_VERSION=$(get_current_version_by_makefile)
 fi
 
+BASE_VERSION=$(get_base_version_by_makefile)
+
 NEW_RELEASE_VERSION="$(read_new_version)"
 
 validate_new_version "${NEW_RELEASE_VERSION}"
 if [[ -n "${DRY_RUN}" ]]; then
   start_dry_run_release "${NEW_RELEASE_VERSION}"
 else
-  start_git_flow_release "${NEW_RELEASE_VERSION}"
+  start_git_flow_release "${NEW_RELEASE_VERSION}" "${BASE_VERSION}"
 fi
 
 update_versions "${NEW_RELEASE_VERSION}"
@@ -60,9 +62,9 @@ update_releasenotes "${NEW_RELEASE_VERSION}"
 show_diff
 
 if [[ -n "${DRY_RUN}" ]]; then
-  abort_dry_run_release "${NEW_RELEASE_VERSION}"
+  abort_dry_run_release "${NEW_RELEASE_VERSION}" "${BASE_VERSION}"
 else
-  finish_release_and_push "${CURRENT_TOOL_VERSION}" "${NEW_RELEASE_VERSION}"
+  finish_release_and_push "${CURRENT_TOOL_VERSION}" "${NEW_RELEASE_VERSION}" "${BASE_VERSION}"
 fi
 
 echo "=====Finished Release process====="
