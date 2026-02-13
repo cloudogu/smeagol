@@ -5,7 +5,8 @@ ifeq ($(APPEND_CRD_SUFFIX), true)
 else ifeq ($(APPEND_CRD_SUFFIX), false)
 	ARTIFACT_CRD_ID = $(ARTIFACT_ID)
 endif
-DEV_CRD_VERSION ?= ${VERSION}-dev
+CRD_BUILD_VERSION := $(shell date +%s).$(TIMESTAMP)
+DEV_CRD_VERSION ?= ${VERSION}-dev.${COMPONENT_BUILD_VERSION}
 HELM_CRD_SOURCE_DIR ?= ${WORKDIR}/k8s/helm-crd
 HELM_CRD_TARGET_DIR ?= $(K8S_RESOURCE_TEMP_FOLDER)/helm-crd
 HELM_CRD_RELEASE_TGZ = ${HELM_CRD_TARGET_DIR}/${ARTIFACT_CRD_ID}-${VERSION}.tgz
@@ -89,10 +90,10 @@ ${HELM_CRD_RELEASE_TGZ}: ${BINARY_HELM} crd-helm-generate ## Generates and packa
 .PHONY: crd-helm-chart-import
 crd-helm-chart-import: ${CHECK_VAR_TARGETS} check-k8s-artifact-id crd-helm-generate crd-helm-package ## Imports the currently available Helm CRD chart into the cluster-local registry.
 	@if [[ ${STAGE} == "development" ]]; then \
-		echo "Import ${HELM_CRD_DEV_RELEASE_TGZ} into K8s cluster ${CES_REGISTRY_HOST}..."; \
+		echo "Import ${HELM_CRD_DEV_RELEASE_TGZ} into K8s cluster ${CES_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE}..."; \
 		${BINARY_HELM} push ${HELM_CRD_DEV_RELEASE_TGZ} oci://${CES_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE} ${BINARY_HELM_ADDITIONAL_PUSH_ARGS}; \
 	else \
-	  	echo "Import ${HELM_CRD_RELEASE_TGZ} into K8s cluster ${CES_REGISTRY_HOST}..."; \
+	  	echo "Import ${HELM_CRD_RELEASE_TGZ} into K8s cluster ${CES_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE}..."; \
         ${BINARY_HELM} push ${HELM_CRD_RELEASE_TGZ} oci://${CES_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE} ${BINARY_HELM_ADDITIONAL_PUSH_ARGS}; \
     fi
 	@echo "Done."
@@ -111,7 +112,7 @@ crd-component-generate: ${K8S_RESOURCE_TEMP_FOLDER} ## Generate the CRD componen
 	fi
 
 .PHONY: crd-component-apply
-crd-component-apply: check-k8s-namespace-env-var crd-helm-chart-import crd-component-generate ## Applies the CRD component YAML resource to the actual defined context.
+crd-component-apply: isProduction check-k8s-namespace-env-var crd-helm-chart-import crd-component-generate ## Applies the CRD component YAML resource to the actual defined context.
 	@kubectl apply -f "${K8S_RESOURCE_CRD_COMPONENT}" --namespace="${NAMESPACE}" --context="${KUBE_CONTEXT_NAME}"
 	@echo "Done."
 

@@ -1,4 +1,5 @@
-COMPONENT_DEV_VERSION?=${VERSION}-dev
+COMPONENT_BUILD_VERSION := $(shell date +%s)
+COMPONENT_DEV_VERSION?=${VERSION}-dev.${COMPONENT_BUILD_VERSION}
 
 include ${BUILD_DIR}/make/k8s.mk
 
@@ -15,8 +16,9 @@ HELM_RELEASE_TGZ=${HELM_TARGET_DIR}/${ARTIFACT_ID}-${VERSION}.tgz
 HELM_DEV_RELEASE_TGZ=${HELM_TARGET_DIR}/${ARTIFACT_ID}-${COMPONENT_DEV_VERSION}.tgz
 HELM_ARTIFACT_NAMESPACE?=k8s
 ifeq (${RUNTIME_ENV}, remote)
-	HELM_ARTIFACT_NAMESPACE?=testing/k8s
+	HELM_ARTIFACT_NAMESPACE=testing/k8s
 endif
+$(info HELM_ARTIFACT_NAMESPACE=$(HELM_ARTIFACT_NAMESPACE))
 
 K8S_RESOURCE_COMPONENT ?= "${K8S_RESOURCE_TEMP_FOLDER}/component-${ARTIFACT_ID}-${VERSION}.yaml"
 K8S_RESOURCE_COMPONENT_CR_TEMPLATE_YAML ?= $(BUILD_DIR)/make/k8s-component.tpl
@@ -93,10 +95,10 @@ helm-reinstall: helm-delete helm-apply ## Uninstalls the current helm chart and 
 .PHONY: helm-chart-import
 helm-chart-import: ${CHECK_VAR_TARGETS} helm-generate helm-package ${IMAGE_IMPORT_TARGET} ## Imports the currently available chart into the cluster-local registry.
 	@if [[ ${STAGE} == "development" ]]; then \
-		echo "Import ${HELM_DEV_RELEASE_TGZ} into K8s cluster ${CES_REGISTRY_HOST}..."; \
+		echo "Import ${HELM_DEV_RELEASE_TGZ} into K8s cluster ${CES_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE}..."; \
 		${BINARY_HELM} push ${HELM_DEV_RELEASE_TGZ} oci://${CES_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE} ${BINARY_HELM_ADDITIONAL_PUSH_ARGS}; \
 	else \
-	  	echo "Import ${HELM_RELEASE_TGZ} into K8s cluster ${CES_REGISTRY_HOST}..."; \
+	  	echo "Import ${HELM_RELEASE_TGZ} into K8s cluster ${CES_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE}..."; \
         ${BINARY_HELM} push ${HELM_RELEASE_TGZ} oci://${CES_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE} ${BINARY_HELM_ADDITIONAL_PUSH_ARGS}; \
     fi
 	@echo "Done."
@@ -142,7 +144,7 @@ ${K8S_RESOURCE_COMPONENT_CR_TEMPLATE_YAML}: ${K8S_RESOURCE_TEMP_FOLDER}
 	fi
 
 .PHONY: component-apply
-component-apply: check-k8s-namespace-env-var ${COMPONENT_PRE_APPLY_TARGETS} ${IMAGE_IMPORT_TARGET} helm-generate helm-chart-import component-generate ## Applies the component yaml resource to the actual defined context.
+component-apply: isProduction check-k8s-namespace-env-var ${COMPONENT_PRE_APPLY_TARGETS} ${IMAGE_IMPORT_TARGET} helm-generate helm-chart-import component-generate ## Applies the component yaml resource to the actual defined context.
 	@kubectl apply -f "${K8S_RESOURCE_COMPONENT}" --namespace="${NAMESPACE}" --context="${KUBE_CONTEXT_NAME}"
 	@echo "Done."
 

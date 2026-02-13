@@ -11,7 +11,7 @@ BINARY_YQ_4_VERSION?=v4.40.3
 BINARY_HELM = $(UTILITY_BIN_PATH)/helm
 BINARY_HELM_VERSION?=v3.13.0
 CONTROLLER_GEN = $(UTILITY_BIN_PATH)/controller-gen
-CONTROLLER_GEN_VERSION?=v0.14.0
+CONTROLLER_GEN_VERSION?=v0.19.0
 
 # Setting SHELL to bash allows bash commands to be executed by recipes.
 # Options are set to exit when a recipe line exits non-zero or a piped command fails.
@@ -35,12 +35,16 @@ K3S_CLUSTER_FQDN?=k3ces.local
 K3S_LOCAL_REGISTRY_PORT?=30099
 
 # The URL of the container-registry to use. Defaults to the registry of the local-cluster.
-# If RUNTIME_ENV is "remote" it is "registry.cloudogu.com/testing"
+# If RUNTIME_ENV is "remote" it is "registry.cloudogu.com/testing", if ENVIRONMENT is "ci" it is "registry.cloudogu.com/ci"
+# if run on ci (jenkins) the images must be pushed to a separate namespace in order to free space every night after the build.
 CES_REGISTRY_HOST?=${K3S_CLUSTER_FQDN}:${K3S_LOCAL_REGISTRY_PORT}
 CES_REGISTRY_NAMESPACE ?=
 ifeq (${RUNTIME_ENV}, remote)
 	CES_REGISTRY_HOST=registry.cloudogu.com
 	CES_REGISTRY_NAMESPACE=/testing
+	ifeq ($(ENVIRONMENT), ci)
+		CES_REGISTRY_NAMESPACE=/ci
+	endif
 endif
 $(info CES_REGISTRY_HOST=$(CES_REGISTRY_HOST))
 
@@ -203,3 +207,14 @@ envtest: ${ENVTEST} ## Download envtest-setup locally if necessary.
 
 ${ENVTEST}:
 	$(call go-get-tool,$(ENVTEST),sigs.k8s.io/controller-runtime/tools/setup-envtest@latest)
+
+.PHONY: isProduction
+isProduction:
+	@if [[ "${STAGE}" == "production" ]]; then \
+		echo "Command executed in production stage. Aborting."; \
+		exit 1; \
+	else \
+		echo "Command executed in development stage. Continuing."; \
+	fi
+
+

@@ -16,7 +16,7 @@ RUN set -x \
 
 
 
-FROM registry.cloudogu.com/official/java:21.0.5-1
+FROM registry.cloudogu.com/official/java:21.0.10-3
 LABEL NAME="official/smeagol" \
       VERSION="1.7.8-3" \
       maintainer="hello@cloudogu.com"
