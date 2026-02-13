@@ -6,6 +6,10 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.7.8-4] - 2026-02-13
+### Security
+- Fix CVE-2025-68121
+
 ## [v1.7.8-3] - 2026-01-29
 
 ### Security

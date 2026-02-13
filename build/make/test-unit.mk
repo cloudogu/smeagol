@@ -9,8 +9,14 @@ COVERAGE_REPORT=$(UNIT_TEST_DIR)/coverage.out
 PRE_UNITTESTS?=
 POST_UNITTESTS?=
 
+ASJSON?=
+
 .PHONY: unit-test
 unit-test: $(XUNIT_JSON) ## Start unit tests
+
+ifeq ($(ENVIRONMENT),ci)
+ASJSON='-json'
+endif
 
 $(XUNIT_JSON): $(SRC) $(GO_JUNIT_REPORT)
 ifneq ($(strip $(PRE_UNITTESTS)),)
@@ -21,7 +27,7 @@ endif
 	@echo 'mode: set' > ${COVERAGE_REPORT}
 	@rm -f $(UNIT_TEST_LOG) || true
 	@for PKG in $(PACKAGES) ; do \
-    ${GO_CALL} test -v $$PKG -coverprofile=${COVERAGE_REPORT}.tmp -json 2>&1 | tee $(UNIT_TEST_LOG).tmp ; \
+    ${GO_CALL} test -v $$PKG -coverprofile=${COVERAGE_REPORT}.tmp ${ASJSON} 2>&1 | tee $(UNIT_TEST_LOG).tmp ; \
 		cat ${COVERAGE_REPORT}.tmp | tail +2 >> ${COVERAGE_REPORT} ; \
 		rm -f ${COVERAGE_REPORT}.tmp ; \
 		cat $(UNIT_TEST_LOG).tmp >> $(UNIT_TEST_LOG) ; \

@@ -1,7 +1,7 @@
 ARG BATS_BASE_IMAGE
 ARG BATS_TAG
 
-FROM ${BATS_BASE_IMAGE:-bats/bats}:${BATS_TAG:-1.11.0}
+FROM ${BATS_BASE_IMAGE:-bats/bats}:${BATS_TAG:-1.12.0}
 
 # Make bash more findable by scripts and tests
 RUN apk add make git bash
