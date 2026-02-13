@@ -5,6 +5,8 @@ Im Folgenden finden Sie die Release Notes für Smeagol.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/smeagol/CHANGELOG/).
 
 ## [Unreleased]
+
+## [v1.7.8-4] - 2026-02-13
 ### Security
 - Sicherheitslücke geschlossen CVE-2025-68121
 
