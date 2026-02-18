@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.7.8-5] - 2026-02-18
+### Changed
+- Upgrade to java base image 21.0.10-4; #253
+
 ## [v1.7.8-4] - 2026-02-13
 ### Security
 - [#251] Fix Go stdlib CVE-2025-68121
