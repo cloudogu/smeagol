@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- [#255] Upgrade to java base image 21.0.10-5
+### Security
+- [#255] CVE fixed: [CVE-2026-22184](https://avd.aquasec.com/nvd/2026/cve-2026-22184/)
+- [#255] CVE fixed: [CVE-2026-25646](https://avd.aquasec.com/nvd/2026/cve-2026-25646/)
 
 ## [v1.7.8-5] - 2026-02-18
 ### Changed
