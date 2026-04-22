@@ -1,7 +1,10 @@
+COMPONENT_ARTIFACT_ID?=$(ARTIFACT_ID)
 COMPONENT_BUILD_VERSION := $(shell date +%s)
 COMPONENT_DEV_VERSION?=${VERSION}-dev.${COMPONENT_BUILD_VERSION}
 
-include ${BUILD_DIR}/make/k8s.mk
+ifeq (${K8S_MK_INCLUDE_MARKER}, )
+	include ${BUILD_DIR}/make/k8s.mk
+endif
 
 ifeq (${RUNTIME_ENV}, local)
 	BINARY_HELM_ADDITIONAL_PUSH_ARGS?=--plain-http
@@ -12,15 +15,15 @@ BINARY_HELM_ADDITIONAL_UPGR_ARGS?=
 
 HELM_TARGET_DIR ?= $(K8S_RESOURCE_TEMP_FOLDER)/helm
 HELM_SOURCE_DIR ?= k8s/helm
-HELM_RELEASE_TGZ=${HELM_TARGET_DIR}/${ARTIFACT_ID}-${VERSION}.tgz
-HELM_DEV_RELEASE_TGZ=${HELM_TARGET_DIR}/${ARTIFACT_ID}-${COMPONENT_DEV_VERSION}.tgz
+HELM_RELEASE_TGZ=${HELM_TARGET_DIR}/${COMPONENT_ARTIFACT_ID}-${VERSION}.tgz
+HELM_DEV_RELEASE_TGZ=${HELM_TARGET_DIR}/${COMPONENT_ARTIFACT_ID}-${COMPONENT_DEV_VERSION}.tgz
 HELM_ARTIFACT_NAMESPACE?=k8s
 ifeq (${RUNTIME_ENV}, remote)
 	HELM_ARTIFACT_NAMESPACE=testing/k8s
 endif
 $(info HELM_ARTIFACT_NAMESPACE=$(HELM_ARTIFACT_NAMESPACE))
 
-K8S_RESOURCE_COMPONENT ?= "${K8S_RESOURCE_TEMP_FOLDER}/component-${ARTIFACT_ID}-${VERSION}.yaml"
+K8S_RESOURCE_COMPONENT ?= "${K8S_RESOURCE_TEMP_FOLDER}/component-${COMPONENT_ARTIFACT_ID}-${VERSION}.yaml"
 K8S_RESOURCE_COMPONENT_CR_TEMPLATE_YAML ?= $(BUILD_DIR)/make/k8s-component.tpl
 # HELM_PRE_GENERATE_TARGETS allows to execute targets that affect Helm source files AND Helm target files.
 HELM_PRE_GENERATE_TARGETS ?=
@@ -38,8 +41,8 @@ IMAGE_IMPORT_TARGET?=
 helm-init-chart: ${BINARY_HELM} ## Creates a Chart.yaml-template with zero values
 	@echo "Initialize ${HELM_SOURCE_DIR}/Chart.yaml..."
 	@mkdir -p ${HELM_SOURCE_DIR}/tmp/
-	@${BINARY_HELM} create ${HELM_SOURCE_DIR}/tmp/${ARTIFACT_ID}
-	@cp ${HELM_SOURCE_DIR}/tmp/${ARTIFACT_ID}/Chart.yaml ${HELM_SOURCE_DIR}/
+	@${BINARY_HELM} create ${HELM_SOURCE_DIR}/tmp/${COMPONENT_ARTIFACT_ID}
+	@cp ${HELM_SOURCE_DIR}/tmp/${COMPONENT_ARTIFACT_ID}/Chart.yaml ${HELM_SOURCE_DIR}/
 	@rm -dr ${HELM_SOURCE_DIR}/tmp
 	@sed -i 's/appVersion: ".*"/appVersion: "0.0.0-replaceme"/' ${HELM_SOURCE_DIR}/Chart.yaml
 	@sed -i 's/version: .*/version: 0.0.0-replaceme/' ${HELM_SOURCE_DIR}/Chart.yaml
@@ -82,12 +85,12 @@ helm-update-dependencies: ${BINARY_HELM} ## Update Helm chart dependencies
 .PHONY: helm-apply
 helm-apply: ${BINARY_HELM} check-k8s-namespace-env-var ${IMAGE_IMPORT_TARGET} helm-generate ${HELM_PRE_APPLY_TARGETS} ## Generates and installs the Helm chart.
 	@echo "Apply generated helm chart"
-	@${BINARY_HELM} --kube-context="${KUBE_CONTEXT_NAME}" upgrade -i ${ARTIFACT_ID} ${HELM_TARGET_DIR} ${BINARY_HELM_ADDITIONAL_UPGR_ARGS} --namespace ${NAMESPACE}
+	@${BINARY_HELM} --kube-context="${KUBE_CONTEXT_NAME}" upgrade -i ${COMPONENT_ARTIFACT_ID} ${HELM_TARGET_DIR} ${BINARY_HELM_ADDITIONAL_UPGR_ARGS} --namespace ${NAMESPACE}
 
 .PHONY: helm-delete
 helm-delete: ${BINARY_HELM} check-k8s-namespace-env-var ## Uninstalls the current Helm chart.
 	@echo "Uninstall helm chart"
-	@${BINARY_HELM} --kube-context="${KUBE_CONTEXT_NAME}" uninstall ${ARTIFACT_ID} --namespace=${NAMESPACE} ${BINARY_HELM_ADDITIONAL_UNINST_ARGS} || true
+	@${BINARY_HELM} --kube-context="${KUBE_CONTEXT_NAME}" uninstall ${COMPONENT_ARTIFACT_ID} --namespace=${NAMESPACE} ${BINARY_HELM_ADDITIONAL_UNINST_ARGS} || true
 
 .PHONY: helm-reinstall
 helm-reinstall: helm-delete helm-apply ## Uninstalls the current helm chart and reinstalls it.
@@ -122,7 +125,7 @@ ${HELM_RELEASE_TGZ}: ${BINARY_HELM} ${HELM_TARGET_DIR}/Chart.yaml ${HELM_POST_GE
 .PHONY: helm-delete-existing-tgz
 helm-delete-existing-tgz: ## Remove an existing Helm package from the target directory.
 	@echo "Delete ${HELM_RELEASE_TGZ}*"
-	@rm -f ${HELM_TARGET_DIR}/${ARTIFACT_ID}-*.tgz
+	@rm -f ${HELM_TARGET_DIR}/${COMPONENT_ARTIFACT_ID}-*.tgz
 
 ##@ K8s - Helm lint targets
 
@@ -138,9 +141,9 @@ component-generate: ${K8S_RESOURCE_COMPONENT_CR_TEMPLATE_YAML} ${COMPONENT_POST_
 ${K8S_RESOURCE_COMPONENT_CR_TEMPLATE_YAML}: ${K8S_RESOURCE_TEMP_FOLDER}
 	@echo "Generating temporary K8s component resource: ${K8S_RESOURCE_COMPONENT}"
 	@if [[ ${STAGE} == "development" ]]; then \
-		sed "s|NAMESPACE|$(HELM_ARTIFACT_NAMESPACE)|g" "${K8S_RESOURCE_COMPONENT_CR_TEMPLATE_YAML}" | sed "s|NAME|$(ARTIFACT_ID)|g"  | sed "s|VERSION|$(COMPONENT_DEV_VERSION)|g" > "${K8S_RESOURCE_COMPONENT}"; \
+		sed "s|NAMESPACE|$(HELM_ARTIFACT_NAMESPACE)|g" "${K8S_RESOURCE_COMPONENT_CR_TEMPLATE_YAML}" | sed "s|NAME|$(COMPONENT_ARTIFACT_ID)|g"  | sed "s|VERSION|$(COMPONENT_DEV_VERSION)|g" > "${K8S_RESOURCE_COMPONENT}"; \
 	else \
-		sed "s|NAMESPACE|$(HELM_ARTIFACT_NAMESPACE)|g" "${K8S_RESOURCE_COMPONENT_CR_TEMPLATE_YAML}" | sed "s|NAME|$(ARTIFACT_ID)|g"  | sed "s|VERSION|$(VERSION)|g" > "${K8S_RESOURCE_COMPONENT}"; \
+		sed "s|NAMESPACE|$(HELM_ARTIFACT_NAMESPACE)|g" "${K8S_RESOURCE_COMPONENT_CR_TEMPLATE_YAML}" | sed "s|NAME|$(COMPONENT_ARTIFACT_ID)|g"  | sed "s|VERSION|$(VERSION)|g" > "${K8S_RESOURCE_COMPONENT}"; \
 	fi
 
 .PHONY: component-apply

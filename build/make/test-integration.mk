@@ -1,3 +1,8 @@
+# this also works with older main Makefiles which include all test*.mk files on top-level.
+ifeq (${TEST_COMMON_MK_INCLUDE_MARKER}, )
+	include ${BUILD_DIR}/make/test-common.mk
+endif
+
 ##@ Integration testing
 
 INTEGRATION_TEST_DIR=$(TARGET_DIR)/integration-tests

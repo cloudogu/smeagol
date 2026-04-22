@@ -35,6 +35,10 @@ GOPASS_BIN?=$(shell command -v gopass 2> /dev/null)
 
 EXCLUDED_TEMPLATE_FILES?=rich-parameters.yaml variables.yaml
 
+TRIVY_VERSION ?= latest
+TRIVY_IMAGE = aquasec/trivy:$(TRIVY_VERSION)
+
+export TRIVY_IMAGE
 
 ##@ Coder template development
 
@@ -107,7 +111,7 @@ ${CONTAINER_IMAGE_TRIVY_SCAN_JSON}: ${CONTAINER_IMAGE_TAR}
 	${CONTAINER_BIN} run --rm --pull=always \
 		-v "trivy-cache:/root/.cache" \
 		-v "${CONTAINER_IMAGE_TAR}:/tmp/image.tar" \
-		aquasec/trivy -q \
+		$(TRIVY_IMAGE) -q \
 		image --scanners vuln --input /tmp/image.tar -f json --timeout 15m \
 		> ${CONTAINER_IMAGE_TRIVY_SCAN_JSON}
 

@@ -11,12 +11,16 @@ VERSION=$(shell $(BINARY_YQ) -oy -e ".Version" $(DOGU_JSON_FILE))
 # Image of the dogu is extracted from the dogu.json
 IMAGE=$(shell $(BINARY_YQ) -oy -e ".Image" $(DOGU_JSON_FILE)):$(VERSION)
 
-include $(BUILD_DIR)/make/k8s.mk
+PRE_BUILD_TARGETS ?=
+
+ifeq (${K8S_MK_INCLUDE_MARKER}, )
+	include ${BUILD_DIR}/make/k8s.mk
+endif
 
 ##@ K8s - EcoSystem
 
 .PHONY: build
-build: image-import install-dogu-descriptor create-dogu-resource apply-dogu-resource ## Builds a new version of the dogu and deploys it into the K8s-EcoSystem.
+build: ${PRE_BUILD_TARGETS} image-import install-dogu-descriptor create-dogu-resource apply-dogu-resource ## Builds a new version of the dogu and deploys it into the K8s-EcoSystem.
 
 ##@ K8s - Dogu - Resource
 
