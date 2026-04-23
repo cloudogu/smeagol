@@ -1,17 +1,20 @@
 import React from "react";
 import injectSheet from "react-jss";
 
-import Editor from "tui-editor/dist/tui-editor-Editor";
-import "tui-editor/dist/tui-editor-extTable";
-import "tui-editor/dist/tui-editor-extScrollSync";
-import "tui-editor/dist/tui-editor-extUML";
+import Editor from "@toast-ui/editor";
+
+import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
+import chart from "@toast-ui/editor-plugin-chart";
+import uml from "@toast-ui/editor-plugin-uml";
 
 import "./TableClassEditorExtension";
 import "./HistoryEditorExtension";
 import "./LegacyPlantumlEditorExtension";
 import "./ShortLinkEditorExtension";
 
-import "codemirror/lib/codemirror.css";
+import "@toast-ui/editor/dist/toastui-editor.css";
+import "tui-color-picker/dist/tui-color-picker.css";
+import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 
 import "highlight.js/lib";
 import "highlight.js/styles/default.css";
@@ -56,23 +59,22 @@ class Markdown extends React.Component<Props> {
   }
 
   componentDidMount() {
-    this.editor = new Editor.factory({
+    this.editor = new Editor({
       el: this.viewerNode,
       viewer: true,
-      initialEditType: "markdown",
       initialValue: this.props.content,
       usageStatistics: false,
-      exts: [
-        "colorSyntax",
-        { name: "uml", rendererURL: "/plantuml/png/" },
-        "chart",
-        "mark",
-        "table",
-        "tableClass",
-        "taskCounter",
-        "shortlinks",
-        "history",
-        "legacyplantuml"
+      plugins: [
+        colorSyntax,
+        chart,
+        [uml, { rendererURL: "/plantuml/png/" }],
+        // Import your local extensions and add them here
+        tableClass,
+        shortlinks,
+        history,
+        legacyplantuml
+        // Note: "mark" and "taskCounter" may require specific v3
+        // plugin versions if they aren't standard.
       ]
     });
 

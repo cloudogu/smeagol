@@ -5,6 +5,9 @@
   "license": "AGPL-3.0-only",
   "dependencies": {
     "@toast-ui/editor": "^3.2.2",
+    "@toast-ui/editor-plugin-chart": "^3.0.1",
+    "@toast-ui/editor-plugin-color-syntax": "^3.1.0",
+    "@toast-ui/editor-plugin-uml": "^3.0.1",
     "ces-theme": "https://github.com/cloudogu/ces-theme.git#v0.7.2",
     "classnames": "^2.2.5",
     "dayjs": "^1.11.10",

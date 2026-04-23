@@ -1,18 +1,16 @@
 import React, { Component } from "react";
 import injectSheet from "react-jss";
 
-import Editor from "tui-editor/dist/tui-editor-Editor";
-import "tui-editor/dist/tui-editor-extTable";
-import "tui-editor/dist/tui-editor-extScrollSync";
-import "tui-editor/dist/tui-editor-extUML";
+import Editor from "@toast-ui/editor";
 
 import "./HistoryEditorExtension";
 import "./ShortLinkEditorExtension";
 import "./TableClassEditorExtension";
 
-import "codemirror/lib/codemirror.css";
-import "tui-editor/dist/tui-editor.css";
-// import 'tui-editor/dist/tui-editor-contents.css';
+import "@toast-ui/editor/dist/toastui-editor.css";
+import "tui-color-picker/dist/tui-color-picker.css";
+import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
+
 import "./markdown-editor-customization.css";
 
 import "highlight.js/lib";
@@ -76,7 +74,6 @@ class MarkdownEditor extends Component<Props, State> {
       initialValue: this.props.content,
       usageStatistics: false,
       exts: [
-        "scrollSync",
         "colorSyntax",
         { name: "uml", rendererURL: "/plantuml/png/" },
         "chart",

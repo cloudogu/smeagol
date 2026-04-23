@@ -1,4 +1,4 @@
-import Editor from "tui-editor/dist/tui-editor-Editor";
+import Editor from "@toast-ui/editor";
 
 Editor.defineExtension("tableClass", function (editor) {
   const tableHtmlRx = /<table/g;
