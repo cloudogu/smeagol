@@ -1,6 +1,6 @@
 import React from "react";
 import injectSheet from "react-jss";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import DateFromNow from "../../DateFromNow";
 
 const styles = {
@@ -28,4 +28,4 @@ class PageFooter extends React.Component<Props> {
   }
 }
 
-export default injectSheet(styles)(translate()(PageFooter));
+export default injectSheet(styles)(withTranslation()(PageFooter));

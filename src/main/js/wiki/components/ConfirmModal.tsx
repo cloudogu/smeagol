@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import ActionButton from "./ActionButton";
 
 type Props = {
@@ -35,4 +35,4 @@ class ConfirmModal extends React.Component<Props> {
   }
 }
 
-export default translate()(ConfirmModal);
+export default withTranslation()(ConfirmModal);

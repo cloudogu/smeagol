@@ -1,5 +1,5 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import { Popover } from "react-bootstrap";
 
 type Props = {
@@ -18,4 +18,4 @@ class ToolTipPopover extends React.Component<Props> {
   }
 }
 
-export default translate()(ToolTipPopover);
+export default withTranslation()(ToolTipPopover);

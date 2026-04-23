@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import { match } from "react-router";
 import WikiHeader from "../components/WikiHeader";
 import { useEditWiki, useWiki } from "../hooks/wiki";
@@ -97,7 +97,7 @@ const Settings: FC<Props> = (props) => {
   );
 };
 
-export default translate()(Settings);
+export default withTranslation()(Settings);
 
 export function findDirectoryPath(pathname) {
   const parts = pathname.split("/");

@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 
@@ -29,4 +29,4 @@ const DisplayRepositoriesCheckbox: FC<Props> = (props: Props) => {
   );
 };
 
-export default translate()(injectSheet(styles)(DisplayRepositoriesCheckbox));
+export default withTranslation()(injectSheet(styles)(DisplayRepositoriesCheckbox));

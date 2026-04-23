@@ -1,6 +1,6 @@
 import React from "react";
 import injectSheet from "react-jss";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import ReactMarkdownHeading from "react-markdown-heading";
 import { WIDTH_BOUNDARY } from "./PageViewer";
 
@@ -112,4 +112,4 @@ class TableOfContents extends React.Component<Props> {
   }
 }
 
-export default translate()(injectSheet(styles)(TableOfContents));
+export default withTranslation()(injectSheet(styles)(TableOfContents));

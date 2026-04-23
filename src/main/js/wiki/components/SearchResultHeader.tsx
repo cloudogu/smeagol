@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import injectSheet from "react-jss";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 
 const styles = {};
 
@@ -25,4 +25,4 @@ class SearchResultHeader extends Component<Props> {
   }
 }
 
-export default injectSheet(styles)(translate()(SearchResultHeader));
+export default injectSheet(styles)(withTranslation()(SearchResultHeader));

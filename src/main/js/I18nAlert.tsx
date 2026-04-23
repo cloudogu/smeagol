@@ -1,6 +1,6 @@
 import React from "react";
 import Alert from "./Alert";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 
 type Props = {
   t: any;
@@ -16,4 +16,4 @@ class I18nAlert extends React.Component<Props> {
   }
 }
 
-export default translate()(I18nAlert);
+export default withTranslation()(I18nAlert);

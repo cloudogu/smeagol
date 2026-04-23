@@ -1,7 +1,7 @@
 import React from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 
 type Props = {
   date?: string;
@@ -26,4 +26,4 @@ class DateFromNow extends React.Component<Props> {
   }
 }
 
-export default translate()(DateFromNow);
+export default withTranslation()(DateFromNow);

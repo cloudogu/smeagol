@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 
@@ -48,4 +48,4 @@ const VerifiableTextArea: FC<Props> = (props) => {
   );
 };
 
-export default translate()(injectSheet(styles)(VerifiableTextArea));
+export default withTranslation()(injectSheet(styles)(VerifiableTextArea));

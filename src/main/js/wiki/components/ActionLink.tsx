@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 
@@ -52,4 +52,4 @@ class ActionLink extends React.Component<Props> {
   }
 }
 
-export default injectSheet(styles)(translate()(ActionLink));
+export default injectSheet(styles)(withTranslation()(ActionLink));

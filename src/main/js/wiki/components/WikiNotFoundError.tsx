@@ -1,5 +1,5 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import Alert from "../../Alert";
 
 type Props = {
@@ -23,4 +23,4 @@ class WikiNotFoundError extends React.Component<Props> {
   }
 }
 
-export default translate()(WikiNotFoundError);
+export default withTranslation()(WikiNotFoundError);
