@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import injectSheet from "react-jss";
-
 import Editor from "@toast-ui/editor";
 
-import "./HistoryEditorExtension";
-import "./ShortLinkEditorExtension";
-import "./TableClassEditorExtension";
+import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
+
+import history from "./HistoryEditorExtension";
+import tableClass from "./TableClassEditorExtension";
+import shortLinks from "./ShortLinkEditorExtension";
 
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
@@ -53,7 +54,9 @@ type State = {
 };
 
 class MarkdownEditor extends Component<Props, State> {
-  private editor: Editor.factory;
+  private editor!: Editor;
+  private viewerNode!: HTMLDivElement;
+
   private ignoreUnsavedChanges = false;
 
   constructor(props) {
@@ -66,24 +69,14 @@ class MarkdownEditor extends Component<Props, State> {
 
   componentDidMount() {
     this.checkForUnsavedChangesInLocalStorage();
-    this.editor = new Editor.factory({
-      el: this.editorNode,
+    this.editor = new Editor({
+      el: this.viewerNode,
       height: "640px",
       previewStyle: "vertical",
       initialEditType: "markdown",
       initialValue: this.props.content,
       usageStatistics: false,
-      exts: [
-        "colorSyntax",
-        { name: "uml", rendererURL: "/plantuml/png/" },
-        "chart",
-        "mark",
-        "table",
-        "tableClass",
-        "taskCounter",
-        "shortlinks",
-        "history"
-      ]
+      plugins: [colorSyntax, history, shortLinks, tableClass]
     });
   }
 

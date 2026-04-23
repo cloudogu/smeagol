@@ -1,30 +1,35 @@
-import Editor from "@toast-ui/editor";
+import { HTMLConvertorMap } from "@toast-ui/editor";
 
-Editor.defineExtension("history", function (editor) {
-  const linkHtmlRx = /<a .*(href="([^"]+)").*>/g;
+export default function historyPlugin() {
+  return {
+    toHTMLRenderers: {
+      link(node: any, context: any) {
+        const { origin } = context;
+        const { destination } = node;
+        const html = origin();
+        const isLocal = !(destination.startsWith("/") || destination.indexOf("://") > 0);
 
-  editor.eventManager.listen("convertorAfterMarkdownToHtmlConverted", (html) => {
-    const result = html.replace(linkHtmlRx, function (match, href, url) {
-      if (!(url.startsWith("/") || url.indexOf("://") > 0)) {
-        return match.replace(href, href + ' data-history="true"');
+        if (isLocal) {
+          html.attributes = {
+            ...html.attributes,
+            "data-history": "true"
+          };
+        }
+
+        return html;
       }
-      return match;
-    });
-    // why timeout ???
-    setTimeout(applyHistoryLinks.bind(), 0);
-    return result;
-  });
-
-  const applyHistoryLinks = () => {
-    for (const link of document.querySelectorAll("[data-history]")) {
-      link.addEventListener("click", handleDataHistoryLinkClick, false);
-    }
+    } as HTMLConvertorMap
   };
+}
 
-  const handleDataHistoryLinkClick = (e: Event) => {
+export const handleHistoryClick = (e: MouseEvent) => {
+  const target = e.target as HTMLElement;
+  const link = target.closest("a[data-history]");
+  if (link) {
     e.preventDefault();
-
-    const href = e.target.getAttribute("href");
-    window.appHistory.push(href, { some: "thing" });
-  };
-});
+    const href = link.getAttribute("href");
+    if (href) {
+      (window as any).appHistory.push(href, { some: "thing" });
+    }
+  }
+};

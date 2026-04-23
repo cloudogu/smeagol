@@ -1,11 +1,23 @@
-import Editor from "@toast-ui/editor";
+import { HTMLConvertorMap } from "@toast-ui/editor";
 
-Editor.defineExtension("shortlinks", function (editor) {
-  const linkHtmlRx = /\[\[([^[\]]+)\]\]/g;
+export default function shortLinksPlugin() {
+  return {
+    toHTMLRenderers: {
+      text(node: any, context: any) {
+        const { literal } = node;
+        const linkHtmlRx = /\[\[([^[\]]+)\]\]/g;
 
-  editor.eventManager.listen("convertorAfterMarkdownToHtmlConverted", (html) => {
-    return html.replace(linkHtmlRx, function (match, link) {
-      return `<a href="${link}">${link}</a>`;
-    });
-  });
-});
+        if (linkHtmlRx.test(literal)) {
+          return {
+            type: "html",
+            content: literal.replace(linkHtmlRx, (match: string, link: string) => {
+              return `<a href="${link}">${link}</a>`;
+            })
+          };
+        }
+
+        return context.origin();
+      }
+    } as HTMLConvertorMap
+  };
+}
