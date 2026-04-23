@@ -229,64 +229,6 @@
                 </dependencies>
             </plugin>
 
-            <!-- groovy scripts for handing dev environment -->
-
-            <plugin>
-                <groupId>org.codehaus.gmavenplus</groupId>
-                <artifactId>gmavenplus-plugin</artifactId>
-                <version>4.0.1</version>
-                <executions>
-                    <execution>
-                        <id>up</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <scripts>
-                                <script>file:///${project.basedir}/src/main/scripts/up.groovy</script>
-                            </scripts>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>down</id>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <scripts>
-                                <script>file:///${project.basedir}/src/main/scripts/down.groovy</script>
-                            </scripts>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>destroy</id>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <scripts>
-                                <script>file:///${project.basedir}/src/main/scripts/destroy.groovy</script>
-                            </scripts>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.groovy</groupId>
-                        <artifactId>groovy-all</artifactId>
-                        <version>4.0.22</version>
-                        <type>pom</type>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.eclipse.jgit</groupId>
-                        <artifactId>org.eclipse.jgit</artifactId>
-                        <version>${jgit.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-
             <plugin>
                 <groupId>com.github.sdorra</groupId>
                 <artifactId>buildfrontend-maven-plugin</artifactId>
@@ -350,6 +292,25 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.codehaus.gmavenplus</groupId>
+                    <artifactId>gmavenplus-plugin</artifactId>
+                    <version>4.0.1</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.groovy</groupId>
+                            <artifactId>groovy-all</artifactId>
+                            <version>4.0.22</version>
+                            <type>pom</type>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.eclipse.jgit</groupId>
+                            <artifactId>org.eclipse.jgit</artifactId>
+                            <version>${jgit.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>0.8.12</version>
@@ -367,6 +328,81 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>up</id>
+            <build>
+                <defaultGoal>process-resources</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.gmavenplus</groupId>
+                        <artifactId>gmavenplus-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <scripts>
+                                        <script>file:///${project.basedir}/src/main/scripts/up.groovy</script>
+                                    </scripts>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>down</id>
+            <build>
+                <defaultGoal>process-resources</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.gmavenplus</groupId>
+                        <artifactId>gmavenplus-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <scripts>
+                                        <script>file:///${project.basedir}/src/main/scripts/down.groovy</script>
+                                    </scripts>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>destroy</id>
+            <build>
+                <defaultGoal>process-resources</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.gmavenplus</groupId>
+                        <artifactId>gmavenplus-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <scripts>
+                                        <script>file:///${project.basedir}/src/main/scripts/destroy.groovy</script>
+                                    </scripts>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
         <profile>
             <!-- profile is active on every jenkins build -->
             <id>jenkins</id>
