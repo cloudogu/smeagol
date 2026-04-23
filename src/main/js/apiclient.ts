@@ -53,9 +53,14 @@ function redirect(redirectUrl: string) {
   window.location.href = redirectUrl;
 }
 
+// Module namespace for better mockability
+export const module = {
+  redirect
+};
+
 class ApiClient {
   get(url: string) {
-    return fetch(createUrl(url), fetchOptions).then(this.handleCasAuthentication).then(handleStatusCode);
+    return fetch(createUrl(url), fetchOptions).then((response) => this.handleCasAuthentication(response)).then(handleStatusCode);
   }
 
   post(url: string, payload: any) {
@@ -78,13 +83,13 @@ class ApiClient {
     options = Object.assign(options, fetchOptions);
     options.headers["Content-Type"] = "application/json";
 
-    return fetch(createUrl(url), options).then(this.handleCasAuthentication).then(handleStatusCode);
+    return fetch(createUrl(url), options).then((response) => this.handleCasAuthentication(response)).then(handleStatusCode);
   }
 
   handleCasAuthentication(response: any) {
     if (isAuthenticationRedirect(response)) {
       const redirectUrl = createRedirectUrl();
-      redirect(redirectUrl);
+      module.redirect(redirectUrl);
     }
     return response;
   }

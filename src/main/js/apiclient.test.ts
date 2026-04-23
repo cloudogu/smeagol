@@ -1,60 +1,59 @@
-import { apiClient, UNAUTHORIZED_ERROR } from "./apiclient";
+import { apiClient, UNAUTHORIZED_ERROR, module } from "./apiclient";
 
-const DEFAULT_LOCATION = "http://localhost";
+const DEFAULT_LOCATION = "http://localhost/";
 
-function mockFetchAndWindow(status, location) {
-  global.fetch = jest.fn().mockImplementation(() => {
-    const p = new Promise((resolve) => {
-      resolve({
-        status: status,
-        ok: status < 300,
-        headers: {
-          get: function (key) {
-            if (key === "location") {
-              return location;
-            }
-            return null;
-          }
-        }
-      });
-    });
+describe("apiClient", () => {
+  let originalLocation: Location;
 
-    return p;
+  beforeAll(() => {
+    // Save the original location object
+    originalLocation = window.location;
+    delete window.location;
+    // @ts-ignore
+    window.location = { href: DEFAULT_LOCATION };
   });
 
-  Object.defineProperty(window, "location", {
-    value: { href: DEFAULT_LOCATION },
-    writable: true
+  afterAll(() => {
+    // Restore the original location object
+    window.location = originalLocation;
   });
-}
 
-test("test apiClient.get", async () => {
-  mockFetchAndWindow(200);
-  const response = await apiClient.get("/api/v1/marvinctl");
+  beforeEach(() => {
+    jest.resetAllMocks();
+    // Reset location
+    window.location.href = DEFAULT_LOCATION;
+  });
 
-  expect(response.status).toBe(200);
+  function mockFetch(status: number, location?: string) {
+    global.fetch = jest.fn().mockResolvedValue({
+      status,
+      ok: status < 300,
+      headers: {
+        get: (key: string) => (key === "location" ? location : null),
+      },
+      text: async () => "",
+    } as any);
+  }
 
-  // be sure no one has done a redirect
-  expect(window.location.href).toBe(DEFAULT_LOCATION);
-});
+  it("returns response for 200", async () => {
+    mockFetch(200);
+    const response = await apiClient.get("/api/v1/marvinctl");
+    expect(response.status).toBe(200);
+    expect(window.location.href).toBe(DEFAULT_LOCATION);
+  });
 
-test("test apiClient.get with status 401 and without location header", async () => {
-  mockFetchAndWindow(401);
+  it("throws UNAUTHORIZED_ERROR for 401 without location header", async () => {
+    mockFetch(401);
+    await expect(apiClient.get("/api/v1/marvinctl")).rejects.toThrow(UNAUTHORIZED_ERROR);
+    expect(window.location.href).toBe(DEFAULT_LOCATION);
+  });
 
-  await expect(() => {
-    return apiClient.get("/api/v1/marvinctl");
-  }).rejects.toThrow(UNAUTHORIZED_ERROR);
-
-  // be sure no one has done a redirect
-  expect(window.location.href).toBe(DEFAULT_LOCATION);
-});
-
-test("test ApiClient.get with status 401 and location header", async () => {
-  mockFetchAndWindow(401, "/hitchhikers");
-
-  await expect(() => {
-    return apiClient.get("/api/v1/marvinctl");
-  }).rejects.toThrow(UNAUTHORIZED_ERROR);
-
-  expect(window.location.href).toBe("/api/v1/authc?location=http%3A%2F%2Flocalhost");
+  it("calls redirect for 401 with location header", async () => {
+    mockFetch(401, "/hitchhikers");
+    const redirectMock = jest.spyOn(module, "redirect");
+    await expect(apiClient.get("/api/v1/marvinctl")).rejects.toThrow(UNAUTHORIZED_ERROR);
+    expect(redirectMock).toHaveBeenCalledWith(
+      expect.stringContaining("/api/v1/authc?location=http%3A%2F%2Flocalhost%2F")
+    );
+  });
 });
