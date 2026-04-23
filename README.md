@@ -17,7 +17,7 @@ Smeagol requires a proper configured Cloudogu EcoSystem in order to work properl
 This can be achieved by using the provided groovy execution:
 
 ```bash 
-./mvnw groovy:execute@up
+./mvnw initialize
 ```
 
 This command will clone the ecosystem repository into the `.workspace` folder, creates a `setup.json` with a proper
