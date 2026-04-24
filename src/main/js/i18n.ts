@@ -12,6 +12,7 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: "en",
+    supportedLngs: ["en", "de"],
     ns: ["translations"],
     defaultNS: "translations",
     resources: {
@@ -21,6 +22,10 @@ i18n
     debug: true,
     interpolation: {
       escapeValue: false
+    },
+    detection: {
+      order: ["querystring", "cookie", "localStorage", "navigator", "path", "subdomain"],
+      caches: ["localStorage", "cookie"]
     }
   });
 
