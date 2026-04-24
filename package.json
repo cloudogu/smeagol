@@ -85,10 +85,10 @@
     "workbox-webpack-plugin": "^6.6.0"
   },
   "scripts": {
-    "start": "cross-env HOST=192.168.56.1 node src/main/scripts/start.js",
-    "build": "cross-env PUBLIC_URL=/smeagol node src/main/scripts/build.js",
-    "test": "node src/main/scripts/test.js --env=jsdom",
-    "test-mvn": "cross-env CI=true node src/main/scripts/test.js --env=jsdom"
+    "start": "cross-env HOST=0.0.0.0 node src/main/scripts/start.js",
+    "build": "cross-env BABEL_ENV=production NODE_ENV=production node src/main/scripts/build.js",
+    "test": "jest --env=jsdom",
+    "test-mvn": "cross-env CI=true jest --env=jsdom --clearCache --testResultsProcessor=./node_modules/jest-junit-reporter"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -101,7 +101,7 @@
       "<rootDir>/src/main/js/**/__tests__/**/*.{js,jsx,mjs,ts,tsx}",
       "<rootDir>/src/main/js/**/?(*.)(spec|test).{js,jsx,mjs,ts,tsx}"
     ],
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "testEnvironmentOptions": {
       "url": "http://localhost"
     },
