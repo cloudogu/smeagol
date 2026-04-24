@@ -48,6 +48,7 @@ const miniCssExtractPluginOptions = shouldUseRelativeAssetPaths
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
 module.exports = {
+  mode: "production",
   // Don't attempt to continue if there are any errors.
   bail: true,
   // We generate sourcemaps in production. This is slow but gives good results.
@@ -56,6 +57,7 @@ module.exports = {
   // In production, we only want to load the polyfills and the app code.
   entry: [require.resolve("./polyfills"), paths.appIndexJs],
   output: {
+    hashFunction: "xxhash64",
     // The build folder.
     path: paths.appBuild,
     // Generated JS file names (with nested folders).
@@ -130,10 +132,14 @@ module.exports = {
           // assets smaller than specified size as data URLs to avoid requests.
           {
             test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.svg$/],
-            loader: require.resolve("url-loader"),
-            options: {
-              limit: 10000,
-              name: "static/media/[hash:8].[ext]"
+            type: "asset",
+            parser: {
+              dataUrlCondition: {
+                maxSize: 10000
+              }
+            },
+            generator: {
+              filename: "static/media/[name].[hash:8][ext]"
             }
           },
           // Process JS with Babel.
@@ -194,14 +200,10 @@ module.exports = {
           },
           // "file" loader makes sure assets end up in the `build` folder.
           {
-            loader: require.resolve("file-loader"),
-            // Exclude `js` files to keep "css" loader working as it injects
-            // it's runtime that would otherwise processed through "file" loader.
-            // Also exclude `html` and `json` extensions so they get processed
-            // by webpacks internal loaders.
             exclude: [/\.(js|jsx|mjs|ts|tsx)$/, /\.html$/, /\.json$/],
-            options: {
-              name: "static/media/[hash:8].[ext]"
+            type: "asset/resource",
+            generator: {
+              filename: "static/media/[name].[hash:8][ext]"
             }
           }
           // ** STOP ** Are you adding a new loader?
@@ -220,7 +222,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
-      env: env.raw,
+      templateParameters: env.raw,
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -271,12 +273,5 @@ module.exports = {
         new RegExp("/[^/?]+\\.[^/]+$")
       ]
     })
-  ],
-  // Some libraries import Node modules but don't use them in the browser.
-  // Tell Webpack to provide empty mocks for them so importing them works.
-  node: {
-    global: true,
-    __filename: false,
-    __dirname: false
-  }
+  ]
 };
