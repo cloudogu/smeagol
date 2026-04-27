@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import injectSheet from "react-jss";
-import Editor from "@toast-ui/editor";
+import { Editor } from "@toast-ui/editor";
 
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 
@@ -8,11 +8,10 @@ import history from "./HistoryEditorExtension";
 import tableClass from "./TableClassEditorExtension";
 import shortLinks from "./ShortLinkEditorExtension";
 
-import "@toast-ui/editor/dist/toastui-editor.css";
+import "../styles/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
-
-import "./markdown-editor-customization.css";
+import "../styles/markdown-editor-customization.css";
 
 import "highlight.js/lib";
 import "highlight.js/styles/default.css";
@@ -55,7 +54,7 @@ type State = {
 
 class MarkdownEditor extends Component<Props, State> {
   private editor!: Editor;
-  private viewerNode!: HTMLDivElement;
+  private editorNode!: HTMLDivElement;
 
   private ignoreUnsavedChanges = false;
 
@@ -69,15 +68,18 @@ class MarkdownEditor extends Component<Props, State> {
 
   componentDidMount() {
     this.checkForUnsavedChangesInLocalStorage();
-    this.editor = new Editor({
-      el: this.viewerNode,
-      height: "640px",
-      previewStyle: "vertical",
-      initialEditType: "markdown",
-      initialValue: this.props.content,
-      usageStatistics: false,
-      plugins: [colorSyntax, history, shortLinks, tableClass]
-    });
+
+    if (this.editorNode) {
+      this.editor = new Editor({
+        el: this.editorNode,
+        height: "640px",
+        previewStyle: "vertical",
+        initialEditType: "markdown",
+        initialValue: this.props.content,
+        usageStatistics: false,
+        plugins: [colorSyntax, history, shortLinks, tableClass]
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -153,6 +155,10 @@ class MarkdownEditor extends Component<Props, State> {
   };
 
   putUnsavedChangesInLocalStorage = () => {
+    if (!this.editor) {
+      return;
+    }
+
     const content = this.editor.getMarkdown();
     if (content != this.props.content && !this.ignoreUnsavedChanges) {
       // The local storage is limited in space (usually around 5MB). In cases where a page exceeds this limit, an error can occur.
