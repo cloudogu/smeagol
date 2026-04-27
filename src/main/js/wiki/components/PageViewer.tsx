@@ -73,7 +73,7 @@ class PageViewer extends React.Component<Props> {
   }
 
   componentWillUnmount() {
-    window.addEventListener("resize", this.updateWith);
+    window.removeEventListener("resize", this.updateWith);
   }
 
   private static hasMarkdownHeadings(page: any): boolean {
