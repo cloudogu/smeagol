@@ -338,6 +338,8 @@
                         <artifactId>gmavenplus-plugin</artifactId>
                         <executions>
                             <execution>
+                                <id>up</id>
+                                <phase>process-resources</phase>
                                 <goals>
                                     <goal>execute</goal>
                                 </goals>
@@ -363,6 +365,8 @@
                         <artifactId>gmavenplus-plugin</artifactId>
                         <executions>
                             <execution>
+                                <id>down</id>
+                                <phase>process-resources</phase>
                                 <goals>
                                     <goal>execute</goal>
                                 </goals>
@@ -388,6 +392,8 @@
                         <artifactId>gmavenplus-plugin</artifactId>
                         <executions>
                             <execution>
+                                <id>destroy</id>
+                                <phase>process-resources</phase>
                                 <goals>
                                     <goal>execute</goal>
                                 </goals>

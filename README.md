@@ -17,7 +17,7 @@ Smeagol requires a proper configured Cloudogu EcoSystem in order to work properl
 This can be achieved by using the provided groovy execution:
 
 ```bash 
-./mvn -Pup
+./mvnw -Pup
 ```
 
 This command will clone the ecosystem repository into the `.workspace` folder, creates a `setup.json` with a proper
@@ -38,13 +38,13 @@ Hint: Make sure your SCM-Manager has the Smeagol Plugin installed!
 To stop the vm use the down execution:
 
 ```bash
-./mvn -Pdown
+mvnw -Pdown
 ```
 
 If the vm is not longer required, it can be removed with the destroy execution:
 
 ```bash
-./mvn -Pdestroy
+./mvnw -Pdestroy
 ```
 
 ### REST API
