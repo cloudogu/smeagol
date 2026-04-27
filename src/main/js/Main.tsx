@@ -20,11 +20,11 @@ type Props = {
 class Main extends React.Component<Props> {
   render() {
     const { classes } = this.props;
-    const repositoryOverviewOptions: string[] = ["/", "/:repository"];
     return (
       <div className={classNames("container", classes.content)}>
         <Switch>
-          <Route exact path={repositoryOverviewOptions} component={RepositoryOverview} />
+          <Route exact path="/" component={RepositoryOverview} />
+          <Route exact path="/:repository" component={RepositoryOverview} />
           <Route path="/:repository/:branch" component={Wiki} />
         </Switch>
       </div>

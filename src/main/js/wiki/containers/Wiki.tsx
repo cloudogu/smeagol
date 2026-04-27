@@ -32,7 +32,7 @@ const Wiki: FC<Props> = (props) => {
         <Route path="/:repository/:branch/settings" component={Settings} />
         <Route path="/:repository/:branch/history" component={History} />
         <Route path="/:repository/:branch/search" component={Search} />
-        <Route path="/:repository/:branch" component={Page} />
+        <Route path="/:repository/:branch/:path+" component={Page} />
       </Switch>
     </div>
   );
