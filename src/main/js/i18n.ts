@@ -19,7 +19,7 @@ i18n
       en: { translations: enTranslations },
       de: { translations: deTranslations }
     },
-    debug: true,
+    debug: process.env.NODE_ENV === "development",
     interpolation: {
       escapeValue: false
     },
