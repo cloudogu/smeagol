@@ -106,23 +106,6 @@ module.exports = {
       // TODO: Disable require.ensure as it's not a standard language feature.
       // We are waiting for https://github.com/facebookincubator/create-react-app/issues/2176.
       // { parser: { requireEnsure: false } },
-
-      // First, run the linter.
-      // It's important to do this before Babel processes the JS.
-      {
-        test: /\.(js|jsx|mjs|ts|tsx)$/,
-        enforce: "pre",
-        use: [
-          {
-            options: {
-              formatter: eslintFormatter,
-              eslintPath: require.resolve("eslint")
-            },
-            loader: require.resolve("eslint-loader")
-          }
-        ],
-        include: paths.appSrc
-      },
       {
         // "oneOf" will traverse all following loaders until one will
         // match the requirements. When no loader matches it will fall
@@ -148,6 +131,27 @@ module.exports = {
             include: paths.appSrc,
             loader: require.resolve("babel-loader"),
             options: {
+              babelrc: false,
+              configFile: false,
+              presets: [
+                [
+                  require.resolve("@babel/preset-env"),
+                  {
+                    targets: { browsers: "> 0.25%, not dead" },
+                    useBuiltIns: "entry",
+                    corejs: 3
+                  }
+                ],
+                [require.resolve("@babel/preset-react"), { runtime: "automatic" }],
+                [
+                  require.resolve("@babel/preset-typescript"),
+                  { isTSX: true, allExtensions: true }
+                ]
+              ],
+              plugins: [
+                require.resolve("@babel/plugin-proposal-class-properties"),
+                require.resolve("@babel/plugin-transform-runtime")
+              ],
               compact: true
             }
           },
@@ -262,6 +266,8 @@ module.exports = {
     // Generate a service worker script that will precache, and keep up to date,
     // the HTML & assets that are part of the Webpack build.
     new GenerateSW({
+      // Prevent cache bloat
+      maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
       clientsClaim: true,
       skipWaiting: true,
       exclude: [/\.map$/, /asset-manifest\.json$/, /\.html$/],
