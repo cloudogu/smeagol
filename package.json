@@ -24,11 +24,11 @@
     "react-dom": "^17.0.1",
     "react-i18next": "^17.0.4",
     "react-jss": "^8.2.1",
-    "react-markdown-heading": "^1.1.2",
     "react-query": "^3.9.6",
     "react-router": "4.2.0",
     "react-router-dom": "^4.2.2",
     "react-sticky-box": "^0.9.3",
+    "tocbot": "^4.36.4",
     "whatwg-fetch": "3.6.20"
   },
   "devDependencies": {
