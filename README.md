@@ -38,7 +38,7 @@ Hint: Make sure your SCM-Manager has the Smeagol Plugin installed!
 To stop the vm use the down execution:
 
 ```bash
-mvnw -Pdown
+./mvnw -Pdown
 ```
 
 If the vm is not longer required, it can be removed with the destroy execution:
