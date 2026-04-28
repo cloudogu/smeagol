@@ -2,6 +2,7 @@ import React from "react";
 import injectSheet from "react-jss";
 
 import Editor from "@toast-ui/editor";
+import Viewer from "@toast-ui/editor/dist/toastui-editor-viewer";
 
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import chart from "@toast-ui/editor-plugin-chart";
@@ -14,11 +15,6 @@ import legacyPlantuml from "./LegacyPlantumlEditorExtension";
 
 import { IdUtil } from "../../idUtil";
 
-import "@toast-ui/editor/dist/toastui-editor.css";
-import "tui-color-picker/dist/tui-color-picker.css";
-import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
-import "highlight.js/styles/default.css";
-
 const styles = {
   markdown: {
     // makes img elements responsive
@@ -26,7 +22,9 @@ const styles = {
       "max-width": "100%",
       height: "auto",
       display: "block"
-    }
+    },
+    // correct margin between li
+    "& li p": { margin: "inherit" }
   }
 };
 
@@ -36,7 +34,7 @@ type Props = {
 };
 
 class Markdown extends React.Component<Props> {
-  private editor!: Editor;
+  private viewer!: Viewer;
   private viewerNode!: HTMLDivElement;
 
   /**
@@ -62,7 +60,7 @@ class Markdown extends React.Component<Props> {
   }
 
   componentDidMount() {
-    this.editor = new Editor({
+    this.viewer = Editor.factory({
       el: this.viewerNode,
       viewer: true,
       initialValue: this.props.content,
@@ -85,7 +83,7 @@ class Markdown extends React.Component<Props> {
   componentDidUpdate(prevProps: Props) {
     // Only update if content actually changed to avoid unnecessary re-renders
     if (prevProps.content !== this.props.content) {
-      this.editor.setMarkdown(this.props.content);
+      this.viewer.setMarkdown(this.props.content);
       this.setIdsOnHeadlines(this.viewerNode);
     }
   }
@@ -95,8 +93,8 @@ class Markdown extends React.Component<Props> {
       this.viewerNode.removeEventListener("click", handleHistoryClick);
     }
     // Clean up editor instance
-    if (this.editor) {
-      this.editor.destroy();
+    if (this.viewer) {
+      this.viewer.destroy();
     }
   }
 

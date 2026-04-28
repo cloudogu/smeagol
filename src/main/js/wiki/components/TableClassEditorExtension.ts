@@ -7,6 +7,10 @@ export default function tableClassPlugin() {
         const { origin } = context;
         const html = origin();
 
+        if (!html.attributes) {
+          html.attributes = {};
+        }
+
         html.attributes = {
           ...html.attributes,
           class: html.attributes.class ? `${html.attributes.class} table` : "table"
