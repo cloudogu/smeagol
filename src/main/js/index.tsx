@@ -14,6 +14,8 @@ const history = createHistory({
   basename: process.env.PUBLIC_URL
 });
 
+window.appHistory = history;
+
 ReactDOM.render(
   <I18nextProvider i18n={i18n}>
     <Router history={history}>
