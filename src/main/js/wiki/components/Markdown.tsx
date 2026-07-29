@@ -11,7 +11,7 @@ import uml from "@toast-ui/editor-plugin-uml";
 import history, { handleHistoryClick } from "./HistoryEditorExtension";
 import tableClass from "./TableClassEditorExtension";
 import shortLinks from "./ShortLinkEditorExtension";
-import legacyPlantuml from "./LegacyPlantumlEditorExtension";
+import { transformLegacyPlantuml } from "./LegacyPlantumlEditorExtension";
 
 import { IdUtil } from "../../idUtil";
 
@@ -63,16 +63,15 @@ class Markdown extends React.Component<Props> {
     this.viewer = Editor.factory({
       el: this.viewerNode,
       viewer: true,
-      initialValue: this.props.content,
+      initialValue: transformLegacyPlantuml(this.props.content),
       usageStatistics: false,
       plugins: [
         colorSyntax,
         chart,
-        [uml, { rendererURL: "/plantuml/png/" }],
+        [uml, { rendererURL: process.env.PLANTUML_RENDERER_URL || "/plantuml/png/" }],
         history,
         tableClass,
-        shortLinks,
-        legacyPlantuml
+        shortLinks
       ]
     });
 
@@ -83,7 +82,7 @@ class Markdown extends React.Component<Props> {
   componentDidUpdate(prevProps: Props) {
     // Only update if content actually changed to avoid unnecessary re-renders
     if (prevProps.content !== this.props.content) {
-      this.viewer.setMarkdown(this.props.content);
+      this.viewer.setMarkdown(transformLegacyPlantuml(this.props.content));
       this.setIdsOnHeadlines(this.viewerNode);
     }
   }

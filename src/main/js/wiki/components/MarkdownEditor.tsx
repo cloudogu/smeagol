@@ -3,10 +3,12 @@ import injectSheet from "react-jss";
 import { Editor } from "@toast-ui/editor";
 
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
+import uml from "@toast-ui/editor-plugin-uml";
 
 import history from "./HistoryEditorExtension";
 import tableClass from "./TableClassEditorExtension";
 import shortLinks from "./ShortLinkEditorExtension";
+import { transformLegacyPlantuml } from "./LegacyPlantumlEditorExtension";
 
 import "../styles/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
@@ -55,6 +57,7 @@ type State = {
 class MarkdownEditor extends Component<Props, State> {
   private editor!: Editor;
   private editorNode!: HTMLDivElement;
+  private initialValue!: string;
 
   private ignoreUnsavedChanges = false;
 
@@ -68,6 +71,7 @@ class MarkdownEditor extends Component<Props, State> {
 
   componentDidMount() {
     this.checkForUnsavedChangesInLocalStorage();
+    this.initialValue = transformLegacyPlantuml(this.props.content);
 
     if (this.editorNode) {
       this.editor = new Editor({
@@ -75,9 +79,9 @@ class MarkdownEditor extends Component<Props, State> {
         height: "640px",
         previewStyle: "vertical",
         initialEditType: "markdown",
-        initialValue: this.props.content,
+        initialValue: this.initialValue,
         usageStatistics: false,
-        plugins: [colorSyntax, history, shortLinks, tableClass]
+        plugins: [colorSyntax, [uml, { rendererURL: process.env.PLANTUML_RENDERER_URL || "/plantuml/png/" }], history, shortLinks, tableClass]
       });
     }
   }
@@ -160,7 +164,7 @@ class MarkdownEditor extends Component<Props, State> {
     }
 
     const content = this.editor.getMarkdown();
-    if (content != this.props.content && !this.ignoreUnsavedChanges) {
+    if (content != this.initialValue && !this.ignoreUnsavedChanges) {
       // The local storage is limited in space (usually around 5MB). In cases where a page exceeds this limit, an error can occur.
       try {
         localStorage.setItem(
