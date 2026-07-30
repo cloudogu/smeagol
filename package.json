@@ -89,7 +89,7 @@
   },
   "scripts": {
     "start": "cross-env HOST=0.0.0.0 node src/main/scripts/start.js",
-    "build": "cross-env BABEL_ENV=production NODE_ENV=production node src/main/scripts/build.js",
+    "build": "cross-env BABEL_ENV=production NODE_ENV=production PUBLIC_URL=/smeagol node src/main/scripts/build.js",
     "test": "jest --env=jsdom",
     "test-mvn": "cross-env CI=true jest --env=jsdom --clearCache --testResultsProcessor=./node_modules/jest-junit-reporter"
   },
