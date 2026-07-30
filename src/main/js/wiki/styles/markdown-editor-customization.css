@@ -59,3 +59,19 @@ the second parameter of the var() func is a fallback for IE and other browser wh
   background-color: var(--primary-color, #1B7DAA);
   color: white;
 }
+
+/* makes img elements responsive */
+.toastui-editor-contents img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* correct margin between li */
+.toastui-editor-contents li p {
+  margin: inherit;
+}
+
+.toastui-editor-contents .task-list-item p {
+  margin-left: 0;
+}

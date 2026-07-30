@@ -1,5 +1,4 @@
 import React from "react";
-import injectSheet from "react-jss";
 
 import Editor from "@toast-ui/editor";
 import Viewer from "@toast-ui/editor/dist/toastui-editor-viewer";
@@ -14,19 +13,6 @@ import shortLinks from "./ShortLinkEditorExtension";
 import { transformLegacyPlantuml } from "./LegacyPlantumlEditorExtension";
 
 import { IdUtil } from "../../idUtil";
-
-const styles = {
-  markdown: {
-    // makes img elements responsive
-    "& img": {
-      "max-width": "100%",
-      height: "auto",
-      display: "block"
-    },
-    // correct margin between li
-    "& li p": { margin: "inherit" }
-  }
-};
 
 type Props = {
   content: string;
@@ -100,7 +86,6 @@ class Markdown extends React.Component<Props> {
   render() {
     return (
       <div
-        className={this.props.classes.markdown}
         ref={(ref) => {
           if (ref) this.viewerNode = ref;
         }}
@@ -109,4 +94,4 @@ class Markdown extends React.Component<Props> {
   }
 }
 
-export default injectSheet(styles)(Markdown);
+export default Markdown;
