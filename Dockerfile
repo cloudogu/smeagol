@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21.0.10_7-jdk AS builder
+FROM eclipse-temurin:21.0.11_10-jdk AS builder
 
 ENV SMEAGOL_DIR=/usr/src/smeagol
 COPY mvnw pom.xml package.json yarn.lock .prettierrc ${SMEAGOL_DIR}/
@@ -16,7 +16,7 @@ RUN set -x \
 
 
 
-FROM registry.cloudogu.com/official/java:21.0.10-7
+FROM registry.cloudogu.com/official/java:21.0.11-2
 LABEL NAME="official/smeagol" \
       VERSION="1.7.8-6" \
       maintainer="hello@cloudogu.com"
