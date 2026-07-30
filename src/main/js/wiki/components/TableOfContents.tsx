@@ -25,6 +25,9 @@ const styles = {
     border: "none",
     "background-color": "transparent",
     "padding-left": "0",
+    "display": "flex",
+    "align-items": "center",
+    "gap": "0.25rem",
     "& ~ ol > li": {
       padding: "0",
       "font-size": "1.4rem"
