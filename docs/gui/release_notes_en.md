@@ -5,60 +5,44 @@ Below you will find the release notes for Smeagol.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/smeagol/CHANGELOG/).
 
 ## [Unreleased]
+### Changed
+- Migrate editor from tui-editor v1 to @toast-ui/editor v3
+### Fixed
+- Task lists (`* [ ] ...`) show proper checkboxes
+- PlantUML diagrams (using `@startuml/@enduml` tags and older code-block syntax) are rendered
+- Colors can be selected in editor
 
 ## [v1.7.8-6] - 2026-03-11
-### Security
-- Fixed [CVE-2026-22184](https://avd.aquasec.com/nvd/2026/cve-2026-22184/)
-- Fixed [CVE-2026-25646](https://avd.aquasec.com/nvd/2026/cve-2026-25646/)
+- We have only made technical changes. You can find more details in the changelogs.
 
 ## [v1.7.8-5] - 2026-02-18
-### Changed
-* We have only made technical changes. You can find more details in the changelogs.
+- We have only made technical changes. You can find more details in the changelogs.
 
 ## [v1.7.8-4] - 2026-02-13
-### Security
-- Fix CVE-2025-68121
+- We have only made technical changes. You can find more details in the changelogs.
 
 ## [v1.7.8-3] - 2026-01-29
-
-### Security
-- [#249] fixed [cve-2025-15467](https://avd.aquasec.com/nvd/2025/cve-2025-15467/)
+- We have only made technical changes. You can find more details in the changelogs.
 
 ## [v1.7.8-2] - 2025-04-28
-
 ### Changed
 - Usage of memory and CPU was optimized for the Kubernetes Mutlinode environment.
 
 ## [v1.7.8-1] - 2025-04-08
-
-### Security
-
-* This release fixes the critical security vulnerability [CVE-2025-24813](https://nvd.nist.gov/vuln/detail/CVE-2025-24813).
-  An update is therefore recommended.
-
-### Changed
-
-* We have only made technical changes. You can find more details in the changelogs.
+- We have only made technical changes. You can find more details in the changelogs.
 
 ## [v1.7.7-1] - 2025-03-13
-
 - The design of the error pages has been revised
 - Fixed an error that occurred when an invalid CAS service ticket was used
 
 ## [v1.7.6-2] - 2025-02-12
-
-We have only made technical changes. You can find more details in the changelogs.
+- We have only made technical changes. You can find more details in the changelogs.
 
 ## [v1.7.6-1] - 2025-01-10
-**The release fixes a critical security vulnerability ([CVE-2024-56337](https://github.com/advisories/GHSA-27hp-xhwr-wr2m)). An update is therefore recommended.**
-
-We have only made technical changes. You can find more details in the changelogs.
+- We have only made technical changes. You can find more details in the changelogs.
 
 ## 1.7.5-1
-
-**The release fixes a critical security vulnerability ([CVE-2024-52316](https://github.com/advisories/GHSA-xcpr-7mr4-h4xq)). An update is therefore recommended.**
-
-We have only made technical changes. You can find more details in the changelogs.
+- We have only made technical changes. You can find more details in the changelogs.
 
 ## 1.7.4-1
 Parts of the application have sent requests to Google Analytics. These requests have been permanently removed.
