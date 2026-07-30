@@ -11,6 +11,7 @@ import history, { handleHistoryClick } from "./HistoryEditorExtension";
 import tableClass from "./TableClassEditorExtension";
 import shortLinks from "./ShortLinkEditorExtension";
 import { transformLegacyPlantuml } from "./LegacyPlantumlEditorExtension";
+import readOnlyTaskList from "./ReadOnlyTaskListExtension";
 
 import { IdUtil } from "../../idUtil";
 
@@ -57,7 +58,8 @@ class Markdown extends React.Component<Props> {
         [uml, { rendererURL: process.env.PLANTUML_RENDERER_URL || "/plantuml/png/" }],
         history,
         tableClass,
-        shortLinks
+        shortLinks,
+        readOnlyTaskList
       ]
     });
 
