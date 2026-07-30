@@ -140,7 +140,7 @@ class MarkdownEditor extends Component<Props, State> {
   };
 
   onRestoreUnsavedChanges = () => {
-    this.editor.setValue(this.state.unsavedChanges);
+    this.editor.setMarkdown(this.state.unsavedChanges);
     localStorage.removeItem(LOCAL_STORAGE_UNSAVED_CHANGES_KEY);
     this.setState({ unsavedChanges: null });
   };
