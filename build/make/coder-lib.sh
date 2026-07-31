@@ -88,7 +88,7 @@ function doTrivyConvert() {
   "$containerExec" run --rm --pull=always \
     -v trivy-cache:/root/.cache \
     -v "$jsonScanToConvert:$containerJsonScanFile" \
-    aquasec/trivy -q \
+    "${TRIVY_IMAGE}" -q \
     convert $trivyFlags "$containerJsonScanFile"  > "$outputFile"
 }
 

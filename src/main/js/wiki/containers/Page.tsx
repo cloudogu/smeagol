@@ -17,6 +17,7 @@ import PageHeader from "../components/PageHeader";
 type Params = {
   repository: string;
   branch: string;
+  path: string;
 };
 
 type Props = {
@@ -26,7 +27,7 @@ type Props = {
 };
 
 const Page: FC<Props> = (props) => {
-  const { repository, branch } = props.match.params;
+  const { repository, branch, path } = props.match.params;
 
   const pushPageState = (pagePath: string) => {
     props.history.push(`/${repository}/${branch}/${pagePath}`);
@@ -40,7 +41,6 @@ const Page: FC<Props> = (props) => {
     pushPageState(wikiQuery.data.landingPage);
   };
 
-  const path = findPagePath(props);
   const pageName = getPageNameFromPath(path);
   const directory = getDirectoryFromPath(path);
 
@@ -263,12 +263,6 @@ function getCommitParameter(props): string {
   } else {
     return "";
   }
-}
-
-function findPagePath(props) {
-  const { pathname } = props.location;
-  const parts = pathname.split("/");
-  return parts.slice(3).join("/");
 }
 
 export function getPageNameFromPath(path: string) {

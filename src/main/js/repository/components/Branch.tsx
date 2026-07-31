@@ -1,17 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { withRouter } from "react-router";
+import { Link, withRouter, RouteComponentProps } from "react-router-dom";
 import { pathWithTrailingSlash } from "../../pathUtil";
 
-type Props = {
-  branch: any;
-  match: any;
+type BranchData = {
+  name: string;
+};
+
+type Props = RouteComponentProps & {
+  branch: BranchData;
 };
 
 class Branch extends React.Component<Props> {
   render() {
     const { match, branch } = this.props;
-
     const link = pathWithTrailingSlash(match.url) + encodeURIComponent(branch.name) + "/";
 
     return (

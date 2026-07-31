@@ -5,62 +5,63 @@ Im Folgenden finden Sie die Release Notes für Smeagol.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/smeagol/CHANGELOG/).
 
 ## [Unreleased]
+### Changed
+- Migration des Editors von tui-editor v1 zu @toast-ui/editor v3
+### Fixed
+- Aufgabenlisten (`* [ ] ...`) zeigen echte Checkboxen an
+- PlantUML-Diagramme (mit `@startuml/@enduml`-Tags und der älteren Code-Block-Syntax) werden gerendert
+- Farben können im Editor ausgewählt werden
+### Security
+- Mehrere CVEs behoben:
+  - [CVE-2026-29145](https://avd.aquasec.com/nvd/2026/cve-2026-29145/)
+  - [CVE-2026-31789](https://avd.aquasec.com/nvd/2026/cve-2026-31789/)
+  - [CVE-2026-41293](https://avd.aquasec.com/nvd/2026/cve-2026-41293/)
+  - [CVE-2026-43512](https://avd.aquasec.com/nvd/2026/cve-2026-43512/)
+  - [CVE-2026-43515](https://avd.aquasec.com/nvd/2026/cve-2026-43515/)
 
 ## [v1.7.8-6] - 2026-03-11
 ### Security
-- [CVE-2026-22184](https://avd.aquasec.com/nvd/2026/cve-2026-22184/) behoben
-- [CVE-2026-25646](https://avd.aquasec.com/nvd/2026/cve-2026-25646/) behoben
+- Mehrere CVEs behoben:
+  - [CVE-2026-22184](https://avd.aquasec.com/nvd/2026/cve-2026-22184/)
+  - [CVE-2026-25646](https://avd.aquasec.com/nvd/2026/cve-2026-25646/)
 
 ## [v1.7.8-5] - 2026-02-18
-### Changed
-* Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
+Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
 
 ## [v1.7.8-4] - 2026-02-13
 ### Security
-- Sicherheitslücke geschlossen CVE-2025-68121
+- [cve-2025-68121](https://avd.aquasec.com/nvd/2025/cve-2025-68121/) behoben
 
 ## [v1.7.8-3] - 2026-01-29
+**Das Release behebt die kritische Sicherheitslücke [cve-2025-15467](https://avd.aquasec.com/nvd/2025/cve-2025-15467/). Ein Update ist daher empfohlen.**
 
-### Security
-- [#249] Sicherheitslücke geschlossen [cve-2025-15467](https://avd.aquasec.com/nvd/2025/cve-2025-15467/)
+Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
 
 ## [v1.7.8-2] - 2025-04-28
-
 ### Changed
 - Die Verwendung von Speicher und CPU wurden für die Kubernetes-Multinode-Umgebung optimiert.
 
 ## [v1.7.8-1] - 2025-04-08
+**Das Release behebt die kritische Sicherheitslücke [CVE-2025-24813](https://nvd.nist.gov/vuln/detail/CVE-2025-24813). Ein Update ist daher empfohlen.**
 
-### Security
-
-* Das Release behebt die kritische Sicherheitslücke [CVE-2025-24813](https://nvd.nist.gov/vuln/detail/CVE-2025-24813).
-  Ein Update ist daher empfohlen.
-
-### Changed
-
-* Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
+Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
 
 ## [v1.7.7-1] - 2025-03-13
-
 - Das Design der Fehlerseiten wurde überarbeitet
 - Es wurde ein Fehler behoben, der aufgetreten ist, wenn ein ungültiges CAS-Service-Ticket verwendet wurde
 
 ## [v1.7.6-2] - 2025-02-12
-
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
 
 ## [v1.7.6-1] - 2025-01-10
-
 **Das Release behebt eine kritische Sicherheitslücke ([CVE-2024-56337](https://github.com/advisories/GHSA-27hp-xhwr-wr2m)). Ein Update ist daher empfohlen.**
 
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
 
 ## 1.7.5-1
-
 **Das Release behebt eine kritische Sicherheitslücke ([CVE-2024-52316](https://github.com/advisories/GHSA-xcpr-7mr4-h4xq)). Ein Update ist daher empfohlen.**
 
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
-
 
 ## 1.7.4-1
 Teile der Applikation haben Anfragen an Google-Analytics geschickt. Diese Anfragen wurden dauerhaft entfernt.

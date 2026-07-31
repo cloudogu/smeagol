@@ -7,14 +7,19 @@ export const MISSING_SMEAGOL_PLUGIN = Error("missing smeagol plugin");
 
 // fetch does not send the X-Requested-With header (https://github.com/github/fetch/issues/17),
 // but we need the header to detect ajax request (AjaxAwareAuthenticationRedirectStrategy).
-const fetchOptions = {
-  credentials: "same-origin",
-  headers: {
-    "X-Requested-With": "XMLHttpRequest"
-  }
-};
+function getBaseOptions(): RequestInit {
+  return {
+    credentials: "same-origin",
+    headers: {
+      "X-Requested-With": "XMLHttpRequest",
+      Accept: "application/json",
+      "Cache-Control": "no-cache",
+      Pragma: "no-cache"
+    }
+  };
+}
 
-function isAuthenticationRedirect(response) {
+function isAuthenticationRedirect(response: Response) {
   if (response.status === 401) {
     const redirectTarget = response.headers.get("location");
     if (redirectTarget) {
@@ -36,7 +41,7 @@ async function handleStatusCode(response: Response) {
     if (body === "SCM is missing Smeagol plugin") {
       throw MISSING_SMEAGOL_PLUGIN;
     }
-    throw new Error(response.body.message || "server returned status code " + response.status);
+    throw new Error(`Server returned ${response.status}: ${body || response.statusText}`);
   }
   return response;
 }
@@ -53,9 +58,16 @@ function redirect(redirectUrl: string) {
   window.location.href = redirectUrl;
 }
 
+// Module namespace for better mockability
+export const module = {
+  redirect
+};
+
 class ApiClient {
   get(url: string) {
-    return fetch(createUrl(url), fetchOptions).then(this.handleCasAuthentication).then(handleStatusCode);
+    return fetch(createUrl(url), getBaseOptions())
+      .then((response) => this.handleCasAuthentication(response))
+      .then(handleStatusCode);
   }
 
   post(url: string, payload: any) {
@@ -71,20 +83,21 @@ class ApiClient {
   }
 
   httpRequestWithJSONBody(url: string, payload: any, method: string) {
-    let options = {
-      method: method,
-      body: JSON.stringify(payload)
-    };
-    options = Object.assign(options, fetchOptions);
-    options.headers["Content-Type"] = "application/json";
+    const options = getBaseOptions();
+    options.method = method;
+    options.body = JSON.stringify(payload);
 
-    return fetch(createUrl(url), options).then(this.handleCasAuthentication).then(handleStatusCode);
+    (options.headers as any)["Content-Type"] = "application/json";
+
+    return fetch(createUrl(url), options)
+      .then((response) => this.handleCasAuthentication(response))
+      .then(handleStatusCode);
   }
 
-  handleCasAuthentication(response: any) {
+  handleCasAuthentication(response: Response) {
     if (isAuthenticationRedirect(response)) {
       const redirectUrl = createRedirectUrl();
-      redirect(redirectUrl);
+      module.redirect(redirectUrl);
     }
     return response;
   }

@@ -1,5 +1,5 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import { Popover } from "react-bootstrap";
 
 type Props = {
@@ -20,4 +20,4 @@ class PathValidationPopover extends React.Component<Props> {
   }
 }
 
-export default translate()(PathValidationPopover);
+export default withTranslation()(PathValidationPopover);

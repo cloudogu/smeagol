@@ -1,33 +1,19 @@
 import React from "react";
-import injectSheet from "react-jss";
 
-import Editor from "tui-editor/dist/tui-editor-Editor";
-import "tui-editor/dist/tui-editor-extTable";
-import "tui-editor/dist/tui-editor-extScrollSync";
-import "tui-editor/dist/tui-editor-extUML";
+import Editor from "@toast-ui/editor";
+import Viewer from "@toast-ui/editor/dist/toastui-editor-viewer";
 
-import "./TableClassEditorExtension";
-import "./HistoryEditorExtension";
-import "./LegacyPlantumlEditorExtension";
-import "./ShortLinkEditorExtension";
+import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
+import chart from "@toast-ui/editor-plugin-chart";
+import uml from "@toast-ui/editor-plugin-uml";
 
-import "codemirror/lib/codemirror.css";
+import history, { handleHistoryClick } from "./HistoryEditorExtension";
+import tableClass from "./TableClassEditorExtension";
+import shortLinks from "./ShortLinkEditorExtension";
+import { transformLegacyPlantuml } from "./LegacyPlantumlEditorExtension";
+import readOnlyTaskList from "./ReadOnlyTaskListExtension";
 
-import "highlight.js/lib";
-import "highlight.js/styles/default.css";
 import { IdUtil } from "../../idUtil";
-
-const styles = {
-  markdown: {
-    // makes img elements responsive
-    "& img": {
-      "max-width": "100%",
-      height: "auto",
-      display: "block"
-    }
-  },
-  toAddId: {}
-};
 
 type Props = {
   content: string;
@@ -35,6 +21,9 @@ type Props = {
 };
 
 class Markdown extends React.Component<Props> {
+  private viewer!: Viewer;
+  private viewerNode!: HTMLDivElement;
+
   /**
    * Adds ids to any tag of "h1, h2, h3, h4, h5, h6" based on their content.
    * Spaces in id are replaced with a '-'.
@@ -46,49 +35,65 @@ class Markdown extends React.Component<Props> {
    *
    * @param parentNode The html element in which the tags should be searched.
    */
-  setIdsOnHeadlines(parentNode: any) {
+  private setIdsOnHeadlines(parentNode: HTMLElement) {
+    if (!parentNode) return;
     const idUtil = new IdUtil();
-    const elements = Array.prototype.slice.call(parentNode.querySelectorAll("h1, h2, h3, h4, h5, h6"));
+    const elements = parentNode.querySelectorAll("h1, h2, h3, h4, h5, h6");
 
     elements.forEach((element) => {
-      element.id = idUtil.nextId(element.innerText);
+      const htmlElement = element as HTMLElement;
+      htmlElement.id = idUtil.nextId(htmlElement.innerText);
     });
   }
 
   componentDidMount() {
-    this.editor = new Editor.factory({
+    this.viewer = Editor.factory({
       el: this.viewerNode,
       viewer: true,
-      initialEditType: "markdown",
-      initialValue: this.props.content,
+      initialValue: transformLegacyPlantuml(this.props.content),
       usageStatistics: false,
-      exts: [
-        "colorSyntax",
-        { name: "uml", rendererURL: "/plantuml/png/" },
-        "chart",
-        "mark",
-        "table",
-        "tableClass",
-        "taskCounter",
-        "shortlinks",
-        "history",
-        "legacyplantuml"
+      plugins: [
+        colorSyntax,
+        chart,
+        [uml, { rendererURL: process.env.PLANTUML_RENDERER_URL || "/plantuml/png/" }],
+        history,
+        tableClass,
+        shortLinks,
+        readOnlyTaskList
       ]
     });
 
-    // After the markdown has been rendered, the ids for the headlines need to be applied.
+    this.viewerNode.addEventListener("click", handleHistoryClick);
     this.setIdsOnHeadlines(this.viewerNode);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
+    // Only update if content actually changed to avoid unnecessary re-renders
     if (prevProps.content !== this.props.content) {
-      this.editor.setMarkdown(this.props.content);
+      this.viewer.setMarkdown(transformLegacyPlantuml(this.props.content));
+      this.setIdsOnHeadlines(this.viewerNode);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.viewerNode) {
+      this.viewerNode.removeEventListener("click", handleHistoryClick);
+    }
+    // Clean up editor instance
+    if (this.viewer) {
+      this.viewer.destroy();
     }
   }
 
   render() {
-    return <div className={this.props.classes.markdown} ref={(ref) => (this.viewerNode = ref)}></div>;
+    return (
+      <div
+        ref={(ref) => {
+          if (ref) this.viewerNode = ref;
+        }}
+      />
+    );
   }
 }
 
-export default injectSheet(styles)(Markdown);
+export default Markdown;

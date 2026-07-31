@@ -1,7 +1,7 @@
 import React from "react";
 import injectSheet from "react-jss";
 import classNames from "classnames";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 
 const styles = {
   infoBox: {
@@ -25,4 +25,4 @@ class GeneralInformation extends React.Component<Props> {
   }
 }
 
-export default translate()(injectSheet(styles)(GeneralInformation));
+export default withTranslation()(injectSheet(styles)(GeneralInformation));

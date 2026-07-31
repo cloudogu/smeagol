@@ -90,11 +90,11 @@ ${HELM_CRD_RELEASE_TGZ}: ${BINARY_HELM} crd-helm-generate ## Generates and packa
 .PHONY: crd-helm-chart-import
 crd-helm-chart-import: ${CHECK_VAR_TARGETS} check-k8s-artifact-id crd-helm-generate crd-helm-package ## Imports the currently available Helm CRD chart into the cluster-local registry.
 	@if [[ ${STAGE} == "development" ]]; then \
-		echo "Import ${HELM_CRD_DEV_RELEASE_TGZ} into K8s cluster ${CES_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE}..."; \
-		${BINARY_HELM} push ${HELM_CRD_DEV_RELEASE_TGZ} oci://${CES_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE} ${BINARY_HELM_ADDITIONAL_PUSH_ARGS}; \
+		echo "Import ${HELM_CRD_DEV_RELEASE_TGZ} into K8s cluster ${IMAGE_PUSH_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE}..."; \
+		${BINARY_HELM} push ${HELM_CRD_DEV_RELEASE_TGZ} oci://${IMAGE_PUSH_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE} ${BINARY_HELM_ADDITIONAL_PUSH_ARGS}; \
 	else \
-	  	echo "Import ${HELM_CRD_RELEASE_TGZ} into K8s cluster ${CES_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE}..."; \
-        ${BINARY_HELM} push ${HELM_CRD_RELEASE_TGZ} oci://${CES_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE} ${BINARY_HELM_ADDITIONAL_PUSH_ARGS}; \
+	  	echo "Import ${HELM_CRD_RELEASE_TGZ} into K8s cluster ${IMAGE_PUSH_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE}..."; \
+        ${BINARY_HELM} push ${HELM_CRD_RELEASE_TGZ} oci://${IMAGE_PUSH_REGISTRY_HOST}/${HELM_ARTIFACT_NAMESPACE} ${BINARY_HELM_ADDITIONAL_PUSH_ARGS}; \
     fi
 	@echo "Done."
 

@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import { usePageHistory } from "../hooks/pagehistory";
 import CommitsTable from "../components/CommitsTable";
 import { match } from "react-router";
@@ -86,4 +86,4 @@ const History: FC<Props> = (props) => {
   );
 };
 
-export default translate()(History);
+export default withTranslation()(History);

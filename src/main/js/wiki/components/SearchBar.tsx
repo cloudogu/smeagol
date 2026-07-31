@@ -1,5 +1,5 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 
@@ -59,4 +59,4 @@ class SearchBar extends React.Component<Props, State> {
   }
 }
 
-export default translate()(injectSheet(styles)(SearchBar));
+export default withTranslation()(injectSheet(styles)(SearchBar));

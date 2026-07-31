@@ -1,27 +1,31 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-import { reactI18nextModule } from "react-i18next";
+import { initReactI18next } from "react-i18next";
+
+import enTranslations from "./assets/locales/en/translations.json";
+import deTranslations from "./assets/locales/de/translations.json";
 
 import "dayjs/locale/de.js";
 
-// The import is essential for webpack to detect the translations and to pack them together with the bundle.js
-import resBundle from "i18next-resource-store-loader!./assets/locales/DoNotDelete";
-
 i18n
   .use(LanguageDetector)
-  .use(reactI18nextModule)
+  .use(initReactI18next)
   .init({
     fallbackLng: "en",
-
-    // have a common namespace used around the full app
+    supportedLngs: ["en", "de"],
     ns: ["translations"],
     defaultNS: "translations",
-    resources: resBundle,
-
-    debug: true,
-
-    react: {
-      wait: true
+    resources: {
+      en: { translations: enTranslations },
+      de: { translations: deTranslations }
+    },
+    debug: process.env.NODE_ENV === "development",
+    interpolation: {
+      escapeValue: false
+    },
+    detection: {
+      order: ["querystring", "cookie", "localStorage", "navigator", "path", "subdomain"],
+      caches: ["localStorage", "cookie"]
     }
   });
 

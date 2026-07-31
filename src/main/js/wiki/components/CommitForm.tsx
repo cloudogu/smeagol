@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import ActionButton from "./ActionButton";
 import VerifiableTextArea from "./VerifiableTextArea";
 import ToolTip from "./ToolTip";
@@ -75,4 +75,4 @@ class CommitForm extends React.Component<Props, State> {
   }
 }
 
-export default translate()(CommitForm);
+export default withTranslation()(CommitForm);

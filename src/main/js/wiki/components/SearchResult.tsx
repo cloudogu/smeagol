@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import { SearchFinding } from "../types/searchFinding";
 
 type Props = {
@@ -25,4 +25,4 @@ class SearchResult extends React.Component<Props> {
   }
 }
 
-export default translate()(SearchResult);
+export default withTranslation()(SearchResult);

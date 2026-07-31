@@ -108,10 +108,19 @@ function build(previousFileSizes) {
   let compiler = webpack(config);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
+      let messages;
       if (err) {
-        return reject(err);
+        if (!err.message) {
+          return reject(err);
+        }
+        messages = formatWebpackMessages({
+          errors: [err.message],
+          warnings: []
+        });
+      } else {
+        messages = formatWebpackMessages(stats.toJson({ all: false, warnings: true, errors: true }));
       }
-      const messages = formatWebpackMessages(stats.toJson({}, true));
+
       if (messages.errors.length) {
         // Only keep the first error. Others are often indicative
         // of the same problem, but confuse the reader with noise.
@@ -120,6 +129,7 @@ function build(previousFileSizes) {
         }
         return reject(new Error(messages.errors.join('\n\n')));
       }
+
       if (
         process.env.CI &&
         (typeof process.env.CI !== 'string' ||
@@ -134,10 +144,14 @@ function build(previousFileSizes) {
         );
         return reject(new Error(messages.warnings.join('\n\n')));
       }
-      return resolve({
-        stats,
-        previousFileSizes,
-        warnings: messages.warnings,
+
+      compiler.close((closeErr) => {
+        if (closeErr) return reject(closeErr);
+        return resolve({
+          stats,
+          previousFileSizes,
+          warnings: messages.warnings
+        });
       });
     });
   });

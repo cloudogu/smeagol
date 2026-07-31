@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 
 type Props = any;
 
@@ -16,4 +16,4 @@ class BackToRepositoriesButton extends React.Component<Props> {
   }
 }
 
-export default translate()(BackToRepositoriesButton);
+export default withTranslation()(BackToRepositoriesButton);

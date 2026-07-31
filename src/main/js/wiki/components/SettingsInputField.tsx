@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import ToolTip from "../components/ToolTip";
 import injectSheet from "react-jss";
 import classNames from "classnames";
@@ -43,4 +43,4 @@ const SettingsInputField: FC<Props> = (props) => {
   );
 };
 
-export default translate()(injectSheet(styles)(SettingsInputField));
+export default withTranslation()(injectSheet(styles)(SettingsInputField));
