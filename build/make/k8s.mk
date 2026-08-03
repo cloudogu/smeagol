@@ -6,17 +6,38 @@ endif
 
 ## Variables
 
+K8S_MK_INCLUDE_MARKER="k8s.mk"
+
 BINARY_YQ = $(UTILITY_BIN_PATH)/yq
 BINARY_YQ_4_VERSION?=v4.40.3
+
 BINARY_HELM = $(UTILITY_BIN_PATH)/helm
-BINARY_HELM_VERSION?=v3.13.0
+BINARY_HELM_VERSION?=v3.20.2
+BINARY_HELM_URL?=https://get.helm.sh/helm-${BINARY_HELM_VERSION}-linux-amd64.tar.gz
+BINARY_HELM_SUM?=258e830a9e613c8a7a302d6059b4bb3b9758f2f3e1bb8ea0d707ce10a9a72fea
+BINARY_HELM_ARCHIVE_PATH?=linux-amd64/helm
+BINARY_HELM_ARCHIVE_STRIP?=1
+
 CONTROLLER_GEN = $(UTILITY_BIN_PATH)/controller-gen
 CONTROLLER_GEN_VERSION?=v0.19.0
+
+BINARY_CRANE_VERSION=v0.21.4
+BINARY_CRANE=$(UTILITY_BIN_PATH)/crane
+BINARY_CRANE_URL?=https://github.com/google/go-containerregistry/releases/download/${BINARY_CRANE_VERSION}/go-containerregistry_Linux_x86_64.tar.gz
+BINARY_CRANE_SUM?=3b6032bcf412e14cf3baf964a4065f2966af906ec947ab22478df5f74705c892
+BINARY_CRANE_ARCHIVE_PATH?=crane
+BINARY_CRANE_ARCHIVE_STRIP?=0
 
 # Setting SHELL to bash allows bash commands to be executed by recipes.
 # Options are set to exit when a recipe line exits non-zero or a piped command fails.
 SHELL = /usr/bin/env bash -o pipefail
 .SHELLFLAGS = -ec
+
+ifneq (${KUBECONFIG},)
+	# Values from the repo-local .env become plain make variables first. Export KUBECONFIG so
+	# recipe shells and nested kubectl/helm calls use the same kubeconfig file as the make logic.
+	export KUBECONFIG
+endif
 
 # The productive tag of the image
 IMAGE ?=
@@ -25,37 +46,65 @@ IMAGE ?=
 # with development images pointing to CES_REGISTRY_URL_PREFIX.
 STAGE?=production
 
-# Set the "local" as runtime-environment, to push images to the container-registry of the local cluster and to apply resources to the local cluster.
-# Use "remote" as runtime-environment in your .env file to push images to the container-registry at "registry.cloudogu.com/testing" and to apply resources to the configured kubernetes-context in KUBE_CONTEXT_NAME.
+# Set "local" as runtime-environment to use the legacy in-cluster registry of the local cluster.
+# Set "k3d" as runtime-environment for local k3d development with local registry push/pull:
+# - push from host to ${K3D_PUSH_REGISTRY_HOST}${K3D_PUSH_REGISTRY_NAMESPACE}
+# - pull in-cluster via ${K3D_PULL_REGISTRY_HOST}${K3D_PULL_REGISTRY_NAMESPACE}
+# Use "remote" as runtime-environment in your .env file to push images to the container-registry at
+# "registry.cloudogu.com/testing" and to apply resources to the configured kubernetes-context in KUBE_CONTEXT_NAME.
 RUNTIME_ENV?=local
 $(info RUNTIME_ENV=$(RUNTIME_ENV))
 
 # The host and port of the local cluster
-K3S_CLUSTER_FQDN?=k3ces.local
+K3S_CLUSTER_FQDN?=k3ces.localdomain
 K3S_LOCAL_REGISTRY_PORT?=30099
+K3D_PULL_REGISTRY_HOST?=k3d-registry-proxy.localhost:5000
+K3D_PULL_REGISTRY_NAMESPACE?=/local-dev
+K3D_PUSH_REGISTRY_HOST?=localhost:5001
+K3D_PUSH_REGISTRY_NAMESPACE?=$(K3D_PULL_REGISTRY_NAMESPACE)
 
-# The URL of the container-registry to use. Defaults to the registry of the local-cluster.
-# If RUNTIME_ENV is "remote" it is "registry.cloudogu.com/testing", if ENVIRONMENT is "ci" it is "registry.cloudogu.com/ci"
-# if run on ci (jenkins) the images must be pushed to a separate namespace in order to free space every night after the build.
+# The URL or image-prefix host to use for development images.
+# If RUNTIME_ENV is "remote" it is "registry.cloudogu.com/testing", if ENVIRONMENT is "ci" it is "registry.cloudogu.com/ci".
+# If run on ci (jenkins) the images must be pushed to a separate namespace in order to free space every night after the build.
 CES_REGISTRY_HOST?=${K3S_CLUSTER_FQDN}:${K3S_LOCAL_REGISTRY_PORT}
 CES_REGISTRY_NAMESPACE ?=
+IMAGE_PUSH_REGISTRY_HOST ?= $(CES_REGISTRY_HOST)
+IMAGE_PUSH_REGISTRY_NAMESPACE ?= $(CES_REGISTRY_NAMESPACE)
 ifeq (${RUNTIME_ENV}, remote)
 	CES_REGISTRY_HOST=registry.cloudogu.com
 	CES_REGISTRY_NAMESPACE=/testing
+	IMAGE_PUSH_REGISTRY_HOST=$(CES_REGISTRY_HOST)
+	IMAGE_PUSH_REGISTRY_NAMESPACE=$(CES_REGISTRY_NAMESPACE)
 	ifeq ($(ENVIRONMENT), ci)
 		CES_REGISTRY_NAMESPACE=/ci
+		IMAGE_PUSH_REGISTRY_NAMESPACE=$(CES_REGISTRY_NAMESPACE)
 	endif
+endif
+ifeq (${RUNTIME_ENV}, k3d)
+	CES_REGISTRY_HOST=$(K3D_PULL_REGISTRY_HOST)
+	CES_REGISTRY_NAMESPACE=$(K3D_PULL_REGISTRY_NAMESPACE)
+	IMAGE_PUSH_REGISTRY_HOST=$(K3D_PUSH_REGISTRY_HOST)
+	IMAGE_PUSH_REGISTRY_NAMESPACE=$(K3D_PUSH_REGISTRY_NAMESPACE)
 endif
 $(info CES_REGISTRY_HOST=$(CES_REGISTRY_HOST))
 
 # The name of the kube-context to use for applying resources.
+# If KUBECONFIG is set and KUBE_CONTEXT_NAME is empty, the current context from this kubeconfig is used.
 # If KUBE_CONTEXT_NAME is empty and RUNTIME_ENV is "remote" the currently configured kube-context is used.
-# If KUBE_CONTEXT_NAME is empty and RUNTIME_ENV is not "remote" the "k3ces.local" is used as kube-context.
+# If KUBE_CONTEXT_NAME is empty and RUNTIME_ENV is "k3d" the currently configured kube-context is used.
+# Set KUBE_CONTEXT_NAME explicitly if the current kube-context does not point to the desired local k3d cluster.
+# If KUBE_CONTEXT_NAME is empty and RUNTIME_ENV is neither "remote" nor "k3d" the "k3ces.localdomain" is used as kube-context.
 ifeq (${KUBE_CONTEXT_NAME}, )
-	ifeq (${RUNTIME_ENV}, remote)
+	ifneq (${KUBECONFIG}, )
+		# Resolve the current context from the explicitly configured kubeconfig instead of the
+		# user's default ~/.kube/config. This keeps repo-local .env settings self-contained.
+		KUBE_CONTEXT_NAME = $(shell KUBECONFIG="${KUBECONFIG}" kubectl config current-context)
+	else ifeq (${RUNTIME_ENV}, remote)
+		KUBE_CONTEXT_NAME = $(shell kubectl config current-context)
+	else ifeq (${RUNTIME_ENV}, k3d)
 		KUBE_CONTEXT_NAME = $(shell kubectl config current-context)
 	else
-		KUBE_CONTEXT_NAME = k3ces.local
+		KUBE_CONTEXT_NAME = k3ces.localdomain
 	endif
 endif
 $(info KUBE_CONTEXT_NAME=$(KUBE_CONTEXT_NAME))
@@ -68,6 +117,8 @@ GIT_HASH := $(shell git rev-parse --short HEAD)
 ## Image URL to use all building/pushing image targets
 IMAGE_DEV?=$(CES_REGISTRY_HOST)$(CES_REGISTRY_NAMESPACE)/$(ARTIFACT_ID)/$(GIT_BRANCH)
 IMAGE_DEV_VERSION=$(IMAGE_DEV):$(VERSION)
+IMAGE_DEV_PUSH?=$(IMAGE_PUSH_REGISTRY_HOST)$(IMAGE_PUSH_REGISTRY_NAMESPACE)/$(ARTIFACT_ID)/$(GIT_BRANCH)
+IMAGE_DEV_PUSH_VERSION=$(IMAGE_DEV_PUSH):$(VERSION)
 
 # Variables for the temporary yaml files. These are used as template to generate a development resource containing
 # the current namespace and the dev image.
@@ -159,9 +210,17 @@ ifeq (${IMAGE_DEV},)
 endif
 
 .PHONY: image-import
-image-import: check-all-vars check-k8s-artifact-id docker-dev-tag ## Imports the currently available image into the configured ces-registry.
-	@echo "Import $(IMAGE_DEV_VERSION) into K8s cluster ${KUBE_CONTEXT_NAME}..."
-	@docker push $(IMAGE_DEV_VERSION)
+image-import: check-all-vars check-k8s-artifact-id docker-dev-tag ## Imports the currently available image into the configured runtime target.
+	@if [[ "${RUNTIME_ENV}" == "k3d" ]]; then \
+		echo "Push $(IMAGE_DEV_VERSION) for k3d registry workflow..."; \
+		echo "Push target: $(IMAGE_DEV_PUSH_VERSION)"; \
+		echo "Pull target: $(IMAGE_DEV_VERSION)"; \
+		DOCKER_BUILDKIT=1 docker tag $(IMAGE_DEV_VERSION) $(IMAGE_DEV_PUSH_VERSION); \
+		docker push $(IMAGE_DEV_PUSH_VERSION); \
+	else \
+		echo "Import $(IMAGE_DEV_VERSION) into K8s cluster ${KUBE_CONTEXT_NAME}..."; \
+		docker push $(IMAGE_DEV_VERSION); \
+	fi
 	@echo "Done."
 
 ## Functions
@@ -193,7 +252,13 @@ ${BINARY_YQ}: $(UTILITY_BIN_PATH)
 install-helm: ${BINARY_HELM}
 
 ${BINARY_HELM}: $(UTILITY_BIN_PATH)
-	$(call go-get-tool,$(BINARY_HELM),helm.sh/helm/v3/cmd/helm@${BINARY_HELM_VERSION})
+	$(call curl-get-tool-from-tar,$(BINARY_HELM),$(BINARY_HELM_URL),$(BINARY_HELM_SUM),$(BINARY_HELM_ARCHIVE_PATH),$(BINARY_HELM_ARCHIVE_STRIP))
+
+.PHONY: install-crane ## Installs crane.
+install-crane: ${BINARY_CRANE}
+
+${BINARY_CRANE}: $(UTILITY_BIN_PATH)
+	$(call curl-get-tool-from-tar,$(BINARY_CRANE),$(BINARY_CRANE_URL),$(BINARY_CRANE_SUM),$(BINARY_CRANE_ARCHIVE_PATH),$(BINARY_CRANE_ARCHIVE_STRIP))
 
 .PHONY: controller-gen
 controller-gen: ${CONTROLLER_GEN} ## Download controller-gen locally if necessary.
@@ -216,5 +281,3 @@ isProduction:
 	else \
 		echo "Command executed in development stage. Continuing."; \
 	fi
-
-

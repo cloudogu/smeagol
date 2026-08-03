@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.8.0-1] - 2026-08-03
+### Fixed
+- [#257] Task lists (`* [ ] ...`) show proper checkboxes
+- [#257] PlantUML diagrams (using `@startuml/@enduml` tags and older code-block syntax) are rendered
+- [#257] Colors can be selected in editor
+### Changed
+- [#257] Update java base image to v21.0.11-2
+- [#257] Migrate editor from tui-editor v1 to @toast-ui/editor v3 (including plugins, task lists, plantuml rendering, custom block syntax)
+- [#257] Update Spring Boot to v3.5.13
+- [#257] Update Node.js to v22.13.0
+- [#257] Update webpack to v5.106.2
+- [#257] Update jest to v30.3.0
+### Security
+- [#257] Fix multiple CVEs:
+  - [CVE-2026-29145](https://avd.aquasec.com/nvd/2026/cve-2026-29145/)
+  - [CVE-2026-31789](https://avd.aquasec.com/nvd/2026/cve-2026-31789/)
+  - [CVE-2026-41293](https://avd.aquasec.com/nvd/2026/cve-2026-41293/)
+  - [CVE-2026-43512](https://avd.aquasec.com/nvd/2026/cve-2026-43512/)
+  - [CVE-2026-43515](https://avd.aquasec.com/nvd/2026/cve-2026-43515/)
+
 ## [v1.7.8-6] - 2026-03-11
 ### Changed
 - [#255] Upgrade to java base image 21.0.10-5

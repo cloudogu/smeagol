@@ -1,5 +1,5 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 
@@ -65,4 +65,4 @@ class ActionButton extends React.Component<Props> {
   }
 }
 
-export default injectSheet(styles)(translate()(ActionButton));
+export default injectSheet(styles)(withTranslation()(ActionButton));

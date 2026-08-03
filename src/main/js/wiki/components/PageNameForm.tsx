@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import ActionButton from "./ActionButton";
 import injectSheet from "react-jss";
 import classNames from "classnames";
@@ -100,4 +100,4 @@ class PageNameForm extends React.Component<Props, State> {
   }
 }
 
-export default injectSheet(styles)(translate()(PageNameForm));
+export default injectSheet(styles)(withTranslation()(PageNameForm));

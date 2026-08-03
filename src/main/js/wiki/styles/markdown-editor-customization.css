@@ -1,0 +1,77 @@
+/* -- Look and feel of previous editor -- */
+
+.toastui-editor-main-container {
+  line-height: 1.5;
+}
+
+.toastui-editor-md-delimiter,
+.toastui-editor-md-thematic-break,
+.toastui-editor-md-link,
+.toastui-editor-md-table,
+.toastui-editor-md-block-quote {
+  color: inherit;
+}
+
+.toastui-editor-md-meta,
+.toastui-editor-md-html,
+.toastui-editor-md-link.toastui-editor-md-link-url.toastui-editor-md-marked-text {
+  color: #a11;
+}
+
+.toastui-editor-md-block-quote .toastui-editor-md-marked-text,
+.toastui-editor-md-list-item .toastui-editor-md-meta {
+  color: inherit;
+}
+
+.toastui-editor-md-link.toastui-editor-md-link-desc.toastui-editor-md-marked-text,
+.toastui-editor-md-list-item-style.toastui-editor-md-list-item-odd {
+  color: #00c;
+}
+
+.toastui-editor-md-list-item-style.toastui-editor-md-list-item-even {
+  color: #085;
+}
+
+/* -- CES-Theme -- */
+
+/* markdown editor custom colors
+you can use the custom properties only in the tui-editor and tui-editor-contents scope
+the second parameter of the var() func is a fallback for IE and other browser which may not support custom properties*/
+.toastui-editor, .toastui-editor-contents{
+  --primary-color: #1B7DAA;
+  --dark-gray: #333;
+  --light-gray: #e5e5e5;
+}
+
+/* markdown editor line break */
+.toastui-editor-md-thematic-break {
+  color: #999;
+  letter-spacing: 0.5rem;
+}
+
+/* markdown editor table borders */
+.toastui-editor-contents table,th,td{
+  border: 1px solid var(--dark-gray, #333);
+}
+
+/* markdown editor table header */
+.toastui-editor-contents th{
+  background-color: var(--primary-color, #1B7DAA);
+  color: white;
+}
+
+/* makes img elements responsive */
+.toastui-editor-contents img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* correct margin between li */
+.toastui-editor-contents li p {
+  margin: inherit;
+}
+
+.toastui-editor-contents .task-list-item p {
+  margin-left: 0;
+}

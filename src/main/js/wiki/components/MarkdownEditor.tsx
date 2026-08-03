@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import injectSheet from "react-jss";
+import { Editor } from "@toast-ui/editor";
 
-import Editor from "tui-editor/dist/tui-editor-Editor";
-import "tui-editor/dist/tui-editor-extTable";
-import "tui-editor/dist/tui-editor-extScrollSync";
-import "tui-editor/dist/tui-editor-extUML";
+import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
+import uml from "@toast-ui/editor-plugin-uml";
 
-import "./HistoryEditorExtension";
-import "./ShortLinkEditorExtension";
-import "./TableClassEditorExtension";
+import history from "./HistoryEditorExtension";
+import tableClass from "./TableClassEditorExtension";
+import shortLinks from "./ShortLinkEditorExtension";
+import { transformLegacyPlantuml } from "./LegacyPlantumlEditorExtension";
 
-import "codemirror/lib/codemirror.css";
-import "tui-editor/dist/tui-editor.css";
-// import 'tui-editor/dist/tui-editor-contents.css';
-import "./markdown-editor-customization.css";
+import "../styles/toastui-editor.css";
+import "tui-color-picker/dist/tui-color-picker.css";
+import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
+import "../styles/markdown-editor-customization.css";
 
 import "highlight.js/lib";
 import "highlight.js/styles/default.css";
@@ -27,14 +27,6 @@ export const LOCAL_STORAGE_UNSAVED_CHANGES_KEY = "unsaved-changes";
 const styles = {
   action: {
     paddingTop: "1em"
-  },
-  markdownEditor: {
-    // makes img elements responsive
-    "& img": {
-      "max-width": "100%",
-      height: "auto",
-      display: "block"
-    }
   }
 };
 
@@ -55,7 +47,10 @@ type State = {
 };
 
 class MarkdownEditor extends Component<Props, State> {
-  private editor: Editor.factory;
+  private editor!: Editor;
+  private editorNode!: HTMLDivElement;
+  private initialValue!: string;
+
   private ignoreUnsavedChanges = false;
 
   constructor(props) {
@@ -68,26 +63,19 @@ class MarkdownEditor extends Component<Props, State> {
 
   componentDidMount() {
     this.checkForUnsavedChangesInLocalStorage();
-    this.editor = new Editor.factory({
-      el: this.editorNode,
-      height: "640px",
-      previewStyle: "vertical",
-      initialEditType: "markdown",
-      initialValue: this.props.content,
-      usageStatistics: false,
-      exts: [
-        "scrollSync",
-        "colorSyntax",
-        { name: "uml", rendererURL: "/plantuml/png/" },
-        "chart",
-        "mark",
-        "table",
-        "tableClass",
-        "taskCounter",
-        "shortlinks",
-        "history"
-      ]
-    });
+    this.initialValue = transformLegacyPlantuml(this.props.content);
+
+    if (this.editorNode) {
+      this.editor = new Editor({
+        el: this.editorNode,
+        height: "640px",
+        previewStyle: "vertical",
+        initialEditType: "markdown",
+        initialValue: this.initialValue,
+        usageStatistics: false,
+        plugins: [colorSyntax, [uml, { rendererURL: process.env.PLANTUML_RENDERER_URL || "/plantuml/png/" }], history, shortLinks, tableClass]
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -126,7 +114,7 @@ class MarkdownEditor extends Component<Props, State> {
 
     return (
       <div>
-        <div className={this.props.classes.markdownEditor} ref={(ref) => (this.editorNode = ref)} />
+        <div ref={(ref) => (this.editorNode = ref)} />
         <div className={classes.action}>
           <ActionButton i18nKey="markdown-editor_save" type="primary" onClick={this.commit} />
           <ActionButton i18nKey="markdown-editor_abort" onClick={this.onAbortEditor} />
@@ -152,7 +140,7 @@ class MarkdownEditor extends Component<Props, State> {
   };
 
   onRestoreUnsavedChanges = () => {
-    this.editor.setValue(this.state.unsavedChanges);
+    this.editor.setMarkdown(this.state.unsavedChanges);
     localStorage.removeItem(LOCAL_STORAGE_UNSAVED_CHANGES_KEY);
     this.setState({ unsavedChanges: null });
   };
@@ -163,8 +151,12 @@ class MarkdownEditor extends Component<Props, State> {
   };
 
   putUnsavedChangesInLocalStorage = () => {
+    if (!this.editor) {
+      return;
+    }
+
     const content = this.editor.getMarkdown();
-    if (content != this.props.content && !this.ignoreUnsavedChanges) {
+    if (content != this.initialValue && !this.ignoreUnsavedChanges) {
       // The local storage is limited in space (usually around 5MB). In cases where a page exceeds this limit, an error can occur.
       try {
         localStorage.setItem(

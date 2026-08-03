@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import FileBrowser from "../components/FileBrowser";
 import { useDirectory } from "../hooks/directory";
-import { translate } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import { match } from "react-router";
 import WikiHeader from "../components/WikiHeader";
 import { useWiki } from "../hooks/wiki";
@@ -108,4 +108,4 @@ const Directory: FC<Props> = (props) => {
   );
 };
 
-export default translate()(Directory);
+export default withTranslation()(Directory);

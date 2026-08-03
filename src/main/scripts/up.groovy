@@ -5,7 +5,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.Files
 
-String remote = "https://github.com/cloudogu/ecosystem"
+String remote = "https://git@github.com/cloudogu/ecosystem.git"
 String branch = "develop"
 
 Path workspace = Paths.get(".workspace")
@@ -22,7 +22,7 @@ if (!Files.exists(ecosystem)) {
     Git.cloneRepository()
         .setURI(remote)
         .setDirectory(ecosystem.toFile())
-        .setBranchesToClone(Collections.singleton("refs/head/" + branch))
+        .setBranchesToClone(Collections.singleton("refs/heads/" + branch))
         .setBranch(branch)
         .setProgressMonitor(new TextProgressMonitor(new PrintWriter(System.out)))
         .call()
@@ -36,6 +36,7 @@ if (!Files.exists(setupJson)) {
 }
 
 new ProcessBuilder("vagrant", "up")
-        .directory(ecosystem.toFile())
-        .start()
-        .waitForProcessOutput(System.out, System.err)
+    .directory(ecosystem.toFile())
+    .inheritIO()
+    .start()
+    .waitFor()

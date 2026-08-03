@@ -6,47 +6,53 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.8.0-1] - 2026-08-03
+### Changed
+- Migrate editor from tui-editor v1 to @toast-ui/editor v3
+### Fixed
+- Task lists (`* [ ] ...`) show proper checkboxes
+- PlantUML diagrams (using `@startuml/@enduml` tags and older code-block syntax) are rendered
+- Colors can be selected in editor
+### Security
+- Fix multiple CVEs:
+  - [CVE-2026-29145](https://avd.aquasec.com/nvd/2026/cve-2026-29145/)
+  - [CVE-2026-31789](https://avd.aquasec.com/nvd/2026/cve-2026-31789/)
+  - [CVE-2026-41293](https://avd.aquasec.com/nvd/2026/cve-2026-41293/)
+  - [CVE-2026-43512](https://avd.aquasec.com/nvd/2026/cve-2026-43512/)
+  - [CVE-2026-43515](https://avd.aquasec.com/nvd/2026/cve-2026-43515/)
+
 ## [v1.7.8-6] - 2026-03-11
 ### Security
-- Fixed [CVE-2026-22184](https://avd.aquasec.com/nvd/2026/cve-2026-22184/)
-- Fixed [CVE-2026-25646](https://avd.aquasec.com/nvd/2026/cve-2026-25646/)
+- Fix multiple CVEs:
+  - [CVE-2026-22184](https://avd.aquasec.com/nvd/2026/cve-2026-22184/)
+  - [CVE-2026-25646](https://avd.aquasec.com/nvd/2026/cve-2026-25646/)
 
 ## [v1.7.8-5] - 2026-02-18
 ### Changed
-* We have only made technical changes. You can find more details in the changelogs.
+We have only made technical changes. You can find more details in the changelogs.
 
 ## [v1.7.8-4] - 2026-02-13
 ### Security
-- Fix CVE-2025-68121
+- Fix [cve-2025-68121](https://avd.aquasec.com/nvd/2025/cve-2025-68121/)
 
 ## [v1.7.8-3] - 2026-01-29
-
 ### Security
 - [#249] fixed [cve-2025-15467](https://avd.aquasec.com/nvd/2025/cve-2025-15467/)
 
 ## [v1.7.8-2] - 2025-04-28
-
 ### Changed
 - Usage of memory and CPU was optimized for the Kubernetes Mutlinode environment.
 
 ## [v1.7.8-1] - 2025-04-08
+**The release fixes a critical security vulnerability ([CVE-2025-24813](https://nvd.nist.gov/vuln/detail/CVE-2025-24813)). An update is therefore recommended.**
 
-### Security
-
-* This release fixes the critical security vulnerability [CVE-2025-24813](https://nvd.nist.gov/vuln/detail/CVE-2025-24813).
-  An update is therefore recommended.
-
-### Changed
-
-* We have only made technical changes. You can find more details in the changelogs.
+We have only made technical changes. You can find more details in the changelogs.
 
 ## [v1.7.7-1] - 2025-03-13
-
 - The design of the error pages has been revised
 - Fixed an error that occurred when an invalid CAS service ticket was used
 
 ## [v1.7.6-2] - 2025-02-12
-
 We have only made technical changes. You can find more details in the changelogs.
 
 ## [v1.7.6-1] - 2025-01-10
@@ -55,7 +61,6 @@ We have only made technical changes. You can find more details in the changelogs
 We have only made technical changes. You can find more details in the changelogs.
 
 ## 1.7.5-1
-
 **The release fixes a critical security vulnerability ([CVE-2024-52316](https://github.com/advisories/GHSA-xcpr-7mr4-h4xq)). An update is therefore recommended.**
 
 We have only made technical changes. You can find more details in the changelogs.

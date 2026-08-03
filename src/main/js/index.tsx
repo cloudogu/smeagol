@@ -6,7 +6,7 @@ import registerServiceWorker from "./registerServiceWorker";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./i18n";
 
-import createHistory from "history/createBrowserHistory";
+import { createBrowserHistory as createHistory } from "history";
 import { Router } from "react-router";
 
 // Create a history of your choosing (we're using a browser history in this case)
