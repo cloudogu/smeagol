@@ -5,6 +5,8 @@ Below you will find the release notes for Smeagol.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/smeagol/CHANGELOG/).
 
 ## [Unreleased]
+
+## [v1.8.0-1] - 2026-08-03
 ### Changed
 - Migrate editor from tui-editor v1 to @toast-ui/editor v3
 ### Fixed
