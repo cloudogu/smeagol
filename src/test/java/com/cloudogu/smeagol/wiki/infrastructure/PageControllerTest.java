@@ -12,9 +12,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -40,13 +41,13 @@ public class PageControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    @MockBean
+    @MockitoBean
     private PageRepository pageRepository;
 
-    @MockBean
+    @MockitoBean
     private WildcardPathExtractor pathExtractor;
 
-    @MockBean
+    @MockitoBean
     private CommandBus commandBus;
 
     @Captor
@@ -65,6 +66,7 @@ public class PageControllerTest {
 
     @Before
     public void setUp() {
+        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         // we need to mock the WildcardPathExtractor, because request.getServletPath seems to be empty in MockMvc
         when(

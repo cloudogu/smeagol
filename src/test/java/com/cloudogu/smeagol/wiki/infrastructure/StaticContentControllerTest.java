@@ -11,9 +11,10 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -41,10 +42,10 @@ public class StaticContentControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    @MockBean
+    @MockitoBean
     private GitClientProvider gitClientProvider;
 
-    @MockBean
+    @MockitoBean
     private WildcardPathExtractor pathExtractor;
 
     @Mock
@@ -54,6 +55,7 @@ public class StaticContentControllerTest {
 
     @Before
     public void setUp() {
+        MockitoAnnotations.openMocks(this);
         when(gitClientProvider.createGitClient(wikiId)).thenReturn(gitClient);
 
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
