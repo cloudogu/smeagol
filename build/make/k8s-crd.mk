@@ -120,3 +120,32 @@ crd-component-apply: isProduction check-k8s-namespace-env-var crd-helm-chart-imp
 crd-component-delete: check-k8s-namespace-env-var crd-component-generate ## Deletes the CRD component YAML resource from the actual defined context.
 	@kubectl delete -f "${K8S_RESOURCE_CRD_COMPONENT}" --namespace="${NAMESPACE}" --context="${KUBE_CONTEXT_NAME}" || true
 	@echo "Done."
+
+CLIENT_GEN = $(UTILITY_BIN_PATH)/client-gen
+CLIENT_GEN_VERSION?=v0.36.4
+
+.PHONY: client-gen
+client-gen: ${CLIENT_GEN} ## Download client-gen locally if necessary.
+
+${CLIENT_GEN}:
+	$(call go-get-tool,$(CLIENT_GEN),k8s.io/code-generator/cmd/client-gen@${CLIENT_GEN_VERSION})
+
+CLIENT_GEN_OUTPUT_DIR?="./"
+CLIENT_GEN_OUTPUT_PKG?="$(shell awk '/^module/ {print $$2}' go.mod)" # Get module path from go.mod
+CLIENT_GEN_CLIENTSET_NAME?="client"
+CLIENT_GEN_CLIENTSET_INPUT?="$(shell find api/ -mindepth 1 -maxdepth 1 -type d -printf 'api/%P\n' | paste -sd, -)" # Get all packages under version names under api/
+CLIENT_GEN_INPUT_BASE?="$(shell pwd)"
+
+.PHONY: generate-client
+generate-client: ${CLIENT_GEN} ## Generate client code from API definitions.
+	@echo "Generating client..."
+	$(CLIENT_GEN) \
+		--output-dir ${CLIENT_GEN_OUTPUT_DIR} \
+		--output-pkg ${CLIENT_GEN_OUTPUT_PKG} \
+		--clientset-name ${CLIENT_GEN_CLIENTSET_NAME} \
+		--input ${CLIENT_GEN_CLIENTSET_INPUT} \
+		--input-base ${CLIENT_GEN_INPUT_BASE}
+
+.PHONY: generate-crd-api
+generate-crd-api: generate-deepcopy generate-client manifests
+	@echo "generated deepcopy, api-client and manifests"
