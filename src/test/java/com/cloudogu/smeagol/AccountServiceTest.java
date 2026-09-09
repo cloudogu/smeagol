@@ -10,10 +10,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.restclient.test.autoconfigure.RestClientTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
@@ -40,13 +41,13 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @RestClientTest(AccountService.class)
 public class AccountServiceTest {
 
-    @MockBean
+    @MockitoBean
     private HttpServletRequest request;
 
     @Mock
     private HttpSession session;
 
-    @MockBean
+    @MockitoBean
     private ObjectFactory<HttpServletRequest> requestFactory;
 
     @Mock
@@ -66,6 +67,7 @@ public class AccountServiceTest {
      */
     @Before
     public void setUpMocks() {
+        MockitoAnnotations.openMocks(this);
         when(request.getSession(true)).thenReturn(session);
         when(requestFactory.getObject()).thenReturn(request);
     }

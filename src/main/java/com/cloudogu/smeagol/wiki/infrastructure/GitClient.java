@@ -38,7 +38,6 @@ import java.util.Optional;
 
 import static com.cloudogu.smeagol.ScmHttpClient.BEARER_TOKEN_IDENTIFIER;
 import static com.cloudogu.smeagol.wiki.infrastructure.GitConfig.DEFAULT_REMOTE;
-import static java.util.Collections.singleton;
 
 @SuppressWarnings("squid:S1160") // ignore multiple exception rule
 public class GitClient implements AutoCloseable {
@@ -261,7 +260,6 @@ public class GitClient implements AutoCloseable {
         gitRepository = Git.cloneRepository()
             .setURI(getRemoteRepositoryUrl())
             .setDirectory(repository)
-            .setBranchesToClone(singleton("refs/head" + branch))
             .setBranch(branch)
             .setCredentialsProvider(credentialsProvider(account))
             .call();
