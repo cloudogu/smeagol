@@ -11,7 +11,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.store.ByteBuffersDirectory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class LuceneIndexerTest {
     private LuceneIndexer indexer;
 
     private IndexWriter writer;
-    private RAMDirectory ramDirectory = new RAMDirectory();
+    private ByteBuffersDirectory ramDirectory = new ByteBuffersDirectory();
 
     @Before
     public void setUp() throws IOException {
@@ -105,7 +105,7 @@ public class LuceneIndexerTest {
             IndexSearcher searcher = new IndexSearcher(reader);
             Query query = new TermQuery(new Term("path", path));
             TopDocs docs = searcher.search(query, 1);
-            assertThat(docs.totalHits).isZero();
+            assertThat(docs.totalHits.value).isZero();
         }
     }
 
