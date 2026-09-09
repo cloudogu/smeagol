@@ -60,7 +60,7 @@ static-analysis-ci-report-local: $(STATIC_ANALYSIS_DIR)/static-analysis-cs.log $
 
 $(LINT): $(TMP_DIR)
 	@echo "Download golangci-lint $(LINT_VERSION)..."
-	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(TMP_DIR)/bin $(LINT_VERSION)
+	@curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(TMP_DIR)/bin $(LINT_VERSION)
 
 $(REVIEW_DOG): $(TMP_DIR)
 	@curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b $(TMP_DIR)/bin

@@ -6,6 +6,10 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.8.1-1] - 2026-09-09
+### Changed
+Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
+
 ## [v1.8.0-1] - 2026-08-03
 ### Changed
 - Migration des Editors von tui-editor v1 zu @toast-ui/editor v3
