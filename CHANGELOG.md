@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- [#260] Update java builder image (eclipse-temurin) to v25.0.4_7
+- [#260] Update java base image to v25.0.4-1
+- [#260] Update Maven wrapper to v3.9.16
+- [#260] Update Spring Boot to v4.1.1
+- [#260] Update spring-web to v7.0.9
+- [#260] Update guava to v33.4.8-jre
+- [#260] Update jgit to v6.10.1.202505221210-r
+- [#260] Update lucene to v9.12.3
+- [#260] Update Tomcat to v11.0.24 (remove obsolete version override)
+- [#260] Update slf4j-api to v2.0.18 (remove obsolete version override)
+- [#260] Update logback-classic to v1.5.38 (remove obsolete version override)
+- [#260] Update snakeyaml to v2.6 (remove obsolete version override)
+### Fixed
+- [#260] Fix broken branch filter in Git clone
 
 ## [v1.8.0-1] - 2026-08-03
 ### Fixed

@@ -5,6 +5,8 @@ Below you will find the release notes for Smeagol.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/smeagol/CHANGELOG/).
 
 ## [Unreleased]
+### Changed
+We have only made technical changes. You can find more details in the changelogs.
 
 ## [v1.8.0-1] - 2026-08-03
 ### Changed
