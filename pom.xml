@@ -67,7 +67,6 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>2.4</version>
         </dependency>
 
         <dependency>
@@ -172,13 +171,11 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.13</version>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.32</version>
         </dependency>
 
         <!-- Used to extract the version at runtime -->
@@ -474,10 +471,6 @@
         <java.version>25</java.version>
         <jaxb.version>2.3.1</jaxb.version>
         <jgit.version>5.1.16.202106041830-r</jgit.version>
-        <!-- Spring Boot 3.5.16 (latest 3.5.x) only manages Tomcat 10.1.55, which is still
-             affected by several CVEs fixed upstream in 10.1.57; override until Spring Boot's
-             managed version catches up. -->
-        <tomcat.version>10.1.57</tomcat.version>
     </properties>
     <repositories>
         <repository>
