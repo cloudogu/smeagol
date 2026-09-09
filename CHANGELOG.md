@@ -15,11 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#260] Update guava to v33.4.8-jre
 - [#260] Update jgit to v6.10.1.202505221210-r
 - [#260] Update lucene to v9.12.3
-- [#260] Update Tomcat to v11.0.24 (remove obsolete version override)
+- [#260] Update jacoco-maven-plugin to v0.8.14
+- [#260] Update Tomcat to v11.0.25
 - [#260] Update slf4j-api to v2.0.18 (remove obsolete version override)
 - [#260] Update logback-classic to v1.5.38 (remove obsolete version override)
 - [#260] Update snakeyaml to v2.6 (remove obsolete version override)
-- [#260] Update jacoco-maven-plugin to v0.8.14
 ### Fixed
 - [#260] Fix broken branch filter in Git clone
 

@@ -471,6 +471,10 @@
         <java.version>25</java.version>
         <jaxb.version>2.3.1</jaxb.version>
         <jgit.version>6.10.1.202505221210-r</jgit.version>
+        <!-- Spring Boot 4.1.1 (latest 4.1.x) only manages Tomcat 11.0.24, which is affected
+             by CVE-2026-65182, CVE-2026-65905 and CVE-2026-68525 (all CRITICAL), fixed
+             upstream in 11.0.25; override until Spring Boot's managed version catches up. -->
+        <tomcat.version>11.0.25</tomcat.version>
     </properties>
     <repositories>
         <repository>
