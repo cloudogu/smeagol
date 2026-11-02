@@ -163,7 +163,7 @@ parallel(
             stage('Integration tests') {
               ecoSystem.runCypressIntegrationTests([enableVideo          : params.EnableVideoRecording,
                                                     enableScreenshots    : params.EnableScreenshotRecording,
-                                                    cypressImage         : "cypress/included:12.17.1",])
+                                                    cypressImage         : "cypress/included:16.2.0",])
             }
 
             if (params.TestDoguUpgrade != null && params.TestDoguUpgrade) {
