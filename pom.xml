@@ -16,6 +16,29 @@
     <name>smeagol</name>
     <packaging>war</packaging>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- cas-client-core 4.1.1 pulls in Bouncy Castle 1.84, which is affected by
+                 CVE-2026-8763 (CRITICAL), fixed upstream in 1.85; override until cas-client's
+                 own managed version catches up. -->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcutil-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
 
         <!-- project serkis -->
@@ -467,6 +490,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <bouncycastle.version>1.86</bouncycastle.version>
         <cas-client.version>4.1.1</cas-client.version>
         <java.version>25</java.version>
         <jaxb.version>2.3.1</jaxb.version>
