@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- [#262] Update java base image to v25.0.5-1
+- [#262] Bump eclipse-temurin to v25.0.5_8
+- [#262] Bump Spring Boot to v4.1.2
+- [#262] Bump Node.js to v22.23.4
+- [#262] Bump Maven wrapper, dependencies and plugins
+- [#262] Bump frontend dependencies
+### Security
+- [#262] Fix multiple CVEs:
+  - [CVE-2026-91403](https://avd.aquasec.com/nvd/2026/cve-2026-91403/)
+  - [CVE-2026-114820](https://avd.aquasec.com/nvd/2026/cve-2026-114820/)
 
 ## [v1.8.1-1] - 2026-09-09
 ### Changed

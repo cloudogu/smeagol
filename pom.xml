@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.1</version>
+        <version>4.1.2</version>
         <relativePath/>
     </parent>
 
@@ -15,6 +15,29 @@
     <version>1.8.1-1</version>
     <name>smeagol</name>
     <packaging>war</packaging>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- cas-client-core 4.1.1 pulls in Bouncy Castle 1.84, which is affected by
+                 CVE-2026-8763 (CRITICAL), fixed upstream in 1.85; override until cas-client's
+                 own managed version catches up. -->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcutil-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
 
@@ -44,7 +67,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>7.0.9</version>
+            <version>7.0.10</version>
         </dependency>
 
         <dependency>
@@ -163,7 +186,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.4.8-jre</version>
+            <version>33.7.2-jre</version>
         </dependency>
 
         <!-- logging -->
@@ -182,7 +205,7 @@
         <dependency>
             <groupId>com.cloudogu.versionName</groupId>
             <artifactId>versionName</artifactId>
-            <version>2.1.0</version>
+            <version>2.2.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -193,7 +216,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>24.1.0</version>
+            <version>26.1.0</version>
             <scope>compile</scope>
         </dependency>
 
@@ -206,19 +229,19 @@
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
-            <version>5.4.2</version>
+            <version>5.6.5</version>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.10.0</version>
+            <version>5.24.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.10.0</version>
+            <version>5.24.0</version>
         </dependency>
     </dependencies>
 
@@ -247,7 +270,7 @@
                 <version>2.5.0</version>
                 <configuration>
                     <node>
-                        <version>22.13.0</version>
+                        <version>22.23.4</version>
                     </node>
                     <pkgManager>
                         <type>YARN</type>
@@ -292,7 +315,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.15.0</version>
+                <version>3.16.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -306,12 +329,12 @@
                 <plugin>
                     <groupId>org.codehaus.gmavenplus</groupId>
                     <artifactId>gmavenplus-plugin</artifactId>
-                    <version>4.0.1</version>
+                    <version>4.3.1</version>
                     <dependencies>
                         <dependency>
                             <groupId>org.apache.groovy</groupId>
                             <artifactId>groovy-all</artifactId>
-                            <version>4.0.22</version>
+                            <version>4.0.33</version>
                             <type>pom</type>
                         </dependency>
                         <dependency>
@@ -325,13 +348,13 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.14</version>
+                    <version>0.8.16</version>
                 </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.2.5</version>
+                    <version>3.6.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -467,14 +490,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cas-client.version>4.0.4</cas-client.version>
+        <bouncycastle.version>1.86</bouncycastle.version>
+        <cas-client.version>4.1.1</cas-client.version>
         <java.version>25</java.version>
         <jaxb.version>2.3.1</jaxb.version>
         <jgit.version>6.10.1.202505221210-r</jgit.version>
-        <!-- Spring Boot 4.1.1 (latest 4.1.x) only manages Tomcat 11.0.24, which is affected
-             by CVE-2026-65182, CVE-2026-65905 and CVE-2026-68525 (all CRITICAL), fixed
-             upstream in 11.0.25; override until Spring Boot's managed version catches up. -->
-        <tomcat.version>11.0.25</tomcat.version>
     </properties>
     <repositories>
         <repository>

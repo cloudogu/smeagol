@@ -63,10 +63,6 @@ $(ETCGROUP): $(TMP_DIR)
 $(UTILITY_BIN_PATH):
 	@mkdir -p $@
 
-# Subdirectories of workdir where no mocks should be generated.
-# Multiple directories can be separated by space, comma or whatever is not a word to regex.
-MOCKERY_IGNORED=vendor,build,docs
-
 ##@ General
 
 .PHONY: help
@@ -83,15 +79,18 @@ info: ## Print build information
 	@echo "Packages   : $(PACKAGES)"
 
 
-# go-get-tool will 'go get' any package $2 and install it to $1.
+# go-get-tool installs package $2 to $1, (re)building it whenever the binary is
+# missing or was built with a different Go version than the project's active one.
+# GOTOOLCHAIN pins the install to that version (GOVERSION)
 define go-get-tool
-	@[ -f $(1) ] || { \
+	@GOVERSION="$$(go env GOVERSION)" ;\
+	{ [ -f $(1) ] && [ "$$(go version $(1) 2>/dev/null | awk '{print $$NF}')" = "$$GOVERSION" ]; } || { \
 		set -e ;\
 		TMP_DIR=$$(mktemp -d) ;\
 		cd $$TMP_DIR ;\
 		go mod init tmp ;\
-		echo "Downloading $(2)" ;\
-		GOBIN=$(UTILITY_BIN_PATH) go install $(2) ;\
+		echo "Downloading $(2) (building with $$GOVERSION)" ;\
+		GOBIN=$(UTILITY_BIN_PATH) GOTOOLCHAIN=$$GOVERSION go install $(2) ;\
 		rm -rf $$TMP_DIR ;\
 	}
 endef

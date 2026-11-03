@@ -150,7 +150,7 @@ update_versions() {
   # Update version in Dockerfile
   if [ -f "Dockerfile" ]; then
     echo "Updating version in Dockerfile..."
-    sed -i "s/\(^[ ]*VERSION=\"\)\([^\"]*\)\(.*$\)/\1${NEW_RELEASE_VERSION}\3/" Dockerfile
+    sed -i "s/\(^.*[[:space:]]\{1,\}VERSION=\"\)\([^\"]*\)\(.*$\)/\1${NEW_RELEASE_VERSION}\3/" Dockerfile
   fi
 
   # Update version in Makefile

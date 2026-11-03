@@ -5,6 +5,12 @@ Im Folgenden finden Sie die Release Notes für Smeagol.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/smeagol/CHANGELOG/).
 
 ## [Unreleased]
+### Changed
+Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
+### Security
+- Mehrere CVEs behoben:
+  - [CVE-2026-91403](https://avd.aquasec.com/nvd/2026/cve-2026-91403/)
+  - [CVE-2026-114820](https://avd.aquasec.com/nvd/2026/cve-2026-114820/)
 
 ## [v1.8.1-1] - 2026-09-09
 ### Changed
