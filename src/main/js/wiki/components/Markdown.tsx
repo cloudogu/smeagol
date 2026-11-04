@@ -12,8 +12,7 @@ import tableClass from "./TableClassEditorExtension";
 import shortLinks from "./ShortLinkEditorExtension";
 import { transformLegacyPlantuml } from "./LegacyPlantumlEditorExtension";
 import readOnlyTaskList from "./ReadOnlyTaskListExtension";
-
-import { IdUtil } from "../../idUtil";
+import { renderInlineTableOfContents, setIdsOnHeadlines, transformGollumTocMacro } from "./InlineTableOfContents";
 
 type Props = {
   content: string;
@@ -25,32 +24,19 @@ class Markdown extends React.Component<Props> {
   private viewerNode!: HTMLDivElement;
 
   /**
-   * Adds ids to any tag of "h1, h2, h3, h4, h5, h6" based on their content.
-   * Spaces in id are replaced with a '-'.
-   * If there is exactly the same content twice or more, a counter is applied to the id.
-   *
-   * This is necessary because in the current version of tui editor (1.4.10), there is no way
-   * implemented to add ids to the headlines.
-   * But ids are necessary to scroll to the headline by using the table of contents.
-   *
-   * @param parentNode The html element in which the tags should be searched.
+   * The toast-ui viewer does not add ids to the headlines, but they are necessary to scroll to a
+   * headline from the table of contents (sidebar and "[[TOC]]" macro).
    */
-  private setIdsOnHeadlines(parentNode: HTMLElement) {
-    if (!parentNode) return;
-    const idUtil = new IdUtil();
-    const elements = parentNode.querySelectorAll("h1, h2, h3, h4, h5, h6");
-
-    elements.forEach((element) => {
-      const htmlElement = element as HTMLElement;
-      htmlElement.id = idUtil.nextId(htmlElement.innerText);
-    });
+  private decorateRenderedContent() {
+    setIdsOnHeadlines(this.viewerNode);
+    renderInlineTableOfContents(this.viewerNode);
   }
 
   componentDidMount() {
     this.viewer = Editor.factory({
       el: this.viewerNode,
       viewer: true,
-      initialValue: transformLegacyPlantuml(this.props.content),
+      initialValue: transformGollumTocMacro(transformLegacyPlantuml(this.props.content)),
       usageStatistics: false,
       plugins: [
         colorSyntax,
@@ -64,14 +50,14 @@ class Markdown extends React.Component<Props> {
     });
 
     this.viewerNode.addEventListener("click", handleHistoryClick);
-    this.setIdsOnHeadlines(this.viewerNode);
+    this.decorateRenderedContent();
   }
 
   componentDidUpdate(prevProps: Props) {
     // Only update if content actually changed to avoid unnecessary re-renders
     if (prevProps.content !== this.props.content) {
-      this.viewer.setMarkdown(transformLegacyPlantuml(this.props.content));
-      this.setIdsOnHeadlines(this.viewerNode);
+      this.viewer.setMarkdown(transformGollumTocMacro(transformLegacyPlantuml(this.props.content)));
+      this.decorateRenderedContent();
     }
   }
 
