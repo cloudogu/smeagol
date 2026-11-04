@@ -7,6 +7,8 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 ## [Unreleased]
 ### Added
 - A table of contents can be inserted into a page with `[[TOC]]`
+### Fixed
+- Table of contents links lead to the correct heading when headings have similar names
 ### Changed
 We have only made technical changes. You can find more details in the changelogs.
 ### Security

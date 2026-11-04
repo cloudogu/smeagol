@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - [#79] Add `[[TOC]]` macro to insert a table of contents into a page (gollum's `[[_TOC_]]` is supported as well)
+### Fixed
+- [#79] Fix duplicate heading ids, which made table of contents links jump to the wrong heading
 ### Changed
 - [#262] Update java base image to v25.0.5-1
 - [#262] Bump eclipse-temurin to v25.0.5_8

@@ -7,6 +7,8 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 ## [Unreleased]
 ### Added
 - Mit `[[TOC]]` kann ein Inhaltsverzeichnis in eine Seite eingefügt werden
+### Fixed
+- Links im Inhaltsverzeichnis führen bei ähnlich benannten Überschriften zur richtigen Überschrift
 ### Changed
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
 ### Security
