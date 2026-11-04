@@ -6,6 +6,18 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.8.2-1] - 2026-11-04
+### Added
+- A table of contents can be inserted into a page with `[[TOC]]`
+### Fixed
+- Table of contents links lead to the correct heading when headings have similar names
+### Changed
+We have only made technical changes. You can find more details in the changelogs.
+### Security
+- Fix multiple CVEs:
+  - [CVE-2026-91403](https://avd.aquasec.com/nvd/2026/cve-2026-91403/)
+  - [CVE-2026-114820](https://avd.aquasec.com/nvd/2026/cve-2026-114820/)
+
 ## [v1.8.1-1] - 2026-09-09
 ### Changed
 We have only made technical changes. You can find more details in the changelogs.

@@ -23,7 +23,12 @@ CRD_HELM_MANIFEST_TARGET?=manifests
 ##@ K8s - CRD targets
 
 .PHONY: manifests
-manifests: ${CONTROLLER_GEN} manifests-run ${CRD_POST_MANIFEST_TARGETS} ## Generate CustomResourceDefinition YAMLs.
+manifests: ${CONTROLLER_GEN} manifests-run applyconfigurations ${CRD_POST_MANIFEST_TARGETS} ## Generate CustomResourceDefinition YAMLs.
+
+.PHONY: applyconfigurations
+applyconfigurations:
+	@echo "Generate applyconfigurations..."
+	@$(CONTROLLER_GEN) applyconfiguration:headerFile="hack/boilerplate.go.txt" paths="./api/..."
 
 .PHONY: manifests-run
 manifests-run:
@@ -135,16 +140,18 @@ CLIENT_GEN_OUTPUT_PKG?="$(shell awk '/^module/ {print $$2}' go.mod)" # Get modul
 CLIENT_GEN_CLIENTSET_NAME?="client"
 CLIENT_GEN_CLIENTSET_INPUT?="$(shell find api/ -mindepth 1 -maxdepth 1 -type d -printf 'api/%P\n' | paste -sd, -)" # Get all packages under version names under api/
 CLIENT_GEN_INPUT_BASE?="$(shell pwd)"
+CLIENT_GEN_APPLYCONFIG_PKG?="$(shell awk '/^module/ {print $$2}' go.mod)/applyconfiguration" # Shared root the applyconfigurations target writes into
 
 .PHONY: generate-client
-generate-client: ${CLIENT_GEN} ## Generate client code from API definitions.
+generate-client: ${CLIENT_GEN} applyconfigurations ## Generate client code from API definitions.
 	@echo "Generating client..."
 	$(CLIENT_GEN) \
 		--output-dir ${CLIENT_GEN_OUTPUT_DIR} \
 		--output-pkg ${CLIENT_GEN_OUTPUT_PKG} \
 		--clientset-name ${CLIENT_GEN_CLIENTSET_NAME} \
 		--input ${CLIENT_GEN_CLIENTSET_INPUT} \
-		--input-base ${CLIENT_GEN_INPUT_BASE}
+		--input-base ${CLIENT_GEN_INPUT_BASE} \
+		--apply-configuration-package ${CLIENT_GEN_APPLYCONFIG_PKG}
 
 .PHONY: generate-crd-api
 generate-crd-api: generate-deepcopy generate-client manifests

@@ -11,6 +11,11 @@ export class IdUtil {
   readonly countById = new Map<string, number>();
 
   /**
+   * All ids returned by nextId so far
+   */
+  readonly usedIds = new Set<string>();
+
+  /**
    * Returns the current count of headlines with the given id which were counted with the count method.
    * @see count
    * @param id The id of the headline
@@ -32,20 +37,26 @@ export class IdUtil {
   }
 
   /**
-   * Creates an id based on the raw text.
+   * Creates a unique id based on the raw text.
    * Increases the counter of that text.
+   *
+   * The counter suffix can produce an id which another text already got.
+   * In this case the counter is increased until the id is unique,
+   * so only the later of the two headlines gets a different id.
    *
    * @param rawText The text of a headline.
    */
   public nextId(rawText: string) {
     const text = rawText.replace(/\s+/g, this.blankSpaceReplaceText);
-    const count = this.getCount(text);
 
-    this.count(text);
-    if (count == 0) {
-      return text;
-    }
+    let id: string;
+    do {
+      const count = this.getCount(text);
+      this.count(text);
+      id = count == 0 ? text : text + this.blankSpaceReplaceText + count;
+    } while (this.usedIds.has(id));
 
-    return text + this.blankSpaceReplaceText + count;
+    this.usedIds.add(id);
+    return id;
   }
 }

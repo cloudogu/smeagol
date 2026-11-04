@@ -6,6 +6,18 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.8.2-1] - 2026-11-04
+### Added
+- Mit `[[TOC]]` kann ein Inhaltsverzeichnis in eine Seite eingefügt werden
+### Fixed
+- Links im Inhaltsverzeichnis führen bei ähnlich benannten Überschriften zur richtigen Überschrift
+### Changed
+Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
+### Security
+- Mehrere CVEs behoben:
+  - [CVE-2026-91403](https://avd.aquasec.com/nvd/2026/cve-2026-91403/)
+  - [CVE-2026-114820](https://avd.aquasec.com/nvd/2026/cve-2026-114820/)
+
 ## [v1.8.1-1] - 2026-09-09
 ### Changed
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
