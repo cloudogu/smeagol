@@ -1,0 +1,33 @@
+/* Table of contents rendered for the "[[TOC]]" / "[[_TOC_]]" macro */
+.smeagol-inline-toc {
+  display: inline-block;
+  min-width: 20rem;
+  max-width: 100%;
+  padding: 1rem 1.5rem;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+}
+
+.smeagol-inline-toc-title {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.toastui-editor-contents .smeagol-inline-toc ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  list-style: none;
+}
+
+.toastui-editor-contents .smeagol-inline-toc > ul {
+  padding-left: 0;
+}
+
+.toastui-editor-contents .smeagol-inline-toc li::before {
+  display: none;
+}
+
+.toastui-editor-contents .smeagol-inline-toc li {
+  margin: 0.25rem 0;
+}

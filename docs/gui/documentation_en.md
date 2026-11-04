@@ -40,6 +40,8 @@ For long wikis, the fixed table of contents is a great help. It is automatically
 
 ![Smeagol Table of Contents](figures/smeagol/SmeagolTableOfContents_EN.png)
 
+In addition, `[[TOC]]` inserts a table of contents directly into the page at the position where it is written, for example at the top of a long page. It is built from the headings of the page as well and is also shown in the live preview of the editor. The notation `[[_TOC_]]` known from older wikis is supported as well.
+
 Under "Pages" all related wiki pages are listed:
 
 ![Smeagol Wiki Page Overview](figures/smeagol/SmeagolWikiPages_EN.png)

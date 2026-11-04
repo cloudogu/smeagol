@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- [#79] Add `[[TOC]]` macro to insert a table of contents into a page (gollum's `[[_TOC_]]` is supported as well)
 ### Changed
 - [#262] Update java base image to v25.0.5-1
 - [#262] Bump eclipse-temurin to v25.0.5_8

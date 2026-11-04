@@ -5,6 +5,8 @@ Below you will find the release notes for Smeagol.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/smeagol/CHANGELOG/).
 
 ## [Unreleased]
+### Added
+- A table of contents can be inserted into a page with `[[TOC]]`
 ### Changed
 We have only made technical changes. You can find more details in the changelogs.
 ### Security

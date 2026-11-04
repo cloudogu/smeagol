@@ -42,6 +42,8 @@ Bei langen Wikis ist das fixierte Inhaltsverzeichnis eine große Hilfe. Es wird 
 
 ![Smeagol Inhaltsverzeichnis](figures/smeagol/SmeagolTableOfContents_DE.png)
 
+Zusätzlich fügt `[[TOC]]` ein Inhaltsverzeichnis direkt an der Stelle in die Seite ein, an der es steht, beispielsweise am Anfang einer langen Seite. Es orientiert sich ebenfalls an den Überschriften der Seite und wird auch in der Live-Vorschau des Editors angezeigt. Die aus älteren Wikis bekannte Schreibweise `[[_TOC_]]` wird ebenfalls unterstützt.
+
 Mit der Schaltfläche "Neue Seite" wird eine neue Wiki-Seite erstellt. Sie müssen einen Namen für die Seite festlegen und können anschlie\ss end mit "OK" die Seite anlegen.
 
 ![Smeagol Wiki-Seite anlegen](figures/smeagol/SmeagolWikiNewPage_DE.png)

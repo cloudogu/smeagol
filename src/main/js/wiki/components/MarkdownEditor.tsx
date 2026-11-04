@@ -9,6 +9,7 @@ import history from "./HistoryEditorExtension";
 import tableClass from "./TableClassEditorExtension";
 import shortLinks from "./ShortLinkEditorExtension";
 import { transformLegacyPlantuml } from "./LegacyPlantumlEditorExtension";
+import { renderInlineTableOfContents, setIdsOnHeadlines, transformGollumTocMacro } from "./InlineTableOfContents";
 
 import "../styles/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
@@ -63,7 +64,7 @@ class MarkdownEditor extends Component<Props, State> {
 
   componentDidMount() {
     this.checkForUnsavedChangesInLocalStorage();
-    this.initialValue = transformLegacyPlantuml(this.props.content);
+    this.initialValue = transformGollumTocMacro(transformLegacyPlantuml(this.props.content));
 
     if (this.editorNode) {
       this.editor = new Editor({
@@ -75,8 +76,18 @@ class MarkdownEditor extends Component<Props, State> {
         usageStatistics: false,
         plugins: [colorSyntax, [uml, { rendererURL: process.env.PLANTUML_RENDERER_URL || "/plantuml/png/" }], history, shortLinks, tableClass]
       });
+
+      // the live preview only renders an empty placeholder for "[[TOC]]", fill it after every render
+      this.editor.on("afterPreviewRender", this.decoratePreview);
+      this.decoratePreview();
     }
   }
+
+  decoratePreview = () => {
+    const preview = this.editor.getEditorElements().mdPreview;
+    setIdsOnHeadlines(preview);
+    renderInlineTableOfContents(preview);
+  };
 
   componentWillUnmount() {
     this.putUnsavedChangesInLocalStorage();
