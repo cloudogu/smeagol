@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.8.2-1] - 2026-11-04
 ### Added
 - [#79] Add `[[TOC]]` macro to insert a table of contents into a page (gollum's `[[_TOC_]]` is supported as well)
 ### Fixed
@@ -23,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [CVE-2026-114820](https://avd.aquasec.com/nvd/2026/cve-2026-114820/)
 
 ## [v1.8.1-1] - 2026-09-09
+### Fixed
+- [#260] Fix broken branch filter in Git clone
 ### Changed
 - [#260] Update java builder image (eclipse-temurin) to v25.0.4_7
 - [#260] Update java base image to v25.0.4-1
@@ -37,8 +41,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#260] Update slf4j-api to v2.0.18 (remove obsolete version override)
 - [#260] Update logback-classic to v1.5.38 (remove obsolete version override)
 - [#260] Update snakeyaml to v2.6 (remove obsolete version override)
-### Fixed
-- [#260] Fix broken branch filter in Git clone
 
 ## [v1.8.0-1] - 2026-08-03
 ### Fixed
