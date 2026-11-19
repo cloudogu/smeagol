@@ -6,6 +6,10 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.8.2-2] - 2026-11-19
+### Security
+- Fix vulnerability [CVE-2026-114938](https://nvd.nist.gov/vuln/detail/CVE-2026-114938) (Java4Shell)
+
 ## [v1.8.2-1] - 2026-11-04
 ### Added
 - A table of contents can be inserted into a page with `[[TOC]]`

@@ -6,6 +6,10 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.8.2-2] - 2026-11-19
+### Security
+- Sicherheitslücke [CVE-2026-114938](https://nvd.nist.gov/vuln/detail/CVE-2026-114938) (Java4Shell) geschlossen
+
 ## [v1.8.2-1] - 2026-11-04
 ### Added
 - Mit `[[TOC]]` kann ein Inhaltsverzeichnis in eine Seite eingefügt werden

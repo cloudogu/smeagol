@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.8.2-2] - 2026-11-19
+### Changed
+- [#265] Update java base image to v25.0.5-4
+### Security
+- [#265] Fix [CVE-2026-114938](https://nvd.nist.gov/vuln/detail/CVE-2026-114938)
+
 ## [v1.8.2-1] - 2026-11-04
 ### Added
 - [#79] Add `[[TOC]]` macro to insert a table of contents into a page (gollum's `[[_TOC_]]` is supported as well)
