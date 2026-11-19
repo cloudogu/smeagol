@@ -5,6 +5,8 @@ Below you will find the release notes for Smeagol.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/smeagol/CHANGELOG/).
 
 ## [Unreleased]
+### Security
+- Fix vulnerability [CVE-2026-114938](https://nvd.nist.gov/vuln/detail/CVE-2026-114938) (Java4Shell)
 
 ## [v1.8.2-1] - 2026-11-04
 ### Added
